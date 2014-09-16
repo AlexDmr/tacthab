@@ -1,0 +1,21 @@
+{"name"	: "AlxAppsGateClient"
+	, "email"	: "alexandre.demeure@inria.fr"
+	, "url"		: "http://iihm.imag.fr/demeure"
+	, "version"	: "0.0.1"
+	, "repository": { "type" : "svn"
+					, "url" : "http://alxappsgateclient.googlecode.com/svn/trunk/"
+					}
+	, "dependencies": {
+          "fs-extra"		: ">=0.8"
+		, "express"			: ">=3"
+		, "socket.io"		: ">=1.0"
+		, "xmldom"			: ">=0.1.18"
+		, "request"			: ">=2.33"
+		, "websocket"		: ">=1.0.8"
+		, "i18next"			: ">=1.7"
+		, "amdrequire"		: ">=0.0.3"
+		, "body-parser"		: ">=1.6.7"
+		, "multer"			: ">=0.1.4"
+		, "smtp-protocol"	: ">=2.3.2"
+    }
+}
