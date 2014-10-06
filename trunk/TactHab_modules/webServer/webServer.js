@@ -1,3 +1,5 @@
+define	( [ ]
+		, function() { //(fs, express, bodyParser, xmldom, multer) {
 var fs			= require( 'fs-extra' );
 var express		= require( 'express' );
 var bodyParser	= require( 'body-parser' );
@@ -6,9 +8,6 @@ var multer		= require( 'multer' );
 var io			= require( 'socket.io' );
 var smtp		= require( 'smtp-protocol' );
 
-define	( [ ]
-		, function() { //(fs, express, bodyParser, xmldom, multer) {
-//
 var webServer = {
 	  fs			: fs
 	, express		: express

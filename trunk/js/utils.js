@@ -12,7 +12,7 @@ var utils = {
 		var xhr = new XMLHttpRequest();
 		params = params || {};
 		xhr.onload = params.onload || null;
-		xhr.open(method, ad);
+		xhr.open(method, ad, true);
 		if(params.form || params.variables) {
 			 var F = new FormData( params.form );
 			 for(var i in params.variables) {

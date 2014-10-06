@@ -3,20 +3,24 @@ require = require('amdrequire');
       basePath		: __dirname
     , publicPath	: __dirname
 });*/
-// console.log(__dirname);
+console.log('__dirname:', __dirname);
 
 var xml = require("xmldom");
 require	( [ './TactHab_modules/programNodes/Putils.js'
+		  , './TactHab_modules/UpnpServer/UpnpServer.js'
 		  , './TactHab_modules/webServer/webServer.js'
 		  ]
-		, function(Putils, webServer) {
+		, function(Putils, UpnpServer,webServer) {
 Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
 	webServer.emit('updateState', {objectId: node.id, prevState: 'state_'+prev, nextState: 'state_'+next});
 }
 
 
 		// console.log('pgTest01 is a ', pgTest01, "\n-------------------------\n", 'webServer is a ', webServer);
+	console.log('webServer.init(',__dirname,',8888)');
 	webServer.init(__dirname, '8888');
+	UpnpServer.init();
+	
 	/*pgTest01.serialize();
 	pgTest01.Start();*/
 	var pgTest01 = null;
