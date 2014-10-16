@@ -4,6 +4,7 @@ define	( [ './ProgramNodePresentation.js'
 		  , './SequenceNodePresentation.js'
 		  , './EventNodePresentation.js'
 		  , './WhenNodePresentation.js'
+		  , './PcontrolBrickPresentation.js'
 		  ]
 		, function( ProgramNodePresentation
 				  , ParallelNodePresentation
@@ -11,6 +12,7 @@ define	( [ './ProgramNodePresentation.js'
 				  , SequenceNodePresentation
 				  , EventNodePresentation
 				  , WhenNodePresentation
+				  , PcontrolBrickPresentation
 				  ) {
 var PresoUtils = {
 	  mapping		: { 'ProgramNode'	: ProgramNodePresentation
@@ -19,6 +21,7 @@ var PresoUtils = {
 					  , 'SequenceNode'	: SequenceNodePresentation
 					  , 'EventNode'		: EventNodePresentation
 					  , 'WhenNode'		: WhenNodePresentation
+					  , 'PcontrolBrick'	: PcontrolBrickPresentation
 					  }
 	, unserialize	: function(json) {
 		 var classe	= this.mapping[json.className];
