@@ -96,7 +96,7 @@ Pnode.prototype.getContext = function() {
 	// Propagate a call for context information
 	if(this.parent) {
 		 return this.parent.getContext();
-		} else {return null;}
+		} else {return {};}
 }
 
 return Pnode;

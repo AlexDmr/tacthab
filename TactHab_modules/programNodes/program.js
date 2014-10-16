@@ -1,8 +1,9 @@
 define( [ './parallel.js'
 		, './Pcall.js'
 		, './Pnode.js'
+		, '../Bricks/Brick.js'
 	    ]
-	  , function(ParalleNode, Pcall, Pnode) {
+	  , function(ParalleNode, Pcall, Pnode, Brick) {
 // Definition of a node for programs
 var ProgramNode = function(parent, children) {
 	 ParalleNode.prototype.constructor.apply(this, [parent, children]);
@@ -26,6 +27,23 @@ ProgramNode.prototype.call = function(call) {
 	if(this.parent) {
 		 return this.parent.call(call);
 		} else {call.execute();}
+}
+
+ProgramNode.prototype.getContext = function() {
+	var context;
+	if(this.parent) {
+		 context = Pnode.prototype.getContext.apply(this, []);
+		} else {context = {bricks:[]};
+				var D_bricks = Brick.prototype.getBricks();
+				for(var i in D_bricks) {
+					 context.bricks.push( D_bricks[i] );
+					}
+			   }
+		
+	// Filter context
+	
+	// Result
+	return context;
 }
 
 return ProgramNode;

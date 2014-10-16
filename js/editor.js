@@ -8,6 +8,7 @@ define	( [ './DragDrop.js'
 		  , './Presentations/ActionNodePresentation.js'
 		  , './Presentations/WhenNodePresentation.js'
 		  , './Presentations/EventNodePresentation.js'
+		  , './Presentations/PcontrolBrickPresentation.js'
 		  // Add Hierarchical list here ?
 		  ]
 		, function( DragDrop, utils, PresoUtils
@@ -18,12 +19,14 @@ define	( [ './DragDrop.js'
 				  , ActionNodePresentation
 				  , WhenNodePresentation
 				  , EventNodePresentation
+				  , PcontrolBrickPresentation
 				  ) {
 var editor = {
 	  htmlNodeTypes		: null
 	, htmlNodeProgram	: null
 	, init	: function(classNodeTypes, htmlNodeProgram, socket) {
 		 console.log('Editor init', classNodeTypes, htmlNodeProgram);
+		 this.htmlNodeProgram = htmlNodeProgram;
 		 var self = this;
 		 this.socket = socket;
 		 socket.on( 'updateState'
@@ -39,9 +42,10 @@ var editor = {
 				  , {class: ActionNodePresentation		, nodeType: 'ActionNode'}
 				  , {class: WhenNodePresentation		, nodeType: 'WhenNode'}
 				  , {class: EventNodePresentation		, nodeType: 'EventNode'}
+				  , {class: PcontrolBrickPresentation	, nodeType: 'PcontrolBrick'}
 				  ]
 		   , nodeType, node;
-		 htmlNodeTypes = document.getElementById('instructionTypes');
+		 this.htmlNodeTypes = htmlNodeTypes = document.getElementById('instructionTypes');
 		 for(var i in T) {
 			 nodeType = T[i].nodeType;
 			 node = htmlNodeTypes.querySelector('.' + nodeType);
@@ -67,6 +71,18 @@ var editor = {
 		   , bt_load	= document.getElementById('loadFromServer')
 		   , bt_start	= document.getElementById('startProgram')
 		   , bt_stop	= document.getElementById('stopProgram');
+		 bt_load.addEventListener( 'click'
+								 , function() {
+									 utils.XHR( 'GET', '/loadProgram'
+											  , { onload	: function() {
+													 console.log('getting program from server, server sent:', this);
+													 var json = JSON.parse( this.responseText );
+													 self.loadProgram(json);
+													}
+												}
+											  );
+									}
+								 );
 		 bt_send.addEventListener( 'click'
 								 , function() {
 									 utils.XHR( 'POST', '/loadProgram'
@@ -74,14 +90,7 @@ var editor = {
 												, onload	: function() {
 													 console.log('loadProgram, server sent:', this);
 													 var json = JSON.parse( this.responseText );
-													 var prog = PresoUtils.unserialize( json );
-													 // Unplug previous program if it exists
-													 console.log('Unplug program');
-													 htmlNodeProgram.innerText = '';
-													 // Plug the new one
-													 console.log('Plug parsed program');
-													 self.rootProgram = prog;
-													 htmlNodeProgram.appendChild( prog.Render() );
+													 self.loadProgram(json);
 													}
 												}
 											  );
@@ -101,7 +110,15 @@ var editor = {
 	, sendProgram	: function() {
 		
 		}
-	, loadProgram	: function() {
+	, loadProgram	: function(json) {
+		 var prog = PresoUtils.unserialize( json );
+		 // Unplug previous program if it exists
+		 console.log('Unplug program');
+		 this.htmlNodeProgram.innerText = '';
+		 // Plug the new one
+		 console.log('Plug parsed program');
+		 this.rootProgram = prog;
+		 this.htmlNodeProgram.appendChild( prog.Render() );
 		}
 };
 

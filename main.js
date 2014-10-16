@@ -7,10 +7,15 @@ console.log('__dirname:', __dirname);
 
 var xml = require("xmldom");
 require	( [ './TactHab_modules/programNodes/Putils.js'
+		  , './TactHab_modules/programNodes/Pnode.js'
 		  , './TactHab_modules/UpnpServer/UpnpServer.js'
+		  , './TactHab_modules/Bricks/BrickUPnP_MediaRenderer.js'
 		  , './TactHab_modules/webServer/webServer.js'
 		  ]
-		, function(Putils, UpnpServer,webServer) {
+		, function( Putils, Pnode, UpnpServer
+		          , BrickUPnP_MediaRenderer
+				  , webServer
+				  ) {
 Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
 	webServer.emit('updateState', {objectId: node.id, prevState: 'state_'+prev, nextState: 'state_'+next});
 }
@@ -20,6 +25,8 @@ Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
 	console.log('webServer.init(',__dirname,',8888)');
 	webServer.init(__dirname, '8888');
 	UpnpServer.init();
+	
+	
 	
 	/*pgTest01.serialize();
 	pgTest01.Start();*/
@@ -50,6 +57,7 @@ Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
 									}
 						});
 			});
+	
 	webServer.app.post( '/Start'
 					  , function(req, res) {
 						 if(pgTest01) {pgTest01.Start();}
@@ -84,6 +92,20 @@ Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
 						 res.end();
 						} );
 						
+	webServer.app.get( '/loadProgram'
+		, function(req, res) {
+				if(pgTest01) {
+					 var pg = pgTest01;
+					 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
+					 var str_prg = JSON.stringify( pg.serialize() );
+					 console.log("========================> Sending:\n", str_prg);
+					 res.end( str_prg );
+					} else  {console.log("No program available...");
+							 res.end();
+							}
+			}
+		);
+		
 	webServer.app.post( '/loadProgram'
 		, function(req, res) {
 			 if(req.body.program) {
@@ -96,6 +118,7 @@ Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
 				}
 			}
 		);
+
 	// Event simulation
 	webServer.app.get( '/evt'
 					 , function(req, res) {
@@ -136,5 +159,40 @@ Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
 							}
 						}
 					  );
+	
+	webServer.app.get	( '/remoteControler'
+		, function(req, res) {
+			 if(req.query.idControler) {
+				 var idControler = req.query.idControler;
+				 webServer.fs.readFile('./test/testRemoteControler.html'
+					  , function(err, dataObj) {
+							 if(err) {
+								 console.error('error reading test_evt.html', err);
+								 res.writeHead(500, {'Content-type': 'application/json; charset=utf-8'});
+								 res.write( "Error reading file ./test/testEditor.html\n" );
+								 res.end( err );
+								} else	{var data = new String(); data = data.concat(dataObj);
+										 var doc  = webServer.domParser.parseFromString(data, 'text/html');
+										 var span_idControler = doc.getElementById('idControler');
+										 span_idControler.appendChild( doc.createTextNode(idControler) );
+										 
+										 var controlBrick = Pnode.prototype.getNode(idControler);
+										 if(controlBrick) {
+											 var context = controlBrick.getContext();
+											 var section_context = doc.getElementById('context');
+											 section_context.appendChild(
+												 doc.createTextNode( JSON.stringify(context) )
+												);
+											 res.end( webServer.xmlSerializer.serializeToString(doc) );
+											} else	{res.writeHead(400, {'Content-type': 'application/json; charset=utf-8'});
+													 res.end("There is no controler identified by " + idControler);
+													}
+										}
+							});
+				}
+			}
+		);
+
+	
 });
 
