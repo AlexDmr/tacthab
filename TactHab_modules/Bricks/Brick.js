@@ -13,7 +13,8 @@ define( [
 		 return this;
 		}
 	Brick.prototype.constructor = Brick;
-	Brick.prototype.getBrickFromId = function(id) {return D_brick[this.brickId];}
+	Brick.prototype.getTypeName = function() {return "Brick";}
+	Brick.prototype.getBrickFromId = function(id) {return D_brick[id];}
 	Brick.prototype.getBricks   = function(  ) {
 		 var res = {};
 		 for(var i in D_brick) {res[i] = D_brick[i];}

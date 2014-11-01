@@ -1,6 +1,7 @@
-define	( [ '/socket.io/socket.io.js'
+define	( [ '../../socket.io/socket.io'
 		  ]
 		, function(io) {
+var callId = 0;
 var utils = {
 	XHR : function(method, ad, params) {
 		// method	: GET or POST
@@ -21,7 +22,23 @@ var utils = {
 			 xhr.send( F );
 			} else {xhr.send();}
 	}
-	, io : io()
+	, io	: io()
+	, call	: function(objectId, method, params, cb) {
+		 var call =	{ objectId	: objectId
+					, method		: method
+					, params		: JSON.stringify( params )
+					};
+		 if(cb) {
+			 call.callId = callId++;
+			}
+		 console.log( "Calling", call);
+		 utils.io.emit	( 'call', call
+						, function(data){
+							 // console.log("Call", call.callId, " returns", data);
+							 cb(data);
+							}
+						);
+		}
 };
 
 return utils;

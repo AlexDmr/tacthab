@@ -3,6 +3,7 @@ define( function() {
 			 // Define the Presentation constructor
 			 var Presentation = function() {
 				 this.uid	= this.getUniqueId();
+				 this.init(null, []);
 				}
 			 Presentation.prototype.className = 'Presentation';
 			 Presentation.prototype.constructor = Presentation;

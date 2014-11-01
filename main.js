@@ -1,19 +1,31 @@
-require = require('amdrequire');
-/*require.config({
+/*require = require('amdrequire');
+require.config({
       basePath		: __dirname
     , publicPath	: __dirname
 });*/
 console.log('__dirname:', __dirname);
+var requirejs = require('requirejs');
+
+requirejs.config({
+    //Pass the top-level main.js/index.js require
+    //function to requirejs so that node modules
+    //are loaded relative to the top-level JS file.
+    nodeRequire: require
+});
+
+
 
 var xml = require("xmldom");
-require	( [ './TactHab_modules/programNodes/Putils.js'
+requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		  , './TactHab_modules/programNodes/Pnode.js'
 		  , './TactHab_modules/UpnpServer/UpnpServer.js'
+		  , './TactHab_modules/Bricks/Brick.js'
 		  , './TactHab_modules/Bricks/BrickUPnP_MediaRenderer.js'
+		  , './TactHab_modules/Bricks/BrickUPnP_MediaServer.js'
 		  , './TactHab_modules/webServer/webServer.js'
 		  ]
 		, function( Putils, Pnode, UpnpServer
-		          , BrickUPnP_MediaRenderer
+		          , Brick, BrickUPnP_MediaRenderer, BrickUPnP_MediaServer
 				  , webServer
 				  ) {
 Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
@@ -69,16 +81,29 @@ Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
 						 res.end();
 						} );
 
-	webServer.oncall = function(json) {
-		 if(pgTest01) {
-			 var obj	= pgTest01.getNode(json.objectId)
-			   , mtd	= json.method
-			   , params	= JSON.parse(json.params);
-			 console.log("Executing webSocket call :", json.objectId + '.' + json.method, 'with ' + json.params);
+	function getObject(id) {
+		 var obj = null;
+		 if(!obj && pgTest01) {obj = pgTest01.getNode(id);}
+		 if(!obj) {obj = Brick.prototype.getBrickFromId(id);}		 
+		 return obj;
+		}
+	webServer.oncall = function(json, fctCB) {
+		 var obj	= getObject(json.objectId)
+		   , mtd	= json.method
+		   , params	= JSON.parse(json.params)
+		   , res	= null;
+		 console.log("Executing webSocket call :", json.objectId + '.' + json.method, 'with ' + json.params);
+		 if(obj) {
 			 try {
-				 obj[mtd].apply(obj, params);
-				} catch(err) {console.error('  error', err);}
-			}
+				 params.push(fctCB);
+				 res = obj[mtd].apply(obj, params);
+				} catch(err) {console.error('  error', err);
+							  res = {error : err};
+							 }
+			} else	{console.error('No object identified by', json.objectId);
+					 res = {error : 'No object identified by' + json.objectId};
+					}
+		 return res;
 		}
 	webServer.app.post( '/call'
 					  , function(req, res) {
@@ -160,6 +185,47 @@ Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
 						}
 					  );
 	
+	webServer.app.get	( '/testUPnP'
+						, function(req, res) {
+							 webServer.fs.readFile('./test/UPnP/index.html'
+								  , function(err, dataObj) {
+										 if(err) {
+											 console.error('error reading test_evt.html', err);
+											 res.writeHead(500, {'Content-type': 'application/json; charset=utf-8'});
+											 res.write( "Error reading file ./test/testEditor.html\n" );
+											 res.end( err );
+											} else	{var data = new String(); data = data.concat(dataObj);
+													 res.end( data );
+													}
+										});
+						});
+						
+	webServer.app.get	( '/get_MediaDLNA'
+						, function(req, res) {
+							 var L = {MediaRenderer:[], MediaServer:[]};
+							 var L_Bricks;
+							 L_Bricks = BrickUPnP_MediaRenderer.getBricks();
+							 for(var i=0; i<L_Bricks.length; i++) {
+								 var brick = L_Bricks[i];
+								 L.MediaRenderer.push(	{ id	: brick.brickId
+														, uuid	: brick.UPnP.uuid
+														, name	: brick.UPnP.friendlyName
+														}
+													 );
+								}
+							 L_Bricks = BrickUPnP_MediaServer.getBricks();
+							 for(var i=0; i<L_Bricks.length; i++) {
+								 var brick = L_Bricks[i];
+								 L.MediaServer.push  (	{ id	: brick.brickId
+														, uuid	: brick.UPnP.uuid
+														, name	: brick.UPnP.friendlyName
+														}
+													 );
+								}
+							 
+							 res.end( JSON.stringify(L) );
+							}
+						);
 	webServer.app.get	( '/remoteControler'
 		, function(req, res) {
 			 if(req.query.idControler) {
