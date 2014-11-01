@@ -1,0 +1,32 @@
+div.AlxHierarchicalList > ul > li {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+div.AlxHierarchicalList > ul > li.item {
+	list-style-image: url('file.png');
+}
+
+div.AlxHierarchicalList > ul > li.AlxHierarchicalList {
+	list-style-image: url('folder.png');
+}
+
+div.AlxHierarchicalList > ul > li.AlxHierarchicalList.open {
+	list-style-image: url('folder-open.png');	
+}
+
+div.AlxHierarchicalList > ul > li.AlxHierarchicalList > div.AlxHierarchicalList > ul {
+	display	: none;
+}
+
+div.AlxHierarchicalList > ul > li.AlxHierarchicalList.open > div.AlxHierarchicalList > ul {
+	display	: block;
+}
+
+div.AlxHierarchicalList > p {
+	margin	: 0px;
+}

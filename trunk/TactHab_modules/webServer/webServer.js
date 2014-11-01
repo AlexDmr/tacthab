@@ -1,12 +1,20 @@
-define	( [ ]
-		, function() { //(fs, express, bodyParser, xmldom, multer) {
-var fs			= require( 'fs-extra' );
-var express		= require( 'express' );
-var bodyParser	= require( 'body-parser' );
-var xmldom		= require( 'xmldom' );
-var multer		= require( 'multer' );
-var io			= require( 'socket.io' );
-var smtp		= require( 'smtp-protocol' );
+define	( [ 'fs-extra'
+		  , 'express'
+		  , 'body-parser'
+		  , 'xmldom'
+		  , 'multer'
+		  , 'socket.io'
+		  , 'smtp-protocol'
+		  ]
+		, function( fs, express, bodyParser, xmldom, multer
+				  , io, smtp) {
+// var fs			= require( 'fs-extra' );
+// var express		= require( 'express' );
+// var bodyParser	= require( 'body-parser' );
+// var xmldom		= require( 'xmldom' );
+// var multer		= require( 'multer' );
+// var io			= require( 'socket.io' );
+// var smtp		= require( 'smtp-protocol' );
 
 var webServer = {
 	  fs			: fs
@@ -44,10 +52,10 @@ var webServer = {
 			 console.log("Mail server running on port", port);
 			}
 		}
-	, addClient: function(socket) {
+	, addClient		: function(socket) {
 		 this.clients[socket.id] = {socket: socket};
 		}
-	, removeClient: function(socket) {
+	, removeClient	: function(socket) {
 		 if(this.clients[socket.id]) {delete this.clients[socket.id];}
 		}
 	, emit			: function(name, json) {
@@ -78,8 +86,13 @@ var webServer = {
 						socket.on ( 'disconnect'
 								  , function() {webServer.removeClient(socket);} );
 						socket.on ( 'call'
-								  , function(call) {
-										 if(self.oncall) {self.oncall(call);}
+								  , function(call, fctCB) {
+										 if(self.oncall) {
+											 res = self.oncall(call, fctCB);
+											 if(res !== undefined) {
+												 fctCB( res );
+												}
+											}
 										} );
 						}
 					);

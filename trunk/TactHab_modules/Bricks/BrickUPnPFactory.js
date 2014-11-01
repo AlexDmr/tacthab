@@ -1,7 +1,8 @@
-define( [ './BrickFactory.js'
+define( [ './Brick.js'
+		, './BrickFactory.js'
 		, '../UpnpServer/UpnpServer.js'
 		]
-	  , function(BrickFactory, UpnpServer) {
+	  , function(Brick, BrickFactory, UpnpServer) {
 	var BrickUPnPFactory = function(name, constr, fct_UPnP_type) {
 		 var self = this;
 		 BrickFactory.prototype.constructor.apply(this, [constr]);
@@ -29,8 +30,23 @@ define( [ './BrickFactory.js'
 			);
 		 return this;
 		}
-	BrickUPnPFactory.prototype = new BrickFactory();
-	BrickUPnPFactory.prototype.constructor = BrickUPnPFactory;
+	BrickUPnPFactory.prototype					= new BrickFactory();
+	
+	BrickUPnPFactory.prototype.constructor		= BrickUPnPFactory;
+	BrickUPnPFactory.prototype.getBricks		= function() {
+		 var L = [];
+		 for(var uuid in this.D_uuid_brickId) {
+			 L.push( this.getBrickFromUUID(uuid) );
+			}
+		 return L;
+		}
+	BrickUPnPFactory.prototype.getBrickFromUUID	= function(uuid) {
+		 if(typeof this.D_uuid_brickId[uuid] !== "undefined") {
+			 var brick = Brick.prototype.getBrickFromId( this.D_uuid_brickId[uuid] );
+			 // console.log( uuid, '=>', this.D_uuid_brickId[uuid], "=>", brick);
+			 return brick;
+			} else {return null;}
+		}
 
 	return BrickUPnPFactory;
 });
