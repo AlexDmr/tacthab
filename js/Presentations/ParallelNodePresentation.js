@@ -15,6 +15,11 @@ ParallelNodePresentation.prototype.init = function(PnodeID, parent, children) {
 	return this;
 }
 
+ParallelNodePresentation.prototype.serialize = function() {
+	 var json = PnodeNChildPresentation.prototype.serialize.apply(this, []);
+	 json.subType = './ParallelNodePresentation.js';
+	 return json;
+	}
 ParallelNodePresentation.prototype.Render	= function() {
 	var self = this;
 	var root = PnodeNChildPresentation.prototype.Render.apply(this, []);

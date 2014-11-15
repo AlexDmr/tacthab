@@ -14,7 +14,7 @@ define	( [ 'fs-extra'
 // var xmldom		= require( 'xmldom' );
 // var multer		= require( 'multer' );
 // var io			= require( 'socket.io' );
-// var smtp		= require( 'smtp-protocol' );
+// var smtp			= require( 'smtp-protocol' );
 
 var webServer = {
 	  fs			: fs

@@ -1,0 +1,9 @@
+.MediaRenderer > details > table {
+	border			: 1px solid black;
+    border-collapse	: collapse;
+}
+
+.MediaRenderer > details > table tr, .MediaRenderer > details > table td {
+	border			: 1px solid black;
+    border-collapse	: collapse;
+}

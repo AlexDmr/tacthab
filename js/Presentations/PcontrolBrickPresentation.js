@@ -20,7 +20,7 @@ PcontrolBrickPresentation.prototype.init = function(PnodeID, parent, children) {
 }
 PcontrolBrickPresentation.prototype.serialize	= function() {
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
-	// Describe action here
+	 json.subType = './PcontrolBrickPresentation.js';
 	return json;
 }
 PcontrolBrickPresentation.prototype.unserialize	= function(json, PresoUtils) {

@@ -28,17 +28,15 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		          , Brick, BrickUPnP_MediaRenderer, BrickUPnP_MediaServer
 				  , webServer
 				  ) {
-Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
-	webServer.emit('updateState', {objectId: node.id, prevState: 'state_'+prev, nextState: 'state_'+next});
-}
+	Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
+		 webServer.emit('updateState', {objectId: node.id, prevState: 'state_'+prev, nextState: 'state_'+next});
+		}
 
-
+	
 		// console.log('pgTest01 is a ', pgTest01, "\n-------------------------\n", 'webServer is a ', webServer);
 	console.log('webServer.init(',__dirname,',8888)');
 	webServer.init(__dirname, '8888');
 	UpnpServer.init();
-	
-	
 	
 	/*pgTest01.serialize();
 	pgTest01.Start();*/
@@ -52,6 +50,8 @@ Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
 						 if(err) {
 							 console.error('error reading test_evt.html', err);
 							} else	{var data = new String(); data = data.concat(dataObj);
+									 res.end( data );
+									 return;
 									 var doc  = webServer.domParser.parseFromString(data, 'text/html');
 									 var instructionTypes = doc.getElementById('instructionTypes');
 									 var D_classes = Putils.mapping['ProgramNode'].prototype.getD_classes();
@@ -176,7 +176,7 @@ Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
 						}
 					 );
 	webServer.app.post( '/evt'
-					 , function(req, res) {
+					  , function(req, res) {
 						 console.log( "Trigger event", req.body.id);
 						 res.end();
 						 if(pgTest01) {

@@ -47,6 +47,5 @@ define( [ './Brick.js'
 			 return brick;
 			} else {return null;}
 		}
-
 	return BrickUPnPFactory;
 });

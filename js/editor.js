@@ -1,29 +1,38 @@
 define	( [ './DragDrop.js'
 		  , './utils.js'
 		  , './Presentations/PresoUtils.js'
-		  , './Presentations/PnodePresentation.js'		   
-		  , './Presentations/ProgramNodePresentation.js'		   
-		  , './Presentations/SequenceNodePresentation.js'		   
-		  , './Presentations/ParallelNodePresentation.js'	
-		  , './Presentations/ActionNodePresentation.js'
-		  , './Presentations/WhenNodePresentation.js'
-		  , './Presentations/EventNodePresentation.js'
-		  , './Presentations/PcontrolBrickPresentation.js'
-		  // Add Hierarchical list here ?
+		  , './Presentations/PnodePresentation.js'
+		  , './async.js'
 		  ]
 		, function( DragDrop, utils, PresoUtils
 				  , PnodePresentation
-				  , ProgramNodePresentation
-				  , SequenceNodePresentation
-				  , ParallelNodePresentation
-				  , ActionNodePresentation
-				  , WhenNodePresentation
-				  , EventNodePresentation
-				  , PcontrolBrickPresentation
+				  , async
 				  ) {
 var editor = {
 	  htmlNodeTypes		: null
 	, htmlNodeProgram	: null
+	, createDragNode		: function(name, config) {
+		 var div = document.createElement('div');
+			div.appendChild( document.createTextNode(name) );
+			div.setAttribute('class', "instructionType Pnode Implemented");
+			div.classList.add( config.nodeType )
+		 DragDrop.newDraggable( div
+							  , { constructor	: config.constructor
+							    , htmlNode		: div
+								, nodeType		: config.nodeType
+								, config		: config
+								}
+							  );
+		 return div;
+		}
+	, createCateg	: function(name) {
+		 var details	= document.createElement('details');
+		 var summary	= document.createElement('summary');
+			details.appendChild( summary );
+			summary.innerHTML = name;
+		 this.htmlNodeTypes.appendChild( details );
+		 return {details: details, summary: summary, appendChild: function(c) {details.appendChild(c); return this;}}
+		}
 	, init	: function(classNodeTypes, htmlNodeProgram, socket) {
 		 console.log('Editor init', classNodeTypes, htmlNodeProgram);
 		 this.htmlNodeProgram = htmlNodeProgram;
@@ -36,24 +45,48 @@ var editor = {
 						 console.log('obj :', obj);
 						 obj.setState(json.prevState, json.nextState);
 						});
-		 var T  = [ {class: ParallelNodePresentation	, nodeType: 'ParallelNode'}
-				  , {class: SequenceNodePresentation	, nodeType: 'SequenceNode'}
-				  , {class: ProgramNodePresentation		, nodeType: 'ProgramNode'}
-				  , {class: ActionNodePresentation		, nodeType: 'ActionNode'}
-				  , {class: WhenNodePresentation		, nodeType: 'WhenNode'}
-				  , {class: EventNodePresentation		, nodeType: 'EventNode'}
-				  , {class: PcontrolBrickPresentation	, nodeType: 'PcontrolBrick'}
-				  ]
-		   , nodeType, node;
-		 this.htmlNodeTypes = htmlNodeTypes = document.getElementById('instructionTypes');
-		 for(var i in T) {
-			 nodeType = T[i].nodeType;
-			 node = htmlNodeTypes.querySelector('.' + nodeType);
-			 if(node) {
-				 node.classList.add('Implemented');
-				 DragDrop.newDraggable( node, {constructor: T[i].class, htmlNode: node, nodeType: nodeType} );
-				}
-			}
+		 
+		 console.log('async:', async);
+		 // Configure html
+		 this.htmlNodeTypes = document.getElementById('instructionTypes');
+		 
+		 // Control flow instructions
+		 this.createCateg("Controls"	).appendChild( this.createDragNode( 'Program'
+													 , { constructor	: PresoUtils.get('ProgramNode')
+													   , nodeType		: 'ProgramNode'
+													   } )
+										).appendChild( this.createDragNode( 'Parrallel'
+													 , { constructor	: PresoUtils.get('ParalleNode')
+													   , nodeType		: 'ParalleNode'
+													   } )
+										).appendChild( this.createDragNode( 'Sequence'
+													 , { constructor	: PresoUtils.get('SequenceNode')
+													   , nodeType		: 'SequenceNode'
+													   } )
+										).appendChild( this.createDragNode( 'When'
+													 , { constructor	: PresoUtils.get('WhenNode')
+													   , nodeType		: 'WhenNode'
+													   } )
+										).appendChild( this.createDragNode( 'Event'
+													 , { constructor	: PresoUtils.get('EventNode')
+													   , nodeType		: 'EventNode'
+													   } )
+										).appendChild( this.createDragNode( 'Controller'
+													 , { constructor	: PresoUtils.get('PcontrolBrick')
+													   , nodeType		: 'PcontrolBrick'
+													   } )
+										);
+		 // Create new draggable for MediaRenderer
+		 this.createCateg("MediaRenderer").appendChild( this.createDragNode( 'Load'
+													 , { constructor	: PresoUtils.get('MR_load_NodePresentation')
+													   , nodeType		: 'ActionNode'
+													   } )
+										).appendChild( this.createDragNode( 'Play'
+													 , { constructor	: PresoUtils.get('MR_Play_NodePresentation')
+													   , nodeType		: 'ActionNode'
+													   } )
+										);
+		 
 		 // Main drop zone for programs
 		 DragDrop.newDropZone( htmlNodeProgram
 							 , { acceptedClasse		: 'ProgramNode'
