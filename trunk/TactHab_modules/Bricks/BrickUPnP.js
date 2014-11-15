@@ -41,18 +41,20 @@ define( [ './Brick.js'
 			 service.on("stateChange", function(event) {
 				 self.UPnPEvent(event.textXML, this);
 				});
-			 service.subscribe( function(err, data) {
-									if(err) {
+			 service.subscribe	(function(service) {return function(err, data) {
+									 if(err) {
 										 console.log('BrickUPnP', self.brickId, "received:", "\n\terr :", err, "\n\tdata :", data);
 										} else {console.log('subscription done for', self.brickId, service.serviceType);}
-									});
+									 };
+									}(service)
+								);
 			}
 		 return this;
 		}
 	BrickUPnP.prototype.UpdateEvent		= function(eventNode, service) {}
 	BrickUPnP.prototype.UpdateFromEvent	= function(eventNode, service) {
 		 var L = eventNode.getElementsByTagName('e:property');
-		 console.log("There are", L.length, "events");
+		 // console.log("There are", L.length, "events");
 		 for(var i=0; i<L.length; i++) {
 			 // console.log("\tevent", i, "has", L.item(i).childNodes.length, "childs");
 			 var pos;

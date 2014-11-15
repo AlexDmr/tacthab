@@ -18,6 +18,11 @@ EventNodePresentation.prototype.init = function(PnodeID, parent, children) {
 	return this;
 }
 
+EventNodePresentation.prototype.serialize = function() {
+	 var json = PnodePresentation.prototype.serialize.apply(this, []);
+	 json.subType = './EventNodePresentation.js';
+	 return json;
+	}
 EventNodePresentation.prototype.Render	= function() {
 	var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);

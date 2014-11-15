@@ -5,6 +5,10 @@ define	( [ './ProgramNodePresentation.js'
 		  , './EventNodePresentation.js'
 		  , './WhenNodePresentation.js'
 		  , './PcontrolBrickPresentation.js'
+		  // Média Renderer
+		  , './UPnP/MediaRendererInstructions/MR_Play_NodePresentation.js'
+		  , './UPnP/MediaRendererInstructions/MR_Pause_NodePresentation.js'
+		  , './UPnP/MediaRendererInstructions/MR_load_NodePresentation.js'
 		  ]
 		, function( ProgramNodePresentation
 				  , ParallelNodePresentation
@@ -13,6 +17,10 @@ define	( [ './ProgramNodePresentation.js'
 				  , EventNodePresentation
 				  , WhenNodePresentation
 				  , PcontrolBrickPresentation
+				  // Media Renderer
+				  , MR_Play_NodePresentation
+				  , MR_Pause_NodePresentation
+				  , MR_load_NodePresentation
 				  ) {
 var PresoUtils = {
 	  mapping		: { 'ProgramNode'	: ProgramNodePresentation
@@ -22,9 +30,17 @@ var PresoUtils = {
 					  , 'EventNode'		: EventNodePresentation
 					  , 'WhenNode'		: WhenNodePresentation
 					  , 'PcontrolBrick'	: PcontrolBrickPresentation
+					  // MediaRenderer
+					  , 'MR_Play_NodePresentation'	: MR_Play_NodePresentation
+					  , 'MR_load_NodePresentation'	: MR_load_NodePresentation
+					  , 'MR_Pause_NodePresentation'	: MR_Pause_NodePresentation
 					  }
-	, unserialize	: function(json) {
-		 var classe	= this.mapping[json.className];
+	, get			: function(className) {
+		 return this.mapping[className];
+		}
+	, unserialize	: function(json, cb) {
+		 console.log("json.subType : ", json.subType);
+		 var classe	= this.mapping[ json.subType || json.className ];
 		 var parent	= new classe().init();
 		 parent.unserialize(json, PresoUtils);
 		 return parent;

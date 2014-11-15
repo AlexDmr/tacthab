@@ -23,7 +23,9 @@ define	( [ '../../AlxHierarchicalList/liste.js'
 		 // Subscribe to events from server
 		 utils.io.on( 'eventForBrick_' + this.remoteBrickId
 					, function(json) {
-						 console.log( self, "received", json);
+						 console.log( self
+									, "eventForBrick_" + this.remoteBrickId
+									, json );
 						}
 					);
 		 utils.call	( self.remoteBrickId
@@ -51,9 +53,18 @@ define	( [ '../../AlxHierarchicalList/liste.js'
 		 this.AlxListe.plugUnder( root );
 		 return root;
 		}
-	MediaServer.prototype.Browse	= function(id, AlxListe) {
+	MediaServer.prototype.itemSelected	= function(itemId, icon, uri, title) {
+		 console.log( this.remoteBrickId, "MediaServer::itemSelected"
+					, "\n\titemId :", itemId
+					, "\n\t title :", title
+					, "\n\t  icon :", icon
+					, "\n\t   uri :", uri
+					);
+		}
+	MediaServer.prototype.Browse		= function(id, AlxListe, remoteBrickId) {
 		 var self = this;
-		 utils.call	( self.remoteBrickId
+		 remoteBrickId = remoteBrickId || self.remoteBrickId;
+		 utils.call	( remoteBrickId
 					, 'Browse'
 					, [id]
 					, function(res) {
@@ -73,7 +84,7 @@ define	( [ '../../AlxHierarchicalList/liste.js'
 														, { classes	: "UPnP_container"
 														  , onclick	: function(contId) {return function() {
 																 console.log("Browse", contId, this);
-																 self.Browse(contId, this);
+																 self.Browse(contId, this, remoteBrickId);
 																};}(contId)
 														  }
 														);
@@ -93,9 +104,10 @@ define	( [ '../../AlxHierarchicalList/liste.js'
 									 var uri	= item.getElementsByTagName('res').item(0).textContent;
 									 AlxListe.addItem	( title
 														, { classes	: "UPnP_item"
-														  , onclick	: function(itemId) {return function() {
+														  , onclick	: function(itemId, icon, uri, title) {return function() {
 																 console.log("Select", itemId, icon, uri);
-																};}(itemId)
+																 self.itemSelected(itemId, icon, uri, title);
+																};}(itemId, icon, uri, title)
 														  }
 														);
 									}

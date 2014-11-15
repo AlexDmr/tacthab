@@ -3,7 +3,7 @@ define( function() {
 			 // Define the Presentation constructor
 			 var Presentation = function() {
 				 this.uid	= this.getUniqueId();
-				 this.init(null, []);
+				 Presentation.prototype.init(null, []);
 				}
 			 Presentation.prototype.className = 'Presentation';
 			 Presentation.prototype.constructor = Presentation;
@@ -30,7 +30,12 @@ define( function() {
 					this.parent = null;
 					parent.removeChild(this);}
 				 this.parent = p;
-				 if(p) p.appendChild(this);
+				 if(p) {
+					 if(typeof p.appendChild === "undefined") {
+						 console.error("Problem for parent", p);
+						}
+					 p.appendChild(this);
+					}
 				}
 			 Presentation.prototype.appendChild = function(c) {
 				 if(this.children.indexOf(c) == -1) {

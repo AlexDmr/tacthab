@@ -17,6 +17,7 @@ WhenNodePresentation.prototype.serialize	= function() {
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
 	json.childEvent		= this.children.indexOf( this.childEvent	);
 	json.childReaction	= this.children.indexOf( this.childReaction );
+	json.subType		= './WhenNodePresentation.js';
 	return json;
 }
 WhenNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
