@@ -1,0 +1,17 @@
+.MediaBrowser .MediaServer{
+	border	: solid black 1px;
+	display	: inline-flex;
+	margin	: 4px;
+	padding	: 2px;
+	width	: 128px;
+	height	: 64px;
+	overflow: hidden;
+	text-align	: center
+}
+
+.MediaBrowser .MediaServer img.icon {
+	width	: 64px;
+	height	: 64px;
+	display	: block;
+}
+

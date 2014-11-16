@@ -14,7 +14,7 @@ var Pnode = function(parent, children) {
 		 for(var i in children) {children[i].parent = this;}
 	 this.state		= 0;
 	 this.name		= '';
-	 this.id		= id++;
+	 this.id		= 'Node' + (id++);
 	 D_nodes[this.id] = this;
 	 return this;
 	}

@@ -51,21 +51,6 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 							 console.error('error reading test_evt.html', err);
 							} else	{var data = new String(); data = data.concat(dataObj);
 									 res.end( data );
-									 return;
-									 var doc  = webServer.domParser.parseFromString(data, 'text/html');
-									 var instructionTypes = doc.getElementById('instructionTypes');
-									 var D_classes = Putils.mapping['ProgramNode'].prototype.getD_classes();
-									 for(var c in D_classes) {
-										 var div = doc.createElement('div')
-										   , C   = D_classes[c]
-										   , CL  = C.prototype.getClasses();
-											var classString = 'instructionType';
-											for(var i in CL) {classString += ' ' + CL[i];}
-											div.setAttribute('class', classString);
-										 div.appendChild( doc.createTextNode(c) );
-										 instructionTypes.appendChild(div);
-										}
-									 res.end( webServer.xmlSerializer.serializeToString(doc) );
 									}
 						});
 			});
@@ -200,27 +185,33 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 										});
 						});
 						
+	function getDescrFromBrick(brick) {
+		 var res  = { id	: brick.brickId
+					, uuid	: brick.UPnP.uuid
+					, name	: brick.UPnP.friendlyName
+					}
+		 if(brick.L_icons && brick.L_icons.length>0) {
+			 var icon   = brick.L_icons.item(0);
+			 res.iconURL = "http://" + brick.UPnP.host + ":" + brick.UPnP.port;
+			 var path    = icon.getElementsByTagName('url')[0].textContent;
+			 // console.log(path, path[0], path[0] === '/');
+			 if(path[0] === '/') {
+				res.iconURL += path;
+				} else {res.iconURL += '/' + path;}
+			}
+		 return res;
+		}
 	webServer.app.get	( '/get_MediaDLNA'
 						, function(req, res) {
 							 var L = {MediaRenderer:[], MediaServer:[]};
 							 var L_Bricks;
 							 L_Bricks = BrickUPnP_MediaRenderer.getBricks();
 							 for(var i=0; i<L_Bricks.length; i++) {
-								 var brick = L_Bricks[i];
-								 L.MediaRenderer.push(	{ id	: brick.brickId
-														, uuid	: brick.UPnP.uuid
-														, name	: brick.UPnP.friendlyName
-														}
-													 );
+								 L.MediaRenderer.push( getDescrFromBrick(L_Bricks[i]) );
 								}
 							 L_Bricks = BrickUPnP_MediaServer.getBricks();
 							 for(var i=0; i<L_Bricks.length; i++) {
-								 var brick = L_Bricks[i];
-								 L.MediaServer.push  (	{ id	: brick.brickId
-														, uuid	: brick.UPnP.uuid
-														, name	: brick.UPnP.friendlyName
-														}
-													 );
+								 L.MediaServer.push  ( getDescrFromBrick(L_Bricks[i]) );
 								}
 							 
 							 res.end( JSON.stringify(L) );
