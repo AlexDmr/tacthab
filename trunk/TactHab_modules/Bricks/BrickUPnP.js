@@ -33,6 +33,13 @@ define( [ './Brick.js'
 		 this.UPnP.friendlyName	= device.friendlyName;
 		 this.UPnP.host			= device.host;
 		 this.UPnP.port			= device.port;
+		 
+		 // Parse the rawData
+		 try {this.docDescription = xmldomparser.parseFromString( device.rawData );
+			  this.L_icons = this.docDescription.getElementsByTagName('icon');
+			 } catch(err)	{console.error("Error paring raw data description for device ", device.friendlyName, ":", JSON.stringify(err));
+							}
+		 
 		 // Subscribe to events
 		 for(var s in device.services) {
 			 var service = device.services[s];

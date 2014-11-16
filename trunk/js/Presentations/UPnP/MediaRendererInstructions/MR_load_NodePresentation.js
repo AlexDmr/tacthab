@@ -1,7 +1,8 @@
 define	( [ './MR_Play_NodePresentation.js'
 		  , '../../../utils.js'
+		  , '../MediaBrowser.js'
 		  ]
-		, function(MR_Play_NodePresentation, utils) {
+		, function(MR_Play_NodePresentation, utils, MediaBrowser) {
 	// 
 	var MR_load_NodePresentation = function() {
 		 MR_Play_NodePresentation.apply(this, []);
@@ -25,7 +26,8 @@ define	( [ './MR_Play_NodePresentation.js'
 				this.html.mediaBrowser.classList.add('MediaBrowser');
 				this.html.mediaBrowser.appendChild( document.createTextNode('SelectMedia') );
 				this.html.mediaBrowser.onclick = function() {
-					 
+					 var MB = new MediaBrowser();
+					 self.appendChild(MB);
 					}
 			 this.divDescription.insertBefore( this.html.mediaBrowser, this.html.select );
 			}

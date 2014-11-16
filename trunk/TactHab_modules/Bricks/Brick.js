@@ -5,7 +5,7 @@ define( [
 	var D_brick = {};
 	
 	var Brick = function() {
-		 this.brickId	= brickId++;
+		 this.brickId	= 'Brick' + (brickId++);
 			D_brick[this.brickId] = this;
 		 this.Actions	= [];
 		 this.Events	= [];
