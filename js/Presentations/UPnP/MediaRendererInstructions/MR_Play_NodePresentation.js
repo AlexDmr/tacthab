@@ -36,6 +36,7 @@ define	( [ '../../ActionNodePresentation.js'
 											 if(self.action.objectId !== "") {
 												 self.html.select.value = self.action.objectId;
 												}
+											 self.action.objectId = self.html.select.value;
 											}
 								}
 					}

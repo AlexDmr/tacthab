@@ -22,16 +22,59 @@ define( [ './BrickUPnP.js'
 	BrickUPnP_MediaRenderer.prototype.getMediasStates	= function() {
 		 return this.MediasStates;
 		}
-	BrickUPnP_MediaRenderer.prototype.loadMedia	= function(uri, cb) {
+	BrickUPnP_MediaRenderer.prototype.loadMedia	= function(mediaServerId, itemId, cbSuccess, cbError) {
+		 var self 		 = this;
+		 var mediaServer = this.getBrickFromId(mediaServerId);
+		 var service	 = mediaServer.UPnP.device.services['urn:upnp-org:serviceId:ContentDirectory'];
+		 service.callAction	( 'Browse'
+							, { ObjectID		: itemId
+							  , BrowseFlag		: 'BrowseMetadata'
+							  , Filter			: '*'
+							  , StartingIndex	: 0
+							  , RequestedCount	: 0
+							  , SortCriteria	: ''
+							  }
+							, function(err, buffer) {
+								 // console.log(self.brickId, "BrickUPnP_MediaRenderer::Browse", err || buffer);
+								 if(err) {
+									 console.error("Error :", JSON.stringify(err));
+									 cbError(err);
+									} else	{try	{var doc			= xmldomparser.parseFromString(buffer);
+													 var metadata		= doc.getElementsByTagName('Result')[0].textContent;
+													 var docMetadata	= xmldomparser.parseFromString( metadata );
+													 var res			= docMetadata.getElementsByTagName('res');
+													 if(res.length > 0) {
+														 self.loadURI( res[0].textContent// uri
+																	 , metadata
+																	 , cbSuccess, cbError );
+														} else {console.error("loadMedia : no res : ", metadata);}
+													} catch(err2) {console.error(err2);
+																   cbError(err2);
+																  }
+											}
+								}
+							);		 
+		}
+	BrickUPnP_MediaRenderer.prototype.loadURI	= function(uri, metadata, cbSuccess, cbError) {
+		 var self = this;
 		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
 		 service.callAction	( 'SetAVTransportURI'
 							, { InstanceID			: 0
 							  , CurrentURI			: uri
-							  , CurrentURIMetaData	: ''
+							  , CurrentURIMetaData	: metadata
 							  }
 							, function(err, buffer) {
-								 console.log(this.brickId, "BrickUPnP_MediaRenderer::loadMedia", err || buffer);
-								 if(cb) cb(err || buffer);
+								 // console.log(self.brickId, "BrickUPnP_MediaRenderer::loadMedia", err || buffer);
+								 if(err) {
+									 console.error("loadURI error :", err);
+									 cbError(err);
+									} else	{// Check SOAP response
+											 console.log("loadURI OK");
+											 if(cbSuccess) {
+												 console.log("cbSuccess");
+												 cbSuccess(buffer);
+												}
+											}
 								}
 							);
 		}
@@ -112,7 +155,6 @@ define( [ './BrickUPnP.js'
 		 delete this.currentInstanceID;
 		 return BrickUPnP.prototype.UPnPEvent.apply(this, [event, service]);
 		}
-		
 	BrickUPnP_MediaRenderer.prototype.UpdateEvent	= function(eventNode, service) {
 		 // To be implemented
 		 console.log("\t", this.brickId, service.serviceType, "<" + eventNode.tagName + ">");
@@ -165,7 +207,6 @@ define( [ './BrickUPnP.js'
 		 return this;
 		}
 
-	
 	// Links to the MediaServers
 	BrickUPnP_MediaRenderer.prototype.getMediaServersIds = function() {
 		 var L_Bricks = BrickUPnP_MediaServer.getBricks()

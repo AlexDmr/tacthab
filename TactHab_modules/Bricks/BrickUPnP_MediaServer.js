@@ -15,11 +15,25 @@ define( [ './BrickUPnP.js'
 	BrickUPnP_MediaServer.prototype.constructor = BrickUPnP_MediaServer;
 	BrickUPnP_MediaServer.prototype.getTypeName = function() {return "BrickUPnP_MediaServer";}
 
+	BrickUPnP_MediaServer.prototype.getMetaData	= function(ObjectID, callback) {
+		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:ContentDirectory'];
+		 service.callAction	( 'Browse'
+							, { ObjectID		: ObjectID
+							  , BrowseFlag		: 'BrowseMetadata'
+							  , Filter			: '*'
+							  , StartingIndex	: 0
+							  , RequestedCount	: 0
+							  , SortCriteria	: ''
+							  }
+							, function(err, buffer) {
+								 // console.log('BrickUPnP_MediaServer::getMetaData', err || buffer);
+								 callback(err || buffer);
+								}
+							);
+		 return undefined;
+		}
 	BrickUPnP_MediaServer.prototype.Browse	= function(ObjectID, callback) {
 		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:ContentDirectory'];
-		 for(var i in this.UPnP.device.services) {
-			 console.log( i );
-			}
 		 service.callAction	( 'Browse'
 							, { ObjectID		: ObjectID
 							  , BrowseFlag		: 'BrowseDirectChildren'

@@ -13,8 +13,15 @@ var Pcall = function(obj, mtd, params, CB_success, CB_cancel) {
 Pcall.prototype.constructor = Pcall;
 
 Pcall.prototype.execute = function() {
-	var res = this.mtd.apply(this.obj, this.params);
-	this.CB_success(res);
+	var self = this;
+	// console.log("Pcall :", this.params);
+	var params = this.params.slice(0);
+	params.push(this.CB_success, this.CB_cancel);
+	try {var res = self.mtd.apply(self.obj, params);
+		 if(res !== undefined) {
+			 self.CB_success(res);
+			}
+		} catch(err) {self.CB_cancel(err);}
 }
 
 Pcall.prototype.cancel = function() {

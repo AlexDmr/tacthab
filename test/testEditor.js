@@ -12,6 +12,6 @@ define ( [ "../js/utils.js"
 							, document.getElementById('program')
 							, utils.io);
 				});
-			 return testEvt;
+			 return null;
 			}
 );

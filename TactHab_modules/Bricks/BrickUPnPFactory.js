@@ -15,6 +15,7 @@ define( [ './Brick.js'
 				 switch(type) {
 					 case 'add':
 						var brick = self.newBrick();
+						brick.changeIdTo( device.uuid );
 						brick.init(device);
 						// console.log( brick );
 						self.D_uuid_brickId[ device.uuid ] = brick.brickId;
