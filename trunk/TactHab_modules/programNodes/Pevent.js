@@ -22,8 +22,9 @@ EventNode.prototype.getClasses	= function() {return classes;};
 EventNode.prototype.triggerEvent = function(event) {
 	if(this.parent && this.state) {
 		 this.parent.eventFromChild(this, event);
+		 return true;
 		}
-	return this;
+	return false;
 }
 EventNode.prototype.eventFromChild = function(child, event) {
 	console.log(this.className + "::eventFromChild(", child, " ,", event, ")");

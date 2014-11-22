@@ -89,7 +89,8 @@ var webServer = {
 								  , function(call, fctCB) {
 										 if(self.oncall) {
 											 res = self.oncall(call, fctCB);
-											 if(res !== undefined) {
+											 if( res !== undefined
+											   &&fctCB ) {
 												 fctCB( res );
 												}
 											}

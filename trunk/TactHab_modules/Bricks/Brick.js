@@ -12,10 +12,15 @@ define( [
 		 this.States	= [];
 		 return this;
 		}
-	Brick.prototype.constructor = Brick;
-	Brick.prototype.getTypeName = function() {return "Brick";}
-	Brick.prototype.getBrickFromId = function(id) {return D_brick[id];}
-	Brick.prototype.getBricks   = function(  ) {
+	Brick.prototype.constructor		= Brick;
+	Brick.prototype.getTypeName		= function() {return "Brick";}
+	Brick.prototype.getBrickFromId	= function(id) {return D_brick[id];}
+	Brick.prototype.changeIdTo		= function(newId) {
+		 delete D_brick[this.brickId];
+		 D_brick[newId] = this;
+		 this.brickId	= newId;
+		}
+	Brick.prototype.getBricks		= function(  ) {
 		 var res = {};
 		 for(var i in D_brick) {res[i] = D_brick[i];}
 		 return res;

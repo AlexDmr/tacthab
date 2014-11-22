@@ -13,17 +13,17 @@ define( [ './Brick.js'
 		 return this;
 		}
 	BrickUPnP.prototype = new Brick();
-	BrickUPnP.prototype.constructor = BrickUPnP;
-	BrickUPnP.prototype.getTypeName = function() {return "BrickUPnP";}
+	BrickUPnP.prototype.constructor		= BrickUPnP;
+	BrickUPnP.prototype.getTypeName		= function() {return "BrickUPnP";}
 	
-	BrickUPnP.prototype.serialize	= function() {
+	BrickUPnP.prototype.serialize		= function() {
 		 var json = Brick.prototype.serialize.apply(this, []);
 		 return json;
 		}
-	BrickUPnP.prototype.UPnP_call = function() {
+	BrickUPnP.prototype.UPnP_call		= function() {
 		 console.error( "BrickUPnP.prototype.UPnP_call : To be implemented");
 		}
-	BrickUPnP.prototype.init	  = function(device) {
+	BrickUPnP.prototype.init	 		= function(device) {
 		 var self = this;
 		 Brick.prototype.init.apply(this, [device]);
 		 this.UPnP.device		= device;
@@ -77,7 +77,7 @@ define( [ './Brick.js'
 					}*/
 		 return L.length;
 		}
-	BrickUPnP.prototype.UPnPEvent	= function(event, service) {
+	BrickUPnP.prototype.UPnPEvent		= function(event, service) {
 		 var self = this;
 		 // console.log("New event for", self.brickId, ":", event, "\n\tfor service:", service.serviceType);
 		 var doc = null, error;

@@ -32,8 +32,10 @@ ActionNode.prototype.Start = function() {
 	
 	if( res ) {
 		// Propagate the call
-		this.call( new Pcall( this.obj, this.mtd, this.params
-							, function(){self.Stop();}, function(){self.Stop();} ) 
+		this.call( new Pcall( this.obj, this.obj[this.mtd], this.params
+							, function(res) {console.log("Success:", res); self.Stop();}
+							, function(err) {console.log("Error  :", err); self.Stop();}
+							) 
 				 );
 		}
 	return res;
@@ -54,10 +56,20 @@ ActionNode.prototype.unserialize	= function(json, Putils) {
 	Pnode.prototype.unserialize.apply(this, [json, Putils]);
 	// Describe action here
 	this.subType = json.subType;
-	this.setCommand	( Brick.prototype.getBrickFromId( json.ActionNode.objectId )
-					, json.ActionNode.method
-					, json.ActionNode.params
-					);
+	var obj = Brick.prototype.getBrickFromId( json.ActionNode.objectId );
+	if(obj) {
+		var mtd = json.ActionNode.method;
+		if(mtd) {
+			 /*console.log( "Registering action : "
+						, json.ActionNode.objectId
+						, json.ActionNode.method
+						, json.ActionNode.params );*/
+			 this.setCommand( obj
+							, mtd
+							, json.ActionNode.params
+							);
+			} else {console.error('action reference an invalid method : ', json.ActionNode.method);}
+		} else {console.error('action reference an invalid object : ', json.ActionNode.objectId);}
 	return this;
 }
 

@@ -1,17 +1,121 @@
-.MediaBrowser .MediaServer{
-	border	: solid black 1px;
-	display	: inline-flex;
-	margin	: 4px;
-	padding	: 2px;
-	width	: 128px;
-	height	: 64px;
-	overflow: hidden;
-	text-align	: center
+div.MediaBrowser {
+	border		: solid black 5px;
+	position	: fixed;
+	top			: 5%;
+	left		: 5%;
+	width		: 90%;
+	height		: 90%;
+	background	: white;
 }
 
-.MediaBrowser .MediaServer img.icon {
+div.MediaBrowser  > div.background {
+	position	: fixed;
+	display		: block;
+	z-index		: -1;
+	top			: 0px;
+	left		: 0px;
+	width		: 100%;
+	height		: 100%;
+	background	: rgba(0,0,0,0.8);
+}
+
+div.MediaBrowser > .foreground {
+	position		: absolute;
+	top				: 0px;
+	left			: 0px;
+	width			: 100%;
+	height			: 100%;
+	background		: rgb(244, 243, 255);
+	overflow		: auto;
+}
+
+div.MediaBrowser > .foreground > div.navigation .element {
+	font-weight	: bold;
+	cursor		: pointer;
+}
+
+div.MediaBrowser > .foreground > div.navigation .MediaServer {
+	color	: #5B55FF;
+}
+
+div.MediaBrowser > .foreground > div.navigation .MediaFolder {
+	color	: #09AB20;
+}
+
+div.MediaBrowser > .foreground > div.navigation .MediaFile {
+	color	: #F70;
+}
+
+div.MediaBrowser > .foreground .Media.MediaServer, button.MediaBrowser > .Media.MediaServer {
+	border-color	: #5B55FF;
+}
+
+div.MediaBrowser > .foreground .Media.MediaFolder, button.MediaBrowser > .Media.MediaFolder {
+	border-color	: #09AB20;
+}
+
+div.MediaBrowser > .foreground .Media.MediaFile, button.MediaBrowser > .Media.MediaFile {
+	border-color	: #F70;
+}
+
+div.MediaBrowser > .foreground > h1{
+	position		: static;
+	top				: 0px;
+	left			: 0px;
+	width			: 100%;
+	font-size		: 1.5em;
+	text-align		: center;
+	border-bottom	: solid black 1px;
+	margin			: 0px;
+	padding			: 0px;
+	background: #1e5799; /* Old browsers */
+	background: -moz-linear-gradient(top,  #1e5799 0%, #6da6d6 17%, #6da6d6 83%, #77bbff 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1e5799), color-stop(17%,#6da6d6), color-stop(83%,#6da6d6), color-stop(100%,#77bbff)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#77bbff',GradientType=0 ); /* IE6-9 */
+}
+
+div.MediaBrowser > .foreground > h1 > .cancel {
+	float			: right;
+	width			: 1.2em;
+	height			: 1.15em;
+	background		: rgb(164, 0, 0);
+	border			: solid black 1px;
+	cursor			: pointer;
+}
+
+div.MediaBrowser > .foreground > div.navigation {
+	position		: static;
+	top				: 1.6em;
+	left			: 0px;
+}
+
+div.MediaBrowser > .foreground .Media.selected {
+	transform : scale(1.5, 1.5);
+}
+
+div.MediaBrowser > .foreground .Media, button.MediaBrowser > .Media {
+	border			: solid black 3px;
+	display			: inline-flex;
+	margin			: 4px;
+	padding			: 2px;
+	width			: 192px;
+	height			: 64px;
+	overflow		: hidden;
+	text-align		: left;
+	vertical-align	: top;
+	cursor			: pointer;
+	border-radius	: 8px;
+	background		: white;
+}
+
+div.MediaBrowser > .foreground .Media img.icon , button.MediaBrowser > .Media img.icon {
 	width	: 64px;
 	height	: 64px;
-	display	: block;
+	flex	: 0 96px;
+	object-fit: contain;
 }
 
