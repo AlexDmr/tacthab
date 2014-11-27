@@ -1,6 +1,6 @@
-define( [ 
+define( [ '../../js/AlxEvents.js'
 		]
-	  , function(ActionNode) {
+	  , function(AlxEvents) {
 	var brickId = 0;
 	var D_brick = {};
 	
@@ -13,6 +13,7 @@ define( [
 		 return this;
 		}
 	Brick.prototype.constructor		= Brick;
+	AlxEvents(Brick);
 	Brick.prototype.getTypeName		= function() {return "Brick";}
 	Brick.prototype.getBrickFromId	= function(id) {return D_brick[id];}
 	Brick.prototype.changeIdTo		= function(newId) {

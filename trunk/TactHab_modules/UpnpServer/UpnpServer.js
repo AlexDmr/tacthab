@@ -23,7 +23,7 @@ var UpnpServer = {
 		   , name = device.friendlyName
 		   , host = device.host
 		   , port = device.port;
-		 // console.log("New device detected:", "\n\tuuid:", uuid, "\n\ttype:", type, "\n\tname:", name, "\n\thost:", host, "\n\tport:", port);
+		 console.log("New device detected:", "\n\tuuid:", uuid, "\n\ttype:", type, "\n\tname:", name, "\n\thost:", host, "\n\tport:", port);
 		 this.D_devices[uuid] = device;
 		 this.CallBack('add', device);
 		}

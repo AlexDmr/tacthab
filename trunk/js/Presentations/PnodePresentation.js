@@ -7,7 +7,8 @@ var L_Pnodes = {};
 var PnodePresentation = function() {
 	// console.log(this);
 	protoPresentation.prototype.constructor.apply(this, []);
-	this.state = null;
+	this.state	= null;
+	this.html	= {};
 	return this;
 }
 
@@ -61,7 +62,6 @@ PnodePresentation.prototype.Render		= function() {
 		 this.divDescription = document.createElement('div');
 			root.appendChild( this.divDescription );
 			this.divDescription.classList.add('description');
-			this.divDescription.innerText = 'Pnode ' + this.PnodeID + ' (presentation ' + this.uid + ')' ;
 		}
 	return root;
 }

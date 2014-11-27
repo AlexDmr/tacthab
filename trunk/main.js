@@ -22,10 +22,12 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		  , './TactHab_modules/Bricks/Brick.js'
 		  , './TactHab_modules/Bricks/BrickUPnP_MediaRenderer.js'
 		  , './TactHab_modules/Bricks/BrickUPnP_MediaServer.js'
+		  , './TactHab_modules/Bricks/BrickUPnP_HueBridge.js'
 		  , './TactHab_modules/webServer/webServer.js'
 		  ]
 		, function( Putils, Pnode, UpnpServer
 		          , Brick, BrickUPnP_MediaRenderer, BrickUPnP_MediaServer
+				  , BrickUPnP_HueBridge
 				  , webServer
 				  ) {
 	Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
