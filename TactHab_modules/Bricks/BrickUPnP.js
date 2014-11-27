@@ -50,7 +50,7 @@ define( [ './Brick.js'
 				});
 			 service.subscribe	(function(service) {return function(err, data) {
 									 if(err) {
-										 console.log('BrickUPnP', self.brickId, "received:", "\n\terr :", err, "\n\tdata :", data);
+										 console.error('BrickUPnP', self.brickId, "received:", "\n\terr :", err, "\n\tdata :", data);
 										} else {console.log('subscription done for', self.brickId, service.serviceType);}
 									 };
 									}(service)
@@ -61,20 +61,11 @@ define( [ './Brick.js'
 	BrickUPnP.prototype.UpdateEvent		= function(eventNode, service) {}
 	BrickUPnP.prototype.UpdateFromEvent	= function(eventNode, service) {
 		 var L = eventNode.getElementsByTagName('e:property');
-		 // console.log("There are", L.length, "events");
 		 for(var i=0; i<L.length; i++) {
-			 // console.log("\tevent", i, "has", L.item(i).childNodes.length, "childs");
 			 var pos;
 			 if(L.item(i).childNodes.length > 1) {pos = 1;} else {pos = 0;}
 			 this.UpdateEvent( L.item(i).childNodes[pos], service );
 			}
-		 /*if(eventNode.childNodes.length === 0) {
-			 this.UpdateEvent(eventNode);
-			} else	{for(var i=0; i<eventNode.childNodes.length; i++) {
-						 if(eventNode.tagName !== 'Event') this.UpdateEvent(eventNode);
-						 this.UpdateFromEvent(eventNode.childNodes.item(i));
-						}
-					}*/
 		 return L.length;
 		}
 	BrickUPnP.prototype.UPnPEvent		= function(event, service) {
@@ -88,7 +79,7 @@ define( [ './Brick.js'
 			 // console.log("Event parsed succesfully");
 			 // for(var i in event) {console.log(i);}
 			 if(this.UpdateFromEvent(doc.documentElement, service) === 0) {
-				 console.log("Event without any e:property ?\n", event);
+				 console.error("Event without any e:property ?\n", event);
 				}
 			} else {console.error('document get an error:', event, error);}
 		}

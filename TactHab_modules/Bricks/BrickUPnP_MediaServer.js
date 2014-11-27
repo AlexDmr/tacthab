@@ -75,6 +75,7 @@ define( [ './BrickUPnP.js'
 			 case 'ValidationRevokedUpdateID'		:
 			 case 'ContainerUpdateIDs'				:
 			 case 'SystemUpdateID'					:
+				// console.log("\t", this.brickId, service.serviceType, "<" + eventNode.tagName + ">");
 				var content = eventNode.textContent;
 				if (typeof this.ServerStates[service.serviceType] === 'undefined') {
 					 this.ServerStates[service.serviceType] = {};
@@ -88,7 +89,7 @@ define( [ './BrickUPnP.js'
 								);
 			 break;
 			 default:
-				console.log( "BrickUPnP_MediaServer: Unknown event type", eventNode.tagName);
+				console.error( "BrickUPnP_MediaServer: Unknown event type", eventNode.tagName);
 			}
 		 return this;
 		}
@@ -99,6 +100,7 @@ define( [ './BrickUPnP.js'
 													  'Factory__BrickUPnP_MediaServer'
 													, BrickUPnP_MediaServer
 													, function(device) {
+														 // console.log("Is this a MediaServer?");
 														 return device.deviceType.indexOf("urn:schemas-upnp-org:device:MediaServer:") === 0;
 														}
 													);

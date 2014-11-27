@@ -15,7 +15,8 @@ var editor = {
 		 var div = document.createElement('div');
 			div.appendChild( document.createTextNode(name) );
 			div.setAttribute('class', "instructionType Pnode Implemented");
-			div.classList.add( config.nodeType )
+			div.classList.add( config.nodeType );
+			if(config.isNotType) {div.classList.remove( config.isNotType );}
 		 DragDrop.newDraggable( div
 							  , { constructor	: config.constructor
 							    , htmlNode		: div
@@ -70,6 +71,7 @@ var editor = {
 										).appendChild( this.createDragNode( 'Event'
 													 , { constructor	: PresoUtils.get('EventNode')
 													   , nodeType		: 'EventNode'
+													   , isNotType		: 'Pnode'
 													   } )
 										).appendChild( this.createDragNode( 'Controller'
 													 , { constructor	: PresoUtils.get('PcontrolBrick')
@@ -85,8 +87,23 @@ var editor = {
 													 , { constructor	: PresoUtils.get('MR_Play_NodePresentation')
 													   , nodeType		: 'ActionNode'
 													   } )
+										).appendChild( this.createDragNode( 'Pause'
+													 , { constructor	: PresoUtils.get('MR_Pause_NodePresentation')
+													   , nodeType		: 'ActionNode'
+													   } )
+										).appendChild( this.createDragNode( 'Stop'
+													 , { constructor	: PresoUtils.get('MR_Stop_NodePresentation')
+													   , nodeType		: 'ActionNode'
+													   } )
 										);
-		 
+		 // Create new draggable for Hue
+		 this.createCateg("Hue lamp").appendChild( this.createDragNode( 'on...'
+												 , { constructor	: PresoUtils.get('PeventBrickPresentation_Hue')
+												   , nodeType		: 'EventNode'
+												   , isNotType		: 'Pnode'
+												   } )
+									);
+													   
 		 // Main drop zone for programs
 		 DragDrop.newDropZone( htmlNodeProgram
 							 , { acceptedClasse		: 'ProgramNode'

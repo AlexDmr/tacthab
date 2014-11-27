@@ -60,10 +60,6 @@ ActionNode.prototype.unserialize	= function(json, Putils) {
 	if(obj) {
 		var mtd = json.ActionNode.method;
 		if(mtd) {
-			 /*console.log( "Registering action : "
-						, json.ActionNode.objectId
-						, json.ActionNode.method
-						, json.ActionNode.params );*/
 			 this.setCommand( obj
 							, mtd
 							, json.ActionNode.params

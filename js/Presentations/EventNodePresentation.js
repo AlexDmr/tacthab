@@ -26,9 +26,9 @@ EventNodePresentation.prototype.serialize = function() {
 EventNodePresentation.prototype.Render	= function() {
 	var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);
-	root.classList.add('ActionNode');
+	root.classList.add('EventNode');
 	root.classList.remove('Pnode');
-	this.divDescription.innerHTML = 'EventNode:' + this.PnodeID ;
+	this.divDescription.innerHTML = ''; //'EventNode:' + this.PnodeID ;
 	var bt = document.createElement('button');
 		bt.addEventListener	( 'click'
 							, function() {

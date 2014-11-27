@@ -156,8 +156,7 @@ define( [ './BrickUPnP.js'
 		 return BrickUPnP.prototype.UPnPEvent.apply(this, [event, service]);
 		}
 	BrickUPnP_MediaRenderer.prototype.UpdateEvent	= function(eventNode, service) {
-		 // To be implemented
-		 console.log("\t", this.brickId, service.serviceType, "<" + eventNode.tagName + ">");
+		 // console.log("\t", this.brickId, service.serviceType, "<" + eventNode.tagName + ">");
 		 switch(eventNode.tagName) {
 			 case 'InstanceID'					:
 				var val = eventNode.getAttribute('val');
@@ -223,6 +222,7 @@ define( [ './BrickUPnP.js'
 													  'Factory__BrickUPnP_MediaRenderer'
 													, BrickUPnP_MediaRenderer
 													, function(device) {
+														 // console.log("Is this a MediaRenderer?");
 														 return device.deviceType.indexOf("urn:schemas-upnp-org:device:MediaRenderer:") === 0;
 														}
 													);
