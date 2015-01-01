@@ -27,7 +27,11 @@ Pnode.prototype.appendClass	= function(classe) {D_classes[classe.prototype.class
 
 // API for starting, stopping the instruction
 Pnode.prototype.serialize	= function() {
-	var json = {className: this.className, PnodeID: this.id, children: []};
+	var json =	{ className: this.className
+				, PnodeID: this.id
+				, children: []
+				};
+	if(this.subType) {json.subType = this.subType;}
 	for(i in this.children) {
 		 json.children.push( this.children[i].serialize() );
 		}
@@ -35,11 +39,12 @@ Pnode.prototype.serialize	= function() {
 }
 Pnode.prototype.unserialize	= function(json, Putils) {
 	// className and id are fixed by the constructor of the object itself
+	if(json.subType) {this.subType = json.subType;} else {this.subType = undefined; delete this.subType;}
 	var children = this.children.slice();
-	for(var i in children		) {children.setParent(null);}
-	for(var i in json.children	) {Putils.unserialize(json.children[i], Putils).setParent(this);}
+	for(var i=0; i<children.length		; i++) {children[i].setParent(null);}
+	for(var i=0; i<json.children.length	; i++) {Putils.unserialize(json.children[i], Putils).setParent(this);}
 	return this;
-}
+} 
 Pnode.prototype.isInstanceOf= function(classe)	{return this.getClasses().indexOf(classe) >= 0;}
 Pnode.prototype.getNode		= function(id)		{return D_nodes[id];}
 Pnode.prototype.setName		= function(name)	{this.name = name; return this;}

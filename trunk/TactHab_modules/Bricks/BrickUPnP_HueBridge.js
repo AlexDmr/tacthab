@@ -22,10 +22,14 @@ define( [ './BrickUPnP.js'
 				  , method	: "GET"
 				  }
 				, function(error, IncomingMessage, responseText) {
-					 var response = JSON.parse( responseText );
 					 if(error) {
 						 console.error("Error with GET /api/TActHab8888", error);
+						 setTimeout	( function() {self.connect();}
+									, 5000 );
 						} else {//console.log('GET /api/TActHab8888 : ', response, response.length);
+								var response = [];
+								try {response = JSON.parse( responseText );
+									} catch(err) {console.error}
 								if( response.length
 								  &&response.length === 1
 								  &&response[0].error

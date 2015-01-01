@@ -37,13 +37,6 @@ EventNodePresentation.prototype.Render	= function() {
 														, method	: 'triggerEvent'
 														, params	: JSON.stringify([])
 														} );
-								 /*utils.XHR( 'POST', 'call'
-										  , {variables : { objectId		: self.PnodeID
-														 , objectMtd	: 'triggerEvent'
-														 , objectParams	: JSON.stringify([])
-														 }
-										    }
-										  )*/
 								}
 							, false );
 		bt.innerText = 'TRIGGER';

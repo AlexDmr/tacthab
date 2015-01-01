@@ -11,6 +11,7 @@ define	( [ '../../ActionNodePresentation.js'
 	
 	MR_Play_NodePresentation.prototype = new ActionNodePresentation();
 	MR_Play_NodePresentation.prototype.serialize = function() {
+		 this.action.method	= 'Play';
 		 var json = ActionNodePresentation.prototype.serialize.apply(this, []);
 		 json.subType = 'MR_Play_NodePresentation';
 		 return json;

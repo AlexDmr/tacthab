@@ -78,6 +78,16 @@ var editor = {
 													   , nodeType		: 'PcontrolBrick'
 													   } )
 										);
+		 // Create new draggable for variables
+		 this.createCateg("Variables").appendChild( this.createDragNode( 'Define new one'
+													 , { constructor	: PresoUtils.get('Var_DefinitionPresentation')
+													   , nodeType		: 'DefinitionNode'
+													   } )
+										).appendChild( this.createDragNode( 'Play'
+													 , { constructor	: PresoUtils.get('MR_load_NodePresentation')
+													   , nodeType		: 'ActionNode'
+													   } )
+										);
 		 // Create new draggable for MediaRenderer
 		 this.createCateg("MediaRenderer").appendChild( this.createDragNode( 'Load'
 													 , { constructor	: PresoUtils.get('MR_load_NodePresentation')
