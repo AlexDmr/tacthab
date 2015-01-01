@@ -55,7 +55,10 @@ ActionNodePresentation.prototype.Render	= function() {
 			this.divDescription.appendChild( this.html.actionName );
 		 this.html.select = document.createElement('select');
 			this.html.select.classList.add('objectId');
-			this.html.select.onchange = function() {self.action.objectId = parseInt(this.value); console.log(this.value);}
+			this.html.select.onchange = function() {
+											 self.action.objectId = this.value;
+											 console.log(this.value);
+											}
 			this.divDescription.appendChild( this.html.select );
 		} 
 	return root;

@@ -25,11 +25,12 @@ define	( [ './MR_Play_NodePresentation.js'
 	MR_load_NodePresentation.prototype.unserialize = function(json) {
 		 var self = this;
 		 MR_Play_NodePresentation.prototype.unserialize.apply(this, [json]);
+		 this.action.method	= 'loadMedia';
 		 console.log( "MR_load_NodePresentation::unserialize"
 					, this.action.objectId
 					, this.action.method
 					, this.action.params );
-		 if(this.action.params.length === 2) {
+		 if(this.action.params && this.action.params.length === 2) {
 			 MB.getHtmlItemFrom	( this.action.params[0]
 								, this.action.params[1]
 								, function(htmlItem) {
@@ -44,6 +45,7 @@ define	( [ './MR_Play_NodePresentation.js'
 		 return this;
 		}
 	MR_load_NodePresentation.prototype.serialize = function() {
+		 this.action.method	= 'loadMedia';
 		 var json = MR_Play_NodePresentation.prototype.serialize.apply(this, []);
 		 json.ActionNode.mediaServerId	= this.action.mediaServerId;
 		 json.ActionNode.itemId			= this.action.itemId;

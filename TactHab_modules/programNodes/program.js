@@ -1,21 +1,29 @@
 define( [ './parallel.js'
+		, './sequence.js'
+		, './Pdefinition.js'
 		, './Pcall.js'
 		, './Pnode.js'
 		, '../Bricks/Brick.js'
 	    ]
-	  , function(ParalleNode, Pcall, Pnode, Brick) {
+	  , function( ParalleNode, SequenceNode
+				, Pdefinition, Pcall, Pnode, Brick) {
 // Definition of a node for programs
 var ProgramNode = function(parent, children) {
-	 ParalleNode.prototype.constructor.apply(this, [parent, children]);
+	 SequenceNode.prototype.constructor.apply(this, [parent, children]);
+	 // Add a definition node
+	 this.definitions	= new Pdefinition(this, []); 
+	 // Add a parallel node
+	 this.instructions	= new ParalleNode(this, []);
+	 
 	 return this;
 	}
 
 // API for starting, stopping the instruction
-ProgramNode.prototype = new ParalleNode();
+ProgramNode.prototype = new SequenceNode();
 ProgramNode.prototype.className	= 'ProgramNode';
 Pnode.prototype.appendClass(ProgramNode);
 
-var classes = ParalleNode.prototype.getClasses().slice();
+var classes = SequenceNode.prototype.getClasses().slice();
 classes.push(ProgramNode.prototype.className);
 ProgramNode.prototype.getClasses	= function() {return classes;};
 
@@ -44,6 +52,34 @@ ProgramNode.prototype.getContext = function() {
 	
 	// Result
 	return context;
+}
+
+// API for starting, stopping the instruction
+ProgramNode.prototype.serialize	= function() {
+	this.definitions.setParent ( null );
+	this.instructions.setParent( null );
+	var json = Pnode.prototype.serialize.apply(this, []);
+	this.definitions.setParent ( this );
+	this.instructions.setParent( this );
+	json.pg = { definitions	: this.definitions.serialize ().children
+			  , instructions: this.instructions.serialize().children
+			  }
+	return json;
+}
+
+ProgramNode.prototype.unserialize	= function(json, Putils) {
+	Pnode.prototype.unserialize.apply(this, [json, Putils]);
+	this.definitions.setParent ( this );
+	this.instructions.setParent( this );
+	// Plug definitions part
+	for(var i=0; i<json.pg.definitions.length; i++) {
+		 Putils.unserialize(json.pg.definitions[i], Putils).setParent ( this.definitions  );
+		}
+	// instructions part
+	for(var i=0; i<json.pg.instructions.length; i++) {
+		 Putils.unserialize(json.pg.instructions[i], Putils).setParent( this.instructions );
+		}
+	return this;
 }
 
 return ProgramNode;

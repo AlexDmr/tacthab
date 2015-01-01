@@ -14,7 +14,7 @@ SequenceNode.prototype = new Pnode();
 SequenceNode.prototype.className	= 'SequenceNode';
 Pnode.prototype.appendClass(SequenceNode);
 
-var classes = Pnode.prototype.getClasses();
+var classes = Pnode.prototype.getClasses().slice();
 classes.push(SequenceNode.prototype.className);
 SequenceNode.prototype.getClasses	= function() {return classes;};
 
