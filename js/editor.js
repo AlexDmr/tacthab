@@ -7,6 +7,7 @@ define	( [ './DragDrop.js'
 		, function( DragDrop, utils, PresoUtils
 				  , PnodePresentation
 				  , async
+				  , BrickUPnP_MediaRenderer
 				  ) {
 var editor = {
 	  htmlNodeTypes		: null
@@ -89,6 +90,7 @@ var editor = {
 													   } )
 										);
 		 // Create new draggable for MediaRenderer
+		 this.MR_categ = 
 		 this.createCateg("MediaRenderer").appendChild( this.createDragNode( 'Load'
 													 , { constructor	: PresoUtils.get('MR_load_NodePresentation')
 													   , nodeType		: 'ActionNode'
@@ -105,7 +107,32 @@ var editor = {
 													 , { constructor	: PresoUtils.get('MR_Stop_NodePresentation')
 													   , nodeType		: 'ActionNode'
 													   } )
+										).appendChild( this.createDragNode( 'Every media renderers'
+													 , { constructor	: PresoUtils.get('MR_Selector_everyMediaRenderers')
+													   , nodeType		: 'SelectorNode'
+													   } )
+										).appendChild( this.createDragNode( 'Every media servers'
+													 , { constructor	: PresoUtils.get('MR_Selector_everyMediaServers')
+													   , nodeType		: 'SelectorNode'
+													   } )
 										);
+		 utils.XHR( 'GET', '/get_MediaDLNA'
+				  , {onload : function() {
+							 var res = JSON.parse( this.responseText );
+							 // console.log( res );
+							 for(var i=0; i<res.MediaRenderer.length; i++) {
+								 var MR = res.MediaRenderer[i];
+								 self.MR_categ.appendChild( self.createDragNode( MR.name
+													   , { constructor	: PresoUtils.get('MR_Instance_SelectorNodePresentation')
+													     , nodeType		: 'SelectorNode'
+														 , uuid			: MR.uuid
+														 , MR			: MR
+													     } )
+													   );
+								}
+							}
+				    }
+				  );
 		 // Create new draggable for Hue
 		 this.createCateg("Hue lamp").appendChild( this.createDragNode( 'on...'
 												 , { constructor	: PresoUtils.get('PeventBrickPresentation_Hue')

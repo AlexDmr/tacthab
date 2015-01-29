@@ -24,12 +24,19 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		  , './TactHab_modules/Bricks/BrickUPnP_MediaServer.js'
 		  , './TactHab_modules/Bricks/BrickUPnP_HueBridge.js'
 		  , './TactHab_modules/webServer/webServer.js'
+		  // Extracteur
+		  , 'request'
+		  , 'xmldom'
 		  ]
 		, function( Putils, Pnode, UpnpServer
 		          , Brick, BrickUPnP_MediaRenderer, BrickUPnP_MediaServer
 				  , BrickUPnP_HueBridge
 				  , webServer
+				  , request
+				  , xmldom
 				  ) {
+	var DOMParser = xmldom.DOMParser;
+	
 	Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
 		 webServer.emit('updateState', {objectId: node.id, prevState: 'state_'+prev, nextState: 'state_'+next});
 		}
@@ -56,6 +63,23 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 									}
 						});
 			});
+	
+	// _______________________________________________________________________________________________
+	webServer.app.post( '/proxy'
+		, function(req, res) {
+			 var URL = req.body.url;
+			 console.log("Proxy for ", URL);
+			 request(URL, function (error, response, body) {
+				  if (!error && response.statusCode == 200) {
+					 // Parse webpage
+					 res.writeHead(200);
+					 res.end( body );
+					} else {res.writeHead(400);
+							res.end();
+						   }
+				});
+			});
+	
 	
 	webServer.app.post( '/Start'
 					  , function(req, res) {

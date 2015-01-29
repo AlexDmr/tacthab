@@ -41,6 +41,18 @@ Var_DefinitionPresentation.prototype.unserialize	= function(json, PresoUtils) {
 	return this;
 }
 
+Var_DefinitionPresentation.prototype.primitivePlug	= function(c) {
+	 // console.log("Primitive plug ", this.root, " ->", c.root);
+	 this.Render();
+	 var P = this.html.selector,
+		 N = c.Render();
+	 if(N.parentElement === null) {
+			 P.innerHTML = '';
+			 P.appendChild( N );
+			}
+	return this;
+}
+
 Var_DefinitionPresentation.prototype.Render	= function() {
 	var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);
@@ -53,11 +65,27 @@ Var_DefinitionPresentation.prototype.Render	= function() {
 		 this.html.inputId = document.createElement('input');
 			this.html.inputId.classList.add( 'varId' );
 			this.html.inputId.innerHTML = "ACTION";
+			this.html.inputId.onkeyup = function() {self.varDef.id = self.html.inputId.value;};
 			this.divDescription.appendChild( this.html.inputId );
 		 this.html.as = document.createElement('span');
 			this.html.as.classList.add('as');
 			this.html.as.innerHTML = " as ";
 			this.divDescription.appendChild( this.html.as );
+		 // Drop zone for selector
+		 this.html.selector = document.createElement('div');
+			this.html.selector.classList.add('selector');
+			this.html.selector.innerHTML = "Insert Selector here";
+			this.divDescription.appendChild( this.html.selector );
+			this.dropZoneSelectorId = DragDrop.newDropZone( this.html.selector
+								, { acceptedClasse	: 'SelectorNode'
+								  , CSSwhenAccepted	: 'possible2drop'
+								  , CSSwhenOver		: 'ready2drop'
+								  , ondrop			: function(evt, draggedNode, infoObj) {
+										 var Pnode = new infoObj.constructor(infoObj).init( '' );
+										 self.appendChild( Pnode );
+										}
+								  }
+								);
 		} 
 	return root;
 }

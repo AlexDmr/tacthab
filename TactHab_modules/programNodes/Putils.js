@@ -7,12 +7,16 @@ define ([ './Pnode.js'
 		, './Pwhen.js'
 		, './PcontrolBrick.js'
 		, './PvariableDeclaration.js'
+		// Selectors
+		, './Pselector_ObjInstance.js'
 		]
 		, function( Pnode, ProgramNode, ParalleNode
 				  , ActionNode, SequenceNode
 				  , EventNode, WhenNode
 				  , PcontrolBrick
 				  , PvariableDeclaration
+				  // Selectors
+				  , Pselector_ObjInstance
 				  ) {
 var Putils = {
 	  mapping		: { 'Pnode'			: Pnode
@@ -23,7 +27,8 @@ var Putils = {
 					  , 'EventNode'		: EventNode
 					  , 'WhenNode'		: WhenNode
 					  , 'PcontrolBrick'	: PcontrolBrick
-					  , 'PvariableDeclaration': PvariableDeclaration
+					  , 'PvariableDeclaration'	: PvariableDeclaration
+					  , 'Pselector_ObjInstance'	: Pselector_ObjInstance
 					  }
 	, unserialize	: function(json) {
 		 var classe	= this.mapping[json.className];
