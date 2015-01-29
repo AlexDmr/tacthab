@@ -12,7 +12,7 @@ var utils = {
 		//		- form 		: a reference to a HTML form node
 		var xhr = new XMLHttpRequest();
 		params = params || {};
-		xhr.onload = params.onload || null;
+		/*xhr.onload*/ xhr.onloadend = params.onload || null;
 		xhr.open(method, ad, true);
 		if(params.form || params.variables) {
 			 var F = new FormData( params.form );

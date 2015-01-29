@@ -20,5 +20,7 @@
 		, "xml2js"			: "latest"
 		, "requirejs"		: "latest"
 		, "ip"				: "latest"
+		, "async"			: "latest"
+		, "network"			: "latest"
     }
 }

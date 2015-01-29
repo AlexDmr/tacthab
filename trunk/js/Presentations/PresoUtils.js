@@ -7,6 +7,8 @@ define	( [ './ProgramNodePresentation.js'
 		  , './PcontrolBrickPresentation.js'
 		  // Variables
 		  , './Var_DefinitionPresentation.js'
+		  , './SelectorNodePresentation.js'
+		  , './MR_Instance_SelectorNodePresentation.js'
 		  // Média Renderer
 		  , './UPnP/MediaRendererInstructions/MR_Play_NodePresentation.js'
 		  , './UPnP/MediaRendererInstructions/MR_Pause_NodePresentation.js'
@@ -24,6 +26,8 @@ define	( [ './ProgramNodePresentation.js'
 				  , PcontrolBrickPresentation
 				  // Variables
 				  , Var_DefinitionPresentation
+				  , SelectorNodePresentation
+				  , MR_Instance_SelectorNodePresentation
 				  // Media Renderer
 				  , MR_Play_NodePresentation
 				  , MR_Pause_NodePresentation
@@ -41,7 +45,9 @@ var PresoUtils = {
 					  , 'WhenNode'		: WhenNodePresentation
 					  , 'PcontrolBrick'	: PcontrolBrickPresentation
 					  // Variables
-					  , 'Var_DefinitionPresentation': Var_DefinitionPresentation
+					  , 'Var_DefinitionPresentation'			: Var_DefinitionPresentation
+					  , 'SelectorNodePresentation'				: SelectorNodePresentation
+					  , 'MR_Instance_SelectorNodePresentation'	: MR_Instance_SelectorNodePresentation
 					  // MediaRenderer
 					  , 'MR_Play_NodePresentation'	: MR_Play_NodePresentation
 					  , 'MR_load_NodePresentation'	: MR_load_NodePresentation
