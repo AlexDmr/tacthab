@@ -7,7 +7,6 @@ var Var_DefinitionPresentation = function() {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
 	this.varDef			= { id	: null
-						  , val	: null
 						  };
 	this.html			= {};
 	return this;
@@ -26,7 +25,6 @@ Var_DefinitionPresentation.prototype.serialize	= function() {
 	// Describe action here
 	json.subType	= 'Var_DefinitionPresentation';
 	json.varDef = { id	: this.varDef.id
-				  , val	: this.varDef.val
 				  };
 	return json;
 }
@@ -34,7 +32,6 @@ Var_DefinitionPresentation.prototype.unserialize	= function(json, PresoUtils) {
 	// Describe action here
 	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
 	this.varDef.id	= json.varDef.id;
-	this.varDef.val	= json.varDef.val;
 	if(this.html.inputId) {
 		 this.html.inputId.value = this.varDef.id;
 		}
@@ -51,6 +48,10 @@ Var_DefinitionPresentation.prototype.primitivePlug	= function(c) {
 			 P.appendChild( N );
 			}
 	return this;
+}
+
+Var_DefinitionPresentation.prototype.updateType = function() {
+	
 }
 
 Var_DefinitionPresentation.prototype.Render	= function() {

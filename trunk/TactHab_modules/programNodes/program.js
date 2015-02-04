@@ -41,12 +41,18 @@ ProgramNode.prototype.getContext = function() {
 	var context;
 	if(this.parent) {
 		 context = Pnode.prototype.getContext.apply(this, []);
-		} else {context = {bricks:[]};
+		} else {context = {bricks:{}, variables:{}};
+				// Register Bricks
 				var D_bricks = Brick.prototype.getBricks();
-				for(var i in D_bricks) {
-					 context.bricks.push( D_bricks[i] );
-					}
+				for(var i in D_bricks) {context.bricks[i] = D_bricks[i];}
 			   }
+		
+	// Resgister Variables
+	var L_defs = this.definitions.children;
+	for(var i=0; i<L_defs.length; i++) {
+		 var def = L_defs[i]; // Variable definition
+		 context.variables[ def.getSelectorId() ] = def;
+		}
 		
 	// Filter context
 	

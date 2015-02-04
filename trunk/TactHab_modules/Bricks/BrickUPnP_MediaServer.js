@@ -9,6 +9,7 @@ define( [ './BrickUPnP.js'
 	var BrickUPnP_MediaServer = function() {
 		 BrickUPnP.prototype.constructor.apply(this, []);
 		 this.ServerStates = {};
+		 this.types.push( 'BrickUPnP_MediaServer' );
 		 return this;
 		}
 	BrickUPnP_MediaServer.prototype = new BrickUPnP();

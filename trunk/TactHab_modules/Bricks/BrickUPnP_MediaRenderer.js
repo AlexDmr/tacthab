@@ -13,6 +13,7 @@ define( [ './BrickUPnP.js'
 	var BrickUPnP_MediaRenderer = function() {
 		 BrickUPnP.prototype.constructor.apply(this, []);
 		 this.MediasStates = {};
+		 this.types.push( 'BrickUPnP_MediaRenderer' );
 		 return this;
 		}
 	BrickUPnP_MediaRenderer.prototype = new BrickUPnP();

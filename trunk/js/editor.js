@@ -116,6 +116,7 @@ var editor = {
 													   , nodeType		: 'SelectorNode'
 													   } )
 										);
+		 
 		 utils.XHR( 'GET', '/get_MediaDLNA'
 				  , {onload : function() {
 							 var res = JSON.parse( this.responseText );

@@ -1,7 +1,12 @@
 define	( [ './PnodePresentation.js'
 		  , './SelectorNodePresentation.js'
+		  , './UPnP/MediaBrowser.js'
+		  , '../utils.js'
 		  ]
-		, function(PnodePresentation, SelectorNodePresentation) {
+		, function( PnodePresentation, SelectorNodePresentation
+				  , MediaBrowser
+				  , utils
+				  ) {
 
 function MR_Instance_SelectorNodePresentation(infoObj) {
 	SelectorNodePresentation.apply(this, [infoObj]);
@@ -15,7 +20,35 @@ MR_Instance_SelectorNodePresentation.prototype = new SelectorNodePresentation();
 MR_Instance_SelectorNodePresentation.prototype.className = 'Pselector_ObjInstance';
 
 MR_Instance_SelectorNodePresentation.prototype.Render = function() {
+	var self = this;
 	var root = SelectorNodePresentation.prototype.Render.apply(this, []);
+	// Call server for the latest description of Media Player this.selector.objectId
+	if(this.selector.objectId) {
+		console.log( 'Display Media Player: ', this.selector.objectId );
+		utils.XHR( 'GET', 'get_MediaDLNA'
+				 , function() {
+					 var data = JSON.parse( this.responseText );
+					 var LMR = data.MediaRenderer;
+					 for(var i=0; i<LMR.length; i++) {
+						 var MR = LMR[i];
+						 if(MR.id === self.selector.objectId) {
+							 root.innerHTML = '';
+							 root.classList.add( 'MediaBrowserFlow' );
+							 var MP = MediaBrowser.prototype.RenderItem( MR.name // name
+															 , MR.iconURL || 'js/Presentations/UPnP/images/defaultMediaRenderer.png'// iconURL
+															 , MR.id // mediaServerId
+															 , 0 // directoryId
+															 , 'MediaRenderer' // classes
+															 , false // isItem
+															 );
+							 MP.onclick = null;
+							 root.appendChild( MP );
+							 break;
+							}
+						}
+					}
+				 );
+		}
 	return root;
 }
 

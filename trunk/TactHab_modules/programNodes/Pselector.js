@@ -18,6 +18,17 @@ var classes = Pnode.prototype.getClasses().slice();
 classes.push(Pselector.prototype.className);
 Pselector.prototype.getClasses	= function() {return classes;};
 
+Pselector.prototype.updateType = function() {
+	this.selector.type = [];
+	for(var i=0; i<this.children.length; i++) {
+		 this.children[i].updateType();
+		}
+	if(this.children[0]) {
+		 this.selector.type = this.children[0].selector.type;
+		}
+	return this.selector.type;
+}
+
 Pselector.prototype.serialize	= function() {
 	var json =	Pnode.prototype.serialize.apply(this, []);
 	json.selector = { name	: this.selector.name

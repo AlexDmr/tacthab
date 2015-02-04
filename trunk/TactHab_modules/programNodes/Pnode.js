@@ -45,8 +45,11 @@ Pnode.prototype.unserialize	= function(json, Putils) {
 	for(var i=0; i<json.children.length	; i++) {Putils.unserialize(json.children[i], Putils).setParent(this);}
 	return this;
 } 
+
 Pnode.prototype.isInstanceOf= function(classe)	{return this.getClasses().indexOf(classe) >= 0;}
+
 Pnode.prototype.getNode		= function(id)		{return D_nodes[id];}
+
 Pnode.prototype.setName		= function(name)	{this.name = name; return this;}
 Pnode.prototype.setParent	= function(node)	{
 	if(this.parent) {
@@ -95,6 +98,18 @@ Pnode.prototype.call = function(call) {
 	if(this.parent) {
 		 return this.parent.call(call);
 		} else {error("Call cannot be propagated");}
+}
+
+Pnode.prototype.getContextDescription = function() {
+	var context = this.getContext();
+	var json = {bricks:{}, variables:{}};
+	for(var i in context.bricks) {
+		 json.bricks[i] = context.bricks[i].getDescription();
+		}
+	for(var i in context.variables) {
+		 json.variables[i] = context.variables[i].getDescription();
+		}
+	return json;
 }
 
 Pnode.prototype.getContext = function() {

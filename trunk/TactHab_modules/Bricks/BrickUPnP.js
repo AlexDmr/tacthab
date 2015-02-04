@@ -10,6 +10,7 @@ define( [ './Brick.js'
 		 Brick.prototype.constructor.apply(this, []);
 		 this.UPnP			= {};
 		 this.UPnP_states	= {};
+		 this.types.push( 'BrickUPnP' );
 		 return this;
 		}
 	BrickUPnP.prototype = new Brick();

@@ -11,6 +11,9 @@ var utils = {
 		//		- variables : an object containing a set of attribute<->value
 		//		- form 		: a reference to a HTML form node
 		var xhr = new XMLHttpRequest();
+		if(typeof params === 'function') {
+			 params = {onload: params};
+			}
 		params = params || {};
 		/*xhr.onload*/ xhr.onloadend = params.onload || null;
 		xhr.open(method, ad, true);
@@ -31,7 +34,7 @@ var utils = {
 		 if(cb) {
 			 call.callId = callId++;
 			}
-		 console.log( "Calling", call);
+		 // console.log( "Calling", call);
 		 utils.io.emit	( 'call', call
 						, function(data){
 							 // console.log("Call", call.callId, " returns", data);
