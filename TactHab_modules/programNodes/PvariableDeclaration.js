@@ -1,12 +1,14 @@
 define( [ './Pnode.js'
 	    ]
 	  , function(Pnode) {
+var varIdCounter = 0;
+
 // console.log('Pnode is a ', Pnode);
 // Definition of a node for programs
 var PvariableDeclaration = function(parent, children) {
 	 Pnode.prototype.constructor.apply(this, [parent, children]);
 	 this.varDef  = { id	: ''
-					, val	: null
+					, type	: []
 					};
 	 return this;
 	}
@@ -20,18 +22,30 @@ var classes = Pnode.prototype.getClasses().slice();
 classes.push(PvariableDeclaration.prototype.className);
 PvariableDeclaration.prototype.getClasses	= function() {return classes;};
 
+PvariableDeclaration.prototype.getDescription = function() {
+	return	{ type	: this.updateType()
+			, id	: this.varDef.id
+			};
+}
+	 
+PvariableDeclaration.prototype.updateType = function() {
+	if(this.children.length) {
+		 this.children[0].updateType();
+		 this.varDef.type = this.children[0].updateType().slice();
+		} else {this.varDef.type = [];}
+	return this.varDef.type;
+}
+
 PvariableDeclaration.prototype.serialize	= function() {
 	var json =	Pnode.prototype.serialize.apply(this, []);
-	json.varDef = { id	:  this.varDef.id
-				  , val	:  this.varDef.val
-				  };
+	json.varDef = this.getDescription();
 	return json;
 }
 PvariableDeclaration.prototype.unserialize	= function(json, Putils) {
 	Pnode.prototype.unserialize.apply(this, [json, Putils]);
 	// className and id are fixed by the constructor of the object itself
 	 this.varDef  = { id	: json.varDef.id
-					, val	: json.varDef.val
+					, type	: this.updateType()
 					};
 	return this;
 } 

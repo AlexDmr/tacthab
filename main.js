@@ -81,6 +81,16 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 			});
 	
 	
+	webServer.app.post( '/getContext'
+					  , function(req, res) {
+							var nodeId = req.body.nodeId; 
+							var json;
+							var node = Pnode.prototype.getNode( nodeId ) || pgTest01;
+							if(node) {
+								 json = JSON.stringify( node.getContextDescription() );
+								} else {json = JSON.stringify( {} );}
+							res.end(json);
+							} );
 	webServer.app.post( '/Start'
 					  , function(req, res) {
 						 if(pgTest01) {pgTest01.Start();}

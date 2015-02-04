@@ -60,7 +60,7 @@ define	( [ './MR_Play_NodePresentation.js'
 		 console.log( "MR_load_NodePresentation::Render");
 		 if(typeof this.html.mediaBrowser === 'undefined') {
 			 this.html.mediaBrowser = document.createElement('button');
-				this.html.mediaBrowser.classList.add('MediaBrowser');
+				this.html.mediaBrowser.classList.add('MediaBrowserFlow');
 				if(self.html.htmlItem) {
 					 this.html.mediaBrowser.appendChild( self.html.htmlItem );
 					} else {this.html.mediaBrowser.appendChild( document.createTextNode('Select Media') );}

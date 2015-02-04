@@ -46,17 +46,22 @@ div.MediaBrowser > .foreground > div.navigation .MediaFile {
 	color	: #F70;
 }
 
-div.MediaBrowser > .foreground .Media.MediaServer, button.MediaBrowser > .Media.MediaServer {
+div.MediaBrowser > .foreground .Media.MediaServer, .MediaBrowserFlow > .Media.MediaServer {
 	border-color	: #5B55FF;
 }
 
-div.MediaBrowser > .foreground .Media.MediaFolder, button.MediaBrowser > .Media.MediaFolder {
+div.MediaBrowser > .foreground .Media.MediaFolder, .MediaBrowserFlow > .Media.MediaFolder {
 	border-color	: #09AB20;
 }
 
-div.MediaBrowser > .foreground .Media.MediaFile, button.MediaBrowser > .Media.MediaFile {
+div.MediaBrowser > .foreground .Media.MediaFile, .MediaBrowserFlow > .Media.MediaFile {
 	border-color	: #F70;
 }
+
+div.MediaBrowser > .foreground .Media.MediaRenderer, .MediaBrowserFlow > .Media.MediaRenderer {
+	border-color	: #5BFFFF;
+}
+
 
 div.MediaBrowser > .foreground > h1{
 	position		: static;
@@ -97,7 +102,7 @@ div.MediaBrowser > .foreground .Media.selected {
 	transform : scale(1.5, 1.5);
 }
 
-div.MediaBrowser > .foreground .Media, button.MediaBrowser > .Media {
+div.MediaBrowser > .foreground .Media, .MediaBrowserFlow > .Media {
 	border			: solid black 3px;
 	display			: inline-flex;
 	margin			: 4px;
@@ -112,7 +117,7 @@ div.MediaBrowser > .foreground .Media, button.MediaBrowser > .Media {
 	background		: white;
 }
 
-div.MediaBrowser > .foreground .Media img.icon , button.MediaBrowser > .Media img.icon {
+div.MediaBrowser > .foreground .Media img.icon , .MediaBrowserFlow > .Media img.icon {
 	width	: 64px;
 	height	: 64px;
 	flex	: 0 96px;

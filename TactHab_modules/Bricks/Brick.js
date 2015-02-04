@@ -7,6 +7,7 @@ define( [ '../../js/AlxEvents.js'
 	var Brick = function() {
 		 this.brickId	= 'Brick' + (brickId++);
 			D_brick[this.brickId] = this;
+		 this.types		= [ 'Brick' ];
 		 this.Actions	= [];
 		 this.Events	= [];
 		 this.States	= [];
@@ -21,12 +22,18 @@ define( [ '../../js/AlxEvents.js'
 		 D_brick[newId] = this;
 		 this.brickId	= newId;
 		}
+	Brick.prototype.getDescription = function() {
+		return	{ type	: this.getTypes()
+				, id	: this.brickId
+				};
+		}
 	Brick.prototype.getBricks		= function(  ) {
 		 var res = {};
 		 for(var i in D_brick) {res[i] = D_brick[i];}
 		 return res;
 		}
 	
+	Brick.prototype.getTypes	= function() {return this.types}
 	Brick.prototype.getActions	= function() {return this.Actions}
 	Brick.prototype.getEvents	= function() {return this.Events }
 	Brick.prototype.getStates	= function() {return this.States }
