@@ -29,6 +29,10 @@ div.MediaBrowser > .foreground {
 	overflow		: auto;
 }
 
+div.MediaBrowserFlow {
+	display: inline-block;
+}
+
 div.MediaBrowser > .foreground > div.navigation .element {
 	font-weight	: bold;
 	cursor		: pointer;

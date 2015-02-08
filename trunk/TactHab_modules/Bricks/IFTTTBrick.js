@@ -4,6 +4,7 @@ define( [ './Brick.js'
 	  , function(Brick, webServer) {
 	var IFTTTBrick = function(user, pass) {
 		 Brick.apply(this, []);
+		 console.log( "IFTTTBrick", this.brickId);
 		 this.wordPress = {user : user, pass, pass};
 		 this.webServer = webServer;
 		 return this;

@@ -27,7 +27,24 @@ PvariableDeclaration.prototype.getDescription = function() {
 			, id	: this.varDef.id
 			};
 }
-	 
+
+PvariableDeclaration.prototype.Start = function() {
+	var res = Pnode.prototype.Start.apply(this, []);
+	this.updateType();
+	if(this.children.length === 1) {
+		 this.children[0].Start();
+		} else {this.Stop();}
+	return res;
+}
+
+PvariableDeclaration.prototype.childStateChanged = function(child, prevState, newState) {
+	if(child === this.children[0]) {
+		 if(newState === 0){this.Stop();}
+		} else {error('PvariableDeclaration::childStateChanged : a child state changed but this was not the expected child !');}
+}
+
+PvariableDeclaration.prototype.getSelectorId = function() {return this.varDef.id}
+
 PvariableDeclaration.prototype.updateType = function() {
 	if(this.children.length) {
 		 this.children[0].updateType();

@@ -20,10 +20,12 @@ SequenceNode.prototype.getClasses	= function() {return classes;};
 
 SequenceNode.prototype.Start = function() {
 	var res = Pnode.prototype.Start.apply(this, []);
-	if(res && this.children.length) {
-		 // Start the sequence
-		 this.currentChildIndex = 0;
-		 this.children[this.currentChildIndex].Start()
+	if(res) {
+		 if(this.children.length) {
+			 // Start the sequence
+			 this.currentChildIndex = 0;
+			 this.children[this.currentChildIndex].Start()
+			} else {this.Stop();}
 		}
 	return res;
 }

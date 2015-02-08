@@ -73,7 +73,7 @@ Var_DefinitionPresentation.prototype.Render	= function() {
 			this.html.as.innerHTML = " as ";
 			this.divDescription.appendChild( this.html.as );
 		 // Drop zone for selector
-		 this.html.selector = document.createElement('div');
+		 this.html.selector = document.createElement('span');
 			this.html.selector.classList.add('selector');
 			this.html.selector.innerHTML = "Insert Selector here";
 			this.divDescription.appendChild( this.html.selector );

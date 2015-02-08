@@ -82,7 +82,10 @@ Pnode.prototype.setState = function(state) {
 	this.state = state;
 	if(prevState !== state) {
 		 if(this.cb_setState) {this.cb_setState.apply(this, [this, prevState, state]);}
-		 if(Pnode.prototype.CB_setState) {Pnode.prototype.CB_setState.apply(this, [this, prevState, state]);}
+		 if(Pnode.prototype.CB_setState) {
+			 console.log('emit', this.className, this.id, this.name, ':', prevState, '->', state);
+			 Pnode.prototype.CB_setState.apply(this, [this, prevState, state]);
+			}
 		 // console.log(this.className, "setting state to ", state);
 		 if(this.parent) this.parent.childStateChanged(this, prevState, state);
 		 return true;

@@ -16,7 +16,7 @@ SequenceNodePresentation.prototype.init = function(PnodeID, parent, children) {
 }
 SequenceNodePresentation.prototype.serialize = function() {
 	 var json = PnodeNChildPresentation.prototype.serialize.apply(this, []);
-	 json.subType = './SequenceNodePresentation.js';
+	 json.subType = 'SequenceNodePresentation';
 	 return json;
 	}
 SequenceNodePresentation.prototype.Render	= function() {

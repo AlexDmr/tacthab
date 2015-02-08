@@ -6,10 +6,9 @@ define	( [ './PnodePresentation.js'
 var ActionNodePresentation = function() {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
-	this.action			= {};
-	this.action.objectId= '';
-	this.action.method	= '';
-	this.action.params	= [];
+	this.action			= { method		: ''
+						  , params		: []
+						  };
 	this.html			= {};
 	return this;
 }
@@ -26,8 +25,7 @@ ActionNodePresentation.prototype.serialize	= function() {
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
 	// Describe action here
 	json.subType	= 'ActionNode';
-	json.ActionNode = { objectId	: this.action.objectId
-					  , method		: this.action.method
+	json.ActionNode = { method		: this.action.method
 					  , params		: this.action.params
 					  };
 	return json;
@@ -35,14 +33,22 @@ ActionNodePresentation.prototype.serialize	= function() {
 ActionNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
 	// Describe action here
 	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
-	this.action.objectId	= json.ActionNode.objectId;
 	this.action.method		= json.ActionNode.method;
 	this.action.params		= json.ActionNode.params;
-	if(this.html.select) {
-		 this.html.select.value = this.action.objectId;
-		}
 	return this;
 }
+
+ActionNodePresentation.prototype.primitivePlug	= function(c) {
+	 // console.log("Primitive plug ", this.root, " ->", c.root);
+	 this.Render();
+	 var P = this.html.divSelector
+		, N = c.Render();
+	 if(N.parentElement === null) {
+		 P.innerHTML = '';
+		 P.appendChild( N );
+		}
+	 return this;
+	}
 
 ActionNodePresentation.prototype.Render	= function() {
 	var self = this;
@@ -53,13 +59,20 @@ ActionNodePresentation.prototype.Render	= function() {
 			this.html.actionName.classList.add( 'actionName' );
 			this.html.actionName.innerHTML = "ACTION";
 			this.divDescription.appendChild( this.html.actionName );
-		 this.html.select = document.createElement('select');
-			this.html.select.classList.add('objectId');
-			this.html.select.onchange = function() {
-											 self.action.objectId = this.value;
-											 console.log(this.value);
-											}
-			this.divDescription.appendChild( this.html.select );
+		 this.html.divSelector = document.createElement('span');
+			this.html.divSelector.classList.add('selector');
+			this.html.divSelector.innerHTML = "Drop medias here";
+			this.dropZoneSelectorId = DragDrop.newDropZone( this.html.divSelector
+								, { acceptedClasse	: 'SelectorNode'
+								  , CSSwhenAccepted	: 'possible2drop'
+								  , CSSwhenOver		: 'ready2drop'
+								  , ondrop			: function(evt, draggedNode, infoObj) {
+										 var Pnode = new infoObj.constructor(infoObj).init( '' );
+										 self.appendChild( Pnode );
+										}
+								  }
+								);
+			this.divDescription.appendChild( this.html.divSelector );
 		} 
 	return root;
 }

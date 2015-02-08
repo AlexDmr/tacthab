@@ -36,7 +36,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 				  , xmldom
 				  ) {
 	var DOMParser = xmldom.DOMParser;
-	
+	// console.log("On se casse!"); return;
 	Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
 		 webServer.emit('updateState', {objectId: node.id, prevState: 'state_'+prev, nextState: 'state_'+next});
 		}

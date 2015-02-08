@@ -8,12 +8,13 @@ define( [ './Brick.js'
 	
 	var BrickUPnP = function() {
 		 Brick.prototype.constructor.apply(this, []);
+		 //console.log( "BrickUPnP", this.brickId);
 		 this.UPnP			= {};
 		 this.UPnP_states	= {};
 		 this.types.push( 'BrickUPnP' );
 		 return this;
 		}
-	BrickUPnP.prototype = new Brick();
+	BrickUPnP.prototype = new Brick(); BrickUPnP.prototype.unreference();
 	BrickUPnP.prototype.constructor		= BrickUPnP;
 	BrickUPnP.prototype.getTypeName		= function() {return "BrickUPnP";}
 	
@@ -23,6 +24,11 @@ define( [ './Brick.js'
 		}
 	BrickUPnP.prototype.UPnP_call		= function() {
 		 console.error( "BrickUPnP.prototype.UPnP_call : To be implemented");
+		}
+	BrickUPnP.prototype.getDescription = function() {
+		 var json = Brick.prototype.getDescription.apply(this, []);
+		 json.name = this.UPnP.friendlyName;
+		 return json;
 		}
 	BrickUPnP.prototype.init	 		= function(device) {
 		 var self = this;
@@ -83,6 +89,12 @@ define( [ './Brick.js'
 				 console.error("Event without any e:property ?\n", event);
 				}
 			} else {console.error('document get an error:', event, error);}
+		}
+	BrickUPnP.prototype.serialize	= function() {
+		 var json = { brickId	: this.brickId
+					, classe	: 'BrickUPnP'
+					};
+		 return json;
 		}
 		
 	

@@ -12,7 +12,7 @@ define( [ './BrickUPnP.js'
 		 this.types.push( 'BrickUPnP_MediaServer' );
 		 return this;
 		}
-	BrickUPnP_MediaServer.prototype = new BrickUPnP();
+	BrickUPnP_MediaServer.prototype = new BrickUPnP(); BrickUPnP_MediaServer.prototype.unreference();
 	BrickUPnP_MediaServer.prototype.constructor = BrickUPnP_MediaServer;
 	BrickUPnP_MediaServer.prototype.getTypeName = function() {return "BrickUPnP_MediaServer";}
 
@@ -104,6 +104,6 @@ define( [ './BrickUPnP.js'
 														 // console.log("Is this a MediaServer?");
 														 return device.deviceType.indexOf("urn:schemas-upnp-org:device:MediaServer:") === 0;
 														}
-													);
+													); 
 	return Factory__BrickUPnP_MediaServer;
 });
