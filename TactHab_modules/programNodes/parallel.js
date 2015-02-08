@@ -25,6 +25,7 @@ ParallelNode.prototype.Start = function() {
 			 this.childrenStopped[i] = false;
 			 this.children[i].Start();
 			}
+		 if(this.children.length === 0) {this.Stop();}
 		}
 	return res;
 }

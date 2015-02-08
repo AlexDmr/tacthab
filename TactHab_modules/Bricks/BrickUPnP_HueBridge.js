@@ -8,12 +8,13 @@ define( [ './BrickUPnP.js'
 				, UpnpServer, request ) {
 	var BrickUPnP_HueBridge = function() {
 		 BrickUPnP.prototype.constructor.apply(this, []);
+		 console.log( "BrickUPnP", this.brickId);
 		 this.authorizedConnection = false;
 		 this.Lamps = {};
 		 return this;
 		}
 		
-	BrickUPnP_HueBridge.prototype = new BrickUPnP();
+	BrickUPnP_HueBridge.prototype = new BrickUPnP(); BrickUPnP_HueBridge.prototype.unreference();
 	BrickUPnP_HueBridge.prototype.constructor	= BrickUPnP_HueBridge;
 	BrickUPnP_HueBridge.prototype.getTypeName	= function() {return "BrickUPnP_HueBridge";}
 	BrickUPnP_HueBridge.prototype.connect		= function() {

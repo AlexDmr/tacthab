@@ -12,7 +12,7 @@ function BrickUPnP_HueLamp(HueBridge, lampHueId, lampJS) {
 	return this;
 }
 
-BrickUPnP_HueLamp.prototype			= new Brick();
+BrickUPnP_HueLamp.prototype			= new Brick(); BrickUPnP_HueLamp.prototype.unreference();
 BrickUPnP_HueLamp.prototype.update	= function(lampJS) {
 	// Check for changes, trigger events
 	

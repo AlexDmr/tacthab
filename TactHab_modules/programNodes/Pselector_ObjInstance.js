@@ -19,7 +19,11 @@ Pnode.prototype.appendClass( Pselector );
 var classes = Pselector.prototype.getClasses().slice();
 classes.push(Pselector_ObjInstance.prototype.className);
 Pselector_ObjInstance.prototype.getClasses	= function() {return classes;};
- 
+
+Pselector.prototype.evalSelector	= function() {
+	return [ Brick.prototype.getBrickFromId( this.selector.objectId ) ];
+}
+
 Pselector_ObjInstance.prototype.updateType = function() {
 	Pselector.prototype.updateType.apply(this, []);
 	// XXX Get type from object if it exists

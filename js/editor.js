@@ -16,7 +16,10 @@ var editor = {
 		 var div = document.createElement('div');
 			div.appendChild( document.createTextNode(name) );
 			div.setAttribute('class', "instructionType Pnode Implemented");
-			div.classList.add( config.nodeType );
+			if(typeof config.nodeType === "string") {config.nodeType = [config.nodeType];}
+			for(var i=0; i<config.nodeType.length; i++) {
+				 div.classList.add( config.nodeType[i] );
+				}
 			if(config.isNotType) {div.classList.remove( config.isNotType );}
 		 DragDrop.newDraggable( div
 							  , { constructor	: config.constructor
@@ -44,8 +47,10 @@ var editor = {
 				  , function(json) {
 						 console.log('updateState : ', json);
 						 var obj = PnodePresentation.prototype.getPnode(json.objectId);
-						 console.log('obj :', obj);
-						 obj.setState(json.prevState, json.nextState);
+						 console.log("\t=> obj :", obj);
+						 if(obj) {
+							 obj.setState(json.prevState, json.nextState);
+							}
 						});
 		 
 		 console.log('async:', async);
@@ -125,7 +130,7 @@ var editor = {
 								 var MR = res.MediaRenderer[i];
 								 self.MR_categ.appendChild( self.createDragNode( MR.name
 													   , { constructor	: PresoUtils.get('MR_Instance_SelectorNodePresentation')
-													     , nodeType		: 'SelectorNode'
+													     , nodeType		: ['SelectorNode', 'BrickUPnP_MediaRenderer']
 														 , uuid			: MR.uuid
 														 , MR			: MR
 													     } )
@@ -163,7 +168,7 @@ var editor = {
 								 , function() {
 									 utils.XHR( 'GET', '/loadProgram'
 											  , { onload	: function() {
-													 console.log('getting program from server, server sent:', this);
+													 // console.log('getting program from server, server sent:', this);
 													 var json = JSON.parse( this.responseText );
 													 self.loadProgram(json);
 													}
@@ -176,7 +181,7 @@ var editor = {
 									 utils.XHR( 'POST', '/loadProgram'
 											  , { variables	: {program: JSON.stringify(self.rootProgram.serialize())}
 												, onload	: function() {
-													 console.log('loadProgram, server sent:', this);
+													 // console.log('loadProgram, server sent:', this);
 													 var json = JSON.parse( this.responseText );
 													 self.loadProgram(json);
 													}
@@ -201,10 +206,10 @@ var editor = {
 	, loadProgram	: function(json) {
 		 var prog = PresoUtils.unserialize( json );
 		 // Unplug previous program if it exists
-		 console.log('Unplug program');
+		 // console.log('Unplug program');
 		 this.htmlNodeProgram.innerText = '';
 		 // Plug the new one
-		 console.log('Plug parsed program');
+		 // console.log('Plug parsed program');
 		 this.rootProgram = prog;
 		 this.htmlNodeProgram.appendChild( prog.Render() );
 		}

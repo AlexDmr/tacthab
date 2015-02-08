@@ -40,7 +40,7 @@ var PresoUtils = {
 	  mapping		: { 'ProgramNode'	: ProgramNodePresentation
 					  , 'ParalleNode'	: ParallelNodePresentation
 					  , 'ActionNode'	: ActionNodePresentation
-					  , 'SequenceNode'	: SequenceNodePresentation
+					  , 'SequenceNode'	: SequenceNodePresentation	, 'SequenceNodePresentation'	: SequenceNodePresentation
 					  , 'EventNode'		: EventNodePresentation
 					  , 'WhenNode'		: WhenNodePresentation
 					  , 'PcontrolBrick'	: PcontrolBrickPresentation
@@ -60,10 +60,15 @@ var PresoUtils = {
 		 return this.mapping[className];
 		}
 	, unserialize	: function(json, cb) {
-		 console.log("json.subType : ", json.subType);
+		 // console.log("json.subType : ", json.subType);
 		 var classe	= this.mapping[ json.subType || json.className ];
-		 var parent	= new classe().init();
-		 parent.unserialize(json, PresoUtils);
+		 if(classe) {
+			 var parent	= new classe().init();
+			 parent.unserialize(json, PresoUtils);
+			} else {console.error( "Unknown class to unserialize:\n\tsubtype:"
+								 , json.subType, "\nclassName:", json.className
+								 );
+				   }
 		 return parent;
 		}
 };

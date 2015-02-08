@@ -17,14 +17,18 @@ define( [ '../../js/AlxEvents.js'
 	AlxEvents(Brick);
 	Brick.prototype.getTypeName		= function() {return "Brick";}
 	Brick.prototype.getBrickFromId	= function(id) {return D_brick[id];}
+	Brick.prototype.unreference		= function() {
+		 delete D_brick[this.brickId];		
+		}
 	Brick.prototype.changeIdTo		= function(newId) {
-		 delete D_brick[this.brickId];
+		 this.unreference();
 		 D_brick[newId] = this;
 		 this.brickId	= newId;
 		}
 	Brick.prototype.getDescription = function() {
 		return	{ type	: this.getTypes()
 				, id	: this.brickId
+				, name	: this.brickId
 				};
 		}
 	Brick.prototype.getBricks		= function(  ) {
@@ -43,6 +47,7 @@ define( [ '../../js/AlxEvents.js'
 		}
 	Brick.prototype.serialize	= function() {
 		 var json = { brickId	: this.brickId
+					, classe	: 'Brick'
 					};
 		 return json;
 		}

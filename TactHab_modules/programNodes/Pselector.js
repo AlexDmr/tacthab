@@ -18,7 +18,21 @@ var classes = Pnode.prototype.getClasses().slice();
 classes.push(Pselector.prototype.className);
 Pselector.prototype.getClasses	= function() {return classes;};
 
-Pselector.prototype.updateType = function() {
+Pselector.prototype.Start			= function() {
+	var res = Pnode.prototype.Start.apply(this, []);
+	this.Stop();
+	return res;
+}
+
+Pselector.prototype.evalSelector	= function() {
+	var res;
+	if(this.children[0]) {
+		 res = this.children[0].evalSelector();
+		} else {res = [];}
+	return res;
+}
+
+Pselector.prototype.updateType		= function() {
 	this.selector.type = [];
 	for(var i=0; i<this.children.length; i++) {
 		 this.children[i].updateType();

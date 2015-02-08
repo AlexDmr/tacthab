@@ -16,7 +16,7 @@ define( [ './BrickUPnP.js'
 		 this.types.push( 'BrickUPnP_MediaRenderer' );
 		 return this;
 		}
-	BrickUPnP_MediaRenderer.prototype = new BrickUPnP();
+	BrickUPnP_MediaRenderer.prototype = new BrickUPnP(); BrickUPnP_MediaRenderer.prototype.unreference();
 	BrickUPnP_MediaRenderer.prototype.constructor = BrickUPnP_MediaRenderer;
 	BrickUPnP_MediaRenderer.prototype.getTypeName = function() {return "BrickUPnP_MediaRenderer";}
 
@@ -45,6 +45,7 @@ define( [ './BrickUPnP.js'
 													 var docMetadata	= xmldomparser.parseFromString( metadata );
 													 var res			= docMetadata.getElementsByTagName('res');
 													 if(res.length > 0) {
+														 console.log("URI:", res[0].textContent);
 														 self.loadURI( res[0].textContent// uri
 																	 , metadata
 																	 , cbSuccess, cbError );
@@ -65,7 +66,7 @@ define( [ './BrickUPnP.js'
 							  , CurrentURIMetaData	: metadata
 							  }
 							, function(err, buffer) {
-								 // console.log(self.brickId, "BrickUPnP_MediaRenderer::loadMedia", err || buffer);
+								 console.log(self.brickId, "BrickUPnP_MediaRenderer::loadMedia", err || buffer);
 								 if(err) {
 									 console.error("loadURI error :", err);
 									 cbError(err);
@@ -80,13 +81,14 @@ define( [ './BrickUPnP.js'
 							);
 		}
 	BrickUPnP_MediaRenderer.prototype.Play		= function(cb) {
+		 var self = this;
 		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
 		 service.callAction	( 'Play'
 							, { InstanceID		: 0
 							  , Speed			: '1'
 							  }
 							, function(err, buffer) {
-								 console.log(this.brickId, "BrickUPnP_MediaRenderer::Play", err || buffer);
+								 console.log(self.brickId, "BrickUPnP_MediaRenderer::Play", err || buffer);
 								 if(cb) cb(err || buffer);
 								}
 							);
@@ -226,7 +228,7 @@ define( [ './BrickUPnP.js'
 														 // console.log("Is this a MediaRenderer?");
 														 return device.deviceType.indexOf("urn:schemas-upnp-org:device:MediaRenderer:") === 0;
 														}
-													);
+													); 
 	Factory__BrickUPnP_MediaRenderer.setFactoryMediaServer = function(fact) {
 		 this.FactoryMediaServer = fact;
 		}
