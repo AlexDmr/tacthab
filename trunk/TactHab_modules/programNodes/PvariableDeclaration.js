@@ -1,7 +1,7 @@
 define( [ './Pnode.js'
 	    ]
 	  , function(Pnode) {
-var varIdCounter = 0;
+// var varIdCounter = 0;
 
 // console.log('Pnode is a ', Pnode);
 // Definition of a node for programs
@@ -46,11 +46,17 @@ PvariableDeclaration.prototype.childStateChanged = function(child, prevState, ne
 PvariableDeclaration.prototype.getSelectorId = function() {return this.varDef.id}
 
 PvariableDeclaration.prototype.updateType = function() {
-	if(this.children.length) {
+	if(this.children.length === 1) {
 		 this.children[0].updateType();
 		 this.varDef.type = this.children[0].updateType().slice();
 		} else {this.varDef.type = [];}
 	return this.varDef.type;
+}
+
+PvariableDeclaration.prototype.evalSelector	= function() {
+	if(this.children.length === 1) {
+		 return this.children[0].evalSelector();
+		} else {return [];}
 }
 
 PvariableDeclaration.prototype.serialize	= function() {

@@ -45,7 +45,7 @@ define( [ './BrickUPnP.js'
 													 var docMetadata	= xmldomparser.parseFromString( metadata );
 													 var res			= docMetadata.getElementsByTagName('res');
 													 if(res.length > 0) {
-														 console.log("URI:", res[0].textContent);
+														 // console.log("URI:", res[0].textContent);
 														 self.loadURI( res[0].textContent// uri
 																	 , metadata
 																	 , cbSuccess, cbError );
@@ -58,7 +58,7 @@ define( [ './BrickUPnP.js'
 							);		 
 		}
 	BrickUPnP_MediaRenderer.prototype.loadURI	= function(uri, metadata, cbSuccess, cbError) {
-		 var self = this;
+		 // var self = this; console.log("loadURI", uri, metadata);
 		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
 		 service.callAction	( 'SetAVTransportURI'
 							, { InstanceID			: 0
@@ -66,14 +66,27 @@ define( [ './BrickUPnP.js'
 							  , CurrentURIMetaData	: metadata
 							  }
 							, function(err, buffer) {
-								 console.log(self.brickId, "BrickUPnP_MediaRenderer::loadMedia", err || buffer);
+								 // console.log(self.brickId, "BrickUPnP_MediaRenderer::loadMedia", err || buffer);
 								 if(err) {
-									 console.error("loadURI error :", err);
-									 cbError(err);
+									 console.error("loadURI error :", err, buffer);
+									 if(metadata !== "") {
+										 console.log("retry");
+										 service.callAction	( 'SetAVTransportURI'
+															, { InstanceID			: 0
+															  , CurrentURI			: uri
+															  , CurrentURIMetaData	: ''
+															  }
+															, function(err, buffer) {
+																 if(err) {
+																	 if(cbError) cbError(err);
+																	} else {if(cbSuccess) cbSuccess(buffer);}
+																}
+															);
+										} else {if(cbError) cbError(err);}
 									} else	{// Check SOAP response
-											 console.log("loadURI OK");
+											 // console.log("loadURI OK");
 											 if(cbSuccess) {
-												 console.log("cbSuccess");
+												 // console.log("cbSuccess");
 												 cbSuccess(buffer);
 												}
 											}
@@ -88,7 +101,7 @@ define( [ './BrickUPnP.js'
 							  , Speed			: '1'
 							  }
 							, function(err, buffer) {
-								 console.log(self.brickId, "BrickUPnP_MediaRenderer::Play", err || buffer);
+								 // console.log(self.brickId, "BrickUPnP_MediaRenderer::Play", err || buffer);
 								 if(cb) cb(err || buffer);
 								}
 							);
@@ -99,7 +112,7 @@ define( [ './BrickUPnP.js'
 							, { InstanceID		: 0
 							  }
 							, function(err, buffer) {
-								 console.log(this.brickId, "BrickUPnP_MediaRenderer::Pause", err || buffer);
+								 // console.log(this.brickId, "BrickUPnP_MediaRenderer::Pause", err || buffer);
 								 if(cb) cb(err || buffer);
 								}
 							);
@@ -110,7 +123,7 @@ define( [ './BrickUPnP.js'
 							, { InstanceID		: 0
 							  }
 							, function(err, buffer) {
-								 console.log(this.brickId, "BrickUPnP_MediaRenderer::Stop", err || buffer);
+								 // console.log(this.brickId, "BrickUPnP_MediaRenderer::Stop", err || buffer);
 								 if(cb) cb(err || buffer);
 								}
 							);
@@ -122,7 +135,7 @@ define( [ './BrickUPnP.js'
 							  , Channel			: "Master"
 							  }
 							, function(err, buffer) {
-								 console.log(this.brickId, "BrickUPnP_MediaRenderer::GetVolume", err || buffer);
+								 // console.log(this.brickId, "BrickUPnP_MediaRenderer::GetVolume", err || buffer);
 								 if(callback) {
 									 callback(err, buffer);
 									}
@@ -138,7 +151,7 @@ define( [ './BrickUPnP.js'
 							  , DesiredVolume	: volume
 							  }
 							, function(err, buffer) {
-								 console.log(this.brickId, "BrickUPnP_MediaRenderer::SetVolume", err || buffer);
+								 // console.log(this.brickId, "BrickUPnP_MediaRenderer::SetVolume", err || buffer);
 								 if(cb) cb(err || buffer);
 								}
 							);
