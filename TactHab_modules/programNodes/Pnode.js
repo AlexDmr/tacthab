@@ -32,7 +32,7 @@ Pnode.prototype.serialize	= function() {
 				, children: []
 				};
 	if(this.subType) {json.subType = this.subType;}
-	for(i in this.children) {
+	for(var i in this.children) {
 		 json.children.push( this.children[i].serialize() );
 		}
 	return json;
@@ -41,8 +41,9 @@ Pnode.prototype.unserialize	= function(json, Putils) {
 	// className and id are fixed by the constructor of the object itself
 	if(json.subType) {this.subType = json.subType;} else {this.subType = undefined; delete this.subType;}
 	var children = this.children.slice();
-	for(var i=0; i<children.length		; i++) {children[i].setParent(null);}
-	for(var i=0; i<json.children.length	; i++) {Putils.unserialize(json.children[i], Putils).setParent(this);}
+	var i;
+	for(i=0; i<children.length		; i++) {children[i].setParent(null);}
+	for(i=0; i<json.children.length	; i++) {Putils.unserialize(json.children[i], Putils).setParent(this);}
 	return this;
 } 
 
@@ -106,10 +107,11 @@ Pnode.prototype.call = function(call) {
 Pnode.prototype.getContextDescription = function() {
 	var context = this.getContext();
 	var json = {bricks:{}, variables:{}};
-	for(var i in context.bricks) {
+	var i;
+	for(i in context.bricks) {
 		 json.bricks[i] = context.bricks[i].getDescription();
 		}
-	for(var i in context.variables) {
+	for(i in context.variables) {
 		 json.variables[i] = context.variables[i].getDescription();
 		}
 	return json;

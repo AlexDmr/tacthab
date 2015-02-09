@@ -38,18 +38,18 @@ ProgramNode.prototype.call = function(call) {
 }
 
 ProgramNode.prototype.getContext = function() {
-	var context;
+	var context, i;
 	if(this.parent) {
 		 context = Pnode.prototype.getContext.apply(this, []);
 		} else {context = {bricks:{}, variables:{}};
 				// Register Bricks
 				var D_bricks = Brick.prototype.getBricks();
-				for(var i in D_bricks) {context.bricks[i] = D_bricks[i];}
+				for(i in D_bricks) {context.bricks[i] = D_bricks[i];}
 			   }
 		
 	// Resgister Variables
 	var L_defs = this.definitions.children;
-	for(var i=0; i<L_defs.length; i++) {
+	for(i=0; i<L_defs.length; i++) {
 		 var def = L_defs[i]; // Variable definition
 		 context.variables[ def.getSelectorId() ] = def;
 		}
@@ -78,11 +78,12 @@ ProgramNode.prototype.unserialize	= function(json, Putils) {
 	this.definitions.setParent ( this );
 	this.instructions.setParent( this );
 	// Plug definitions part
-	for(var i=0; i<json.pg.definitions.length; i++) {
+	var i;
+	for(i=0; i<json.pg.definitions.length; i++) {
 		 Putils.unserialize(json.pg.definitions[i], Putils).setParent ( this.definitions  );
 		}
 	// instructions part
-	for(var i=0; i<json.pg.instructions.length; i++) {
+	for(i=0; i<json.pg.instructions.length; i++) {
 		 Putils.unserialize(json.pg.instructions[i], Putils).setParent( this.instructions );
 		}
 	return this;

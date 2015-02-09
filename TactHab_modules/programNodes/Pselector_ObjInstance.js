@@ -14,7 +14,7 @@ var Pselector_ObjInstance = function(parent, children) {
 // API for starting, stopping the instruction
 Pselector_ObjInstance.prototype = new Pselector();
 Pselector_ObjInstance.prototype.className	= 'Pselector_ObjInstance';
-Pnode.prototype.appendClass( Pselector );
+Pnode.prototype.appendClass( Pselector_ObjInstance );
 
 var classes = Pselector.prototype.getClasses().slice();
 classes.push(Pselector_ObjInstance.prototype.className);
@@ -29,7 +29,7 @@ Pselector_ObjInstance.prototype.updateType = function() {
 	// XXX Get type from object if it exists
 	if(typeof this.selector.objectId !== 'undefined') {
 		 var brick = Brick.prototype.getBrickFromId( this.selector.objectId );
-		 this.selector.type = brick.getTypes();
+		 if(brick) this.selector.type = brick.getTypes();
 		}
 	return this.selector.type;
 }
