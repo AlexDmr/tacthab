@@ -17,6 +17,11 @@ var ProgramNode = function(parent, children) {
 	 
 	 return this;
 	}
+ProgramNode.prototype.dispose		= function() {
+	Pnode.prototype.dispose.apply(this, []);
+	this.definitions.dispose (); delete this.definitions;
+	this.instructions.dispose(); delete this.instructions;
+}
 
 // API for starting, stopping the instruction
 ProgramNode.prototype = new SequenceNode();

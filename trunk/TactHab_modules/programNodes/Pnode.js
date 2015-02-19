@@ -21,6 +21,13 @@ var Pnode = function(parent, children) {
 Pnode.prototype.constructor = Pnode;
 Pnode.prototype.className	= 'Pnode';
 
+Pnode.prototype.dispose		= function() {
+	delete D_nodes[this.id];
+	this.id = 'obsolet ' + this.id;
+	while(this.children.length) {this.children[0].setParent(null);}
+	this.setParent(null);
+	return this;
+}
 Pnode.prototype.getClasses	= function() {return [Pnode.prototype.className];}
 Pnode.prototype.getD_classes= function() {return D_classes;}
 Pnode.prototype.appendClass	= function(classe) {D_classes[classe.prototype.className] = classe;}
@@ -49,7 +56,19 @@ Pnode.prototype.unserialize	= function(json, Putils) {
 
 Pnode.prototype.isInstanceOf= function(classe)	{return this.getClasses().indexOf(classe) >= 0;}
 
-Pnode.prototype.getNode		= function(id)		{return D_nodes[id];}
+Pnode.prototype.getNode			= function(id)	{return D_nodes[id];}
+Pnode.prototype.substituteIdBy	= function(id)	{
+	 // Is there an object already having that id ?
+	 var obj = Pnode.prototype.getNode( id );
+	 if(obj) {obj.dispose(); console.log("Replacing object", id, ':', obj.className);}
+	 
+	 // Replacing id and registrations
+	 delete D_nodes[this.id];
+	 this.id	= id;
+	 D_nodes[id]= this;
+	 
+	 return this;
+	}
 
 Pnode.prototype.setName		= function(name)	{this.name = name; return this;}
 Pnode.prototype.setParent	= function(node)	{

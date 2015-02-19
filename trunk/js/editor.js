@@ -85,13 +85,13 @@ var editor = {
 													   } )
 										);
 		 // Create new draggable for variables
-		 this.createCateg("Variables").appendChild( this.createDragNode( 'Define new one'
+		 this.createCateg("Variables").appendChild( this.createDragNode( 'New selector'
 													 , { constructor	: PresoUtils.get('Var_DefinitionPresentation')
 													   , nodeType		: 'DefinitionNode'
 													   } )
-										).appendChild( this.createDragNode( 'Play'
-													 , { constructor	: PresoUtils.get('MR_load_NodePresentation')
-													   , nodeType		: 'ActionNode'
+										).appendChild( this.createDragNode( 'New sub-program'
+													 , { constructor	: PresoUtils.get('Program_DefinitionPresentation')
+													   , nodeType		: 'DefinitionNode'
 													   } )
 										);
 		 // Create new draggable for MediaRenderer
@@ -122,6 +122,48 @@ var editor = {
 													   } )
 										);
 		 
+		 // Process variables and bricks
+		 var variables = {};
+		 if(self.rootProgram) {variables.nodeId = self.rootProgram.PnodeID;}
+		 utils.XHR( 'POST', '/getContext'
+				  , { variables	: variables
+					, onload	: function() {
+						 var json = JSON.parse( this.responseText ); 
+						 console.log('/getContext of ', variables.nodeId, ':', json );
+						 var i, brick, variable;
+						 // Bricks
+						 for(i in json.bricks) {
+							 brick = json.bricks[i];
+							 if(brick.type.indexOf('BrickUPnP_MediaRenderer') !== -1) {
+								 self.MR_categ.appendChild( self.createDragNode( brick.name
+													   , { constructor	: PresoUtils.get('MR_Instance_SelectorNodePresentation')
+													     , nodeType		: brick.type.concat( ['SelectorNode'] )
+														 , id			: brick.id
+														 , uuid			: brick.id
+														 , name			: brick.name
+													     } )
+													   );
+								}
+							}
+						 // Variables
+						 for(var i in json.variables) {
+							 variable = json.variables[i];
+							 if(variable.type.indexOf('BrickUPnP_MediaRenderer') !== -1) {
+								 self.MR_categ.appendChild( self.createDragNode( variable.name
+													   , { constructor	: PresoUtils.get('Var_UsePresentation')
+													     , nodeType		: variable.type.concat( ['SelectorNode', 'variable'] )
+														 , id			: variable.id
+														 , name			: variable.name
+													     } )
+													   );
+								}
+							}
+						}
+				    }
+				  );
+		 
+		 // Process Media Renderer and media servers
+		 /* => done via /getContext HTTP POST
 		 utils.XHR( 'GET', '/get_MediaDLNA'
 				  , {onload : function() {
 							 var res = JSON.parse( this.responseText );
@@ -139,6 +181,7 @@ var editor = {
 							}
 				    }
 				  );
+		 */
 		 // Create new draggable for Hue
 		 this.createCateg("Hue lamp").appendChild( this.createDragNode( 'on...'
 												 , { constructor	: PresoUtils.get('PeventBrickPresentation_Hue')
@@ -164,22 +207,32 @@ var editor = {
 		   , bt_load	= document.getElementById('loadFromServer')
 		   , bt_start	= document.getElementById('startProgram')
 		   , bt_stop	= document.getElementById('stopProgram');
-		 bt_load.addEventListener( 'click'
-								 , function() {
-									 utils.XHR( 'GET', '/loadProgram'
-											  , { onload	: function() {
-													 // console.log('getting program from server, server sent:', this);
+		 bt_load.onclick = function() {
+								 var inputHidden = document.getElementById('programId');
+								 var ressource = '/loadProgram';
+								 if(inputHidden) {
+									 ressource += '?programId=' + encodeURIComponent( inputHidden.value );
+									}
+								 utils.XHR( 'GET', ressource
+										  , { onload	: function() {
+												 // console.log('getting program from server, server sent:', this);
+												 if(this.responseText !== '') {
 													 var json = JSON.parse( this.responseText );
 													 self.loadProgram(json);
 													}
 												}
-											  );
-									}
-								 );
+											}
+										  );
+								};
+		 bt_load.onclick(); // Direct call !
+		 
 		 bt_send.addEventListener( 'click'
 								 , function() {
+									 var variables		= {program: JSON.stringify(self.rootProgram.serialize())};
+									 var inputHidden	= document.getElementById('programId');
+									 if(inputHidden) {variables.programId = inputHidden.value;}
 									 utils.XHR( 'POST', '/loadProgram'
-											  , { variables	: {program: JSON.stringify(self.rootProgram.serialize())}
+											  , { variables	: variables
 												, onload	: function() {
 													 // console.log('loadProgram, server sent:', this);
 													 var json = JSON.parse( this.responseText );

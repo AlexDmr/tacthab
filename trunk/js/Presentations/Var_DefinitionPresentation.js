@@ -6,7 +6,7 @@ define	( [ './PnodePresentation.js'
 var Var_DefinitionPresentation = function() {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
-	this.varDef			= { id	: null
+	this.varDef			= { name	: ''
 						  };
 	this.html			= {};
 	return this;
@@ -24,16 +24,17 @@ Var_DefinitionPresentation.prototype.serialize	= function() {
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
 	// Describe action here
 	json.subType	= 'Var_DefinitionPresentation';
-	json.varDef = { id	: this.varDef.id
-				  };
+	json.varDef = { name	: this.varDef.name };
+	if(this.varDef.id) {json.varDef.id = this.varDef.id;}
 	return json;
 }
 Var_DefinitionPresentation.prototype.unserialize	= function(json, PresoUtils) {
 	// Describe action here
 	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
 	this.varDef.id	= json.varDef.id;
+	this.varDef.name= json.varDef.name;
 	if(this.html.inputId) {
-		 this.html.inputId.value = this.varDef.id;
+		 this.html.inputId.value = this.varDef.name;
 		}
 	return this;
 }
@@ -66,7 +67,7 @@ Var_DefinitionPresentation.prototype.Render	= function() {
 		 this.html.inputId = document.createElement('input');
 			this.html.inputId.classList.add( 'varId' );
 			this.html.inputId.innerHTML = "ACTION";
-			this.html.inputId.onkeyup = function() {self.varDef.id = self.html.inputId.value;};
+			this.html.inputId.onkeyup = function() {self.varDef.name = self.html.inputId.value;};
 			this.divDescription.appendChild( this.html.inputId );
 		 this.html.as = document.createElement('span');
 			this.html.as.classList.add('as');

@@ -9,7 +9,7 @@ function SelectorNodePresentation(infoObj) {
 					, type: ['selector']
 					};
 	if(infoObj) {
-		 this.selector.name = infoObj.config.MR.name;
+		 this.selector.name = infoObj.config.name;
 		}
 }
 
