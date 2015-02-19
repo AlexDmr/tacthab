@@ -6,9 +6,11 @@ define	( [ './ProgramNodePresentation.js'
 		  , './WhenNodePresentation.js'
 		  , './PcontrolBrickPresentation.js'
 		  // Variables
+		  , './Program_DefinitionPresentation.js'
 		  , './Var_DefinitionPresentation.js'
 		  , './SelectorNodePresentation.js'
 		  , './MR_Instance_SelectorNodePresentation.js'
+		  , './Var_UsePresentation.js'
 		  // Média Renderer
 		  , './UPnP/MediaRendererInstructions/MR_Play_NodePresentation.js'
 		  , './UPnP/MediaRendererInstructions/MR_Pause_NodePresentation.js'
@@ -25,9 +27,11 @@ define	( [ './ProgramNodePresentation.js'
 				  , WhenNodePresentation
 				  , PcontrolBrickPresentation
 				  // Variables
+				  , Program_DefinitionPresentation
 				  , Var_DefinitionPresentation
 				  , SelectorNodePresentation
 				  , MR_Instance_SelectorNodePresentation
+				  , Var_UsePresentation
 				  // Media Renderer
 				  , MR_Play_NodePresentation
 				  , MR_Pause_NodePresentation
@@ -45,9 +49,11 @@ var PresoUtils = {
 					  , 'WhenNode'		: WhenNodePresentation
 					  , 'PcontrolBrick'	: PcontrolBrickPresentation
 					  // Variables
+					  , 'Program_DefinitionPresentation'		: Program_DefinitionPresentation
 					  , 'Var_DefinitionPresentation'			: Var_DefinitionPresentation
 					  , 'SelectorNodePresentation'				: SelectorNodePresentation
 					  , 'MR_Instance_SelectorNodePresentation'	: MR_Instance_SelectorNodePresentation
+					  , 'Var_UsePresentation'					: Var_UsePresentation
 					  // MediaRenderer
 					  , 'MR_Play_NodePresentation'	: MR_Play_NodePresentation
 					  , 'MR_load_NodePresentation'	: MR_load_NodePresentation
@@ -57,11 +63,16 @@ var PresoUtils = {
 					  , 'PeventBrickPresentation_Hue'	: PeventBrickPresentation_Hue
 					  }
 	, get			: function(className) {
+		 var classe	= this.mapping[ className ];
+		 if(!classe) {
+			 console.error('This dependency has not been loaded yet :', className);
+			}
 		 return this.mapping[className];
 		}
 	, unserialize	: function(json, cb) {
 		 // console.log("json.subType : ", json.subType);
-		 var classe	= this.mapping[ json.subType || json.className ];
+		 var Cname	= json.subType || json.className;
+		 var classe	= this.get( Cname );
 		 if(classe) {
 			 var parent	= new classe().init();
 			 parent.unserialize(json, PresoUtils);

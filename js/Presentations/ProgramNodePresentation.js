@@ -86,6 +86,7 @@ ProgramNodePresentation.prototype.Render	= function() {
 	if(this.html.instructions === null) {
 		 // Déclarations
 		 this.html.definitions = document.createElement('details');
+			this.html.definitions.setAttribute('open', 'open');
 			this.html.definitionsSummary	= document.createElement('summary');
 			this.html.definitionsSummary.innerHTML = "Definitions";
 			// Drop zone
@@ -105,6 +106,7 @@ ProgramNodePresentation.prototype.Render	= function() {
 		 this.html.definitions.appendChild(this.html.definitionsSummary);
 		 // Instructions
 		 this.html.instructions = document.createElement('details');
+			this.html.instructions.setAttribute('open', 'open');
 			this.html.instructionsSummary	= document.createElement('summary');
 			this.html.instructionsSummary.innerHTML = "Instructions";
 			// Drop zone

@@ -15,7 +15,7 @@ requirejs.config({
 
 
 
-var xml = require("xmldom");
+// var xml = require("xmldom");
 requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		  , './TactHab_modules/programNodes/Pnode.js'
 		  , './TactHab_modules/UpnpServer/UpnpServer.js'
@@ -24,6 +24,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		  , './TactHab_modules/Bricks/BrickUPnP_MediaServer.js'
 		  , './TactHab_modules/Bricks/BrickUPnP_HueBridge.js'
 		  , './TactHab_modules/webServer/webServer.js'
+		  , './TactHab_modules/programNodes/program.js'
 		  // Extracteur
 		  , 'request'
 		  , 'xmldom'
@@ -32,12 +33,13 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		          , Brick, BrickUPnP_MediaRenderer, BrickUPnP_MediaServer
 				  , BrickUPnP_HueBridge
 				  , webServer
+				  , ProgramNode
 				  , request
 				  , xmldom
 				  ) {
-	var DOMParser = xmldom.DOMParser;
+	// var DOMParser = xmldom.DOMParser;
 	// console.log("On se casse!"); return;
-	Putils.mapping['Pnode'].prototype.CB_setState = function(node, prev, next) {
+	Putils.mapping.Pnode.prototype.CB_setState = function(node, prev, next) {
 		 webServer.emit('updateState', {objectId: node.id, prevState: 'state_'+prev, nextState: 'state_'+next});
 		}
 
@@ -54,11 +56,25 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 	// Program editor
 	webServer.app.get( '/editor'
 		, function(req, res) {
+			 var programId = req.query.programId;
+			 console.log("Program editor for", programId || 'a new program');
 			 webServer.fs.readFile('./test/testEditor.html'
 				  , function(err, dataObj) {
 						 if(err) {
 							 console.error('error reading test_evt.html', err);
-							} else	{var data = new String(); data = data.concat(dataObj);
+							} else	{var data = ''; data = data.concat(dataObj);
+									 if(programId) {
+										 console.log("Add an input hidden for the program identifier");
+										 var doc	= webServer.domParser.parseFromString(data, 'text/html');
+											var body	= doc.getElementsByTagName('body')[0];
+											var inputHidden = doc.createElement('input');
+											inputHidden.setAttribute('type' , 'hidden'    );
+											inputHidden.setAttribute('id'   , 'programId' );
+											inputHidden.setAttribute('value', programId   );
+											body.appendChild( inputHidden );
+										 data = webServer.xmlSerializer.serializeToString(doc);
+										}
+									 // console.log(data);
 									 res.end( data );
 									}
 						});
@@ -80,12 +96,12 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 				});
 			});
 	
-	
+	var pipoPgRoot = new ProgramNode();
 	webServer.app.post( '/getContext'
 					  , function(req, res) {
 							var nodeId = req.body.nodeId; 
 							var json;
-							var node = Pnode.prototype.getNode( nodeId ) || pgTest01;
+							var node = Pnode.prototype.getNode( nodeId ) || pgTest01 || pipoPgRoot;
 							if(node) {
 								 json = JSON.stringify( node.getContextDescription() );
 								} else {json = JSON.stringify( {} );}
@@ -140,23 +156,36 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 						
 	webServer.app.get( '/loadProgram'
 		, function(req, res) {
-				if(pgTest01) {
-					 var pg = pgTest01;
+				var programId = req.query.programId;
+				if(!programId && pgTest01) {programId = pgTest01.id;}
+				if(programId) {
+					 var pg = Pnode.prototype.getNode(programId);
 					 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
-					 var str_prg = JSON.stringify( pg.serialize() );
-					 console.log("========================> Sending:\n", str_prg);
+					 var str_prg = '';
+					 if(pg) {
+						 str_prg = JSON.stringify( pg.serialize() );
+						 console.log("========================> Sending:\n", str_prg);
+						}
 					 res.end( str_prg );
 					} else  {console.log("No program available...");
-							 res.end();
+							 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
+							 res.end('');
 							}
 			}
 		);
 		
 	webServer.app.post( '/loadProgram'
 		, function(req, res) {
+			 var parent = null;
+			 if(req.body.programId) {
+				 var node = Pnode.prototype.getNode(req.body.programId);
+				 if(node) {parent = node.parent;}
+				}
 			 if(req.body.program) {
 				 console.log("Loading program\n", req.body.program);
-				 var pg = pgTest01 = Putils.unserialize( JSON.parse(req.body.program) );
+				 var pg = Putils.unserialize( JSON.parse(req.body.program) );
+				 pg.setParent(parent);
+				 if(pgTest01 === null && parent === null) {pgTest01 = pg;}
 				 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
 				 var str_prg = JSON.stringify( pg.serialize() );
 				 console.log("========================> Sending:\n", str_prg);
@@ -173,7 +202,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 											  , function(err, dataObj) {
 													 if(err) {
 														 console.error('error reading test_evt.html', err);
-														} else	{var data = new String(); data = data.concat(dataObj);
+														} else	{var data = ''; data = data.concat(dataObj);
 																 var doc  = webServer.domParser.parseFromString(data, 'text/html');
 																 var body = doc.getElementsByTagName('body')[0];
 																 var L = []
@@ -215,7 +244,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 											 res.writeHead(500, {'Content-type': 'application/json; charset=utf-8'});
 											 res.write( "Error reading file ./test/testEditor.html\n" );
 											 res.end( err );
-											} else	{var data = new String(); data = data.concat(dataObj);
+											} else	{var data = ''; data = data.concat(dataObj);
 													 res.end( data );
 													}
 										});
@@ -240,13 +269,13 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 	webServer.app.get	( '/get_MediaDLNA'
 						, function(req, res) {
 							 var L = {MediaRenderer:[], MediaServer:[]};
-							 var L_Bricks;
+							 var L_Bricks, i;
 							 L_Bricks = BrickUPnP_MediaRenderer.getBricks();
-							 for(var i=0; i<L_Bricks.length; i++) {
+							 for(i=0; i<L_Bricks.length; i++) {
 								 L.MediaRenderer.push( getDescrFromBrick(L_Bricks[i]) );
 								}
 							 L_Bricks = BrickUPnP_MediaServer.getBricks();
-							 for(var i=0; i<L_Bricks.length; i++) {
+							 for(i=0; i<L_Bricks.length; i++) {
 								 L.MediaServer.push  ( getDescrFromBrick(L_Bricks[i]) );
 								}
 							 
@@ -264,7 +293,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 								 res.writeHead(500, {'Content-type': 'application/json; charset=utf-8'});
 								 res.write( "Error reading file ./test/testEditor.html\n" );
 								 res.end( err );
-								} else	{var data = new String(); data = data.concat(dataObj);
+								} else	{var data = ''; data = data.concat(dataObj);
 										 var doc  = webServer.domParser.parseFromString(data, 'text/html');
 										 var span_idControler = doc.getElementById('idControler');
 										 span_idControler.appendChild( doc.createTextNode(idControler) );

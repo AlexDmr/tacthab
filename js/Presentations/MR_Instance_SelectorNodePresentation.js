@@ -11,9 +11,7 @@ define	( [ './PnodePresentation.js'
 function MR_Instance_SelectorNodePresentation(infoObj) {
 	SelectorNodePresentation.apply(this, [infoObj]);
 	this.selector.type.push( 'MediaRenderer' );
-	if(infoObj) {
-		 this.selector.objectId = infoObj.config.MR.id;
-		}
+	if(infoObj) this.selector.objectId = infoObj.config.uuid;
 }
 
 MR_Instance_SelectorNodePresentation.prototype = new SelectorNodePresentation();

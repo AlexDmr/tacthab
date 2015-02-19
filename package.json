@@ -22,5 +22,6 @@
 		, "ip"				: "latest"
 		, "async"			: "latest"
 		, "network"			: "latest"
+		, "jsdoc"			: "latest"
     }
 }
