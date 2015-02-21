@@ -1,0 +1,120 @@
+define	( [ './PnodePresentation.js'
+		  , '../DragDrop.js'
+		  ]
+		, function(PnodePresentation, DragDrop) {
+
+var PfilterPresentation = function() {
+	// console.log(this);
+	PnodePresentation.prototype.constructor.apply(this, []);
+	this.filter		= { programs	: null
+					  , objects		: null
+					  , HiddenExpose: 'hidden'
+					  };
+	this.html		= { programs	: null
+					  , objects		: null
+					  };
+	return this;
+}
+
+PfilterPresentation.prototype = new PnodePresentation();
+PfilterPresentation.prototype.className = 'PfilterNode';
+
+PfilterPresentation.prototype.init = function(PnodeID, parent, children) {
+	PnodePresentation.prototype.init.apply(this, [parent, children]);
+	this.PnodeID = PnodeID;
+	return this;
+}
+PfilterPresentation.prototype.serialize	= function() {
+	var json = PnodePresentation.prototype.serialize.apply(this, []);
+	// Describe action here
+	json.subType	= 'PfilterPresentation';
+	json.filter		= {};
+	if(this.filter.programs) {json.filter.programs = this.filter.programs.serialize();}
+	if(this.filter.objects ) {json.filter.objects  = this.filter.objects.serialize ();}
+	return json;
+}
+
+
+PfilterPresentation.prototype.unserialize	= function(json, PresoUtils) {
+	// Describe action here
+	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
+	if(json.filter.programs) {this.filter.programs = PresoUtils.unserialize(json.filter.programs);}
+	if(json.filter.objects ) {this.filter.objects  = PresoUtils.unserialize(json.filter.objects );}
+	this.filter.HiddenExpose = json.filter.HiddenExpose;
+	
+	this.updateHTML_programs_and_objects();
+	return this;
+}
+
+PfilterPresentation.prototype.updateHTML_programs_and_objects = function() {
+	if(this.html.programs && this.filter.programs) {
+		 this.html.programs.innerHTML = "";
+		 this.html.programs.appendChild( this.filter.programs.Render() );
+		 DragDrop.deleteDropZone( this.dropZoneProgramsId );
+		}
+	if(this.html.objects && this.filter.objects) {
+		 this.html.objects.innerHTML = "";
+		 this.html.objects.appendChild ( this.filter.objects.Render () );
+		 DragDrop.deleteDropZone( this.dropZoneObjectsId );
+		}
+	if(this.html.select_HiddenExpose) {
+		 this.html.select_HiddenExpose.querySelector( 'option.'+this.filter.HiddenExpose ).setAttribute('selected', 'selected');
+		}
+}
+
+PfilterPresentation.prototype.Render	= function() {
+	var self = this;
+	var root = PnodePresentation.prototype.Render.apply(this, []);
+	root.classList.add('PfilterNode');
+	if(this.html.programs === null) {
+		 this.html.select_HiddenExpose = document.createElement('select');
+			this.html.select_HiddenExpose.classList.add( 'HiddenExpose' );
+			this.html.select_HiddenExpose.innerHTML = '<option class="hidden" value="hidden">Hidden elements</option><option class="expose" value="expose">Expose elements</option>';
+			this.html.select_HiddenExpose.onchange = function() {self.filter.HiddenExpose = self.html.select_HiddenExpose.value;}
+			this.divDescription.appendChild( this.html.select_HiddenExpose );
+
+		// Drop zone for objects to be hidden/exposed
+		 this.html.objects = document.createElement('span');
+			this.html.objects.classList.add('objects');
+			this.html.objects.innerHTML = "Insert a \"Objects Selector\" here";
+			this.divDescription.appendChild( this.html.objects );
+			this.dropZoneObjectsId = DragDrop.newDropZone( this.html.objects
+									, { acceptedClasse	: ['SelectorNode']
+									  , CSSwhenAccepted	: 'possible2drop'
+									  , CSSwhenOver		: 'ready2drop'
+									  , ondrop			: function(evt, draggedNode, infoObj) {
+											 self.filter.objects = new infoObj.constructor(infoObj).init( '' );
+											 self.updateHTML_programs_and_objects();
+											}
+									  }
+									);
+
+		// label 
+		 this.html.label = document.createElement('span');
+			this.html.label.classList.add( 'labelHide' );
+			this.html.label.innerHTML = " for programs ";
+			this.divDescription.appendChild( this.html.label );
+
+		// Drop zone for programs for which objects will be hidden/exposed
+		 this.html.programs = document.createElement('span');
+			this.html.programs.classList.add('programs');
+			this.html.programs.innerHTML = "Insert a \"Program Selector\" here";
+			this.divDescription.appendChild( this.html.programs );
+			this.dropZoneProgramsId = DragDrop.newDropZone( this.html.programs
+									, { acceptedClasse	: ['SelectorNode', 'Program']
+									  , CSSwhenAccepted	: 'possible2drop'
+									  , CSSwhenOver		: 'ready2drop'
+									  , ondrop			: function(evt, draggedNode, infoObj) {
+											 self.filter.programs = new infoObj.constructor(infoObj).init( '' );
+											 self.updateHTML_programs_and_objects();
+											}
+									  }
+									);
+		} 
+	this.updateHTML_programs_and_objects();
+	return root;
+}
+
+// Return the constructor
+return PfilterPresentation;
+});
