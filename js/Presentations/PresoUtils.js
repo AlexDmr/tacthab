@@ -5,6 +5,7 @@ define	( [ './ProgramNodePresentation.js'
 		  , './EventNodePresentation.js'
 		  , './WhenNodePresentation.js'
 		  , './PcontrolBrickPresentation.js'
+		  , './PfilterPresentation.js'
 		  // Variables
 		  , './Program_DefinitionPresentation.js'
 		  , './Var_DefinitionPresentation.js'
@@ -26,6 +27,7 @@ define	( [ './ProgramNodePresentation.js'
 				  , EventNodePresentation
 				  , WhenNodePresentation
 				  , PcontrolBrickPresentation
+				  , PfilterPresentation
 				  // Variables
 				  , Program_DefinitionPresentation
 				  , Var_DefinitionPresentation
@@ -41,13 +43,14 @@ define	( [ './ProgramNodePresentation.js'
 				  , PeventBrickPresentation_Hue
 				  ) {
 var PresoUtils = {
-	  mapping		: { 'ProgramNode'	: ProgramNodePresentation
-					  , 'ParalleNode'	: ParallelNodePresentation
-					  , 'ActionNode'	: ActionNodePresentation
-					  , 'SequenceNode'	: SequenceNodePresentation	, 'SequenceNodePresentation'	: SequenceNodePresentation
-					  , 'EventNode'		: EventNodePresentation
-					  , 'WhenNode'		: WhenNodePresentation
-					  , 'PcontrolBrick'	: PcontrolBrickPresentation
+	  mapping		: { 'ProgramNode'							: ProgramNodePresentation
+					  , 'ParalleNode'							: ParallelNodePresentation
+					  , 'ActionNode'							: ActionNodePresentation
+					  , 'SequenceNode'							: SequenceNodePresentation	, 'SequenceNodePresentation'	: SequenceNodePresentation
+					  , 'EventNode'								: EventNodePresentation
+					  , 'WhenNode'								: WhenNodePresentation
+					  , 'PcontrolBrick'							: PcontrolBrickPresentation
+					  , 'PfilterPresentation'					: PfilterPresentation
 					  // Variables
 					  , 'Program_DefinitionPresentation'		: Program_DefinitionPresentation
 					  , 'Var_DefinitionPresentation'			: Var_DefinitionPresentation
@@ -55,10 +58,10 @@ var PresoUtils = {
 					  , 'MR_Instance_SelectorNodePresentation'	: MR_Instance_SelectorNodePresentation
 					  , 'Var_UsePresentation'					: Var_UsePresentation
 					  // MediaRenderer
-					  , 'MR_Play_NodePresentation'	: MR_Play_NodePresentation
-					  , 'MR_load_NodePresentation'	: MR_load_NodePresentation
-					  , 'MR_Pause_NodePresentation'	: MR_Pause_NodePresentation
-					  , 'MR_Stop_NodePresentation'	: MR_Stop_NodePresentation
+					  , 'MR_Play_NodePresentation'				: MR_Play_NodePresentation
+					  , 'MR_load_NodePresentation'				: MR_load_NodePresentation
+					  , 'MR_Pause_NodePresentation'				: MR_Pause_NodePresentation
+					  , 'MR_Stop_NodePresentation'				: MR_Stop_NodePresentation
 					  // Hue
 					  , 'PeventBrickPresentation_Hue'	: PeventBrickPresentation_Hue
 					  }

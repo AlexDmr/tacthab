@@ -8,6 +8,7 @@ define ([ './Pnode.js'
 		, './PcontrolBrick.js'
 		, './PvariableDeclaration.js'
 		, './PprogramDeclaration.js'
+		, './PfilterNode.js'
 		// Selectors
 		, './Pselector_ObjInstance.js'
 		, './Pselector_variable.js'
@@ -18,20 +19,22 @@ define ([ './Pnode.js'
 				  , PcontrolBrick
 				  , PvariableDeclaration
 				  , PprogramDeclaration
+				  , PfilterNode
 				  // Selectors
 				  , Pselector_ObjInstance
 				  , Pselector_variable
 				  ) {
 var Putils = {
-	  mapping		: { 'Pnode'			: Pnode
-					  , 'ProgramNode'	: ProgramNode
-					  , 'ParalleNode'	: ParalleNode
-					  , 'ActionNode'	: ActionNode
-					  , 'SequenceNode'	: SequenceNode
-					  , 'EventNode'		: EventNode
-					  , 'WhenNode'		: WhenNode
-					  , 'PcontrolBrick'	: PcontrolBrick
+	  mapping		: { 'Pnode'					: Pnode
+					  , 'ProgramNode'			: ProgramNode
+					  , 'ParalleNode'			: ParalleNode
+					  , 'ActionNode'			: ActionNode
+					  , 'SequenceNode'			: SequenceNode
+					  , 'EventNode'				: EventNode
+					  , 'WhenNode'				: WhenNode
+					  , 'PcontrolBrick'			: PcontrolBrick
 					  , 'PvariableDeclaration'	: PvariableDeclaration
+					  , 'PfilterNode'			: PfilterNode
 					  , 'PprogramDeclaration'	: PprogramDeclaration
 					  , 'Pselector_ObjInstance'	: Pselector_ObjInstance
 					  , 'Pselector_variable'	: Pselector_variable

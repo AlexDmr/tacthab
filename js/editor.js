@@ -83,6 +83,10 @@ var editor = {
 													 , { constructor	: PresoUtils.get('PcontrolBrick')
 													   , nodeType		: 'PcontrolBrick'
 													   } )
+										).appendChild( this.createDragNode( 'Filter (hide/expose)'
+													 , { constructor	: PresoUtils.get('PfilterPresentation')
+													   , nodeType		: 'PfilterNode'
+													   } )
 										);
 		 // Create new draggable for variables
 		 this.createCateg("Variables").appendChild( this.createDragNode( 'New selector'
