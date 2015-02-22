@@ -54,7 +54,7 @@ var editor = {
 							}
 						});
 		 
-		 console.log('async:', async);
+		 // console.log('async:', async);
 		 // Configure html
 		 this.htmlNodeTypes = document.getElementById('instructionTypes');
 		 

@@ -8,7 +8,7 @@ var PfilterPresentation = function() {
 	PnodePresentation.prototype.constructor.apply(this, []);
 	this.filter		= { programs	: null
 					  , objects		: null
-					  , HiddenExpose: 'hidden'
+					  , HideExpose	: 'hide'
 					  };
 	this.html		= { programs	: null
 					  , objects		: null
@@ -25,10 +25,11 @@ PfilterPresentation.prototype.init = function(PnodeID, parent, children) {
 	return this;
 }
 PfilterPresentation.prototype.serialize	= function() {
+	var children = []
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
 	// Describe action here
 	json.subType	= 'PfilterPresentation';
-	json.filter		= {};
+	json.filter		= {HideExpose : this.filter.HideExpose};
 	if(this.filter.programs) {json.filter.programs = this.filter.programs.serialize();}
 	if(this.filter.objects ) {json.filter.objects  = this.filter.objects.serialize ();}
 	return json;
@@ -40,8 +41,7 @@ PfilterPresentation.prototype.unserialize	= function(json, PresoUtils) {
 	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
 	if(json.filter.programs) {this.filter.programs = PresoUtils.unserialize(json.filter.programs);}
 	if(json.filter.objects ) {this.filter.objects  = PresoUtils.unserialize(json.filter.objects );}
-	this.filter.HiddenExpose = json.filter.HiddenExpose;
-	
+	this.filter.HideExpose = json.filter.HideExpose;
 	this.updateHTML_programs_and_objects();
 	return this;
 }
@@ -58,7 +58,7 @@ PfilterPresentation.prototype.updateHTML_programs_and_objects = function() {
 		 DragDrop.deleteDropZone( this.dropZoneObjectsId );
 		}
 	if(this.html.select_HiddenExpose) {
-		 this.html.select_HiddenExpose.querySelector( 'option.'+this.filter.HiddenExpose ).setAttribute('selected', 'selected');
+		 this.html.select_HiddenExpose.querySelector( 'option.'+this.filter.HideExpose ).setAttribute('selected', 'selected');
 		}
 }
 
@@ -68,9 +68,11 @@ PfilterPresentation.prototype.Render	= function() {
 	root.classList.add('PfilterNode');
 	if(this.html.programs === null) {
 		 this.html.select_HiddenExpose = document.createElement('select');
-			this.html.select_HiddenExpose.classList.add( 'HiddenExpose' );
-			this.html.select_HiddenExpose.innerHTML = '<option class="hidden" value="hidden">Hidden elements</option><option class="expose" value="expose">Expose elements</option>';
-			this.html.select_HiddenExpose.onchange = function() {self.filter.HiddenExpose = self.html.select_HiddenExpose.value;}
+			this.html.select_HiddenExpose.classList.add( 'HideExpose' );
+			this.html.select_HiddenExpose.innerHTML = '<option class="hide" value="hide">Hide elements</option><option class="expose" value="expose">Expose elements</option>';
+			this.html.select_HiddenExpose.onchange = function() {
+														 self.filter.HideExpose = self.html.select_HiddenExpose.value;
+														}
 			this.divDescription.appendChild( this.html.select_HiddenExpose );
 
 		// Drop zone for objects to be hidden/exposed

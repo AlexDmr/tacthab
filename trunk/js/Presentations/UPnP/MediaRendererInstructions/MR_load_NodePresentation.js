@@ -12,7 +12,7 @@ define	( [ './MR_Play_NodePresentation.js'
 		 this.action.method	= 'loadMedia';
 		 this.forceRendering = false;
 		 this.cbSelected = function(event) {
-			 console.log('MR_load_NodePresentation::cbSelected', self, event);
+			 // console.log('MR_load_NodePresentation::cbSelected', self, event);
 			 self.action.mediaServerId	= event.mediaServerId;
 			 self.action.itemId			= event.itemId;
 			 self.html.mediaBrowser.innerHTML = '';
@@ -27,10 +27,6 @@ define	( [ './MR_Play_NodePresentation.js'
 		 var self = this;
 		 MR_Play_NodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
 		 // this.action.method	= 'loadMedia';
-		 console.log( "MR_load_NodePresentation::unserialize"
-					, this.action.objectId
-					, this.action.method
-					, this.action.params );
 		 if(this.action.params && this.action.params.length === 2) {
 			 MB.getHtmlItemFrom	( this.action.params[0]
 								, this.action.params[1]
@@ -40,7 +36,7 @@ define	( [ './MR_Play_NodePresentation.js'
 										 self.html.mediaBrowser.appendChild( htmlItem );
 										}
 									 self.html.htmlItem = htmlItem;
-									 console.log("MR_load_NodePresentation: now html item is available");
+									 // console.log("MR_load_NodePresentation: now html item is available");
 									 this.forceRendering = true;
 									}
 								);
@@ -74,7 +70,7 @@ define	( [ './MR_Play_NodePresentation.js'
 		 this.html.actionName.innerHTML = "loadMedia";
 		 // Create elements for selecting the media
 		 if((typeof this.html.mediaBrowser === 'undefined') || this.forceRendering) {
-			 console.log( "MR_load_NodePresentation::Render" );
+			 // console.log( "MR_load_NodePresentation::Render" );
 			 this.forceRendering = false;
 			 if(this.html.mediaBrowser && this.html.mediaBrowser.parentNode) {
 				 this.html.mediaBrowser.parentNode.removeChild( this.html.mediaBrowser );
@@ -91,7 +87,7 @@ define	( [ './MR_Play_NodePresentation.js'
 							 }
 				, true );
 			 this.divDescription.appendChild( this.html.mediaBrowser );
-			} else {console.log("MR_load_NodePresentation: no render");}
+			} // else {console.log("MR_load_NodePresentation: no render");}
 		 return root;
 		}
 	

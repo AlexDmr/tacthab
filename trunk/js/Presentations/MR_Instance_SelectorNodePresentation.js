@@ -26,9 +26,9 @@ MR_Instance_SelectorNodePresentation.prototype.Render = function() {
 				  , { variables	: {nodeId: this.PnodeID}
 				    , onload	: function() {
 						 var data = JSON.parse( this.responseText );
-						 console.log("select", self.selector.objectId, data.bricks);
+						 // console.log("select", self.selector.objectId, data.bricks);
 						 if(typeof data.bricks[ self.selector.objectId ] !== 'undefined') {
-							 console.log("XXX Render properly the selected MR with", data.bricks[ self.selector.objectId ]);
+							 // console.log("XXX Render properly the selected MR with", data.bricks[ self.selector.objectId ]);
 							 root.innerHTML = '';
 							 root.classList.add( 'MediaBrowserFlow' );
 							 var MR = data.bricks[ self.selector.objectId ];
@@ -41,40 +41,11 @@ MR_Instance_SelectorNodePresentation.prototype.Render = function() {
 															 );
 							 MP.onclick = null;
 							 root.appendChild( MP );
-							}
+							} else {console.error("/getContext from", self.PnodeID, " : The brick", self.selector.objectId, "is not present in the context", data);}
 						}
 				    }
 				  );
 		}
-	
-	/** DEBUG
-	if(this.selector.objectId) {
-		console.log( 'Display Media Player: ', this.selector.objectId );
-		utils.XHR( 'GET', 'get_MediaDLNA'
-				 , function() {
-					 var data = JSON.parse( this.responseText );
-					 var LMR = data.MediaRenderer;
-					 for(var i=0; i<LMR.length; i++) {
-						 var MR = LMR[i];
-						 if(MR.id === self.selector.objectId) {
-							 root.innerHTML = '';
-							 root.classList.add( 'MediaBrowserFlow' );
-							 var MP = MediaBrowser.prototype.RenderItem( MR.name // name
-															 , MR.iconURL || 'js/Presentations/UPnP/images/defaultMediaRenderer.png'// iconURL
-															 , MR.id // mediaServerId
-															 , 0 // directoryId
-															 , 'MediaRenderer' // classes
-															 , false // isItem
-															 );
-							 MP.onclick = null;
-							 root.appendChild( MP );
-							 break;
-							}
-						}
-					}
-				 );
-		}
-	*/
 	return root;
 }
 

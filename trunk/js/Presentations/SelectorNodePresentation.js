@@ -4,7 +4,7 @@ define	( [ './PnodePresentation.js'
 
 function SelectorNodePresentation(infoObj) {
 	PnodePresentation.apply(this, []);
-	console.log("SelectorNodePresentation::constructor", infoObj);
+	// console.log("SelectorNodePresentation::constructor", infoObj);
 	this.selector = { name: 'There should be a name here'
 					, type: ['selector']
 					};
