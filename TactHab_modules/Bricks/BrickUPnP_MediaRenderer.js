@@ -162,9 +162,6 @@ define( [ './BrickUPnP.js'
 	BrickUPnP_MediaRenderer.prototype.init		= function(device) {
 		 var self = this;
 		 BrickUPnP.prototype.init.apply(this, [device]);
-		 var url = this.UPnP.icons[0].url[0];
-		 if(url[0] !== '/') {url = '/' + url;}
-		 console.log("New MediaRenderer", this.brickId, device.friendlyName, 'http://' + device.host + ':' + device.port + url);
 		 return this;
 		}
 

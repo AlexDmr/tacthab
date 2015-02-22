@@ -103,7 +103,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 									 || pipoPgRoot;
 							if(node) {
 								 json = JSON.stringify( node.getContextDescription() );
-								 console.log("/getContext", node.id, "\n", json);
+								 // console.log("/getContext", node.id, "\n", json);
 								} else {json = JSON.stringify( {} );}
 							res.end(json);
 							} );

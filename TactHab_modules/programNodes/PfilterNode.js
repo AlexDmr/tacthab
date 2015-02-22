@@ -8,7 +8,7 @@ var PfilterNode = function(parent, children) {
 	 Pnode.prototype.constructor.apply(this, [parent, children]);
 	this.filter		= { programs	: null
 					  , objects		: null
-					  , HiddenExpose: 'hidden'
+					  , HideExpose	: 'hide'
 					  };
 	 return this;
 	}
@@ -41,7 +41,7 @@ PfilterNode.prototype.Stop	= function() {
 // API for starting, stopping the instruction
 PfilterNode.prototype.serialize	= function() {
 	var json = Pnode.prototype.serialize.apply(this, []);
-	json.filter = { HiddenExpose	: this.filter.HiddenExpose }
+	json.filter = { HideExpose	: this.filter.HideExpose }
 	if(this.filter.programs) {json.filter.programs = this.filter.programs.serialize();}
 	if(this.filter.objects ) {json.filter.objects  = this.filter.objects.serialize ();}
 	return json;
@@ -52,8 +52,10 @@ PfilterNode.prototype.unserialize	= function(json, Putils) {
 	if(this.filter.objects ) {this.filter.objects.dispose (); this.filter.objects  = null;}
 	Pnode.prototype.unserialize.apply(this, [json, Putils]);
 	// Plug filter part
-	if(json.filter.programs) {this.filter.programs = Putils.unserialize(json.filter.programs);}
-	if(json.filter.objects ) {this.filter.objects  = Putils.unserialize(json.filter.objects );}
+	this.filter.HideExpose = json.filter.HideExpose;
+	if(json.filter.programs) {this.filter.programs = Putils.unserialize(json.filter.programs); this.filter.programs.setParent(this);}
+	if(json.filter.objects ) {this.filter.objects  = Putils.unserialize(json.filter.objects ); this.filter.objects.setParent (this);}
+	this.children = [];
 	return this;
 }
 
