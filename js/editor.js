@@ -9,6 +9,7 @@ define	( [ './DragDrop.js'
 				  , async
 				  , BrickUPnP_MediaRenderer
 				  ) {
+					  
 var editor = {
 	  htmlNodeTypes		: null
 	, htmlNodeProgram	: null
@@ -150,7 +151,7 @@ var editor = {
 								}
 							}
 						 // Variables
-						 for(var i in json.variables) {
+						 for(i in json.variables) {
 							 variable = json.variables[i];
 							 if(variable.type.indexOf('BrickUPnP_MediaRenderer') !== -1) {
 								 self.MR_categ.appendChild( self.createDragNode( variable.name
@@ -248,13 +249,19 @@ var editor = {
 								 , false );
 		 bt_start.addEventListener( 'click'
 								  , function() {
-									 utils.XHR( 'POST', '/Start');
-									}
+										var inputHidden = document.getElementById('programId');
+										if(inputHidden) {utils.XHR( 'POST', '/Start'
+																  , {variables: {programId: inputHidden.value}}
+																  ); }
+										}
 								  , false );
 		 bt_stop.addEventListener ( 'click'
 								  , function() {
-									 utils.XHR( 'POST', '/Stop');
-									}
+										var inputHidden = document.getElementById('programId');
+										if(inputHidden) {utils.XHR( 'POST', '/Stop'
+																  , {variables: {programId: inputHidden.value}}
+																  ); }
+										}
 								  , false );
 		}
 	, sendProgram	: function() {
@@ -269,6 +276,15 @@ var editor = {
 		 // console.log('Plug parsed program');
 		 this.rootProgram = prog;
 		 this.htmlNodeProgram.appendChild( prog.Render() );
+		 var inputHidden = document.getElementById('programId');
+		 if(inputHidden === null) {
+			 inputHidden = document.createElement('input');
+			 inputHidden.setAttribute('type' , 'hidden');
+			 inputHidden.setAttribute('id'   , 'programId');
+			 inputHidden.setAttribute('value', prog.PnodeID);
+			 document.body.appendChild( inputHidden );
+			}
+		 inputHidden.setAttribute('value', prog.PnodeID);
 		}
 };
 

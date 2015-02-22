@@ -18,5 +18,6 @@
 				  , "clearTimeout"	: false
 				  , "clearInterval"	: false
 				  , "exports"		: false
+				  , "DOMParser"		: false
 				  }
 }

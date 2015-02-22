@@ -6,6 +6,13 @@ var id			= 0;
 var D_nodes		= {};
 var D_classes	= {};
 
+function getNodeId() {
+	var PnodeID;
+	do	{PnodeID = 'Node' + (id++);
+		} while( Pnode.prototype.getNode(PnodeID) );
+	return PnodeID;
+}
+
 // Definition of a node for programs
 var Pnode = function(parent, children) {
 	 this.parent	= parent	|| null;
@@ -14,7 +21,7 @@ var Pnode = function(parent, children) {
 		 for(var i in children) {children[i].parent = this;}
 	 this.state		= 0;
 	 this.name		= '';
-	 this.id		= 'Node' + (id++);
+	 this.id		= getNodeId();
 	 D_nodes[this.id] = this;
 	 return this;
 	}
