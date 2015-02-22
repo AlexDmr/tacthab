@@ -43,9 +43,11 @@ var Putils = {
 		 var classe	= this.mapping[json.className];
 		 var parent	= new classe(null);
 		 parent.unserialize(json, this);
+		 /** DEBUG XXXif
 		 if(Pnode.prototype.getNode(json.PnodeID)) {
 			 parent.substituteIdBy(json.PnodeID);
 			}
+		 */
 		 return parent;
 		}
 };

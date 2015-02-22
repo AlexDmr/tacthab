@@ -44,14 +44,11 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		}
 
 	
-		// console.log('pgTest01 is a ', pgTest01, "\n-------------------------\n", 'webServer is a ', webServer);
 	console.log('webServer.init(',__dirname,',8888)');
 	webServer.init(__dirname, '8888');
 	UpnpServer.init();
 	
-	/*pgTest01.serialize();
-	pgTest01.Start();*/
-	var pgTest01 = null;
+	var pgRootId = '';
 	// Configure server
 	// Program editor
 	webServer.app.get( '/editor'
@@ -101,26 +98,36 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 					  , function(req, res) {
 							var nodeId = req.body.nodeId; 
 							var json;
-							var node = Pnode.prototype.getNode( nodeId ) || pgTest01 || pipoPgRoot;
+							var node =  Pnode.prototype.getNode( nodeId ) 
+									 || Pnode.prototype.getNode( pgRootId )
+									 || pipoPgRoot;
 							if(node) {
 								 json = JSON.stringify( node.getContextDescription() );
+								 console.log("/getContext", node.id, "\n", json);
 								} else {json = JSON.stringify( {} );}
 							res.end(json);
 							} );
 	webServer.app.post( '/Start'
 					  , function(req, res) {
-						 if(pgTest01) {pgTest01.Start();}
-						 res.end();
-						} );
+							 if(req.body.programId) {
+								 var obj = Pnode.prototype.getNode(req.body.programId);
+								 if(obj) {obj.Start();}
+								} else {console.log("Start : no program specified");}
+							 res.end();
+							}
+					  );
 	webServer.app.post( '/Stop'
 					  , function(req, res) {
-						 if(pgTest01) {pgTest01.Stop();}
-						 res.end();
-						} );
+							 if(req.body.programId) {
+								 var obj = Pnode.prototype.getNode(req.body.programId);
+								 if(obj) {obj.Stop ();}
+								} else {console.log("Stop  : no program specified");}
+							 res.end();
+							}
+					  );
 
 	function getObject(id) {
-		 var obj = null;
-		 if(!obj && pgTest01) {obj = pgTest01.getNode(id);}
+		 var obj = Pnode.prototype.getNode(id);
 		 if(!obj) {obj = Brick.prototype.getBrickFromId(id);}		 
 		 return obj;
 		}
@@ -144,20 +151,21 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		}
 	webServer.app.post( '/call'
 					  , function(req, res) {
-						 if(pgTest01) {
-							 var obj	= pgTest01.getNode(req.body.objectId)
-							   , mtd	= req.body.method
-							   , params	= JSON.parse(req.body.params);
-							 console.log("Executing HTTP call :", req.body.objectId + '.' + req.body.method, 'with ' + req.body.params);
-							 obj[mtd].apply(obj, params);
-							}
-						 res.end();
+							 var obj	= Pnode.prototype.getNode(req.body.objectId)
+							 if(obj) {
+								 var mtd	= req.body.method
+								   , params	= JSON.parse(req.body.params);
+								 console.log("Executing HTTP call :", req.body.objectId + '.' + req.body.method, 'with ' + req.body.params);
+								 try {obj[mtd].apply(obj, params);} catch(err) {console.error("\terror", err);}
+								}
+							 res.end();
 						} );
 						
 	webServer.app.get( '/loadProgram'
 		, function(req, res) {
-				var programId = req.query.programId;
-				if(!programId && pgTest01) {programId = pgTest01.id;}
+				 console.log("loadProgram :", req.query.programId, ':', pgRootId);
+				var programId = req.query.programId
+				if(programId === undefined) {programId = pgRootId || null;}
 				if(programId) {
 					 var pg = Pnode.prototype.getNode(programId);
 					 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
@@ -165,7 +173,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 					 if(pg) {
 						 str_prg = JSON.stringify( pg.serialize() );
 						 console.log("========================> Sending:\n", str_prg);
-						}
+						} else {console.log("\tImpossible to find the program identified by", programId);}
 					 res.end( str_prg );
 					} else  {console.log("No program available...");
 							 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
@@ -176,19 +184,25 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		
 	webServer.app.post( '/loadProgram'
 		, function(req, res) {
-			 var parent = null;
+			 var parent = null, previousProgram = null;
 			 if(req.body.programId) {
-				 var node = Pnode.prototype.getNode(req.body.programId);
-				 if(node) {parent = node.parent;}
+				 previousProgram = Pnode.prototype.getNode(req.body.programId);
+				 if(previousProgram) {parent = previousProgram.parent;}
 				}
 			 if(req.body.program) {
 				 console.log("Loading program\n", req.body.program);
 				 var pg = Putils.unserialize( JSON.parse(req.body.program) );
+				 // Substitute id?
+				 if(previousProgram) {
+					 console.log( "Substitute program", previousProgram.id, "by the new one");
+					 pg.substituteIdBy( previousProgram.id );
+					 previousProgram.dispose(); 
+					}
 				 pg.setParent(parent);
-				 if(pgTest01 === null && parent === null) {pgTest01 = pg;}
+				 if(pgRootId === '' && parent === null) {pgRootId = pg.id; console.log("Now pgRootId =", pgRootId);}
 				 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
 				 var str_prg = JSON.stringify( pg.serialize() );
-				 console.log("========================> Sending:\n", str_prg);
+				 console.log("|n========================> Sending:\n", str_prg, "\n");
 				 res.end( str_prg );
 				}
 			}
@@ -207,7 +221,8 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 																 var body = doc.getElementsByTagName('body')[0];
 																 var L = []
 																   , node;
-																 if(pgTest01) {L.push(pgTest01);}
+																 var obj = Pnode.prototype.getNode(pgRootId);
+																 if(obj) {L.push(obj);}
 																 while(L.length) {
 																	 node = L.splice(0, 1)[0];
 																	 for(var i in node.children) {L.push( node.children[i] );}
@@ -229,9 +244,8 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 					  , function(req, res) {
 						 console.log( "Trigger event", req.body.id);
 						 res.end();
-						 if(pgTest01) {
-							 pgTest01.getNode(req.body.id).triggerEvent();
-							}
+						 var obj = Pnode.prototype.getNode(req.body.id);
+						 if(obj) {obj.triggerEvent();}
 						}
 					  );
 	

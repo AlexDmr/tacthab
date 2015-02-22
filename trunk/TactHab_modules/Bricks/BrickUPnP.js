@@ -28,6 +28,11 @@ define( [ './Brick.js'
 	BrickUPnP.prototype.getDescription = function() {
 		 var json = Brick.prototype.getDescription.apply(this, []);
 		 json.name = this.UPnP.friendlyName;
+		 if(this.UPnP.icons[0]) {
+			 var url = this.UPnP.icons[0].url[0];
+			 if(url[0] !== '/') {url = '/' + url;}
+			 json.iconURL = 'http://' + this.UPnP.device.host + ':' + this.UPnP.device.port + url;
+			}
 		 return json;
 		}
 	BrickUPnP.prototype.init	 		= function(device) {
@@ -40,6 +45,9 @@ define( [ './Brick.js'
 		 this.UPnP.friendlyName	= device.friendlyName;
 		 this.UPnP.host			= device.host;
 		 this.UPnP.port			= device.port;
+		 this.UPnP.icons		= [];
+		 
+		 if(device.desc.iconList && device.desc.iconList.icon) {this.UPnP.icons = device.desc.iconList.icon;}
 		 
 		 // Parse the rawData
 		 try {this.docDescription = xmldomparser.parseFromString( device.rawData );

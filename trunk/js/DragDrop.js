@@ -29,6 +29,7 @@ var DragDrop = {
 		 delete this.dropZones[id];
 		}
 	, nodeContainsClasses	: function(node, classes) {
+		 if(node === null) {return false;}
 		 for(var i=0; i<classes.length; i++) {
 			 if( !node.classList.contains(classes[i]) ) {return false;}
 			}

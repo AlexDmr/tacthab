@@ -22,6 +22,33 @@ MR_Instance_SelectorNodePresentation.prototype.Render = function() {
 	var root = SelectorNodePresentation.prototype.Render.apply(this, []);
 	// Call server for the latest description of Media Player this.selector.objectId
 	if(this.selector.objectId) {
+		 utils.XHR( 'POST', 'getContext'
+				  , { variables	: {nodeId: this.PnodeID}
+				    , onload	: function() {
+						 var data = JSON.parse( this.responseText );
+						 console.log("select", self.selector.objectId, data.bricks);
+						 if(typeof data.bricks[ self.selector.objectId ] !== 'undefined') {
+							 console.log("XXX Render properly the selected MR with", data.bricks[ self.selector.objectId ]);
+							 root.innerHTML = '';
+							 root.classList.add( 'MediaBrowserFlow' );
+							 var MR = data.bricks[ self.selector.objectId ];
+							 var MP = MediaBrowser.prototype.RenderItem( MR.name // name
+															 , MR.iconURL || 'js/Presentations/UPnP/images/defaultMediaRenderer.png'// iconURL
+															 , MR.id // mediaServerId
+															 , 0 // directoryId
+															 , 'MediaRenderer' // classes
+															 , false // isItem
+															 );
+							 MP.onclick = null;
+							 root.appendChild( MP );
+							}
+						}
+				    }
+				  );
+		}
+	
+	/** DEBUG
+	if(this.selector.objectId) {
 		console.log( 'Display Media Player: ', this.selector.objectId );
 		utils.XHR( 'GET', 'get_MediaDLNA'
 				 , function() {
@@ -47,6 +74,7 @@ MR_Instance_SelectorNodePresentation.prototype.Render = function() {
 					}
 				 );
 		}
+	*/
 	return root;
 }
 

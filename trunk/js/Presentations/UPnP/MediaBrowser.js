@@ -10,8 +10,8 @@ define	( [ '../protoPresentation.js'
 		document.head.appendChild( css );
 	
 	function MediaBrowser(title) {
+		 // var self			= this;
 		 protoPresentation.apply(this, []);
-		 var self			= this;
 		 this.title			= title || 'TITLE';
 		 this.Breadcrumbs	= [ {name: 'Servers', mediaServerId:'', directoryId:'', classes: 'MediaServer'}
 							  ];
@@ -126,10 +126,34 @@ define	( [ '../protoPresentation.js'
 				   }
 		 return htmlMS;
 		}
-	MediaBrowser.prototype.getServers = function() {
+	MediaBrowser.prototype.getServers = function(PnodeID) {
 		 var self = this;
 		 this.htmldivContent.innerHTML = '';
 		 this.htmldivContent.classList.remove('error');
+		 utils.XHR( 'POST', 'getContext'
+				  , { variables	: {nodeId: this.PnodeID}
+					, onload	: function() {
+						 var data = JSON.parse( this.responseText )
+						   , brick;
+						 self.htmldivContent.innerHTML = '';
+						 for(var i in data.bricks) {
+							 brick = data.bricks[i];
+							 if(brick.type.indexOf('BrickUPnP_MediaServer') !== -1) {
+								 var htmlMS = self.RenderItem( brick.name
+															 , brick.iconURL || 'js/Presentations/UPnP/images/defaultMediaServer.png'
+															 , brick.id
+															 , '0'
+															 , 'MediaServer' );
+								 self.htmldivContent.appendChild( htmlMS );
+								}
+							}
+						}
+				    }
+				  );
+
+		 
+		 
+		 /** DEBUG XXX
 		 utils.XHR( 'GET', '/get_MediaDLNA'
 				  , {onload : function() {
 								 var data = JSON.parse( this.responseText );
@@ -152,6 +176,7 @@ define	( [ '../protoPresentation.js'
 								}
 					}
 				 );
+		 */
 		}
 	MediaBrowser.prototype.getHtmlItemFrom = function(mediaServerId, itemId, cb) {
 		 var self = this;
@@ -182,11 +207,11 @@ define	( [ '../protoPresentation.js'
 						}
 					);
 		}
-	MediaBrowser.prototype.Browse = function() {
+	MediaBrowser.prototype.Browse = function(PnodeID) {
 		 var self = this;
 		 var element = this.Breadcrumbs[ this.Breadcrumbs.length - 1 ];
 		 this.RenderNavigation();
-		 if( element.mediaServerId === '') {return this.getServers();}
+		 if( element.mediaServerId === '') {return this.getServers(PnodeID);}
 		 
 		 utils.call	( element.mediaServerId
 					, 'Browse'
@@ -199,13 +224,13 @@ define	( [ '../protoPresentation.js'
 							 var Result = doc.getElementsByTagName('Result').item(0);
 							 if(Result) {
 								 var ResultDoc = XMLparser.parseFromString(Result.textContent, "text/xml");
-								 var L_containers = ResultDoc.getElementsByTagName('container');
-								 for(var i=0; i<L_containers.length; i++) {
+								 var L_containers = ResultDoc.getElementsByTagName('container')
+								   , i, title, icon;
+								 for(i=0; i<L_containers.length; i++) {
 									 var container	= L_containers.item(i);
 									 var contId		= container.getAttribute('id');
-									 var title		= container.getElementsByTagName('title').item(0).textContent;
+									 title		= container.getElementsByTagName('title').item(0).textContent;
 									 // console.log('title', container);
-									 var icon	;
 										if(container.getElementsByTagName('albumArtURI').length) {
 											 icon = container.getElementsByTagName('albumArtURI').item(0).textContent;
 											} else {icon = null;}
@@ -219,15 +244,14 @@ define	( [ '../protoPresentation.js'
 									} // End of containers
 								 var L_items	= ResultDoc.getElementsByTagName('item');
 								 // console.log("There is", L_items.length, "items");
-								 for(var i=0; i<L_items.length; i++) {
+								 for(i=0; i<L_items.length; i++) {
 									 var item	= L_items.item(i);
 									 var itemId	= item.getAttribute('id');
-									 var title	= item.getElementsByTagName('title').item(0).textContent;
-									 var icon	;
+									 title	= item.getElementsByTagName('title').item(0).textContent;
 										if(item.getElementsByTagName('albumArtURI').length) {
 											 icon = item.getElementsByTagName('albumArtURI').item(0).textContent;
 											} else {icon = null;}
-									 var uri	= item.getElementsByTagName('res').item(0).textContent;
+									 // var uri	= item.getElementsByTagName('res').item(0).textContent;
 									 var htmlMedia = self.RenderItem( title
 																	, icon || 'js/Presentations/UPnP/images/media_icon.jpg'
 																	, element.mediaServerId

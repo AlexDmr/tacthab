@@ -52,15 +52,20 @@ PprogramDeclaration.prototype.unserialize	= function(json, Putils) {
 	// className and id are fixed by the constructor of the object itself
 	this.programDef   = { type	: this.updateType()
 						, name	: json.programDef.name
+						, id	: null
 						};
 	if(json.programDef.id) {
-		 this.programDef.id	= json.programDef.id;
-		 // Replug
-		 Pnode.prototype.getNode( this.programDef.id ).setParent(this);
-		} else {var pg = new ProgramNode();
-				pg.setParent(this);
-				this.programDef.id = pg.id;
-			   }
+		 var subProgram = Pnode.prototype.getNode( this.programDef.id );
+		 if(subProgram) {
+			 this.programDef.id	= json.programDef.id;
+			 subProgram.setParent(this);
+			}
+		}
+	if(this.programDef.id === null) {
+		 var pg = new ProgramNode();
+		 pg.setParent(this);
+		 this.programDef.id = pg.id;
+		}
 	return this;
 } 
 
