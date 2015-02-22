@@ -1,0 +1,15 @@
+------------------------------------------------------------------------------
+1) Désérialiser sans se soucier des id
+2) Substituer l'id du programme désérialiser par celui du programme remplacé
+   pour conserver les références possibles de son programme père
+------------------------------------------------------------------------------
+3) Identifiant des variables gérés par l noeud définitions.
+   Permet de ne pas générer deux fois le même pour un programme donnée
+   en vérifiant au préalable si l'identifiant existeou non.
+   On parle bien de l'id de la variable (nom, id) 
+   et pas de celui du noeud de définition qui la porte.
+------------------------------------------------------------------------------
+4) Cahcer/Exposer, on liste les instruction qui ont été appelé
+   Si une instruction est rappellée, on retire l'appel précédent...
+   Pour un porogramm donné,
+   au maximum on aura une liste contenant chaque instruction 
