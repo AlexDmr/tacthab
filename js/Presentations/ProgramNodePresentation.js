@@ -36,29 +36,31 @@ ProgramNodePresentation.prototype.reset = function() {
 }
 
 ProgramNodePresentation.prototype.serialize	= function() {
-	var json = PnodePresentation.prototype.serialize.apply(this, []);
+	var json = PnodePresentation.prototype.serialize.apply(this, [])
+	  , i, node;
 	json.pg = { definitions : []
 			  , instructions: [] };
-	for(var i=0; i<this.Pnodes.definitions.length; i++) {
-		 var node = this.Pnodes.definitions[i];
+	for(i=0; i<this.Pnodes.definitions.length; i++) {
+		 node = this.Pnodes.definitions[i];
 		 json.pg.definitions.push( node.serialize() );
 		}
-	for(var i=0; i<this.Pnodes.instructions.length; i++) {
-		 var node = this.Pnodes.instructions[i];
+	for(i=0; i<this.Pnodes.instructions.length; i++) {
+		 node = this.Pnodes.instructions[i];
 		 json.pg.instructions.push( node.serialize() );
 		}
 	return json;
 }
 
 ProgramNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
+	var i, jsonNode;
 	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
 	this.reset();
-	for(var i=0; i<json.pg.definitions.length; i++) {
-		 var jsonNode = json.pg.definitions[i];
+	for(i=0; i<json.pg.definitions.length; i++) {
+		 jsonNode = json.pg.definitions[i];
 		 this.appendDefinitionNode ( PresoUtils.unserialize(jsonNode) );
 		}
-	for(var i=0; i<json.pg.instructions.length; i++) {
-		 var jsonNode = json.pg.instructions[i];
+	for(i=0; i<json.pg.instructions.length; i++) {
+		 jsonNode = json.pg.instructions[i];
 		 this.appendInstructionNode( PresoUtils.unserialize(jsonNode) );
 		}
 	return this;
@@ -114,7 +116,7 @@ ProgramNodePresentation.prototype.Render	= function() {
 			this.divChildrenInstTxt.innerText = 'Insert a Definition here';
 			this.html.instructions.appendChild( this.divChildrenInstTxt );
 			this.dropZoneInstId = DragDrop.newDropZone( this.divChildrenInstTxt
-								, { acceptedClasse	: 'Pnode'
+								, { acceptedClasse	: ['Pnode', 'instruction']
 								  , CSSwhenAccepted	: 'possible2drop'
 								  , CSSwhenOver		: 'ready2drop'
 								  , ondrop			: function(evt, draggedNode, infoObj) {

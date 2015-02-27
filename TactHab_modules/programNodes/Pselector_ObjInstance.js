@@ -20,8 +20,16 @@ var classes = Pselector.prototype.getClasses().slice();
 classes.push(Pselector_ObjInstance.prototype.className);
 Pselector_ObjInstance.prototype.getClasses	= function() {return classes;};
 
-Pselector.prototype.evalSelector	= function() {
-	return [ Brick.prototype.getBrickFromId( this.selector.objectId ) ];
+Pselector_ObjInstance.prototype.evalSelector	= function() {
+	var context	= this.getContext()
+	  , brick	= Brick.prototype.getBrickFromId( this.selector.objectId )
+	  , res		= [];
+	if(brick) {
+		 if(typeof context.bricks[ brick.brickId ] !== 'undefined') {
+			 res.push(brick);
+			} else {console.error("There no brick", brick.brickId, "in the context", context);}
+		} else {console.error("There is no brick identified by", this.selector.objectId);}
+	return res; //[ Brick.prototype.getBrickFromId( this.selector.objectId ) ];
 }
 
 Pselector_ObjInstance.prototype.updateType = function() {

@@ -8,7 +8,7 @@ var DragDrop = {
 	, init			: function() {
 		// Some initialization here
 		// May be useful to handle subscribing at document level
-		 var self = this;
+		 // var self = this;
 		}
 	, updateConfig	: function(id, config) {
 		 for(var i in config) {
@@ -35,7 +35,7 @@ var DragDrop = {
 			}
 		 return true;
 		}
-	, newDropZone	: function(node, config) {
+	, newDropZone	: function(node, config ) {
 		 // Config is an object containing potentially :
 		 //		- acceptedClasse	: Accepted classes conjunctions (list)
 		 //		- CSSwhenAccepted	: class added to the drop zone when an accepted node is dragged

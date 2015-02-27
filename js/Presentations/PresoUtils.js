@@ -6,7 +6,8 @@ define	( [ './ProgramNodePresentation.js'
 		  , './WhenNodePresentation.js'
 		  , './PcontrolBrickPresentation.js'
 		  , './PfilterPresentation.js'
-		  // Variables
+		  // Variables and programs
+		  , './Program_UsePresentation.js'
 		  , './Program_DefinitionPresentation.js'
 		  , './Var_DefinitionPresentation.js'
 		  , './SelectorNodePresentation.js'
@@ -29,6 +30,7 @@ define	( [ './ProgramNodePresentation.js'
 				  , PcontrolBrickPresentation
 				  , PfilterPresentation
 				  // Variables
+				  , Program_UsePresentation
 				  , Program_DefinitionPresentation
 				  , Var_DefinitionPresentation
 				  , SelectorNodePresentation
@@ -52,6 +54,7 @@ var PresoUtils = {
 					  , 'PcontrolBrick'							: PcontrolBrickPresentation
 					  , 'PfilterPresentation'					: PfilterPresentation
 					  // Variables
+					  , 'Program_UsePresentation'				: Program_UsePresentation
 					  , 'Program_DefinitionPresentation'		: Program_DefinitionPresentation
 					  , 'Var_DefinitionPresentation'			: Var_DefinitionPresentation
 					  , 'SelectorNodePresentation'				: SelectorNodePresentation

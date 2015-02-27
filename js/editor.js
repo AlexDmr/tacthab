@@ -46,9 +46,9 @@ var editor = {
 		 this.socket = socket;
 		 socket.on( 'updateState'
 				  , function(json) {
-						 console.log('updateState : ', json);
+						 // console.log('updateState : ', json);
 						 var obj = PnodePresentation.prototype.getPnode(json.objectId);
-						 console.log("\t=> obj :", obj);
+						 // console.log("\t=> obj :", obj);
 						 if(obj) {
 							 obj.setState(json.prevState, json.nextState);
 							}
@@ -61,15 +61,15 @@ var editor = {
 		 // Control flow instructions
 		 this.createCateg("Controls"	).appendChild( this.createDragNode( 'Program'
 													 , { constructor	: PresoUtils.get('ProgramNode')
-													   , nodeType		: 'ProgramNode'
+													   , nodeType		: ['ProgramNode', 'instruction']
 													   } )
 										).appendChild( this.createDragNode( 'Parrallel'
 													 , { constructor	: PresoUtils.get('ParalleNode')
-													   , nodeType		: 'ParalleNode'
+													   , nodeType		: ['ParalleNode', 'instruction']
 													   } )
 										).appendChild( this.createDragNode( 'Sequence'
 													 , { constructor	: PresoUtils.get('SequenceNode')
-													   , nodeType		: 'SequenceNode'
+													   , nodeType		: ['SequenceNode', 'instruction']
 													   } )
 										).appendChild( this.createDragNode( 'When'
 													 , { constructor	: PresoUtils.get('WhenNode')
@@ -78,15 +78,22 @@ var editor = {
 										).appendChild( this.createDragNode( 'Event'
 													 , { constructor	: PresoUtils.get('EventNode')
 													   , nodeType		: 'EventNode'
-													   , isNotType		: 'Pnode'
+													   , isNotType		: ['Pnode', 'instruction']
 													   } )
 										).appendChild( this.createDragNode( 'Controller'
 													 , { constructor	: PresoUtils.get('PcontrolBrick')
-													   , nodeType		: 'PcontrolBrick'
+													   , nodeType		: ['PcontrolBrick']
 													   } )
 										).appendChild( this.createDragNode( 'Filter (hide/expose)'
 													 , { constructor	: PresoUtils.get('PfilterPresentation')
-													   , nodeType		: 'PfilterNode'
+													   , nodeType		: ['PfilterNode', 'instruction']
+													   } )
+										);
+		 // Create new draggable for programs
+		 this.program_categ =
+		 this.createCateg("Programs").appendChild( this.createDragNode( 'New sub-program'
+													 , { constructor	: PresoUtils.get('Program_DefinitionPresentation')
+													   , nodeType		: 'DefinitionNode'
 													   } )
 										);
 		 // Create new draggable for variables
@@ -94,36 +101,32 @@ var editor = {
 													 , { constructor	: PresoUtils.get('Var_DefinitionPresentation')
 													   , nodeType		: 'DefinitionNode'
 													   } )
-										).appendChild( this.createDragNode( 'New sub-program'
-													 , { constructor	: PresoUtils.get('Program_DefinitionPresentation')
-													   , nodeType		: 'DefinitionNode'
-													   } )
 										);
 		 // Create new draggable for MediaRenderer
 		 this.MR_categ = 
 		 this.createCateg("MediaRenderer").appendChild( this.createDragNode( 'Load'
 													 , { constructor	: PresoUtils.get('MR_load_NodePresentation')
-													   , nodeType		: 'ActionNode'
+													   , nodeType		: ['ActionNode', 'instruction']
 													   } )
 										).appendChild( this.createDragNode( 'Play'
 													 , { constructor	: PresoUtils.get('MR_Play_NodePresentation')
-													   , nodeType		: 'ActionNode'
+													   , nodeType		: ['ActionNode', 'instruction']
 													   } )
 										).appendChild( this.createDragNode( 'Pause'
 													 , { constructor	: PresoUtils.get('MR_Pause_NodePresentation')
-													   , nodeType		: 'ActionNode'
+													   , nodeType		: ['ActionNode', 'instruction']
 													   } )
 										).appendChild( this.createDragNode( 'Stop'
 													 , { constructor	: PresoUtils.get('MR_Stop_NodePresentation')
-													   , nodeType		: 'ActionNode'
+													   , nodeType		: ['ActionNode', 'instruction']
 													   } )
 										).appendChild( this.createDragNode( 'Every media renderers'
 													 , { constructor	: PresoUtils.get('MR_Selector_everyMediaRenderers')
-													   , nodeType		: 'SelectorNode'
+													   , nodeType		: ['SelectorNode', 'BrickUPnP_MediaRenderer']
 													   } )
 										).appendChild( this.createDragNode( 'Every media servers'
 													 , { constructor	: PresoUtils.get('MR_Selector_everyMediaServers')
-													   , nodeType		: 'SelectorNode'
+													   , nodeType		: ['SelectorNode', 'BrickUPnP_MediaServer']
 													   } )
 										);
 		 
@@ -162,31 +165,20 @@ var editor = {
 													     } )
 													   );
 								}
-							}
-						}
-				    }
-				  );
-		 
-		 // Process Media Renderer and media servers
-		 /* => done via /getContext HTTP POST
-		 utils.XHR( 'GET', '/get_MediaDLNA'
-				  , {onload : function() {
-							 var res = JSON.parse( this.responseText );
-							 // console.log( res );
-							 for(var i=0; i<res.MediaRenderer.length; i++) {
-								 var MR = res.MediaRenderer[i];
-								 self.MR_categ.appendChild( self.createDragNode( MR.name
-													   , { constructor	: PresoUtils.get('MR_Instance_SelectorNodePresentation')
-													     , nodeType		: ['SelectorNode', 'BrickUPnP_MediaRenderer']
-														 , uuid			: MR.uuid
-														 , MR			: MR
+							 if(variable.type.indexOf("Program") !== -1) {
+								 self.program_categ.appendChild( self.createDragNode( variable.name
+													   , { constructor	: PresoUtils.get('Program_UsePresentation')
+													     , nodeType		: variable.type.concat( ['SelectorNode', 'program'] )
+														 , id			: variable.id
+														 , name			: variable.name
 													     } )
 													   );
 								}
 							}
+						}
 				    }
 				  );
-		 */
+				  
 		 // Create new draggable for Hue
 		 this.createCateg("Hue lamp").appendChild( this.createDragNode( 'on...'
 												 , { constructor	: PresoUtils.get('PeventBrickPresentation_Hue')

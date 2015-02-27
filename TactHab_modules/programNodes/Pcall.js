@@ -18,8 +18,8 @@ Pcall.prototype.update_res	= function(A_res, i, type, value) {
 	this.nb_res++;
 	if(this.nb_res === A_res.length) {
 		 // Check all results to decide which callback to trigger
-		 for(var i=0; i<A_res.length; i++) {
-			 if(A_res[i].type === 'error') {this.CB_cancel (A_res); return;}
+		 for(var j=0; j<A_res.length; j++) {
+			 if(A_res[j].type === 'error') {this.CB_cancel (A_res); return;}
 			}
 		 this.CB_success(A_res);
 		}
@@ -31,10 +31,12 @@ Pcall.prototype.executeFor	= function(A_res, i) {
 		 params.push( function(res) {self.update_res(A_res, i, 'success', res);}
 					, function(err) {self.update_res(A_res, i, 'error'  , err);}
 					);
-		 var obj = this.targets[i]
-		   , mtd = obj[this.mtdName]
-		   , res = mtd.apply(obj, params);
-		 if(res !== undefined) {this.update_res(A_res, i, 'success', res);}
+		 var obj = this.targets[i];
+		 if(obj) {
+			 var mtd = obj[this.mtdName];
+			 var res = mtd.apply(obj, params);
+			 if(res !== undefined) {this.update_res(A_res, i, 'success', res);}
+			} else {console.error("Unknown target object for method", this.mtdName);}
 		} catch (err) {
 			 A_res[i] = {error  : err};
 			}

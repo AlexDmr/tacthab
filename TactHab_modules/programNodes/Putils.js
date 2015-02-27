@@ -12,6 +12,7 @@ define ([ './Pnode.js'
 		// Selectors
 		, './Pselector_ObjInstance.js'
 		, './Pselector_variable.js'
+		, './Pselector_program.js'
 		]
 		, function( Pnode, ProgramNode, ParalleNode
 				  , ActionNode, SequenceNode
@@ -23,6 +24,7 @@ define ([ './Pnode.js'
 				  // Selectors
 				  , Pselector_ObjInstance
 				  , Pselector_variable
+				  , Pselector_program
 				  ) {
 var Putils = {
 	  mapping		: { 'Pnode'					: Pnode
@@ -38,6 +40,7 @@ var Putils = {
 					  , 'PprogramDeclaration'	: PprogramDeclaration
 					  , 'Pselector_ObjInstance'	: Pselector_ObjInstance
 					  , 'Pselector_variable'	: Pselector_variable
+					  , 'Pselector_program'		: Pselector_program
 					  }
 	, unserialize	: function(json) {
 		 var classe	= this.mapping[json.className];

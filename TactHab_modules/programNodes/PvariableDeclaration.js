@@ -24,7 +24,7 @@ PvariableDeclaration.prototype.getDescription = function() {
 	var descr =	{ type	: this.updateType()
 				, name	: this.varDef.name
 				};
-	descr.id = this.varDef.id || this.parent.getVariableId();
+	descr.id = this.getSelectorId();
 	return descr;
 }
 
@@ -43,7 +43,10 @@ PvariableDeclaration.prototype.childStateChanged = function(child, prevState, ne
 		} else {error('PvariableDeclaration::childStateChanged : a child state changed but this was not the expected child !');}
 }
 
-PvariableDeclaration.prototype.getSelectorId = function() {return this.varDef.id}
+PvariableDeclaration.prototype.getSelectorId = function() {
+	 this.varDef.id = this.varDef.id || this.parent.getVariableId();
+	 return this.varDef.id;
+	}
 
 PvariableDeclaration.prototype.updateType = function() {
 	if(this.children.length === 1) {

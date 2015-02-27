@@ -25,7 +25,6 @@ PfilterPresentation.prototype.init = function(PnodeID, parent, children) {
 	return this;
 }
 PfilterPresentation.prototype.serialize	= function() {
-	var children = []
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
 	// Describe action here
 	json.subType	= 'PfilterPresentation';
