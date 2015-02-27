@@ -33,7 +33,7 @@ ActionNode.prototype.Start = function() {
 		if(this.children[0] && this.children[0].evalSelector) {
 			// Evaluate the targets
 			var targets = this.children[0].evalSelector();
-			console.log("ActionNode->Calling", this.mtd, this.params);
+			console.log("ActionNode->Calling", targets.length, this.mtd, this.params);
 			// Propagate the call
 			this.call( new Pcall( targets, this.mtd, this.params
 								, function(res) {console.log("Success:", res); self.Stop();}

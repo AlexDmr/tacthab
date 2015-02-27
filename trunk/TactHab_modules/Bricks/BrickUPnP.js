@@ -85,7 +85,7 @@ define( [ './Brick.js'
 		}
 	BrickUPnP.prototype.UPnPEvent		= function(event, service) {
 		 var self = this;
-		 // console.log("New event for", self.brickId, ":", event, "\n\tfor service:", service.serviceType);
+		 // console.log("New event for", self.brickId, service.serviceType);
 		 var doc = null, error;
 		 try {
 			 doc = xmldomparser.parseFromString(event, 'text/xml');

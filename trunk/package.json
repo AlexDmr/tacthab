@@ -21,6 +21,7 @@
 		, "requirejs"		: "latest"
 		, "ip"				: "latest"
 		, "async"			: "latest"
+		, "underscore"		: "latest"
 		, "network"			: "latest"
 		, "jsdoc"			: "latest"
     }

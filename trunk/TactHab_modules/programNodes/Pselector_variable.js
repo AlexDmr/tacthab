@@ -26,6 +26,7 @@ Pselector_variable.prototype.getVariableDeclaration	= function() {
 }
 
 Pselector_variable.prototype.evalSelector	= function() {
+	Pselector.prototype.evalSelector.apply(this, []);
 	// Get reference to the variable declaration
 	var variableDeclaration = this.getVariableDeclaration();
 	if(variableDeclaration) {

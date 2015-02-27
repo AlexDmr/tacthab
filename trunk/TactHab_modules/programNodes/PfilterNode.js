@@ -1,8 +1,10 @@
 define( [ './program.js'
 		, './Pnode.js'
+		, 'underscore'
 	    ]
 	  , function( ProgramNode
-				, Pnode ) {
+				, Pnode
+				, _ ) {
 // Definition of a node for programs
 var PfilterNode = function(parent, children) {
 	 Pnode.prototype.constructor.apply(this, [parent, children]);
@@ -27,9 +29,21 @@ var classes = Pnode.prototype.getClasses().slice();
 classes.push(PfilterNode.prototype.className);
 PfilterNode.prototype.getClasses	= function() {return classes;};
 
+// API for starting, stopping the instruction
 PfilterNode.prototype.Start	= function() {
 	var res = Pnode.prototype.Start.apply(this, []);
 	
+	// Get program
+	var programs = this.filter.programs.evalSelector();
+	console.log("Filtering for", programs.length, "programs");
+	
+	// Register this filter
+	for(var i=0; i<programs.length; i++) {
+		 programs[i].RegisterFilter(this);
+		}
+	
+	this.Stop();
+	// Returns Pnode Start result
 	return res;
 }
 
@@ -38,7 +52,16 @@ PfilterNode.prototype.Stop	= function() {
 	return res;
 }
 
-// API for starting, stopping the instruction
+PfilterNode.prototype.applyFilterOn = function(context) {
+	if(this.filter.objects) {
+		if(this.filter.HideExpose === 'Hide') {
+			 context.bricks = _.difference(context.bricks, this.filter.objects.evalSelector());
+			} else {context.bricks = _.union(context.bricks, this.filter.objects.evalSelector());
+				   }
+		}
+}
+
+// API for serialization
 PfilterNode.prototype.serialize	= function() {
 	var json = Pnode.prototype.serialize.apply(this, []);
 	json.filter = { HideExpose	: this.filter.HideExpose }

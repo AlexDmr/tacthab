@@ -14,6 +14,9 @@ var ProgramNode = function(parent, children) {
 	 this.definitions	= new Pdefinition(this, []); 
 	 // Add a parallel node
 	 this.instructions	= new ParalleNode(this, []);
+	 // Manage filters
+	 this.filterNodes	= [];
+	 this.filtering		= false;
 	 
 	 return this;
 	}
@@ -25,12 +28,21 @@ ProgramNode.prototype.dispose		= function() {
 
 // API for starting, stopping the instruction
 ProgramNode.prototype = new SequenceNode();
+ProgramNode.prototype.constructor	= ProgramNode;
 ProgramNode.prototype.className	= 'ProgramNode';
 Pnode.prototype.appendClass(ProgramNode);
 
 var classes = SequenceNode.prototype.getClasses().slice();
 classes.push(ProgramNode.prototype.className);
 ProgramNode.prototype.getClasses	= function() {return classes;};
+
+ProgramNode.prototype.RegisterFilter = function(filterNode) {
+	for(var i=0; i<this.filterNodes.length; i++) {
+		 if(this.filterNodes[i] === filterNode) {this.filterNodes.splice(i, 1); break;}
+		}
+	this.filterNodes.push(filterNode);
+	return this;
+}
 
 ProgramNode.prototype.call = function(call) {
 	// Filter call
@@ -60,6 +72,13 @@ ProgramNode.prototype.getContext = function() {
 		}
 		
 	// Filter context
+	if(this.filtering === false) { // Take care of infinite loop
+		 this.filtering = true;
+		 for(var i=0; i<this.filterNodes.length; i++) {
+			 this.filterNodes[i].applyFilterOn( context );
+			}
+		 this.filtering = false;
+		}
 	
 	// Result
 	return context;
