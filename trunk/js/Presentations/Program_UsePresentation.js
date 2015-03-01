@@ -61,7 +61,7 @@ Program_UsePresentation.prototype.updateType = function() {
 Program_UsePresentation.prototype.Render	= function() {
 	// var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);
-	root.classList.add('Pselector_variable');
+	root.classList.add('Pselector_program');
 	if(typeof this.html.spanVarId === 'undefined') {
 		 this.html.spanVarId = document.createElement('span');
 			this.html.spanVarId.classList.add( 'varId' );

@@ -43,6 +43,7 @@ PvariableDeclaration.prototype.childStateChanged = function(child, prevState, ne
 		} else {error('PvariableDeclaration::childStateChanged : a child state changed but this was not the expected child !');}
 }
 
+PvariableDeclaration.prototype.getName = function() {return this.varDef.name;}
 PvariableDeclaration.prototype.getSelectorId = function() {
 	 this.varDef.id = this.varDef.id || this.parent.getVariableId();
 	 return this.varDef.id;

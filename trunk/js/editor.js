@@ -132,7 +132,10 @@ var editor = {
 		 
 		 // Process variables and bricks
 		 var variables = {};
-		 if(self.rootProgram) {variables.nodeId = self.rootProgram.PnodeID;}
+		 var inputHidden = document.getElementById('programId');
+		 if(inputHidden) {
+			  variables.nodeId = inputHidden.value;
+			 }
 		 utils.XHR( 'POST', '/getContext'
 				  , { variables	: variables
 					, onload	: function() {
@@ -270,6 +273,7 @@ var editor = {
 		 this.htmlNodeProgram.appendChild( prog.Render() );
 		 var inputHidden = document.getElementById('programId');
 		 if(inputHidden === null) {
+			 console.log("Create a new hidden input for program",  prog.PnodeID);
 			 inputHidden = document.createElement('input');
 			 inputHidden.setAttribute('type' , 'hidden');
 			 inputHidden.setAttribute('id'   , 'programId');

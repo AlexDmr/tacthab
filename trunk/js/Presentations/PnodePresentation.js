@@ -119,6 +119,7 @@ PnodePresentation.prototype.Render		= function() {
 	root.classList.add('Pnode');
 	if(this.state) {root.classList.add(this.state);}
 	if(!this.divDescription) {
+		 // root.appendChild( document.createTextNode(this.PnodeID + ' : ') );
 		 this.divDescription = document.createElement('div');
 			root.appendChild( this.divDescription );
 			this.divDescription.classList.add('description');

@@ -55,7 +55,11 @@ ProgramNode.prototype.call = function(call) {
 }
 
 ProgramNode.prototype.getContext = function() {
+	if(this.filtering) return this.cacheContext;
+	this.filtering = true;
+	
 	var context, i;
+	// console.log("<ProgramNode:getContext", this.id, ">");
 	if(this.parent) {
 		 context = Pnode.prototype.getContext.apply(this, []);
 		} else {context = {bricks:{}, variables:{}};
@@ -63,23 +67,45 @@ ProgramNode.prototype.getContext = function() {
 				var D_bricks = Brick.prototype.getBricks();
 				for(i in D_bricks) {context.bricks[i] = D_bricks[i];}
 			   }
-		
+	
+	this.cacheContext = context;	
 	// Resgister Variables
-	var L_defs = this.definitions.children;
+	var L_defs = this.definitions.children, varId, def;
 	for(i=0; i<L_defs.length; i++) {
-		 var def = L_defs[i]; // Variable definition
-		 context.variables[ def.getSelectorId() ] = def;
+		 def = L_defs[i]; // Variable definition
+		 varId = def.getSelectorId()
+		 context.variables[ varId ] = def;
+		 // console.log("\t- add variable", varId, ":", def.getName(), ":", def.evalSelector().length, "elements" );
 		}
 		
 	// Filter context
-	if(this.filtering === false) { // Take care of infinite loop
+		 this.cacheContext = context;
 		 this.filtering = true;
-		 for(var i=0; i<this.filterNodes.length; i++) {
+		 for(i=0; i<this.filterNodes.length; i++) {
 			 this.filterNodes[i].applyFilterOn( context );
 			}
+		// Delete variables that are "empty" with respect to the context
+		var variables = {}, variable, L, v;
+		for(v in context.variables) {
+			 variable = context.variables[v];
+			 L = variable.evalSelector();
+			 var empty = true;
+			 for(i=0; i<L.length; i++) {// Are all objects present in the context?
+				 if(  (L[i].brickId	&& typeof context.bricks   [ L[i].brickId] !== 'undefined')
+				   || (L[i].id		&& typeof context.variables[ L[i].id     ] !== 'undefined') ) {empty = false; break;}
+				}
+			 if(!empty) {variables[v] = variable;} else {
+				 L_str = "[";
+				 for(i=0; i<L.length; i++) {L_str += L[i].id + ', ';}
+				 L_str += "]";
+				 // console.log("\tRemoving variable", v, L_str);
+				}
+			}
+		 context.variables = variables;
 		 this.filtering = false;
-		}
-	
+		 
+		 
+	// console.log("</ProgramNode:getContext", this.id, ">");
 	// Result
 	return context;
 }

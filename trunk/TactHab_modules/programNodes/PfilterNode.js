@@ -34,8 +34,11 @@ PfilterNode.prototype.Start	= function() {
 	var res = Pnode.prototype.Start.apply(this, []);
 	
 	// Get program
-	var programs = this.filter.programs.evalSelector();
-	console.log("Filtering for", programs.length, "programs");
+	var programs;
+	if(this.filter.programs) {
+		 programs = this.filter.programs.evalSelector();
+		 console.log("Filtering for", programs.length, "programs.");
+		} else {programs = [];}
 	
 	// Register this filter
 	for(var i=0; i<programs.length; i++) {
@@ -54,9 +57,22 @@ PfilterNode.prototype.Stop	= function() {
 
 PfilterNode.prototype.applyFilterOn = function(context) {
 	if(this.filter.objects) {
-		if(this.filter.HideExpose === 'Hide') {
-			 context.bricks = _.difference(context.bricks, this.filter.objects.evalSelector());
-			} else {context.bricks = _.union(context.bricks, this.filter.objects.evalSelector());
+		var objects = this.filter.objects.evalSelector()
+		  , object, i;
+		if(this.filter.HideExpose === 'hide') {
+			 // context.bricks = _.difference(context.bricks, objects);
+			 for(i=0; i<objects.length; i++) {
+				 object = objects[i];
+				 delete context.bricks[ object.brickId ];
+				 console.log("\tPfilterNode:Removing", object.brickId);
+				}
+			} else {for(i=0; i<objects.length; i++) {
+						 object = objects[i];
+						 if(typeof context.bricks[ object.brickId ] === 'undefined') {
+							 context.bricks[ object.brickId ] = object;
+							 console.log("\tPfilterNode:Exposing", object.brickId);
+							}
+						}
 				   }
 		}
 }
