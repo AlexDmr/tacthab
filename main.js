@@ -172,7 +172,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 					 var str_prg = '';
 					 if(pg) {
 						 str_prg = JSON.stringify( pg.serialize() );
-						 console.log("========================> Sending:\n", str_prg);
+						 // console.log("========================> Sending:\n", str_prg);
 						} else {console.log("\tImpossible to find the program identified by", programId);}
 					 res.end( str_prg );
 					} else  {console.log("No program available...");
@@ -190,7 +190,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 				 if(previousProgram) {parent = previousProgram.parent;}
 				}
 			 if(req.body.program) {
-				 console.log("Loading program\n", req.body.program);
+				 // console.log("Loading program\n", req.body.program);
 				 var pg = Putils.unserialize( JSON.parse(req.body.program) );
 				 // Substitute id?
 				 if(previousProgram) {
@@ -202,7 +202,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 				 if(pgRootId === '' && parent === null) {pgRootId = pg.id; console.log("Now pgRootId =", pgRootId);}
 				 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
 				 var str_prg = JSON.stringify( pg.serialize() );
-				 console.log("|n========================> Sending:\n", str_prg, "\n");
+				 // console.log("|n=======================> Sending:\n", str_prg, "\n");
 				 res.end( str_prg );
 				}
 			}

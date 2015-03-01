@@ -51,7 +51,7 @@ Pselector_variable.prototype.serialize	= function() {
 }
 
 Pselector_variable.prototype.unserialize	= function(json, Putils) {
-	console.log("Pselector_variable::unserialize", json);
+	// console.log("Pselector_variable::unserialize", json);
 	Pselector.prototype.unserialize.apply(this, [json, Putils]);
 	// className and id are fixed by the constructor of the object itself
 	this.selector.variableId = json.selector.variableId;

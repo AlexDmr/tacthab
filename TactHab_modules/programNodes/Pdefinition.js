@@ -19,7 +19,11 @@ var classes = SequenceNode.prototype.getClasses().slice();
 classes.push(DefinitionNode.prototype.className);
 DefinitionNode.prototype.getClasses	= function() {return classes;};
 
-DefinitionNode.prototype.getVariableId = function() {
+DefinitionNode.prototype.getVariableId = function(prefix) {
+	var program = this.parent;
+	while(program && program.className !== 'ProgramNode') {program = program.parent;}
+	if(!program) {console.error('!!!!!!!!!! => THERE IS NO PROGRAM ANCESTOR FOR DefinitionNode:', this.id);}
+	
 	// retrieve exising names
 	var Dico = {};
 	for(var i=0; i<this.children.length; i++) {
@@ -28,8 +32,9 @@ DefinitionNode.prototype.getVariableId = function() {
 			 }
 		}	
 	// genrate a new one
-	var prefix = "V_", name, i=0;
-	do	{name = prefix + (i++);
+	prefix = prefix || "V_";
+	var name, i=0;
+	do	{name = program.id + ':' + prefix + (i++);
 		} while(Dico[name]);
 	// return name
 	return name;

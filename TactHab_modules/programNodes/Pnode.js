@@ -67,7 +67,7 @@ Pnode.prototype.getNode			= function(id)	{return D_nodes[id];}
 Pnode.prototype.substituteIdBy	= function(id)	{
 	 // Is there an object already having that id ?
 	 var obj = Pnode.prototype.getNode( id );
-	 if(obj) {obj.dispose(); console.log("Replacing object", id, ':', obj.className);}
+	 if(obj && (obj !== this)) {obj.dispose(); console.log("Replacing object", id, ':', obj.className);}
 	 
 	 // Replacing id and registrations
 	 delete D_nodes[this.id];
@@ -110,7 +110,7 @@ Pnode.prototype.setState = function(state) {
 	if(prevState !== state) {
 		 if(this.cb_setState) {this.cb_setState.apply(this, [this, prevState, state]);}
 		 if(Pnode.prototype.CB_setState) {
-			 console.log('emit', this.className, this.id, this.name, ':', prevState, '->', state);
+			 // console.log('emit', this.className, this.id, this.name, ':', prevState, '->', state);
 			 Pnode.prototype.CB_setState.apply(this, [this, prevState, state]);
 			}
 		 // console.log(this.className, "setting state to ", state);

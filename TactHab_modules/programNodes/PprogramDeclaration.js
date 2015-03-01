@@ -34,11 +34,17 @@ PprogramDeclaration.prototype.Start = function() {
 	return res;
 }
 
-PprogramDeclaration.prototype.getSelectorId = function() {return this.programDef.id}
+PprogramDeclaration.prototype.getName		= function() {return this.programDef.name;}
+PprogramDeclaration.prototype.getSelectorId = function() {return this.programDef.id  ;}
 
 PprogramDeclaration.prototype.updateType	= function() {return ['ProgramDeclaration', 'Program']}
 
-PprogramDeclaration.prototype.evalSelector	= function() {return []}
+PprogramDeclaration.prototype.evalSelector	= function() {
+	var L = [];
+	var P = Pnode.prototype.getNode( this.getSelectorId() );
+	if(P) {L.push(P);}
+	return L;
+}
 
 PprogramDeclaration.prototype.serialize	= function() {
 	var children = this.children; this.children = [];
@@ -54,16 +60,20 @@ PprogramDeclaration.prototype.unserialize	= function(json, Putils) {
 						, name	: json.programDef.name
 						, id	: null
 						};
-	if(json.programDef.id) {
-		 var subProgram = Pnode.prototype.getNode( this.programDef.id );
+	if(json.programDef.id !== null) {
+		 var subProgram = Pnode.prototype.getNode( json.programDef.id );
 		 if(subProgram) {
+			 console.log("There is a node identified by", json.programDef.id, ":", subProgram.className);
+			 
 			 this.programDef.id	= json.programDef.id;
 			 subProgram.setParent(this);
-			}
+			} else {console.log("There is no node identified by", json.programDef.id);}
 		}
 	if(this.programDef.id === null) {
+		 console.log("Creating a new sub-program");
 		 var pg = new ProgramNode();
 		 pg.setParent(this);
+		 if(json.programDef.id) {pg.substituteIdBy(json.programDef.id);}
 		 this.programDef.id = pg.id;
 		}
 	return this;
