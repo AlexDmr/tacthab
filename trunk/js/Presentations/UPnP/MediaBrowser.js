@@ -97,7 +97,9 @@ define	( [ '../protoPresentation.js'
 		 htmlMS.setAttribute('class', classes);
 		 htmlMS.classList.add('Media');
 		 var img = document.createElement('img');
-			img.setAttribute('src', iconURL);
+			if(iconURL.indexOf('http') === 0) {
+				 img.setAttribute('src', 'proxy?url=' + encodeURIComponent(iconURL) + '&binary=1' ); // iconURL);
+				} else {img.setAttribute('src', iconURL);}
 			img.classList.add('icon');
 			htmlMS.appendChild( img );
 		 htmlMS.appendChild( document.createTextNode(name) );

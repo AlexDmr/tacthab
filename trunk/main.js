@@ -28,6 +28,9 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		  // Extracteur
 		  , 'request'
 		  , 'xmldom'
+		  // OAuth
+		  , 'passport'
+		  , 'passport-google'
 		  ]
 		, function( Putils, Pnode, UpnpServer
 		          , Brick, BrickUPnP_MediaRenderer, BrickUPnP_MediaServer
@@ -36,6 +39,8 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 				  , ProgramNode
 				  , request
 				  , xmldom
+				  , passport
+				  , passportGoogle
 				  ) {
 	// var DOMParser = xmldom.DOMParser;
 	// console.log("On se casse!"); return;
@@ -78,15 +83,21 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 			});
 	
 	// _______________________________________________________________________________________________
-	webServer.app.post( '/proxy'
+	webServer.app.all( '/proxy'
 		, function(req, res) {
-			 var URL = req.body.url;
+			 var URL = req.body.url || req.query.url;
+			 var binary = req.body.binary || req.query.binary || false;
 			 console.log("Proxy for ", URL);
-			 request(URL, function (error, response, body) {
+			 var query = {url: URL};
+			 if(binary) query.encoding = 'binary';
+			 request(query, function (error, response, body) {
 				  if (!error && response.statusCode == 200) {
 					 // Parse webpage
-					 res.writeHead(200);
-					 res.end( body );
+					 console.log( response.headers );
+					 res.writeHead(200, { 'content-type'	: response.headers['Content-Type'] || response.headers['content-type'] 
+										// , 'content-length'	: response.headers['content-length']
+										} );
+					 if(binary) {res.end( body, 'binary' );} else {res.end(body);}
 					} else {res.writeHead(400);
 							res.end();
 						   }
@@ -136,7 +147,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		   , mtd	= json.method
 		   , params	= JSON.parse(json.params)
 		   , res	= null;
-		 console.log("Executing webSocket call :", json.objectId + '.' + json.method, 'with ' + json.params);
+		 // console.log("Executing webSocket call :", json.objectId + '.' + json.method, 'with ' + json.params);
 		 if(obj) {
 			 try {
 				 params.push(fctCB);
@@ -329,6 +340,20 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 			}
 		);
 
-	
+	// OAuth identification
+	/*var GoogleStrategy = passportGoogle.Strategy;
+	passport.use(new GoogleStrategy( { returnURL: 'http://localhost:8888/'
+									 , realm	: 'http://www.example.com/'
+									 }
+								   , function(identifier, profile, done) {
+										User.findOrCreate( { openId: identifier }
+														 , function(err, user) {
+																 done(err, user);
+																}
+														 );
+										}
+								   )
+				);
+	*/
 });
 
