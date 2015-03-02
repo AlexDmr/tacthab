@@ -24,5 +24,7 @@
 		, "underscore"		: "latest"
 		, "network"			: "latest"
 		, "jsdoc"			: "latest"
+		, "passport"		: "latest"
+		, "passport-google"	: "latest"
     }
 }
