@@ -26,5 +26,6 @@
 		, "jsdoc"			: "latest"
 		, "passport"		: "latest"
 		, "passport-google"	: "latest"
+		, "socket.io-client": "latest"
     }
 }

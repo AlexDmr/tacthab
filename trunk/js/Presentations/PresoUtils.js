@@ -3,6 +3,7 @@ define	( [ './ProgramNodePresentation.js'
 		  , './ActionNodePresentation.js'
 		  , './SequenceNodePresentation.js'
 		  , './EventNodePresentation.js'
+		  , './PeventFromSocketIOPresentation.js'
 		  , './WhenNodePresentation.js'
 		  , './PcontrolBrickPresentation.js'
 		  , './PfilterPresentation.js'
@@ -26,6 +27,7 @@ define	( [ './ProgramNodePresentation.js'
 				  , ActionNodePresentation
 				  , SequenceNodePresentation
 				  , EventNodePresentation
+				  , PeventFromSocketIOPresentation
 				  , WhenNodePresentation
 				  , PcontrolBrickPresentation
 				  , PfilterPresentation
@@ -50,6 +52,7 @@ var PresoUtils = {
 					  , 'ActionNode'							: ActionNodePresentation
 					  , 'SequenceNode'							: SequenceNodePresentation	, 'SequenceNodePresentation'	: SequenceNodePresentation
 					  , 'EventNode'								: EventNodePresentation
+					  , 'PeventFromSocketIOPresentation'		: PeventFromSocketIOPresentation
 					  , 'WhenNode'								: WhenNodePresentation
 					  , 'PcontrolBrick'							: PcontrolBrickPresentation
 					  , 'PfilterPresentation'					: PfilterPresentation

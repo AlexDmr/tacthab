@@ -87,13 +87,13 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		, function(req, res) {
 			 var URL = req.body.url || req.query.url;
 			 var binary = req.body.binary || req.query.binary || false;
-			 console.log("Proxy for ", URL);
+			 // console.log("Proxy for ", URL);
 			 var query = {url: URL};
 			 if(binary) query.encoding = 'binary';
 			 request(query, function (error, response, body) {
 				  if (!error && response.statusCode == 200) {
 					 // Parse webpage
-					 console.log( response.headers );
+					 // console.log( response.headers );
 					 res.writeHead(200, { 'content-type'	: response.headers['Content-Type'] || response.headers['content-type'] 
 										// , 'content-length'	: response.headers['content-length']
 										} );

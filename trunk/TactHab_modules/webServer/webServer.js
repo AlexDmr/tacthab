@@ -4,10 +4,12 @@ define	( [ 'fs-extra'
 		  , 'xmldom'
 		  , 'multer'
 		  , 'socket.io'
+		  , 'socket.io-client'
 		  , 'smtp-protocol'
 		  ]
 		, function( fs, express, bodyParser, xmldom, multer
-				  , io, smtp) {
+				  , io, ioClient
+				  , smtp) {
 // var fs			= require( 'fs-extra' );
 // var express		= require( 'express' );
 // var bodyParser	= require( 'body-parser' );
@@ -108,7 +110,34 @@ var webServer = {
 						 
 						 res.end();
 					  } );
-		 
+		 // Init a socket.IO client to http://thacthab.herokuapp.com
+		 this.socketioClient = ioClient( "http://thacthab.herokuapp.com" );
+		 this.socketioClient.on( 'connect'
+							   , function() {
+									 console.log("Connected to http://thacthab.herokuapp.com");
+									}
+							   );
+		 /*this.socketioClient.on( 'tel'
+							   , function(data) {
+									 console.log('tel:', data);
+									}
+							   );
+		 this.socketioClient.on( 'google'
+							   , function(data) {
+									 console.log('google:', data);
+									}
+							   );*/
+		 this.socketioClient.on( 'disconnect'
+							   , function() {
+									 console.log("Disconnected from http://thacthab.herokuapp.com");
+									}
+							   );
+		}
+	, registerSocketIO_CB			: function(topic, CB) {
+		 this.socketioClient.on(topic, CB);
+		}
+	, unregisterSocketIO_CB			: function(topic, CB) {
+		 this.socketioClient.removeListener(topic, CB);
 		}
 	, wordPressEvent				: function(user, pass, title, categs) {
 		 for(var i in this.CB_wordPressEvent) {

@@ -6,6 +6,7 @@ var PvariableDeclaration = function(parent, children) {
 	 Pnode.prototype.constructor.apply(this, [parent, children]);
 	 this.varDef  = { id	: undefined
 					, name	: ''
+					, expose: false
 					, type	: []
 					};
 	 return this;
@@ -23,6 +24,7 @@ PvariableDeclaration.prototype.getClasses	= function() {return classes;};
 PvariableDeclaration.prototype.getDescription = function() {
 	var descr =	{ type	: this.updateType()
 				, name	: this.varDef.name
+				, expose: this.varDef.expose
 				};
 	descr.id = this.getSelectorId();
 	return descr;
@@ -74,6 +76,7 @@ PvariableDeclaration.prototype.unserialize	= function(json, Putils) {
 	// className and id are fixed by the constructor of the object itself
 	 this.varDef  = { type	: this.updateType()
 					, name	: json.varDef.name
+					, expose: json.varDef.expose
 					};
 	if(json.varDef.id) {this.varDef.id	= json.varDef.id;}
 	return this;

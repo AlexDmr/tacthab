@@ -1,15 +1,30 @@
-------------------------------------------------------------------------------
-1) Désérialiser sans se soucier des id
-2) Substituer l'id du programme désérialiser par celui du programme remplacé
-   pour conserver les références possibles de son programme père
-------------------------------------------------------------------------------
-3) Identifiant des variables gérés par l noeud définitions.
-   Permet de ne pas générer deux fois le même pour un programme donnée
-   en vérifiant au préalable si l'identifiant existeou non.
-   On parle bien de l'id de la variable (nom, id) 
-   et pas de celui du noeud de définition qui la porte.
-------------------------------------------------------------------------------
-4) Cahcer/Exposer, on liste les instruction qui ont été appelé
-   Si une instruction est rappellée, on retire l'appel précédent...
-   Pour un porogramm donné,
-   au maximum on aura une liste contenant chaque instruction 
+----- Evènements d'apparition/dispariation des bricks
+Emettre des évènements lors de l'appaiation et de la dispariation des briques
+Permettre de s'y abonner dans les programmes
+	ex : lorsqu'apparait Kodi alors lui envoyer un média qui dit bonjour...
+
+	
+
+----- Coder une gestion des états
+Savoir si on est ou pas dans un état.
+	Maintenir un état lié.
+	Modéliser les états atomiques et les lier aux actions et évènements correspondant d'E/S.
+Evènement lorsqu'on entre dans l'état E1
+		  lorsqu'on sort de l'état E1
+
+
+
+----- Equipements "virtuels", ou plutôt à façon, bricolé, ...
+Permettre de définir ses propres capteurs avec :
+	- des évènements	: faire le pont avec un évènement extérieur
+						  par exemple, si on reçoit tel requête HTTP alors lever tel évènement
+						  pour l'appareil.
+	- des états			: Un état est définit par un évènement d'entrée un évènement de sortie.
+						  On peut ensuite utiliser l'état (je rentre dans l'état, j'en sort, j'y suis ou pas...
+	- des actions		: faire le pont avec des actions extérieurs.
+						  Possibilité de lier un évènement à l'action ainsi définit.
+	- un programme ???	: Dans ce cas le programme permet de définir des "variables"
+						  pour modéliser les évènements, les états et les actions...
+
+Est-ce pertinent de définir seulement des objets/équipement ou bien aussi des classes?
+Est-ce en rapport avec des programmes paramétriques ? (les paramètres permettant alors de distinguer les objets ?)
