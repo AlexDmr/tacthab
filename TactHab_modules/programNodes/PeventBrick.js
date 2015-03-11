@@ -22,7 +22,7 @@ classes.push(PeventBrick.prototype.className);
 PeventBrick.prototype.getClasses	= function() {return classes;};
 
 PeventBrick.prototype.serialize		= function() {
-	var json = Pnode.prototype.serialize.apply(this, []);
+	var json = Pevent.prototype.serialize.apply(this, []);
 	// Describe action here
 	json.subType = this.subType;
 	json.eventNode	= { objectId  : this.event.objectId  ,
@@ -31,7 +31,7 @@ PeventBrick.prototype.serialize		= function() {
 }
 
 PeventBrick.prototype.unserialize	= function(json, Putils) {
-	Pnode.prototype.unserialize.apply(this, [json, Putils]);
+	Pevent.prototype.unserialize.apply(this, [json, Putils]);
 	this.subType = json.subType;
 	this.event.objectId		= json.eventNode.objectId;
 	this.event.eventName	= json.eventNode.eventName;

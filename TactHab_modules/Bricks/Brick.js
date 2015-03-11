@@ -14,6 +14,10 @@ define( [ '../../js/AlxEvents.js'
 		 return this;
 		}
 	Brick.prototype.constructor		= Brick;
+	Brick.prototype.dispose			= function() {
+		 this.disposeAlxEvent();
+		 this.unreference();
+		}
 	AlxEvents(Brick);
 	Brick.prototype.getTypeName		= function() {return "Brick";}
 	Brick.prototype.getBrickFromId	= function(id) {return D_brick[id];}
@@ -25,7 +29,7 @@ define( [ '../../js/AlxEvents.js'
 		 D_brick[newId] = this;
 		 this.brickId	= newId;
 		}
-	Brick.prototype.getDescription = function() {
+	Brick.prototype.getDescription	= function() {
 		return	{ type	: this.getTypes()
 				, id	: this.brickId
 				, name	: this.brickId

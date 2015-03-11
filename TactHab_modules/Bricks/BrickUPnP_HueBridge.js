@@ -30,7 +30,7 @@ define( [ './BrickUPnP.js'
 						} else {//console.log('GET /api/TActHab8888 : ', response, response.length);
 								var response = [];
 								try {response = JSON.parse( responseText );
-									} catch(err) {console.error}
+									} catch(err) {console.error("Error while parsing JSON response from Hue bridge", err, "\n", responseText);}
 								if( response.length
 								  &&response.length === 1
 								  &&response[0].error
@@ -60,18 +60,28 @@ define( [ './BrickUPnP.js'
 											);
 									 
 									} else	{//console.log('Authorized to be connected to Hue bridge !');
+											 var i, keys, key, lampHueId;
 											 self.authorizedConnection = true;
 											 // Get the state of lamps.
 											 self.HueConfig = response.config;
-											 for(var i in response.lights) {
+											 for(i in response.lights) {
 												 var lamp = response.lights[i];
 												 self.updateLamp(i, lamp);
 												}
 											 // XXX Check lamp that are no more present
-											 
+											 keys = Object.keys(self.Lamps);
+											 for(i in keys) {
+												 key		= keys[i];
+												 lampHueId	= self.Lamps[key].lampHueId;
+												 if(typeof response.lights[lampHueId] === 'undefined') {
+													 console.log("SUB BrickUPnP_HueLamp", key);
+													 self.Lamps[key].dispose();
+													 delete self.Lamps[key];
+													}
+												}
 											 // Check again
 											 setTimeout	( function() {self.connect();}
-														, 5000 );
+														, 15000 );
 
 											}
 								
@@ -80,7 +90,7 @@ define( [ './BrickUPnP.js'
 				);
 		}
 	BrickUPnP_HueBridge.prototype.init			= function(device) {
-		 var self = this;
+		 // var self = this;
 		 BrickUPnP.prototype.init.apply(this, [device]);
 		 this.prefixHTTP = 'http://' + device.host + ':' + device.port;
 		 console.log("init Hue bridge ", this.prefixHTTP);
@@ -88,14 +98,16 @@ define( [ './BrickUPnP.js'
 		 return this;
 		}
 	BrickUPnP_HueBridge.prototype.updateLamp	= function(lampHueId, lampJS) {
-		 var uuidLamp = this.UPnP.uuid + ":" + lampJS.uniqueid;
+		 var uuidLamp = this.UPnP.uuid + ":" + lampHueId;
 		 var brick = this.getBrickFromId(uuidLamp);
 		 if(brick) {
 			 brick.update(lampJS);
 			} else	{// Create a brick representing this lamp
-					 var brick = new BrickUPnP_HueLamp(this, lampHueId, lampJS);
+					 brick = new BrickUPnP_HueLamp(this, lampHueId, lampJS);
 					 brick.changeIdTo(uuidLamp);
 					 this.Lamps[uuidLamp] = brick;
+					 console.log("ADD BrickUPnP_HueLamp", uuidLamp);
+					 // console.log(lampJS);
 					}
 		}
 	

@@ -9,7 +9,7 @@ define	( [ './DragDrop.js'
 				  , async
 				  , BrickUPnP_MediaRenderer
 				  ) {
-					  
+
 var editor = {
 	  htmlNodeTypes		: null
 	, htmlNodeProgram	: null
@@ -73,7 +73,7 @@ var editor = {
 													   } )
 										).appendChild( this.createDragNode( 'When'
 													 , { constructor	: PresoUtils.get('WhenNode')
-													   , nodeType		: 'WhenNode'
+													   , nodeType		: ['WhenNode', 'instruction']
 													   } )
 										).appendChild( this.createDragNode( 'Event'
 													 , { constructor	: PresoUtils.get('EventNode')
@@ -189,7 +189,16 @@ var editor = {
 												   , isNotType		: 'Pnode'
 												   } )
 									);
-													   
+
+		 // Create new draggable for HTTP and socketIO
+		 this.createCateg("External").appendChild( this.createDragNode( 'on socketIO...'
+												 , { constructor	: PresoUtils.get('PeventFromSocketIOPresentation')
+												   , nodeType		: 'EventNode'
+												   , isNotType		: 'Pnode'
+												   } )
+									);
+
+
 		 // Main drop zone for programs
 		 DragDrop.newDropZone( htmlNodeProgram
 							 , { acceptedClasse		: 'ProgramNode'

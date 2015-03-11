@@ -17,6 +17,13 @@ PprogramDeclaration.prototype = new Pnode();
 PprogramDeclaration.prototype.className	= 'PprogramDeclaration';
 Pnode.prototype.appendClass( PprogramDeclaration );
 
+PprogramDeclaration.prototype.dispose	= function() {
+	var subProgram = Pnode.prototype.getNode( this.programDef.id );
+	if(subProgram) {subProgram.setParent(null);}
+	Pnode.prototype.dispose.apply(this, []);
+	return this;
+}
+
 var classes = Pnode.prototype.getClasses().slice();
 classes.push(PprogramDeclaration.prototype.className);
 PprogramDeclaration.prototype.getClasses	= function() {return classes;};

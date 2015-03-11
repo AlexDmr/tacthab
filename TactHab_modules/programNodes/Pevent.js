@@ -34,31 +34,13 @@ EventNode.prototype.eventFromChild = function(child, event) {
 
 EventNode.prototype.serialize		= function() {
 	var json = Pnode.prototype.serialize.apply(this, []);
-	// Describe action here
-	json.ActionNode = {};
-	if(this.obj) {
-		 json.ActionNode.objectId = this.obj.brickId;
-		} else {json.ActionNode.objectId = '';}
-	json.ActionNode.method	= this.mtd;
-	json.ActionNode.params	= this.params;
+	// Describe event here
 	json.subType = this.subType;
 	return json;
 }
 
 EventNode.prototype.unserialize	= function(json, Putils) {
 	Pnode.prototype.unserialize.apply(this, [json, Putils]);
-	// Describe action here
-	this.subType = json.subType;
-	var obj = Brick.prototype.getBrickFromId( json.ActionNode.objectId );
-	if(obj) {
-		var mtd = json.ActionNode.method;
-		if(mtd) {
-			 this.setCommand( obj
-							, mtd
-							, json.ActionNode.params
-							);
-			} else {console.error('action reference an invalid method : ', json.ActionNode.method);}
-		} else {console.error('action reference an invalid object : ', json.ActionNode.objectId);}
 	return this;
 }
 

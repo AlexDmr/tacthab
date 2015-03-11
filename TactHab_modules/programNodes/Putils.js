@@ -4,6 +4,7 @@ define ([ './Pnode.js'
 		, './action.js'
 		, './sequence.js'
 		, './Pevent.js'
+		, './PeventFromSocketIO.js'
 		, './Pwhen.js'
 		, './PcontrolBrick.js'
 		, './PvariableDeclaration.js'
@@ -16,7 +17,9 @@ define ([ './Pnode.js'
 		]
 		, function( Pnode, ProgramNode, ParalleNode
 				  , ActionNode, SequenceNode
-				  , EventNode, WhenNode
+				  , EventNode
+				  , PeventFromSocketIO
+				  , WhenNode
 				  , PcontrolBrick
 				  , PvariableDeclaration
 				  , PprogramDeclaration
@@ -33,6 +36,7 @@ var Putils = {
 					  , 'ActionNode'			: ActionNode
 					  , 'SequenceNode'			: SequenceNode
 					  , 'EventNode'				: EventNode
+					  , 'PeventFromSocketIO'	: PeventFromSocketIO
 					  , 'WhenNode'				: WhenNode
 					  , 'PcontrolBrick'			: PcontrolBrick
 					  , 'PvariableDeclaration'	: PvariableDeclaration

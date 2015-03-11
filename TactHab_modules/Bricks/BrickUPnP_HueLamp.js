@@ -1,7 +1,7 @@
 define( [ './Brick.js'
 		, 'request'
 		]
-	  , function(Brick) {
+	  , function(Brick, request) {
 
 function BrickUPnP_HueLamp(HueBridge, lampHueId, lampJS) {
 	Brick.apply(this, []);
@@ -9,6 +9,12 @@ function BrickUPnP_HueLamp(HueBridge, lampHueId, lampJS) {
 	this.lampHueId	= lampHueId;
 	this.prefixHTTP	= HueBridge.prefixHTTP;
 	this.update(lampJS);
+	var self = this;
+	this.set( { alert: "select"
+			  }
+			, function(err ) {console.log("Error ADD Hue", lampHueId, err );}
+		    , function(data) {console.log("Yeahh ADD Hue", lampHueId, data); self.set({on:true, transitiontime: 20, hue:46920});}
+			);
 	return this;
 }
 

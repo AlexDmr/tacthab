@@ -7,6 +7,7 @@ var Var_DefinitionPresentation = function() {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
 	this.varDef			= { name	: ''
+						  , expose	: false
 						  };
 	this.html			= {};
 	return this;
@@ -24,7 +25,9 @@ Var_DefinitionPresentation.prototype.serialize	= function() {
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
 	// Describe action here
 	json.subType	= 'Var_DefinitionPresentation';
-	json.varDef = { name	: this.varDef.name };
+	json.varDef = { name	: this.varDef.name
+				  , expose	: this.varDef.expose
+				  };
 	if(this.varDef.id) {json.varDef.id = this.varDef.id;}
 	return json;
 }
@@ -60,6 +63,10 @@ Var_DefinitionPresentation.prototype.Render	= function() {
 	var root = PnodePresentation.prototype.Render.apply(this, []);
 	root.classList.add('DefinitionNode');
 	if(typeof this.html.inputId === 'undefined') {
+		 this.html.expose = document.createElement('input');
+			this.html.expose.setAttribute('type', 'checkbox');
+			this.divDescription.appendChild( this.html.expose );
+			console.error("XXX Var_DefinitionPresentation::Render must implement checkbox changes");
 		 this.html.labelId = document.createElement('span');
 			this.html.labelId.classList.add( 'varId' );
 			this.html.labelId.innerHTML = "Define variable ";

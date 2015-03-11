@@ -31,10 +31,15 @@ Pnode.prototype.className	= 'Pnode';
 Pnode.prototype.dispose		= function() {
 	delete D_nodes[this.id];
 	this.id = 'obsolet ' + this.id;
-	while(this.children.length) {this.children[0].setParent(null);}
+	while(this.children.length) {
+		 var child = this.children[0];
+		 child.setParent(null);
+		 child.dispose();
+		}
 	this.setParent(null);
 	return this;
 }
+
 Pnode.prototype.getClasses	= function() {return [Pnode.prototype.className];}
 Pnode.prototype.getD_classes= function() {return D_classes;}
 Pnode.prototype.appendClass	= function(classe) {D_classes[classe.prototype.className] = classe;}
