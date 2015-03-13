@@ -54,9 +54,7 @@ Var_UsePresentation.prototype.unserialize	= function(json, PresoUtils) {
 	return this;
 }
 
-Var_UsePresentation.prototype.updateType = function() {
-	
-}
+Var_UsePresentation.prototype.updateType = function() {}
 
 Var_UsePresentation.prototype.Render	= function() {
 	var self = this;

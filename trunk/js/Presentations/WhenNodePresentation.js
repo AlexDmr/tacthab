@@ -5,8 +5,9 @@ define	( [ './PnodePresentation.js'
 
 var WhenNodePresentation = function() {
 	PnodePresentation.prototype.constructor.apply(this, []);
-	this.childEvent		= null;
-	this.childReaction	= null;
+	this.when = { childEvent	: null
+				, childReaction	: null
+				};
 	return this;
 }
 
@@ -15,15 +16,16 @@ WhenNodePresentation.prototype.className = 'WhenNode';
 
 WhenNodePresentation.prototype.serialize	= function() {
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
-	json.childEvent		= this.children.indexOf( this.childEvent	);
-	json.childReaction	= this.children.indexOf( this.childReaction );
-	json.subType		= './WhenNodePresentation.js';
+	json.when = {};
+	if(this.when.childEvent   ) {json.when.childEvent		= this.when.childEvent.serialize   ();}
+	if(this.when.childReaction) {json.when.childReaction	= this.when.childReaction.serialize();}
+	json.subType		= 'WhenNodePresentation';
 	return json;
 }
 WhenNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
-	this.childEvent		= json.childEvent;
-	this.childReaction	= json.childReaction;
 	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
+	if(json.when.childEvent   ) {this.when.childEvent		= PresoUtils.unserialize(json.when.childEvent   ); this.appendChild(this.when.childEvent	 );}
+	if(json.when.childReaction) {this.when.childReaction	= PresoUtils.unserialize(json.when.childReaction); this.appendChild(this.when.childReaction);}
 	return this;
 }
 WhenNodePresentation.prototype.init = function(PnodeID, parent, children) {
@@ -43,18 +45,17 @@ WhenNodePresentation.prototype.Render	= function() {
 			this.divChildren.classList.add('children');
 		 // Event part
 		 this.divEvent		= document.createElement('div');
-		 self.divEvent.innerText = 'Event here';
+		 self.divEvent.innerText = ' Drop event here ';
 		 this.divChildren.appendChild(this.divEvent);
 			this.dropZoneEventId = DragDrop.newDropZone( self.divEvent
 								, { acceptedClasse	: 'EventNode'
 								  , CSSwhenAccepted	: 'possible2drop'
 								  , CSSwhenOver		: 'ready2drop'
 								  , ondrop			: function(evt, draggedNode, infoObj) {
-										 var Pnode = new infoObj.constructor().init( '' );
-										 self.childEvent = self.children.length;
+										 self.when.childEvent = new infoObj.constructor(infoObj).init( '' );
 										 self.divEvent.innerText = '';
-										 self.appendChild( Pnode );
-										 DragDrop.deleteDropZone( self.dropZoneEventId );
+										 self.appendChild(  self.when.childEvent );
+										 // DragDrop.deleteDropZone( self.dropZoneEventId );
 										}
 								  }
 								);
@@ -63,15 +64,14 @@ WhenNodePresentation.prototype.Render	= function() {
 		 self.divReaction.innerText = 'Reaction here';
 		 this.divChildren.appendChild(this.divReaction);
 			this.dropZoneReactionId = DragDrop.newDropZone( this.divReaction
-								, { acceptedClasse	: 'Pnode'
+								, { acceptedClasse	: [['Pnode', 'instruction']]
 								  , CSSwhenAccepted	: 'possible2drop'
 								  , CSSwhenOver		: 'ready2drop'
 								  , ondrop			: function(evt, draggedNode, infoObj) {
-										 var Pnode = new infoObj.constructor().init( '' );
-										 self.childReaction = self.children.length;
+										 self.when.childReaction = new infoObj.constructor(infoObj).init( '' );
 										 self.divReaction.innerText = '';
-										 self.appendChild( Pnode );
-										 DragDrop.deleteDropZone( self.dropZoneReactionId );
+										 self.appendChild( self.when.childReaction );
+										 // DragDrop.deleteDropZone( self.dropZoneReactionId );
 										}
 								  }
 								);
@@ -85,45 +85,19 @@ WhenNodePresentation.prototype.deletePrimitives = function() {
 		 if(this.divChildren.parentNode) {this.divChildren.parentNode.removeChild( this.divChildren );}
 		 delete this.divChildren;
 		 this.divChildren = this.divEvent = this.divReaction = null;
-		 DragDrop.deleteDropZone( self.dropZoneEventId );
+		 DragDrop.deleteDropZone( self.dropZoneEventId    );
 		 DragDrop.deleteDropZone( self.dropZoneReactionId );
 		}
 	return this;
 }
 
-WhenNodePresentation.prototype.serialize	= function() {
-	var json = PnodePresentation.prototype.serialize.apply(this, []);
-	json.childEvent		= this.childEvent;
-	json.childReaction	= this.childReaction;
-	return json;
-}
-WhenNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
-	this.childEvent    = json.childEvent	;
-	this.childReaction = json.childReaction	;
-	var json = PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
-	return json;
-}
-
-// XXX
-WhenNodePresentation.prototype.removeChild = function(c) {
-	if(c === this.childReaction) {this.childReaction	= null;}
-	if(c === this.childEvent	) {this.childEvent		= null;}
-	return PnodePresentation.prototype.removeChild.apply(this, [c]);
-}
 WhenNodePresentation.prototype.primitivePlug	= function(c) {
-	var P, pos = this.children.indexOf(c);
-	if(pos === -1) {
-		 throw 'WhenNodePresentation::primitivePlug error, this is not a childthat we are trying to plug';
-		 return
-		}
-	if(pos === this.childReaction) {P = this.divReaction; this.divReaction.innerText = ''}
-	if(pos === this.childEvent	 ) {P = this.divEvent	; this.divEvent.innerText	 = '';}
-	if(!P) {
-		 throw 'WhenNodePresentation::primitivePlug error, children not indexed as an event or a reaction';
-		 return;
-		}
-	var N = c.Render();
-	if(N.parentElement === null) {P.appendChild(N);}
+	if(c && c === this.when.childEvent   ) {this.divEvent.innerText	  = '';
+										    this.divEvent.appendChild( c.Render() );
+										   }
+	if(c && c === this.when.childReaction) {this.divReaction.innerText = '';
+										    this.divReaction.appendChild( c.Render() );
+										   }
 }
 
 // Return the constructor

@@ -2,16 +2,14 @@ define( [ './Pnode.js'
 	    ]
 	  , function(Pnode) {
 // Definition of a when node for programs
-// when EVENT then [ACTION | RULE | ...]
-var WhenNode = function(parent, eventNode, thenNode, forever) {
-	 var children = [];
-	 if(eventNode) {children.push(eventNode);}
-	 if(thenNode ) {children.push(thenNode );}
-	 Pnode.prototype.constructor.apply(this, [parent, children]);
-	 this.eventNode	= eventNode;
-	 this.thenNode	= thenNode;
-	 
-	 if(forever === undefined) {forever = true;}
+var WhenNode = function(parent, childEvent, childReaction, forever) {
+	 Pnode.prototype.constructor.apply(this, [parent]);
+	 this.when = { childEvent		: childEvent
+				 , childReaction	: childReaction
+				 };
+	 if(this.when.childEvent   ) {this.when.childEvent.setParent   (this);}
+	 if(this.when.childReaction) {this.when.childReaction.setParent(this);}
+	 if(typeof forever === 'undefined') {forever = true;}
 	 this.forever	= forever;
 	 
 	 return this;
@@ -27,50 +25,53 @@ classes.push(WhenNode.prototype.className);
 WhenNode.prototype.getClasses	= function() {return classes;};
 
 WhenNode.prototype.serialize	= function() {
+	if(this.when.childEvent   ) {this.when.childEvent.setParent    (null);}
+	if(this.when.childReaction) {this.when.childReaction.setParent (null);}
 	var json = Pnode.prototype.serialize.apply(this, []);
-	json.childEvent		= this.children.indexOf(this.eventNode);
-	json.childReaction	= this.children.indexOf(this.thenNode );
+	if(this.when.childEvent   ) {this.when.childEvent.setParent    (this);}
+	if(this.when.childReaction) {this.when.childReaction.setParent (this);}
+	
+	json.when = {};
+	if(this.when.childEvent   ) {json.when.childEvent		= this.when.childEvent   .serialize();}
+	if(this.when.childReaction) {json.when.childReaction	= this.when.childReaction.serialize();}
+
 	return json;
 }
 WhenNode.prototype.unserialize	= function(json, Putils) {
 	Pnode.prototype.unserialize.apply(this, [json, Putils]);
-	this.eventNode = this.thenNode = null;
-	if(json.childEvent	  >= 0) {this.eventNode = this.children[json.childEvent	  ];}
-	if(json.childReaction >= 0) {this.thenNode  = this.children[json.childReaction];}
+	this.when = { childEvent	: null
+				, childReaction	: null
+				};
+	if(json.when.childEvent   ) {this.when.childEvent		= Putils.unserialize( json.when.childEvent    );
+								 this.when.childEvent.setParent(this);
+								}
+	if(json.when.childReaction) {this.when.childReaction	= Putils.unserialize( json.when.childReaction );
+								 this.when.childReaction.setParent(this);
+								}
 	return this;
 }
 
 WhenNode.prototype.Start = function() {
 	var res = Pnode.prototype.Start.apply(this, []);
 	if( res ) {
-		 if(this.eventNode) {this.eventNode.Start();}
+		 if(this.when.childEvent) {this.when.childEvent.Start();}
 		}
 	return res;
 }
 
-WhenNode.prototype.setEventThen = function(whenNode, thenNode) {
-	if(this.eventNode) {this.eventNode.setParent(null);}
-	if(this.thenNode ) {this.thenNode.setParent (null);}
-	this.eventNode	= eventNode;
-	this.thenNode	= thenNode;
-	this.children	= [];
-	if(eventNode) {this.children.push(eventNode);}
-	if(thenNode ) {this.children.push(thenNode );}
-	
-	return this;
-}
 WhenNode.prototype.eventFromChild = function(child, event) {
-	if(child === this.eventNode) {
+	if(child === this.when.childEvent) {
+		 // console.log("When event triggered");
 		 // Stop the eventNode
-		 this.eventNode.Stop();
+		 this.when.childEvent.Stop();
 		 // Start the thenNode
-		 if(this.thenNode) {this.thenNode.Start();}
+		 if(this.when.childReaction) {this.when.childReaction.Start();}
 		} else {error('WhenNode::eventFromChild received an event from a child wich is not the eventNode.');}
 }
 WhenNode.prototype.childStateChanged = function(child, prevState, newState) {
-	if(child === this.thenNode && newState === 0) {
+	if(child === this.when.childReaction && newState === 0) {
 		 // Restart listening if forever is true, Stop otherwise
-		 if(this.forever) {this.eventNode.Start();} else {this.Stop();}
+		 if(this.forever) {this.when.childEvent.Start();} else {this.Stop();}
 		}
 }
 

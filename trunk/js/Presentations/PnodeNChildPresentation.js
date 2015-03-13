@@ -30,11 +30,11 @@ PnodeNChildPresentation.prototype.Render	= function() {
 			this.divChildrenTxt.innerText = 'Insert a Pnode here';
 			this.divChildren.appendChild( this.divChildrenTxt );
 			this.dropZoneId = DragDrop.newDropZone( this.divChildrenTxt
-								, { acceptedClasse	: ['Pnode', 'instruction']
+								, { acceptedClasse	: [['Pnode', 'instruction']]
 								  , CSSwhenAccepted	: 'possible2drop'
 								  , CSSwhenOver		: 'ready2drop'
 								  , ondrop			: function(evt, draggedNode, infoObj) {
-										 var Pnode = new infoObj.constructor().init( '' );
+										 var Pnode = new infoObj.constructor(infoObj).init( '' );
 										 self.appendChild( Pnode );
 										}
 								  }

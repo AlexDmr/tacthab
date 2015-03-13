@@ -51,9 +51,9 @@ var PresoUtils = {
 					  , 'ParalleNode'							: ParallelNodePresentation
 					  , 'ActionNode'							: ActionNodePresentation
 					  , 'SequenceNode'							: SequenceNodePresentation	, 'SequenceNodePresentation'	: SequenceNodePresentation
-					  , 'EventNode'								: EventNodePresentation
+					  , 'EventNode'								: EventNodePresentation		, 'EventNodePresentation'		: EventNodePresentation
 					  , 'PeventFromSocketIOPresentation'		: PeventFromSocketIOPresentation
-					  , 'WhenNode'								: WhenNodePresentation
+					  , 'WhenNode'								: WhenNodePresentation		, 'WhenNodePresentation'		: WhenNodePresentation
 					  , 'PcontrolBrick'							: PcontrolBrickPresentation
 					  , 'PfilterPresentation'					: PfilterPresentation
 					  // Variables

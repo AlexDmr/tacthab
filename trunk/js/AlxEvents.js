@@ -27,7 +27,7 @@ AlxEvent.prototype.on	= function(eventName, callback) {
 
 AlxEvent.prototype.off	= function(eventName, callback) {
 	if(this.AlxEvent && this.AlxEvent[eventName]) {
-		 var pos = this.AlxEvent.indexOf(callback);
+		 var pos = this.AlxEvent[eventName].indexOf(callback);
 		 if(pos >= 0) {
 			 this.AlxEvent[eventName].splice(pos, 1);
 			}

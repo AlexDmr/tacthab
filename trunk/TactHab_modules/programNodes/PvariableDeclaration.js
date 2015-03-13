@@ -33,9 +33,12 @@ PvariableDeclaration.prototype.getDescription = function() {
 PvariableDeclaration.prototype.Start = function() {
 	var res = Pnode.prototype.Start.apply(this, []);
 	this.updateType();
+	this.Stop();
+	/* XXX Debug
 	if(this.children.length === 1) {
 		 this.children[0].Start();
 		} else {this.Stop();}
+	*/
 	return res;
 }
 
@@ -51,7 +54,13 @@ PvariableDeclaration.prototype.getSelectorId = function() {
 	 return this.varDef.id;
 	}
 
-PvariableDeclaration.prototype.updateType = function() {
+PvariableDeclaration.prototype.isExposed	= function() {return this.varDef.expose;}
+PvariableDeclaration.prototype.getValueNode	= function() {
+	if(this.children[0]) {return this.children[0];}
+	return null;
+}
+
+PvariableDeclaration.prototype.updateType	= function() {
 	if(this.children.length === 1) {
 		 this.children[0].updateType();
 		 this.varDef.type = this.children[0].updateType().slice();

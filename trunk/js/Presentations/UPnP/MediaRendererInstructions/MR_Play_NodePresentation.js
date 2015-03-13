@@ -21,7 +21,7 @@ define	( [ '../../ActionNodePresentation.js'
 		 var self = this;
 		 var root = ActionNodePresentation.prototype.Render.apply(this,[]);
 		 this.html.actionName.innerHTML = "Play";
-		 DragDrop.updateConfig(this.dropZoneSelectorId, {acceptedClasse: ['BrickUPnP_MediaRenderer']});
+		 DragDrop.updateConfig(this.dropZoneSelectorId, {acceptedClasse: [['BrickUPnP_MediaRenderer']]});
 		 return root;
 		}
 	

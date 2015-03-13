@@ -20,7 +20,7 @@ EventNodePresentation.prototype.init = function(PnodeID, parent, children) {
 
 EventNodePresentation.prototype.serialize = function() {
 	 var json = PnodePresentation.prototype.serialize.apply(this, []);
-	 json.subType = './EventNodePresentation.js';
+	 json.subType = 'EventNodePresentation';
 	 return json;
 	}
 EventNodePresentation.prototype.Render	= function() {

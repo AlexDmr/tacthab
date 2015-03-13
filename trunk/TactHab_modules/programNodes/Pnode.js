@@ -19,10 +19,10 @@ var Pnode = function(parent, children) {
 	 this.children	= children	|| [];
 		 if(parent) {parent.children.push(this);}
 		 for(var i in children) {children[i].parent = this;}
-	 this.state		= 0;
-	 this.name		= '';
-	 this.id		= getNodeId();
-	 D_nodes[this.id] = this;
+	 this.state			= 0;
+	 this.name			= '';
+	 this.id			= getNodeId();
+	 D_nodes[this.id]	= this;
 	 return this;
 	}
 Pnode.prototype.constructor = Pnode;
@@ -40,9 +40,12 @@ Pnode.prototype.dispose		= function() {
 	return this;
 }
 
-Pnode.prototype.getClasses	= function() {return [Pnode.prototype.className];}
-Pnode.prototype.getD_classes= function() {return D_classes;}
-Pnode.prototype.appendClass	= function(classe) {D_classes[classe.prototype.className] = classe;}
+Pnode.prototype.evalSelector	= function() {return [];}
+Pnode.prototype.updateType		= function() {return [];}
+Pnode.prototype.isTypedAs		= function(t) {return this.updateType().indexOf(t) >= 0;}
+Pnode.prototype.getClasses		= function() {return [Pnode.prototype.className];}
+Pnode.prototype.getD_classes	= function() {return D_classes;}
+Pnode.prototype.appendClass		= function(classe) {D_classes[classe.prototype.className] = classe;}
 
 // API for starting, stopping the instruction
 Pnode.prototype.serialize	= function() {
