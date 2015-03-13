@@ -20,11 +20,6 @@ var ProgramNode = function(parent, children) {
 	 
 	 return this;
 	}
-ProgramNode.prototype.dispose		= function() {
-	Pnode.prototype.dispose.apply(this, []);
-	this.definitions.dispose (); delete this.definitions;
-	this.instructions.dispose(); delete this.instructions;
-}
 
 // API for starting, stopping the instruction
 ProgramNode.prototype = new SequenceNode();
@@ -32,9 +27,50 @@ ProgramNode.prototype.constructor	= ProgramNode;
 ProgramNode.prototype.className	= 'ProgramNode';
 Pnode.prototype.appendClass(ProgramNode);
 
+ProgramNode.prototype.dispose		= function() {
+	if(this.definitions ) {this.definitions.dispose (); delete this.definitions ;}
+	if(this.instructions) {this.instructions.dispose(); delete this.instructions;}
+	SequenceNode.prototype.dispose.apply(this, []);
+}
+
 var classes = SequenceNode.prototype.getClasses().slice();
 classes.push(ProgramNode.prototype.className);
 ProgramNode.prototype.getClasses	= function() {return classes;};
+
+/**
+  * Get exposed events, states and actions
+*/
+ProgramNode.prototype.getExposedAPI	= function() {
+	var obj = { events	: []
+			  , states	: []
+			  , actions: []
+			  };
+	var i, def, type;
+	for(i=0; i<this.definitions.children.length; i++) {
+		 def = this.definitions.children[i];
+		 if(def.isExposed()) {
+			 type = def.updateType();
+			 if(type.indexOf('event' ) >= 0) {obj.events.push (def);}
+			 if(type.indexOf('state' ) >= 0) {obj.states.push (def);}
+			 if(type.indexOf('action') >= 0) {obj.actions.push(def);}
+			}
+		}
+	
+	return obj;
+}
+
+ProgramNode.prototype.getExposedAPI_serialized	= function() {
+	var obj  = this.getExposedAPI();
+	var json = { events	: []
+			   , states	: []
+			   , actions: []
+			   };
+	var i;
+	for(i in obj.events ) {json.events.push ( obj.events [i].getDescription() );}
+	for(i in obj.states ) {json.states.push ( obj.states [i].getDescription() );}
+	for(i in obj.actions) {json.actions.push( obj.actions[i].getDescription() );}
+	return json;
+}
 
 ProgramNode.prototype.RegisterFilter = function(filterNode) {
 	for(var i=0; i<this.filterNodes.length; i++) {
@@ -85,7 +121,7 @@ ProgramNode.prototype.getContext = function() {
 			 this.filterNodes[i].applyFilterOn( context );
 			}
 		// Delete variables that are "empty" with respect to the context
-		var variables = {}, variable, L, v;
+		var variables = {}, variable, L, v, L_str;
 		for(v in context.variables) {
 			 variable = context.variables[v];
 			 L = variable.evalSelector();
@@ -94,8 +130,8 @@ ProgramNode.prototype.getContext = function() {
 				 if(  (L[i].brickId	&& typeof context.bricks   [ L[i].brickId] !== 'undefined')
 				   || (L[i].id		&& typeof context.variables[ L[i].id     ] !== 'undefined') ) {empty = false; break;}
 				}
-			 if(!empty) {variables[v] = variable;} else {
-				 L_str = "[";
+			 if(!empty || !variable.isTypedAs('selector')) {variables[v] = variable;} else {
+				 L_str = "["; // XXX C'est quoi ce merdier ?
 				 for(i=0; i<L.length; i++) {L_str += L[i].id + ', ';}
 				 L_str += "]";
 				 // console.log("\tRemoving variable", v, L_str);

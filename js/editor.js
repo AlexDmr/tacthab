@@ -97,7 +97,8 @@ var editor = {
 													   } )
 										);
 		 // Create new draggable for variables
-		 this.createCateg("Variables").appendChild( this.createDragNode( 'New selector'
+		 this.variables_categ = 
+		 this.createCateg("Variables").appendChild( this.createDragNode( 'New variable'
 													 , { constructor	: PresoUtils.get('Var_DefinitionPresentation')
 													   , nodeType		: 'DefinitionNode'
 													   } )
@@ -159,6 +160,7 @@ var editor = {
 						 // Variables
 						 for(i in json.variables) {
 							 variable = json.variables[i];
+							 console.log("New variable", variable.id, variable.name);
 							 if(variable.type.indexOf('BrickUPnP_MediaRenderer') !== -1) {
 								 self.MR_categ.appendChild( self.createDragNode( variable.name
 													   , { constructor	: PresoUtils.get('Var_UsePresentation')
@@ -167,7 +169,7 @@ var editor = {
 														 , name			: variable.name
 													     } )
 													   );
-								}
+								} else 
 							 if(variable.type.indexOf("Program") !== -1) {
 								 self.program_categ.appendChild( self.createDragNode( variable.name
 													   , { constructor	: PresoUtils.get('Program_UsePresentation')
@@ -176,7 +178,16 @@ var editor = {
 														 , name			: variable.name
 													     } )
 													   );
-								}
+								} else {self.variables_categ.appendChild( self.createDragNode( variable.name
+																							 , { constructor	: PresoUtils.get('Var_UsePresentation')
+																							   , nodeType		: variable.type//.concat( ['SelectorNode', 'program'] )
+																							   , id				: variable.id
+																							   , name			: variable.name
+																							   } 
+																							 )
+																	    );
+										console.log("New variable", variable.id, variable.name, ':', variable.type);
+									   }
 							}
 						}
 				    }

@@ -116,7 +116,7 @@ ProgramNodePresentation.prototype.Render	= function() {
 			this.divChildrenInstTxt.innerText = 'Insert a Definition here';
 			this.html.instructions.appendChild( this.divChildrenInstTxt );
 			this.dropZoneInstId = DragDrop.newDropZone( this.divChildrenInstTxt
-								, { acceptedClasse	: ['Pnode', 'instruction']
+								, { acceptedClasse	: [['Pnode', 'instruction']]
 								  , CSSwhenAccepted	: 'possible2drop'
 								  , CSSwhenOver		: 'ready2drop'
 								  , ondrop			: function(evt, draggedNode, infoObj) {

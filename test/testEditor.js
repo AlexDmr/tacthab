@@ -16,8 +16,8 @@ require.config({
 define ( [ "../js/utils.js"
 		 , '../js/domReady.js'
 		 , '../js/editor.js'
-         , 'async!http://maps.google.com/maps/api/js?sensor=false'
-		 , 'goog!visualization,1,packages:[corechart,geochart]'
+         // , 'async!http://maps.google.com/maps/api/js?sensor=false'
+		 // , 'goog!visualization,1,packages:[corechart,geochart]'
 		 ]
 	   , function(utils, domReady, editor) {
 			 domReady( function() {

@@ -28,7 +28,15 @@ var DragDrop = {
 		 node.classList.remove(config.CSSwhenOver	 );
 		 delete this.dropZones[id];
 		}
-	, nodeContainsClasses	: function(node, classes) {
+	, nodeContainsClasses	: function(node, classes) { // classes is a list of list of string
+		 if(node === null) {return false;}
+		 for(var i=0; i<classes.length; i++) {
+			 if( this.nodeContainsClassesConjonction(node, classes[i]) ) {return true;}
+			}
+		 return false;
+		 
+		}
+	, nodeContainsClassesConjonction	: function(node, classes) { // classes is a list of string
 		 if(node === null) {return false;}
 		 for(var i=0; i<classes.length; i++) {
 			 if( !node.classList.contains(classes[i]) ) {return false;}
@@ -37,24 +45,29 @@ var DragDrop = {
 		}
 	, newDropZone	: function(node, config ) {
 		 // Config is an object containing potentially :
-		 //		- acceptedClasse	: Accepted classes conjunctions (list)
+		 //		- acceptedClasse	: Accepted classes disjonction of conjunctions (list of list of string)
 		 //		- CSSwhenAccepted	: class added to the drop zone when an accepted node is dragged
 		 //		- CSSwhenOver		: class added to the drop zone when an accepted node is dragged over
 		 //		- ondrop			: function triggered when an accepted dragged node is dropped on the zone
-		 var self = this;
+		 var self = this, i;
 		 if(typeof config.acceptedClasse === 'string') {
-			 config.acceptedClasse = [config.acceptedClasse];
+			 config.acceptedClasse = [[config.acceptedClasse]];
+			}
+		 for(i in config.acceptedClasse) {
+			 if(typeof config.acceptedClasse[i] === 'string') {config.acceptedClasse[i] = [config.acceptedClasse[i]];}
 			}
 		 // Register drop zone
 		 var id = self.dropZoneId++
 		 self.dropZones[id] = {node: node, config: config};
 
 		 node.addEventListener( 'dragenter'
-							  , config.dragenter = function(evt) {
+							  , config.dragenter = function(event) {
 									 // console.log(self.draggedNode.classList);
 									 if( self.nodeContainsClasses(self.draggedNode, self.dropZones[id].config.acceptedClasse) ) {
 										 // console.log('enter');
 										 this.classList.add( self.dropZones[id].config.CSSwhenOver );
+										 event.stopPropagation();
+										 event.preventDefault ();
 										}
 									}
 							  , false );
@@ -62,6 +75,8 @@ var DragDrop = {
 							  , config.dragover = function(event) {
 									 if(node.classList.contains( self.dropZones[id].config.CSSwhenOver ) ) {
 										 event.preventDefault();
+										 event.stopPropagation();
+										 event.preventDefault ();
 										}
 									}
 							  , false );
@@ -71,13 +86,17 @@ var DragDrop = {
 									   &&self.dropZones[id].config.ondrop ) {
 										 // console.log('drop on', node);
 										 self.dropZones[id].config.ondrop.apply(node, [event, self.draggedNode, self.infoObj, self]);
+										 event.stopPropagation();
+										 event.preventDefault ();
 										}
 									}
 							  , false );
 		 node.addEventListener( 'dragleave'
-							  , config.dragleave = function(evt) {
+							  , config.dragleave = function(event) {
 									 if( self.nodeContainsClasses(self.draggedNode, self.dropZones[id].config.acceptedClasse) ) {
 										 this.classList.remove( self.dropZones[id].config.CSSwhenOver );
+										 event.stopPropagation();
+										 event.preventDefault ();
 										}
 									}
 							  , false );
@@ -87,10 +106,10 @@ var DragDrop = {
 		 node.setAttribute('draggable', 'true');
 		 var self = this;
 		 node.addEventListener( 'dragstart'
-							  , function(evt) {self.startingDrag( node, infoObj );}
+							  , function(event) {self.startingDrag( node, infoObj );}
 							  , false );
 		 node.addEventListener( 'dragend'
-							  , function(evt) {self.stoppingDrag( node, infoObj );}
+							  , function(event) {self.stoppingDrag( node, infoObj );}
 							  , false );
 		}
 	, startingDrag	: function(node, infoObj) {

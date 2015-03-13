@@ -33,12 +33,12 @@ Pselector.prototype.evalSelector	= function() {
 }
 
 Pselector.prototype.updateType		= function() {
-	this.selector.type = [];
+	this.selector.type = [ 'selector' ];
 	for(var i=0; i<this.children.length; i++) {
 		 this.children[i].updateType();
 		}
 	if(this.children[0]) {
-		 this.selector.type = this.children[0].selector.type;
+		 this.selector.type = this.selector.type.concat( this.children[0].selector.type );
 		}
 	return this.selector.type;
 }

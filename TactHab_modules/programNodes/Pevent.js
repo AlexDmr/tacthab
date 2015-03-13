@@ -1,6 +1,7 @@
 define( [ './Pnode.js'
+		, '../../js/AlxEvents.js'
 	    ]
-	  , function(Pnode) {
+	  , function(Pnode, AlxEvents) {
 var D_EventNode	= {};
 
 // Definition of a node for programs
@@ -16,20 +17,36 @@ EventNode.prototype = new Pnode();
 EventNode.prototype.className	= 'EventNode';
 Pnode.prototype.appendClass(EventNode);
 
+AlxEvents(EventNode);
+
 var classes = [];//Pnode.prototype.getClasses();
 classes.push(EventNode.prototype.className);
 EventNode.prototype.getClasses	= function() {return classes;};
 
+EventNode.prototype.evalSelector	= function() {
+	var res = Pnode.prototype.evalSelector.apply(this, []);
+	res.push( this.id );
+	return res;
+}
+
+EventNode.prototype.updateType		= function() {
+	 var type = Pnode.prototype.updateType.apply(this, []);
+	 type.push( 'EventNode' );
+	 return type;
+	}
+	
 EventNode.prototype.triggerEvent = function(event) {
 	if(this.parent && this.state) {
 		 this.parent.eventFromChild(this, event);
 		 return true;
 		}
+	this.emit( 'triggerEvent', event);
 	return false;
 }
 
 EventNode.prototype.eventFromChild = function(child, event) {
 	console.log(this.className + "::eventFromChild(", child, " ,", event, ")");
+	if(this.parent && this.parent.eventFromChild) this.parent.eventFromChild(this, event);
 }
 
 EventNode.prototype.serialize		= function() {
