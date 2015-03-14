@@ -1,3 +1,6 @@
+----- Dynamique des programmes
+Démarrer et arréter un programme.
+
 ----- Evènements d'apparition/dispariation des bricks
 Emettre des évènements lors de l'appaiation et de la dispariation des briques
 Permettre de s'y abonner dans les programmes

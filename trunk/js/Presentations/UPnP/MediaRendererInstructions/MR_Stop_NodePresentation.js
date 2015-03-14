@@ -11,7 +11,7 @@ define	( [ './MR_Play_NodePresentation.js'
 	
 	MR_Stop_NodePresentation.prototype = new MR_Play_NodePresentation();
 	MR_Stop_NodePresentation.prototype.serialize = function() {
-		 this.action.method	= 'Stop';
+		 // this.action.method	= 'Stop';
 		 var json = MR_Play_NodePresentation.prototype.serialize.apply(this, []);
 		 json.subType = 'MR_Stop_NodePresentation';
 		 return json;

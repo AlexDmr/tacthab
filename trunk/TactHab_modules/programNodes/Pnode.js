@@ -155,7 +155,7 @@ Pnode.prototype.getContext = function() {
 	// Propagate a call for context information
 	if(this.parent) {
 		 return this.parent.getContext();
-		} else {return {};}
+		} else {return {variables:{}, bricks:{}};}
 }
 
 return Pnode;

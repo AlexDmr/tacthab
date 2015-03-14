@@ -13,7 +13,11 @@ function BrickUPnP_HueLamp(HueBridge, lampHueId, lampJS) {
 	this.set( { alert: "select"
 			  }
 			, function(err ) {console.log("Error ADD Hue", lampHueId, err );}
-		    , function(data) {console.log("Yeahh ADD Hue", lampHueId, data); self.set({on:true, transitiontime: 20, hue:46920});}
+		    , function(data) {console.log("Yeahh ADD Hue", lampHueId, data);
+							  self.set({on:true, transitiontime: 20, hue:46920, sat:255});
+							  setTimeout(function() {self.set({transitiontime: 20, hue:0, bri:50});}, 2000);
+							  setTimeout(function() {self.set({on:false});}, 5000);
+							 }
 			);
 	return this;
 }

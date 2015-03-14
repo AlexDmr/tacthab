@@ -13,6 +13,7 @@ define	( [ './MR_Play_NodePresentation.js'
 	MR_Pause_NodePresentation.prototype.serialize = function() {
 		 var json = MR_Play_NodePresentation.prototype.serialize.apply(this, []);
 		 json.subType = 'MR_Pause_NodePresentation';
+		 console.log("MR_Pause_NodePresentation::serialize", json);
 		 return json;
 		}
 	MR_Pause_NodePresentation.prototype.Render = function() {
