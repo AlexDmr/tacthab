@@ -44,6 +44,7 @@ define( [ './BrickUPnP.js'
 							  , SortCriteria	: ''
 							  }
 							, function(err, buffer) {
+								 if(err) {console.error("Error:", err);}
 								 callback(err || buffer);
 								}
 							);

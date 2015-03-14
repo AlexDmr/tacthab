@@ -1,8 +1,3 @@
-/*require = require('amdrequire');
-require.config({
-      basePath		: __dirname
-    , publicPath	: __dirname
-});*/
 console.log('__dirname:', __dirname);
 var requirejs = require('requirejs');
 
@@ -48,13 +43,41 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		 webServer.emit('updateState', {objectId: node.id, prevState: 'state_'+prev, nextState: 'state_'+next});
 		}
 
-	
 	console.log('webServer.init(',__dirname,',8888)');
 	webServer.init(__dirname, '8888');
 	UpnpServer.init();
 	
 	var pgRootId = '';
+	var rootPath = __dirname.slice();
 	// Configure server
+	webServer.app.post( '/saveProgram'
+					  , function(req, res) {
+							 var fileName	= req.body.fileName || 'default';
+							 var programId	= req.query.programId || pgRootId;
+							 // XXX serialize root program and all sub-programs
+							 var  prog = Pnode.prototype.getNode(programId)
+							   , L_programs = [prog];
+							 if(!prog) {res.end(); return;}
+							 var serialization = { pgRootId : programId
+												 , programs	: []
+												 };
+							 while(L_programs.length) {
+								 prog = L_programs[0];
+								 L_programs = L_programs.splice(1);
+								 if(prog) {serialization.programs.push( prog.serialize() );}
+								}
+							 webServer.fs.writeFile( rootPath + '/savedPrograms/' + fileName + 'prog'
+												   , JSON.stringify(serialization)
+												   , function(err) {
+														 if(err) {res.writeHead(500);
+																  res.end( "error" + err );
+																 } else {res.writeHead(200);
+																		 res.end();
+																		}
+														}
+												   );
+							}
+					  );
 	// Program editor
 	webServer.app.get( '/editor'
 		, function(req, res) {
@@ -175,7 +198,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 	webServer.app.get( '/loadProgram'
 		, function(req, res) {
 				 console.log("loadProgram :", req.query.programId, ':', pgRootId);
-				var programId = req.query.programId
+				var programId = req.query.programId;
 				if(programId === undefined) {programId = pgRootId || null;}
 				if(programId) {
 					 var pg = Pnode.prototype.getNode(programId);
@@ -219,62 +242,6 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 			}
 		);
 
-	// Event simulation
-	webServer.app.get( '/evt'
-					 , function(req, res) {
-						 res.writeHead	(200, {'Content-type': 'text/html; charset=utf-8'} );
-						 webServer.fs.readFile('./test/testEvt.html'
-											  , function(err, dataObj) {
-													 if(err) {
-														 console.error('error reading test_evt.html', err);
-														} else	{var data = ''; data = data.concat(dataObj);
-																 var doc  = webServer.domParser.parseFromString(data, 'text/html');
-																 var body = doc.getElementsByTagName('body')[0];
-																 var L = []
-																   , node;
-																 var obj = Pnode.prototype.getNode(pgRootId);
-																 if(obj) {L.push(obj);}
-																 while(L.length) {
-																	 node = L.splice(0, 1)[0];
-																	 for(var i in node.children) {L.push( node.children[i] );}
-																	 if(node.isInstanceOf('EventNode')) {
-																		 var bt = doc.createElement('button');
-																		 bt.setAttribute('id', node.id);
-																		 bt.setAttribute('onclick', "testEvt.utils.XHR('POST', '/evt', {'variables': {'id':'"+node.id+"'}})");
-																		 bt.appendChild( doc.createTextNode(node.name) );
-																		 body.appendChild(bt);
-																		}
-																	}
-																 res.end( webServer.xmlSerializer.serializeToString(doc) );
-																}
-													}
-											  );
-						}
-					 );
-	webServer.app.post( '/evt'
-					  , function(req, res) {
-						 console.log( "Trigger event", req.body.id);
-						 res.end();
-						 var obj = Pnode.prototype.getNode(req.body.id);
-						 if(obj) {obj.triggerEvent();}
-						}
-					  );
-	
-	webServer.app.get	( '/testUPnP'
-						, function(req, res) {
-							 webServer.fs.readFile('./test/UPnP/index.html'
-								  , function(err, dataObj) {
-										 if(err) {
-											 console.error('error reading test_evt.html', err);
-											 res.writeHead(500, {'Content-type': 'application/json; charset=utf-8'});
-											 res.write( "Error reading file ./test/testEditor.html\n" );
-											 res.end( err );
-											} else	{var data = ''; data = data.concat(dataObj);
-													 res.end( data );
-													}
-										});
-						});
-						
 	function getDescrFromBrick(brick) {
 		 var res  = { id	: brick.brickId
 					, uuid	: brick.UPnP.uuid
@@ -307,38 +274,6 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 							 res.end( JSON.stringify(L) );
 							}
 						);
-	webServer.app.get	( '/remoteControler'
-		, function(req, res) {
-			 if(req.query.idControler) {
-				 var idControler = req.query.idControler;
-				 webServer.fs.readFile('./test/testRemoteControler.html'
-					  , function(err, dataObj) {
-							 if(err) {
-								 console.error('error reading test_evt.html', err);
-								 res.writeHead(500, {'Content-type': 'application/json; charset=utf-8'});
-								 res.write( "Error reading file ./test/testEditor.html\n" );
-								 res.end( err );
-								} else	{var data = ''; data = data.concat(dataObj);
-										 var doc  = webServer.domParser.parseFromString(data, 'text/html');
-										 var span_idControler = doc.getElementById('idControler');
-										 span_idControler.appendChild( doc.createTextNode(idControler) );
-										 
-										 var controlBrick = Pnode.prototype.getNode(idControler);
-										 if(controlBrick) {
-											 var context = controlBrick.getContext();
-											 var section_context = doc.getElementById('context');
-											 section_context.appendChild(
-												 doc.createTextNode( JSON.stringify(context) )
-												);
-											 res.end( webServer.xmlSerializer.serializeToString(doc) );
-											} else	{res.writeHead(400, {'Content-type': 'application/json; charset=utf-8'});
-													 res.end("There is no controler identified by " + idControler);
-													}
-										}
-							});
-				}
-			}
-		);
 
 	// OAuth identification
 	/*var GoogleStrategy = passportGoogle.Strategy;

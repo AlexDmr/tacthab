@@ -2,7 +2,7 @@ define( [ './Pnode.js'
 		, '../../js/AlxEvents.js'
 	    ]
 	  , function(Pnode, AlxEvents) {
-var D_EventNode	= {};
+var D_EventNode	= {};	// Dedicated dictionnary
 
 // Definition of a node for programs
 var EventNode = function(parent, children) {
@@ -22,6 +22,11 @@ AlxEvents(EventNode);
 var classes = [];//Pnode.prototype.getClasses();
 classes.push(EventNode.prototype.className);
 EventNode.prototype.getClasses	= function() {return classes;};
+
+EventNode.prototype.dispose			= function() {
+	delete  D_EventNode[this.id];
+	return Pnode.prototype.dispose.apply(this, []);
+}
 
 EventNode.prototype.evalSelector	= function() {
 	var res = Pnode.prototype.evalSelector.apply(this, []);

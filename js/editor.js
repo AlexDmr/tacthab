@@ -160,7 +160,7 @@ var editor = {
 						 // Variables
 						 for(i in json.variables) {
 							 variable = json.variables[i];
-							 console.log("New variable", variable.id, variable.name);
+							 // console.log("New variable", variable.id, variable.name);
 							 if(variable.type.indexOf('BrickUPnP_MediaRenderer') !== -1) {
 								 self.MR_categ.appendChild( self.createDragNode( variable.name
 													   , { constructor	: PresoUtils.get('Var_UsePresentation')
@@ -186,7 +186,7 @@ var editor = {
 																							   } 
 																							 )
 																	    );
-										console.log("New variable", variable.id, variable.name, ':', variable.type);
+										// console.log("New variable", variable.id, variable.name, ':', variable.type);
 									   }
 							}
 						}
@@ -226,7 +226,23 @@ var editor = {
 		 var bt_send	= document.getElementById('sendToServer')
 		   , bt_load	= document.getElementById('loadFromServer')
 		   , bt_start	= document.getElementById('startProgram')
-		   , bt_stop	= document.getElementById('stopProgram');
+		   , bt_stop	= document.getElementById('stopProgram')
+		   , bt_save	= document.getElementById('SaveToServer');
+		 bt_save.onclick = function() {
+								 var inputHidden = document.getElementById('programId');
+								 if(!inputHidden) {console.error("no program to save"); return;}
+								 utils.XHR( 'POST', '/saveProgram'
+										  , { variables	: { pgRootId	: inputHidden.value
+														  , fileName	: 'bonGrosTest'
+														  }
+											, onload	: function() {
+												 if(this.status === 200) {
+													  console.log('program saved');
+													} else {console.error("Error saving program:", this.responseText);}
+												}
+											}
+										  );
+								}
 		 bt_load.onclick = function() {
 								 var inputHidden = document.getElementById('programId');
 								 var ressource = '/loadProgram';
