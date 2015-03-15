@@ -64,9 +64,10 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 							 while(L_programs.length) {
 								 prog = L_programs[0];
 								 L_programs = L_programs.splice(1);
+								 L_programs = L_programs.concat( prog.getSubPrograms() );
 								 if(prog) {serialization.programs.push( prog.serialize() );}
 								}
-							 webServer.fs.writeFile( rootPath + '/savedPrograms/' + fileName + 'prog'
+							 webServer.fs.writeFile( rootPath + '/savedPrograms/' + fileName + '.prog'
 												   , JSON.stringify(serialization)
 												   , function(err) {
 														 if(err) {res.writeHead(500);
@@ -76,6 +77,45 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 																		}
 														}
 												   );
+							}
+					  );
+	webServer.app.post( '/loadProgramFromDisk'
+					  , function(req, res) {
+							 var fileName	= req.body.fileName || 'default';
+							 // XXX serialize root program and all sub-programs
+							 var  prog = Pnode.prototype.getNode(pgRootId)
+							   , L_programs = [];
+							 if(prog) {L_programs.push(prog);}
+							 while(L_programs.length) {
+								 prog = L_programs[0];
+								 L_programs = L_programs.splice(1);
+								 if(prog) {prog.dispose();}
+								}
+							 webServer.fs.readFile( rootPath + '/savedPrograms/' + fileName + '.prog'
+												  , function(err, data) {
+														 if(err) {res.writeHead(500);
+																  res.end( "error" + err );
+																 } else {var i, pg;
+																		 try {
+																			 var json = JSON.parse(data);
+																			 console.log("File contains", json.programs.length, "programs");
+																			 for(i=0; i<json.programs.length; i++) {
+																				 pg = Putils.unserialize( json.programs[i] );
+																				 pg.substituteIdBy( json.programs[i].PnodeID );
+																				 console.log('-----------', i, 'Program', pg.id, '/', json.programs[i].PnodeID);
+																				}
+																			 pgRootId = json.pgRootId;
+																			 console.log("Root program is", pgRootId);
+																			 pg = Pnode.prototype.getNode(pgRootId);
+																			 var str =  JSON.stringify( pg.serialize() );
+																			 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
+																			 res.end( str );
+																			} catch(err) {res.writeHead(500);
+																						  res.end( "Error processing data file", err );
+																						 }
+																		}
+														}
+												  );
 							}
 					  );
 	// Program editor
