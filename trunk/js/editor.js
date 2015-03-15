@@ -227,18 +227,33 @@ var editor = {
 		   , bt_load	= document.getElementById('loadFromServer')
 		   , bt_start	= document.getElementById('startProgram')
 		   , bt_stop	= document.getElementById('stopProgram')
-		   , bt_save	= document.getElementById('SaveToServer');
+		   , bt_save	= document.getElementById('DiskSaveToServer')
+		   , bt_dskLoad	= document.getElementById('DiskLoadFromServer');
 		 bt_save.onclick = function() {
 								 var inputHidden = document.getElementById('programId');
 								 if(!inputHidden) {console.error("no program to save"); return;}
 								 utils.XHR( 'POST', '/saveProgram'
 										  , { variables	: { pgRootId	: inputHidden.value
-														  , fileName	: 'bonGrosTest'
+														  , fileName	: document.getElementById('fileName').value || 'bonGrosTest'
 														  }
 											, onload	: function() {
 												 if(this.status === 200) {
 													  console.log('program saved');
 													} else {console.error("Error saving program:", this.responseText);}
+												}
+											}
+										  );
+								}
+		 bt_dskLoad.onclick = function() {
+								 utils.XHR( 'POST', '/loadProgramFromDisk'
+										  , { variables	: { fileName	: document.getElementById('fileName').value || 'bonGrosTest'
+														  }
+											, onload	: function() {
+												 if(this.status === 200) {
+													 console.log('Loading program...');
+													 var json = JSON.parse( this.responseText );
+													 self.loadProgram(json);
+													} else {console.error("Error retrieving program:", this.responseText);}
 												}
 											}
 										  );

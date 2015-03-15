@@ -33,6 +33,7 @@ html, body {
 #program {
 	margin		: 0px;
 	height		: 100%;
+	padding-top	: 1.5em;
 }
 
 #program div.children {
