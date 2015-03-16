@@ -79,7 +79,7 @@ PprogramDeclaration.prototype.unserialize	= function(json, Putils) {
 		 console.log("Creating a new sub-program");
 		 var pg = new ProgramNode();
 		 pg.setParent(this);
-		 /*if(json.programDef.id) {*/pg.substituteIdBy(json.programDef.id);//}
+		 if(json.programDef.id) {pg.substituteIdBy(json.programDef.id);}
 		 this.programDef.id = pg.id;
 		}
 	return this;
