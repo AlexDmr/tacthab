@@ -32,7 +32,8 @@ var UpnpServer = {
 		 if(this.D_devices[uuid]) {
 			 // console.log("\ttype:", this.D_devices[uuid].deviceType);
 			 // console.log("\tname:", this.D_devices[uuid].friendlyName);
-			 this.CallBack('remove', this.D_devices[uuid]);
+			 console.log("--- Removing", uuid, "---");
+			 this.CallBack('sub', this.D_devices[uuid]);
 			 delete this.D_devices[uuid];
 			}
 		}
