@@ -95,7 +95,12 @@ var editor = {
 													 , { constructor	: PresoUtils.get('Program_DefinitionPresentation')
 													   , nodeType		: 'DefinitionNode'
 													   } )
+										).appendChild( this.createDragNode( 'Start/Stop program'
+													 , { constructor	: PresoUtils.get('PprogramActionPresentation')
+													   , nodeType		: ['ActionNode', 'instruction']
+													   } )
 										);
+										
 		 // Create new draggable for variables
 		 this.variables_categ = 
 		 this.createCateg("Variables").appendChild( this.createDragNode( 'New variable'

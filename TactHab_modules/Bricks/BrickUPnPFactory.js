@@ -20,7 +20,7 @@ define( [ './Brick.js'
 						// console.log( brick );
 						self.D_uuid_brickId[ device.uuid ] = brick.brickId;
 					 break;
-					 case 'remove':
+					 case 'sub':
 						var uuid = device.uuid;
 						self.removeBrick( self.D_uuid_brickId[uuid] );
 						delete self.D_uuid_brickId[uuid];
