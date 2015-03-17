@@ -111,6 +111,7 @@ ProgramNode.prototype.getContext = function() {
 		 context = Pnode.prototype.getContext.apply(this, []);
 		} else {context = {bricks:{}, variables:{}};
 				// Register Bricks
+				console.log("Program", this.id, "is root");
 				var D_bricks = Brick.prototype.getBricks();
 				for(i in D_bricks) {context.bricks[i] = D_bricks[i];}
 			   }
@@ -141,11 +142,11 @@ ProgramNode.prototype.getContext = function() {
 				 if(  (L[i].brickId	&& typeof context.bricks   [ L[i].brickId] !== 'undefined')
 				   || (L[i].id		&& typeof context.variables[ L[i].id     ] !== 'undefined') ) {empty = false; break;}
 				}
-			 if(!empty || !variable.isTypedAs('selector')) {variables[v] = variable;} else {
+			 if(!empty || !variable.isTypedAs('ProgramNode')) {variables[v] = variable;} else {
 				 L_str = "["; // XXX C'est quoi ce merdier ?
 				 for(i=0; i<L.length; i++) {L_str += L[i].id + ', ';}
 				 L_str += "]";
-				 // console.log("\tRemoving variable", v, L_str);
+				 console.log("\tRemoving variable", v, L_str);
 				}
 			}
 		 context.variables = variables;

@@ -1,12 +1,18 @@
 ----- Dynamique des programmes
 Démarrer et arréter un programme.
 
+
 ----- Evènements d'apparition/dispariation des bricks
 Emettre des évènements lors de l'appaiation et de la dispariation des briques
 Permettre de s'y abonner dans les programmes
 	ex : lorsqu'apparait Kodi alors lui envoyer un média qui dit bonjour...
 
 	
+----- Intégration des services google Map et Tag
+Tag pour localiser des arrêts et connaitre les prochains passages
+Google Map pour visualiser cela plus visualiser la position d'un téléphone par exemple.
+Eventuellement, google map pour calculer des itinéraires en transport en commun ?
+
 
 ----- Coder une gestion des états
 Savoir si on est ou pas dans un état.
