@@ -76,7 +76,7 @@ PprogramDeclaration.prototype.unserialize	= function(json, Putils) {
 			} else {console.log("There is no node identified by", json.programDef.id);}
 		}
 	if(this.programDef.id === null) {
-		 console.log("Creating a new sub-program");
+		 console.log("Creating a new sub-program for", json.programDef.id);
 		 var pg = new ProgramNode();
 		 pg.setParent(this);
 		 if(json.programDef.id) {pg.substituteIdBy(json.programDef.id);}

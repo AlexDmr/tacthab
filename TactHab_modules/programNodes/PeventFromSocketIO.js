@@ -75,7 +75,7 @@ PeventFromSocketIO.prototype.serialize		= function() {
 }
 
 PeventFromSocketIO.prototype.unserialize	= function(json, Putils) {
-	console.log("PeventFromSocketIO::unserialize", json);
+	// console.log("PeventFromSocketIO::unserialize", json);
 	Pevent.prototype.unserialize.apply(this, [json, Putils]);
 	this.subType = json.subType;
 	// Describe event here

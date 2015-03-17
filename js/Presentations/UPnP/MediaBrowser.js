@@ -152,33 +152,6 @@ define	( [ '../protoPresentation.js'
 						}
 				    }
 				  );
-
-		 
-		 
-		 /** DEBUG XXX
-		 utils.XHR( 'GET', '/get_MediaDLNA'
-				  , {onload : function() {
-								 var data = JSON.parse( this.responseText );
-								 if(data.error) {
-									 this.htmldivContent.classList.add('error');
-									 this.htmldivContent.appendChild( document.createTextNode('error with /get_MediaDLNA', data) );
-									 console.error('error with /get_MediaDLNA', data);
-									} else	{var MSs = data.MediaServer;
-											 self.htmldivContent.innerHTML = '';
-											 for(var i=0; i<MSs.length; i++) {
-												 var MS = MSs[i];
-												 var htmlMS = self.RenderItem( MS.name
-																			 , MS.iconURL || 'js/Presentations/UPnP/images/defaultMediaServer.png'
-																			 , MS.id
-																			 , '0'
-																			 , 'MediaServer' );
-												 self.htmldivContent.appendChild( htmlMS );
-												}
-											}
-								}
-					}
-				 );
-		 */
 		}
 	MediaBrowser.prototype.getHtmlItemFrom = function(mediaServerId, itemId, cb) {
 		 var self = this;

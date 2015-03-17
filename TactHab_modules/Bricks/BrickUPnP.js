@@ -9,6 +9,7 @@ define( [ './Brick.js'
 	var BrickUPnP = function() {
 		 Brick.prototype.constructor.apply(this, []);
 		 //console.log( "BrickUPnP", this.brickId);
+		 this.subscriptions	= [];
 		 this.UPnP			= {};
 		 this.UPnP_states	= {};
 		 this.types.push( 'BrickUPnP' );
@@ -18,6 +19,12 @@ define( [ './Brick.js'
 	BrickUPnP.prototype.constructor		= BrickUPnP;
 	BrickUPnP.prototype.getTypeName		= function() {return "BrickUPnP";}
 	
+	BrickUPnP.prototype.dispose			= function() {
+		 for(var i=0; i<this.subscriptions.length; i++) {
+			 clearInterval( this.subscriptions[i].timer );
+			}
+		 Brick.prototype.dispose.apply(this, []);
+		}
 	BrickUPnP.prototype.serialize		= function() {
 		 var json = Brick.prototype.serialize.apply(this, []);
 		 return json;
@@ -56,6 +63,7 @@ define( [ './Brick.js'
 							}
 		 
 		 // Subscribe to events
+		 
 		 for(var s in device.services) {
 			 var service = device.services[s];
 			 // console.log( service.serviceType );
@@ -63,10 +71,20 @@ define( [ './Brick.js'
 			 service.on("stateChange", function(event) {
 				 self.UPnPEvent(event.textXML, this);
 				});
+			 service.on	( 'newSubscription'
+						, function(data) {
+							 var pos = self.subscriptions.indexOf( data.old );
+							 if(pos >= 0) {self.subscriptions.splice(pos, 1);}
+							 self.subscriptions.push( data.new );
+							 console.log("\tBrickUPnP: Registering the new subscription for", this.id);
+							}
+						);
 			 service.subscribe	(function(service) {return function(err, data) {
 									 if(err) {
 										 console.error('BrickUPnP', self.brickId, "received:", "\n\terr :", err, "\n\tdata :", data);
-										} else {console.log('subscription done for', self.brickId, service.serviceType);}
+										} else {console.log('subscription done for', self.brickId, service.serviceType);
+											    self.subscriptions.push( data ); // data is a subscription in the sense of upnp-service.js library
+											   }
 									 };
 									}(service)
 								);

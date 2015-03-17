@@ -97,12 +97,15 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 																  res.end( "error" + err );
 																 } else {var i, pg;
 																		 try {
-																			 var json = JSON.parse(data);
+																			 var json = JSON.parse(data), parent;
 																			 console.log("File contains", json.programs.length, "programs");
 																			 for(i=0; i<json.programs.length; i++) {
 																				 pg = Putils.unserialize( json.programs[i] );
+																				 parent = Pnode.prototype.getNode( json.programs[i].PnodeID ).parent;
 																				 pg.substituteIdBy( json.programs[i].PnodeID );
-																				 console.log('-----------', i, 'Program', pg.id, '/', json.programs[i].PnodeID);
+																				 pg.setParent( parent );
+																				 console.log('-----------', i, 'Identification of program', pg.id, '/', json.programs[i].PnodeID);
+																				 if(pg.parent) {console.log('-----------   | parent:', pg.parent.id);} else {console.log('-----------   | this is a root');}
 																				}
 																			 pgRootId = json.pgRootId;
 																			 console.log("Root program is", pgRootId);
@@ -281,7 +284,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 				}
 			}
 		);
-
+/* XXX OBSOLETE ?
 	function getDescrFromBrick(brick) {
 		 var res  = { id	: brick.brickId
 					, uuid	: brick.UPnP.uuid
@@ -298,23 +301,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 			}
 		 return res;
 		}
-	webServer.app.get	( '/get_MediaDLNA'
-						, function(req, res) {
-							 var L = {MediaRenderer:[], MediaServer:[]};
-							 var L_Bricks, i;
-							 L_Bricks = BrickUPnP_MediaRenderer.getBricks();
-							 for(i=0; i<L_Bricks.length; i++) {
-								 L.MediaRenderer.push( getDescrFromBrick(L_Bricks[i]) );
-								}
-							 L_Bricks = BrickUPnP_MediaServer.getBricks();
-							 for(i=0; i<L_Bricks.length; i++) {
-								 L.MediaServer.push  ( getDescrFromBrick(L_Bricks[i]) );
-								}
-							 
-							 res.end( JSON.stringify(L) );
-							}
-						);
-
+*/
 	// OAuth identification
 	/*var GoogleStrategy = passportGoogle.Strategy;
 	passport.use(new GoogleStrategy( { returnURL: 'http://localhost:8888/'

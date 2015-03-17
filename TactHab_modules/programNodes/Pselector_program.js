@@ -49,7 +49,7 @@ Pselector_program.prototype.serialize	= function() {
 }
 
 Pselector_program.prototype.unserialize	= function(json, Putils) {
-	console.log("Pselector_program::unserialize", json);
+	// console.log("Pselector_program::unserialize", json);
 	Pselector.prototype.unserialize.apply(this, [json, Putils]);
 	// className and id are fixed by the constructor of the object itself
 	this.selector.programId = json.selector.programId;
