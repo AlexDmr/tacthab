@@ -21,7 +21,8 @@ define( [ './Brick.js'
 	
 	BrickUPnP.prototype.dispose			= function() {
 		 for(var i=0; i<this.subscriptions.length; i++) {
-			 clearInterval( this.subscriptions[i].timer );
+			 console.log("\tclearTimeout", i);
+			 clearTimeout( this.subscriptions[i].timer );
 			}
 		 Brick.prototype.dispose.apply(this, []);
 		}

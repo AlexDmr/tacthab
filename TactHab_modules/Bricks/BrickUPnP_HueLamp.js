@@ -51,6 +51,7 @@ BrickUPnP_HueLamp.prototype.set		= function(json, cbError, cbSuccess) {
 			  }
 			, function(error, IncomingMessage, responseText) {
 				 if(error) {
+					 console.error("BrickUPnP_HueLamp::set error:", error, responseText);
 					 if(cbError) cbError(error);
 					} else {var json = JSON.parse(responseText);
 							if(cbSuccess) cbSuccess(responseText);
