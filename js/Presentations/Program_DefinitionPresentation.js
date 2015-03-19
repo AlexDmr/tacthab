@@ -7,6 +7,7 @@ var Program_DefinitionPresentation = function() {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
 	this.programDef		= { name	: ''
+						  , expose	: false
 						  };
 	this.html			= {};
 	return this;
@@ -25,7 +26,9 @@ Program_DefinitionPresentation.prototype.serialize	= function() {
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
 	// Describe action here
 	json.subType	= 'Program_DefinitionPresentation';
-	json.programDef = { name	: this.programDef.name };
+	json.programDef = { name	: this.programDef.name
+					  , expose	: this.programDef.expose
+					  };
 	if(this.programDef.id) {json.programDef.id = this.programDef.id;}
 	return json;
 }
@@ -33,11 +36,13 @@ Program_DefinitionPresentation.prototype.serialize	= function() {
 Program_DefinitionPresentation.prototype.unserialize	= function(json, PresoUtils) {
 	// Describe action here
 	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
-	this.programDef.id	= json.programDef.id;
-	this.programDef.name= json.programDef.name;
+	this.programDef.id		= json.programDef.id;
+	this.programDef.name	= json.programDef.name;
+	this.programDef.expose	= json.programDef.expose;
 	if(this.html.inputId) {
 		 this.html.inputId.value = this.programDef.name;
 		 this.html.editProgram.setAttribute('href', 'editor?programId=' + encodeURIComponent(this.programDef.id) );
+		 this.html.expose.checked = this.programDef.expose;
 		}
 	return this;
 }
@@ -49,6 +54,11 @@ Program_DefinitionPresentation.prototype.Render	= function() {
 	var root = PnodePresentation.prototype.Render.apply(this, []);
 	root.classList.add('DefinitionNode');
 	if(typeof this.html.inputId === 'undefined') {
+		 this.html.expose = document.createElement('input');
+			this.html.expose.setAttribute('type', 'checkbox');
+			this.html.expose.checked = self.programDef.expose;
+			this.html.expose.onchange = function() {self.programDef.expose = this.checked; console.log(self.programDef.expose);};
+			this.divDescription.appendChild( this.html.expose );
 		 this.html.labelId = document.createElement('span');
 			this.html.labelId.classList.add( 'varId' );
 			this.html.labelId.innerHTML = "Define sub-program ";

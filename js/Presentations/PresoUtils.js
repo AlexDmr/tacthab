@@ -15,6 +15,7 @@ define	( [ './ProgramNodePresentation.js'
 		  , './MR_Instance_SelectorNodePresentation.js'
 		  , './Var_UsePresentation.js'
 		  , './PprogramActionPresentation.js'
+		  , './Program_ExposedAPI_elementPresentation.js'
 		  // Média Renderer
 		  , './UPnP/MediaRendererInstructions/MR_Play_NodePresentation.js'
 		  , './UPnP/MediaRendererInstructions/MR_Pause_NodePresentation.js'
@@ -40,6 +41,7 @@ define	( [ './ProgramNodePresentation.js'
 				  , MR_Instance_SelectorNodePresentation
 				  , Var_UsePresentation
 				  , PprogramActionPresentation
+				  , Program_ExposedAPI_elementPresentation
 				  // Media Renderer
 				  , MR_Play_NodePresentation
 				  , MR_Pause_NodePresentation
@@ -66,6 +68,7 @@ var PresoUtils = {
 					  , 'MR_Instance_SelectorNodePresentation'	: MR_Instance_SelectorNodePresentation
 					  , 'Var_UsePresentation'					: Var_UsePresentation
 					  , 'PprogramActionPresentation'			: PprogramActionPresentation
+					  , 'Program_ExposedAPI_elementPresentation': Program_ExposedAPI_elementPresentation
 					  // MediaRenderer
 					  , 'MR_Play_NodePresentation'				: MR_Play_NodePresentation
 					  , 'MR_load_NodePresentation'				: MR_load_NodePresentation

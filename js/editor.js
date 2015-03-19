@@ -37,7 +37,7 @@ var editor = {
 			details.appendChild( summary );
 			summary.innerHTML = name;
 		 this.htmlNodeTypes.appendChild( details );
-		 return {details: details, summary: summary, appendChild: function(c) {details.appendChild(c); return this;}}
+		 return {root: details, details: details, summary: summary, appendChild: function(c) {details.appendChild(c); return this;}}
 		}
 	, init	: function(classNodeTypes, htmlNodeProgram, socket) {
 		 console.log('Editor init', classNodeTypes, htmlNodeProgram);
@@ -139,9 +139,7 @@ var editor = {
 		 // Process variables and bricks
 		 var variables = {};
 		 var inputHidden = document.getElementById('programId');
-		 if(inputHidden) {
-			  variables.nodeId = inputHidden.value;
-			 }
+		 if(inputHidden) {variables.nodeId = inputHidden.value;}
 		 utils.XHR( 'POST', '/getContext'
 				  , { variables	: variables
 					, onload	: function() {
@@ -176,13 +174,44 @@ var editor = {
 													   );
 								} else 
 							 if(variable.type.indexOf("Program") !== -1) {
-								 self.program_categ.appendChild( self.createDragNode( variable.name
-													   , { constructor	: PresoUtils.get('Program_UsePresentation')
-													     , nodeType		: variable.type.concat( ['SelectorNode', 'program'] )
-														 , id			: variable.id
-														 , name			: variable.name
-													     } )
-													   );
+								 var categ_pg = self.createCateg(variable.name);
+								 self.program_categ.appendChild( categ_pg.root );
+								 categ_pg.appendChild( self.createDragNode ( variable.name
+																		   , { constructor	: PresoUtils.get('Program_UsePresentation')
+																			 , nodeType		: variable.type.concat( ['SelectorNode', 'program'] )
+																			 , id			: variable.id
+																			 , name			: variable.name
+																			 } )
+													 );
+								 // Make a call to retrieve exposed API for this program
+								 utils.call	( variable.id, 'getExposedAPI_serialized', []
+											, function(categ_pg, variable) {
+												 return function(api) {
+													 console.log("Add", api, "to", categ_pg);
+													 for(var t in api) {
+														 if(api[t].length) {
+															 var subCateg = self.createCateg(t);
+															 categ_pg.appendChild( subCateg.root );
+															 for(var i=0; i<api[t].length; i++) {
+																 function createSubCateg(t, i) {
+																	 subCateg.appendChild( self.createDragNode ( api[t][i].name
+																											   , { constructor	: PresoUtils.get('Program_ExposedAPI_elementPresentation')
+																												 , nodeType		: api[t][i].type.concat( ['SelectorNode', t] )
+																												 , id			: variable.id	// id du program
+																												 , variableId	: api[t][i].id	// id de la variable
+																												 , name			: variable.name	// nom du programme
+																												 , variableName	: api[t][i].name// nom de la variable
+																												 } )
+																						 );
+																	}
+																 createSubCateg(t, i);
+																}
+															}															 
+														}
+													}
+												}(categ_pg, variable)
+											);
+								 
 								} else {self.variables_categ.appendChild( self.createDragNode( variable.name
 																							 , { constructor	: PresoUtils.get('Var_UsePresentation')
 																							   , nodeType		: variable.type//.concat( ['SelectorNode', 'program'] )

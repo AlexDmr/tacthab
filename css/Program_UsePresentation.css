@@ -7,3 +7,12 @@ div.Pnode.Pselector_program {
 	background	: white;
 	border-radius	: 0.2em;
 }
+
+div.Pnode.Pselector_program span.program {
+	margin		: 0.2em;
+}
+
+div.Pnode.Pselector_program span.variable {
+	border		: solid black 1px;
+	background	: yellow;
+}

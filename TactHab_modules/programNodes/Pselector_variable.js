@@ -91,6 +91,16 @@ Pselector_variable.prototype.updateType = function() {
 Pselector_variable.prototype.serialize	= function() {
 	var json =	Pselector.prototype.serialize.apply(this, []);
 	json.selector.variableId	= this.selector.variableId;
+	json.selector.programId		= this.selector.programId;
+	var varDef	= Pnode.prototype.getNode( this.selector.variableId )
+	  , progDef	= Pnode.prototype.getNode( this.selector.programId  );
+	if(varDef) {
+		 json.selector.variableName	= varDef.getName();
+		}
+	if(progDef) {
+		 json.selector.name			= program.getName();
+		}
+	
 	return json;
 }
 
@@ -98,7 +108,8 @@ Pselector_variable.prototype.unserialize	= function(json, Putils) {
 	// console.log("Pselector_variable::unserialize", json);
 	Pselector.prototype.unserialize.apply(this, [json, Putils]);
 	// className and id are fixed by the constructor of the object itself
-	this.selector.variableId = json.selector.variableId;
+	this.selector.variableId	= json.selector.variableId;
+	this.selector.programId		= json.selector.programId
 	return this;
 }
 

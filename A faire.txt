@@ -23,7 +23,7 @@ Evènement lorsqu'on entre dans l'état E1
 
 
 
------ Equipements "virtuels", ou plutôt à façon, bricolé, ...
+----- Equipements "virtuels", ou plutôt à façons, bricolés, ...
 Permettre de définir ses propres capteurs avec :
 	- des évènements	: faire le pont avec un évènement extérieur
 						  par exemple, si on reçoit tel requête HTTP alors lever tel évènement
