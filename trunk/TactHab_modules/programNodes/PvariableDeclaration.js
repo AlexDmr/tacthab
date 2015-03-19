@@ -48,13 +48,14 @@ PvariableDeclaration.prototype.childStateChanged = function(child, prevState, ne
 		} else {error('PvariableDeclaration::childStateChanged : a child state changed but this was not the expected child !');}
 }
 
-PvariableDeclaration.prototype.getName = function() {return this.varDef.name;}
+PvariableDeclaration.prototype.getName		= function() {return this.varDef.name;}
+PvariableDeclaration.prototype.isExposed	= function() {return this.varDef.expose;}
+
 PvariableDeclaration.prototype.getSelectorId = function() {
 	 this.varDef.id = this.varDef.id || this.parent.getVariableId();
 	 return this.varDef.id;
 	}
 
-PvariableDeclaration.prototype.isExposed	= function() {return this.varDef.expose;}
 PvariableDeclaration.prototype.getValueNode	= function() {
 	if(this.children[0]) {return this.children[0];}
 	return null;

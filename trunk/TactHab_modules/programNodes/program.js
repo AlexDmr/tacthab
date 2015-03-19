@@ -61,9 +61,10 @@ ProgramNode.prototype.getExposedAPI	= function() {
 		 def = this.definitions.children[i];
 		 if(def.isExposed()) {
 			 type = def.updateType();
-			 if(type.indexOf('event' ) >= 0) {obj.events.push (def);}
-			 if(type.indexOf('state' ) >= 0) {obj.states.push (def);}
-			 if(type.indexOf('action') >= 0) {obj.actions.push(def);}
+			 // console.log("\tvariable", def.id, "typed", type);
+			 if(type.indexOf('EventNode' ) >= 0) {obj.events.push (def);}
+			 if(type.indexOf('StateNode' ) >= 0) {obj.states.push (def);}
+			 if(type.indexOf('ActionNode') >= 0) {obj.actions.push(def);}
 			}
 		}
 	

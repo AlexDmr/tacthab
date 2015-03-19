@@ -22,7 +22,8 @@ var Program_UsePresentation = function(infoObj) {
 }
 
 Program_UsePresentation.prototype = new PnodePresentation();
-Program_UsePresentation.prototype.className = 'Pselector_program';
+Program_UsePresentation.prototype.className		= 'Pselector_program';
+Program_UsePresentation.prototype.constructor	= Program_UsePresentation
 
 Program_UsePresentation.prototype.init = function(PnodeID, parent, children) {
 	PnodePresentation.prototype.init.apply(this, [parent, children]);
@@ -46,10 +47,10 @@ Program_UsePresentation.prototype.unserialize	= function(json, PresoUtils) {
 	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
 	this.selector.programId	= json.selector.programId;
 	this.selector.name		= json.selector.name;
-	if(this.html.spanVarId) {
-		 this.html.spanVarId.innerHTML = '';
-		 this.html.spanVarId.classList.add( this.selector.programId );
-		 this.html.spanVarId.appendChild( document.createTextNode(this.selector.name) );
+	if(this.html.spanProgramId) {
+		 this.html.spanProgramId.innerHTML = '';
+		 this.html.spanProgramId.classList.add( this.selector.programId );
+		 this.html.spanProgramId.appendChild( document.createTextNode(this.selector.name) );
 		}
 	return this;
 }
@@ -62,13 +63,13 @@ Program_UsePresentation.prototype.Render	= function() {
 	// var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);
 	root.classList.add('Pselector_program');
-	if(typeof this.html.spanVarId === 'undefined') {
-		 this.html.spanVarId = document.createElement('span');
-			this.html.spanVarId.classList.add( 'varId' );
-			this.divDescription.appendChild( this.html.spanVarId );
+	if(typeof this.html.spanProgramId === 'undefined') {
+		 this.html.spanProgramId = document.createElement('span');
+			this.html.spanProgramId.classList.add( 'program' );
+			this.divDescription.appendChild( this.html.spanProgramId );
 			if(this.selector.programId) {
-				 this.html.spanVarId.classList.add( this.selector.programId );
-				 this.html.spanVarId.appendChild( document.createTextNode(this.selector.name) );
+				 this.html.spanProgramId.classList.add( this.selector.programId );
+				 this.html.spanProgramId.appendChild( document.createTextNode(this.selector.name) );
 				}
 		}
 	return root;

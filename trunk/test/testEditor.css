@@ -6,6 +6,10 @@
 	background	: grey;
 }
 
+#instructionTypes details  > details {
+	margin-left	: 1em;
+}
+
 div.instructionType {
 	background	: #6BF;
 	border		: solid black 1px;

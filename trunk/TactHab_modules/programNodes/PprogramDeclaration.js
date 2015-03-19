@@ -8,6 +8,7 @@ var PprogramDeclaration = function(parent, children) {
 	 this.programDef  = { id	: undefined
 						, name	: ''
 						, type	: this.updateType()
+						, expose: false
 						};
 	 return this;
 }
@@ -28,10 +29,13 @@ var classes = Pnode.prototype.getClasses().slice();
 classes.push(PprogramDeclaration.prototype.className);
 PprogramDeclaration.prototype.getClasses	= function() {return classes;};
 
+PprogramDeclaration.prototype.isExposed	= function() {return this.programDef.expose;}
+
 PprogramDeclaration.prototype.getDescription = function() {
 	return	{ id	: this.programDef.id
 			, name	: this.programDef.name
 			, type	: this.programDef.type
+			, expose: this.programDef.expose
 			};
 }
 
@@ -66,6 +70,7 @@ PprogramDeclaration.prototype.unserialize	= function(json, Putils) {
 	this.programDef   = { type	: this.updateType()
 						, name	: json.programDef.name
 						, id	: null
+						, expose: json.programDef.expose
 						};
 	if(json.programDef.id !== null) {
 		 var subProgram = Pnode.prototype.getNode( json.programDef.id );
