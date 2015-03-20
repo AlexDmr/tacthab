@@ -184,7 +184,7 @@ var editor = {
 																			 } )
 													 );
 								 // Make a call to retrieve exposed API for this program
-								 utils.call	( variable.id, 'getExposedAPI_serialized', []
+								 utils.call	( variable.programId, 'getExposedAPI_serialized', []
 											, function(categ_pg, variable) {
 												 return function(api) {
 													 console.log("Add", api, "to", categ_pg);
@@ -197,6 +197,7 @@ var editor = {
 																	 subCateg.appendChild( self.createDragNode ( api[t][i].name
 																											   , { constructor	: PresoUtils.get('Program_ExposedAPI_elementPresentation')
 																												 , nodeType		: api[t][i].type.concat( ['SelectorNode', t] )
+																												 , variableTypes: api[t][i].type.concat( ['SelectorNode', t] )
 																												 , id			: variable.id	// id du program
 																												 , variableId	: api[t][i].id	// id de la variable
 																												 , name			: variable.name	// nom du programme

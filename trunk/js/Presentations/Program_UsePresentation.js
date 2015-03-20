@@ -10,12 +10,12 @@ var css = document.createElement('link');
 var Program_UsePresentation = function(infoObj) {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
-	this.selector	= { programId	: null
+	this.selector	= { progDefId	: null
 					  , name		: ''
 					  };
 	this.html			= {};
 	if(infoObj) {
-		 this.selector.programId	= infoObj.config.id;
+		 this.selector.progDefId	= infoObj.config.id;
 		 this.selector.name			= infoObj.config.name;
 		}
 	return this;
@@ -35,9 +35,7 @@ Program_UsePresentation.prototype.serialize	= function() {
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
 	// Describe action here
 	json.subType	= 'Program_UsePresentation';
-	json.selector = { name			: this.selector.name
-					, type			: []
-					, programId		: this.selector.programId
+	json.selector = { progDefId		: this.selector.progDefId
 					};
 	return json;
 }
@@ -45,12 +43,12 @@ Program_UsePresentation.prototype.serialize	= function() {
 Program_UsePresentation.prototype.unserialize	= function(json, PresoUtils) {
 	// Describe action here
 	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
-	this.selector.programId	= json.selector.programId;
+	this.selector.progDefId	= json.selector.progDefId;
 	this.selector.name		= json.selector.name;
-	if(this.html.spanProgramId) {
-		 this.html.spanProgramId.innerHTML = '';
-		 this.html.spanProgramId.classList.add( this.selector.programId );
-		 this.html.spanProgramId.appendChild( document.createTextNode(this.selector.name) );
+	if(this.html.spanProgramName) {
+		 this.html.spanProgramName.innerHTML = '';
+		 this.html.spanProgramName.classList.add( this.selector.progDefId );
+		 this.html.spanProgramName.appendChild( document.createTextNode(this.selector.name) );
 		}
 	return this;
 }
@@ -63,13 +61,13 @@ Program_UsePresentation.prototype.Render	= function() {
 	// var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);
 	root.classList.add('Pselector_program');
-	if(typeof this.html.spanProgramId === 'undefined') {
-		 this.html.spanProgramId = document.createElement('span');
-			this.html.spanProgramId.classList.add( 'program' );
-			this.divDescription.appendChild( this.html.spanProgramId );
-			if(this.selector.programId) {
-				 this.html.spanProgramId.classList.add( this.selector.programId );
-				 this.html.spanProgramId.appendChild( document.createTextNode(this.selector.name) );
+	if(typeof this.html.spanProgramName === 'undefined') {
+		 this.html.spanProgramName = document.createElement('span');
+			this.html.spanProgramName.classList.add( 'program' );
+			this.divDescription.appendChild( this.html.spanProgramName );
+			if(this.selector.progDefId) {
+				 this.html.spanProgramName.classList.add( this.selector.progDefId );
+				 this.html.spanProgramName.appendChild( document.createTextNode(this.selector.name) );
 				}
 		}
 	return root;

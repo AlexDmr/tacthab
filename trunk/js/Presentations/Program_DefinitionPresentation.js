@@ -6,9 +6,9 @@ define	( [ './PnodePresentation.js'
 var Program_DefinitionPresentation = function() {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
-	this.programDef		= { name	: ''
-						  , expose	: false
-						  };
+	this.varDef	= { name	: ''
+				  , expose	: false
+				  };
 	this.html			= {};
 	return this;
 }
@@ -26,23 +26,25 @@ Program_DefinitionPresentation.prototype.serialize	= function() {
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
 	// Describe action here
 	json.subType	= 'Program_DefinitionPresentation';
-	json.programDef = { name	: this.programDef.name
-					  , expose	: this.programDef.expose
-					  };
-	if(this.programDef.id) {json.programDef.id = this.programDef.id;}
+	json.varDef = { name	: this.varDef.name
+				  , expose	: this.varDef.expose
+				  };
+	if(this.varDef.id		) {json.varDef.id		 = this.varDef.id		;}
+	if(this.varDef.programId) {json.varDef.programId = this.varDef.programId;}
 	return json;
 }
 
 Program_DefinitionPresentation.prototype.unserialize	= function(json, PresoUtils) {
 	// Describe action here
 	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
-	this.programDef.id		= json.programDef.id;
-	this.programDef.name	= json.programDef.name;
-	this.programDef.expose	= json.programDef.expose;
+	this.varDef.id			= json.varDef.id;
+	this.varDef.name		= json.varDef.name;
+	this.varDef.expose		= json.varDef.expose;
+	this.varDef.programId	= json.varDef.programId;
 	if(this.html.inputId) {
-		 this.html.inputId.value = this.programDef.name;
-		 this.html.editProgram.setAttribute('href', 'editor?programId=' + encodeURIComponent(this.programDef.id) );
-		 this.html.expose.checked = this.programDef.expose;
+		 this.html.inputId.value = this.varDef.name;
+		 this.html.editProgram.setAttribute('href', 'editor?programId=' + encodeURIComponent(this.varDef.programId) );
+		 this.html.expose.checked = this.varDef.expose;
 		}
 	return this;
 }
@@ -56,8 +58,8 @@ Program_DefinitionPresentation.prototype.Render	= function() {
 	if(typeof this.html.inputId === 'undefined') {
 		 this.html.expose = document.createElement('input');
 			this.html.expose.setAttribute('type', 'checkbox');
-			this.html.expose.checked = self.programDef.expose;
-			this.html.expose.onchange = function() {self.programDef.expose = this.checked; console.log(self.programDef.expose);};
+			this.html.expose.checked = self.varDef.expose;
+			this.html.expose.onchange = function() {self.varDef.expose = this.checked; console.log(self.varDef.expose);};
 			this.divDescription.appendChild( this.html.expose );
 		 this.html.labelId = document.createElement('span');
 			this.html.labelId.classList.add( 'varId' );
@@ -66,11 +68,11 @@ Program_DefinitionPresentation.prototype.Render	= function() {
 		 this.html.inputId = document.createElement('input');
 			this.html.inputId.classList.add( 'varId' );
 			this.html.inputId.innerHTML = "ACTION";
-			this.html.inputId.onkeyup = function() {self.programDef.name = self.html.inputId.value;};
+			this.html.inputId.onkeyup = function() {self.varDef.name = self.html.inputId.value;};
 			this.divDescription.appendChild( this.html.inputId );
 		 // Link
 		 this.html.editProgram = document.createElement('a');
-			this.html.editProgram.setAttribute('href', 'editor?programId=' + encodeURIComponent(this.programDef.id) );
+			this.html.editProgram.setAttribute('href', 'editor?programId=' + encodeURIComponent(this.varDef.programId) );
 			this.html.editProgram.setAttribute('target', "_blank");
 			this.html.editProgram.innerHTML = " edit ";
 			this.divDescription.appendChild( this.html.editProgram );

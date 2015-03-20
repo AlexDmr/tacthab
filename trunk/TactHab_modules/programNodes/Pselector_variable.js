@@ -89,17 +89,18 @@ Pselector_variable.prototype.updateType = function() {
 }
 
 Pselector_variable.prototype.serialize	= function() {
+	var context = this.getContext();
 	var json =	Pselector.prototype.serialize.apply(this, []);
 	json.selector.variableId	= this.selector.variableId;
 	json.selector.programId		= this.selector.programId;
-	var varDef	= Pnode.prototype.getNode( this.selector.variableId )
-	  , progDef	= Pnode.prototype.getNode( this.selector.programId  );
+	var varDef	= context.variables[ this.selector.variableId ]
+	  , progDef	= context.variables[ this.selector.programId  ];
 	if(varDef) {
 		 json.selector.variableName	= varDef.getName();
-		}
+		} else {console.log("\tno varDef for", this.selector.variableId);}
 	if(progDef) {
-		 json.selector.name			= program.getName();
-		}
+		 json.selector.name			= progDef.getName();
+		} else {console.log("\tno progDef for", this.selector.programId);}
 	
 	return json;
 }
