@@ -1,91 +1,78 @@
 define( [ './Pnode.js'
+		, './PvariableDeclaration.js'
 		, './program.js'
 	    ]
-	  , function(Pnode, ProgramNode) {
+	  , function(Pnode, PvariableDeclaration, ProgramNode) {
 
 var PprogramDeclaration = function(parent, children) {
-	 Pnode.prototype.constructor.apply(this, [parent, children]);
-	 this.programDef  = { id	: undefined
-						, name	: ''
-						, type	: this.updateType()
-						, expose: false
-						};
+	 this.varDef = {};
+	 PvariableDeclaration.apply(this, [parent, children]);
+	 this.varDef.type		= this.updateType()
+	 this.varDef.programId	= null;
+	 
 	 return this;
 }
 
 // API for starting, stopping the instruction
-PprogramDeclaration.prototype = new Pnode();
+PprogramDeclaration.prototype = new PvariableDeclaration();
 PprogramDeclaration.prototype.className	= 'PprogramDeclaration';
 Pnode.prototype.appendClass( PprogramDeclaration );
 
 PprogramDeclaration.prototype.dispose	= function() {
-	var subProgram = Pnode.prototype.getNode( this.programDef.id );
+	var subProgram = Pnode.prototype.getNode( this.varDef.programId );
 	if(subProgram) {subProgram.setParent(null);}
 	Pnode.prototype.dispose.apply(this, []);
 	return this;
 }
 
-var classes = Pnode.prototype.getClasses().slice();
+var classes = PvariableDeclaration.prototype.getClasses().slice();
 classes.push(PprogramDeclaration.prototype.className);
 PprogramDeclaration.prototype.getClasses	= function() {return classes;};
 
-PprogramDeclaration.prototype.isExposed	= function() {return this.programDef.expose;}
-
 PprogramDeclaration.prototype.getDescription = function() {
-	return	{ id	: this.programDef.id
-			, name	: this.programDef.name
-			, type	: this.programDef.type
-			, expose: this.programDef.expose
-			};
+	var descr		= PvariableDeclaration.prototype.getDescription.apply(this, []);
+	descr.programId	= this.varDef.programId;
+	return	descr;
 }
 
 PprogramDeclaration.prototype.Start = function() {
 	var res = Pnode.prototype.Start.apply(this, []);
-	if(res) {this.Stop();}
+	this.Stop();
 	return res;
 }
 
-PprogramDeclaration.prototype.getName		= function() {return this.programDef.name;}
-PprogramDeclaration.prototype.getSelectorId = function() {return this.programDef.id  ;}
-
 PprogramDeclaration.prototype.updateType	= function() {return ['ProgramDeclaration', 'Program']}
-
 PprogramDeclaration.prototype.evalSelector	= function() {
 	var L = [];
-	var P = Pnode.prototype.getNode( this.getSelectorId() );
+	var P = Pnode.prototype.getNode( this.varDef.programId );
 	if(P) {L.push(P);}
 	return L;
 }
 
 PprogramDeclaration.prototype.serialize	= function() {
 	var children = this.children; this.children = [];
-	var json =	Pnode.prototype.serialize.apply(this, []);
-	json.programDef = this.getDescription();
+	var json =	PvariableDeclaration.prototype.serialize.apply(this, []);
+	json.varDef.programId = this.varDef.programId;
 	this.children = children;
 	return json;
 }
 PprogramDeclaration.prototype.unserialize	= function(json, Putils) {
-	Pnode.prototype.unserialize.apply(this, [json, Putils]);
+	PvariableDeclaration.prototype.unserialize.apply(this, [json, Putils]);
 	// className and id are fixed by the constructor of the object itself
-	this.programDef   = { type	: this.updateType()
-						, name	: json.programDef.name
-						, id	: null
-						, expose: json.programDef.expose
-						};
-	if(json.programDef.id !== null) {
-		 var subProgram = Pnode.prototype.getNode( json.programDef.id );
+	if(json.varDef.programId !== null) {
+		 var subProgram = Pnode.prototype.getNode( json.varDef.programId );
 		 if(subProgram) {
-			 console.log("There is a node identified by", json.programDef.id, ":", subProgram.className);
-			 this.programDef.id	= json.programDef.id;
+			 console.log("There is a node identified by", json.varDef.programId, ":", subProgram.className);
+			 this.varDef.programId	= json.varDef.programId;
 			 subProgram.setParent(this);
-			} else {console.log("There is no node identified by", json.programDef.id);}
+			} else {console.log("There is no node identified by", json.varDef.programId);}
 		}
-	if(this.programDef.id === null) {
-		 console.log("Creating a new sub-program for", json.programDef.id);
+	if(this.varDef.programId === null) {
+		 console.log("Creating a new sub-program for", json.varDef.programId);
 		 var pg = new ProgramNode();
 		 pg.setParent(this);
-		 if(json.programDef.id) {pg.substituteIdBy(json.programDef.id);}
-		 this.programDef.id = pg.id;
+		 if(json.varDef.programId) {pg.substituteIdBy(json.varDef.programId);}
+		 this.varDef.programId = pg.id;
 		}
 	return this;
 } 

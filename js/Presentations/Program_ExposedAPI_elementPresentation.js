@@ -12,6 +12,7 @@ var Program_ExposedAPI_elementPresentation = function(infoObj) {
 	if(infoObj) {
 		 this.selector.variableId	= infoObj.config.variableId;
 		 this.selector.variableName	= infoObj.config.variableName;
+		 this.selector.variableTypes= infoObj.config.variableTypes;
 		}
 	return this;
 }

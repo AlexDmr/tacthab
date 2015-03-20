@@ -21,21 +21,22 @@ classes.push(Pselector_program.prototype.className);
 Pselector_program.prototype.getClasses	= function() {return classes;};
 
 Pselector_program.prototype.getProgramDeclaration	= function() {
-	return Pnode.prototype.getNode(this.selector.programId);
+	return Pnode.prototype.getNode(this.selector.progDefId);
 }
 
 Pselector_program.prototype.evalSelector	= function() {
 	Pselector.prototype.evalSelector.apply(this, []);
 	// Get reference to the variable declaration
 	var programDeclaration = this.getProgramDeclaration();
-	// console.log('Program declaration "', this.selector.programId, "is referenced by", programDeclaration);
-	if(programDeclaration) {return [programDeclaration];} else {return [];}
+	if(programDeclaration) {
+		 return programDeclaration.evalSelector();
+		} else {return [];}
 }
 
 Pselector_program.prototype.updateType = function() {
 	Pselector.prototype.updateType.apply(this, []);
 	// XXX Get type from object if it exists
-	if(typeof this.selector.programId !== 'undefined') {
+	if(typeof this.selector.progDefId !== 'undefined') {
 		 var programDeclaration = this.getProgramDeclaration();
 		 if(programDeclaration) this.selector.type = programDeclaration.updateType();
 		}
@@ -44,7 +45,7 @@ Pselector_program.prototype.updateType = function() {
 
 Pselector_program.prototype.serialize	= function() {
 	var json =	Pselector.prototype.serialize.apply(this, []);
-	json.selector.programId	= this.selector.programId;
+	json.selector.progDefId	= this.selector.progDefId;
 	return json;
 }
 
@@ -52,7 +53,7 @@ Pselector_program.prototype.unserialize	= function(json, Putils) {
 	// console.log("Pselector_program::unserialize", json);
 	Pselector.prototype.unserialize.apply(this, [json, Putils]);
 	// className and id are fixed by the constructor of the object itself
-	this.selector.programId = json.selector.programId;
+	this.selector.progDefId = json.selector.progDefId;
 	return this;
 }
 

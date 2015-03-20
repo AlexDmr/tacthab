@@ -25,8 +25,8 @@ PvariableDeclaration.prototype.getDescription = function() {
 	var descr =	{ type	: this.updateType()
 				, name	: this.varDef.name
 				, expose: this.varDef.expose
+				, id	: this.getSelectorId()
 				};
-	descr.id = this.getSelectorId();
 	return descr;
 }
 
@@ -84,10 +84,9 @@ PvariableDeclaration.prototype.serialize	= function() {
 PvariableDeclaration.prototype.unserialize	= function(json, Putils) {
 	Pnode.prototype.unserialize.apply(this, [json, Putils]);
 	// className and id are fixed by the constructor of the object itself
-	 this.varDef  = { type	: this.updateType()
-					, name	: json.varDef.name
-					, expose: json.varDef.expose
-					};
+	this.varDef.type	= this.updateType();
+	this.varDef.name	= json.varDef.name;
+	this.varDef.expose	= json.varDef.expose;
 	if(json.varDef.id) {this.varDef.id	= json.varDef.id;}
 	return this;
 } 

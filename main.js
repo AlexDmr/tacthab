@@ -248,6 +248,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 					 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
 					 var str_prg = '';
 					 if(pg) {
+						 console.log("\tparent node:", pg.parent?pg.parent.id:'NONE');
 						 str_prg = JSON.stringify( pg.serialize() );
 						 // console.log("========================> Sending:\n", str_prg);
 						} else {console.log("\tImpossible to find the program identified by", programId);}
