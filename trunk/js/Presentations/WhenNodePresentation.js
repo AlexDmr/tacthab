@@ -16,6 +16,7 @@ WhenNodePresentation.prototype.className = 'WhenNode';
 
 WhenNodePresentation.prototype.serialize	= function() {
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
+	json.children = []; // info debug to be sure to remove children, should already be empty.
 	json.when = {};
 	if(this.when.childEvent   ) {json.when.childEvent		= this.when.childEvent.serialize   ();}
 	if(this.when.childReaction) {json.when.childReaction	= this.when.childReaction.serialize();}
@@ -52,6 +53,7 @@ WhenNodePresentation.prototype.Render	= function() {
 								  , CSSwhenAccepted	: 'possible2drop'
 								  , CSSwhenOver		: 'ready2drop'
 								  , ondrop			: function(evt, draggedNode, infoObj) {
+										 self.removeChild( self.when.childEvent );
 										 self.when.childEvent = new infoObj.constructor(infoObj).init( '' );
 										 self.divEvent.innerText = '';
 										 self.appendChild(  self.when.childEvent );
@@ -68,6 +70,7 @@ WhenNodePresentation.prototype.Render	= function() {
 								  , CSSwhenAccepted	: 'possible2drop'
 								  , CSSwhenOver		: 'ready2drop'
 								  , ondrop			: function(evt, draggedNode, infoObj) {
+										 self.removeChild( self.when.childReaction );
 										 self.when.childReaction = new infoObj.constructor(infoObj).init( '' );
 										 self.divReaction.innerText = '';
 										 self.appendChild( self.when.childReaction );

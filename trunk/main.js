@@ -18,6 +18,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		  , './TactHab_modules/Bricks/BrickUPnP_MediaRenderer.js'
 		  , './TactHab_modules/Bricks/BrickUPnP_MediaServer.js'
 		  , './TactHab_modules/Bricks/BrickUPnP_HueBridge.js'
+		  , './TactHab_modules/Bricks/Factory__Fhem.js'
 		  , './TactHab_modules/webServer/webServer.js'
 		  , './TactHab_modules/programNodes/program.js'
 		  // Extracteur
@@ -30,6 +31,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		, function( Putils, Pnode, UpnpServer
 		          , Brick, BrickUPnP_MediaRenderer, BrickUPnP_MediaServer
 				  , BrickUPnP_HueBridge
+				  , Factory__Fhem
 				  , webServer
 				  , ProgramNode
 				  , request
@@ -82,6 +84,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 	webServer.app.post( '/loadProgramFromDisk'
 					  , function(req, res) {
 							 var fileName	= req.body.fileName || 'default';
+							 console.log("Reading program from file", fileName);
 							 // XXX serialize root program and all sub-programs
 							 var  prog = Pnode.prototype.getNode(pgRootId)
 							   , L_programs = [];
@@ -89,7 +92,11 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 							 while(L_programs.length) {
 								 prog = L_programs[0];
 								 L_programs = L_programs.splice(1);
-								 if(prog) {prog.dispose();}
+								 if(prog) {
+									  L_programs = L_programs.concat( prog.getSubPrograms() );
+									  console.log("\tdisposing", prog.id);
+									  prog.dispose();
+									 }
 								}
 							 webServer.fs.readFile( rootPath + '/savedPrograms/' + fileName + '.prog'
 												  , function(err, data) {
@@ -101,7 +108,10 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 																			 console.log("File contains", json.programs.length, "programs");
 																			 for(i=0; i<json.programs.length; i++) {
 																				 pg = Putils.unserialize( json.programs[i] );
-																				 parent = Pnode.prototype.getNode( json.programs[i].PnodeID ).parent;
+																				 var previousProg = Pnode.prototype.getNode( json.programs[i].PnodeID );
+																				 if(previousProg) {
+																					 parent = previousProg.parent;
+																					} else {parent = null;}
 																				 pg.substituteIdBy( json.programs[i].PnodeID );
 																				 pg.setParent( parent );
 																				 console.log('-----------', i, 'Identification of program', pg.id, '/', json.programs[i].PnodeID);
@@ -113,7 +123,8 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 																			 var str =  JSON.stringify( pg.serialize() );
 																			 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
 																			 res.end( str );
-																			} catch(err) {res.writeHead(500);
+																			} catch(err) {console.error("\terror reading file", fileName);
+																						  res.writeHead(500);
 																						  res.end( "Error processing data file", err );
 																						 }
 																		}
@@ -188,7 +199,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 					  , function(req, res) {
 							 if(req.body.programId) {
 								 var obj = Pnode.prototype.getNode(req.body.programId);
-								 if(obj) {obj.Start();}
+								 if(obj) {console.log("Start program", obj.id); obj.Start();console.log("\tstart done...");}
 								} else {console.log("Start : no program specified");}
 							 res.end();
 							}
@@ -240,11 +251,12 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 						
 	webServer.app.get( '/loadProgram'
 		, function(req, res) {
-				 console.log("loadProgram :", req.query.programId, ':', pgRootId);
+				 console.log("loadProgram :", req.query.programId, 'with program root', pgRootId);
 				var programId = req.query.programId;
 				if(programId === undefined) {programId = pgRootId || null;}
 				if(programId) {
 					 var pg = Pnode.prototype.getNode(programId);
+					 console.log("\tparent:", pg.parent?pg.parent.id:'NONE');
 					 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
 					 var str_prg = '';
 					 if(pg) {

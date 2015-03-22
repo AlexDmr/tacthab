@@ -14,8 +14,14 @@ function PprogramActionPresentation() {
 PprogramActionPresentation.prototype = new ActionNodePresentation();
 PprogramActionPresentation.prototype.className = 'ActionNode';
 
-PprogramActionPresentation.prototype.unserialize	= function() {
-	ActionNodePresentation.prototype.unserialize.apply(this, []);
+PprogramActionPresentation.prototype.serialize	= function() {
+	var json = ActionNodePresentation.prototype.serialize.apply(this, []);
+	json.subType		= 'PprogramActionPresentation';
+	return json;
+}
+
+PprogramActionPresentation.prototype.unserialize	= function(json, Putils) {
+	ActionNodePresentation.prototype.unserialize.apply(this, [json, Putils]);
 	if(this.html.selectAction) {
 		 this.html.selectAction.value = this.action.method;
 		}
@@ -23,18 +29,18 @@ PprogramActionPresentation.prototype.unserialize	= function() {
 }
 
 PprogramActionPresentation.prototype.Render			= function() {
-	ActionNodePresentation.prototype.Render.apply(this, []);
+	var root = ActionNodePresentation.prototype.Render.apply(this, []);
 	if(!this.html.selectAction) {
+		 this.html.actionName.innerHTML		= '';
+		 this.html.divSelector.innerHTML	= '[DROP PROGRAMS HERE]';
 		 var options = '<option value="Start">Start</option><option value="Stop">Stop</option>';
 			 this.html.selectAction = document.createElement( 'select' );
-			 this.html.selectAction.innerHTML	= str;
+			 this.html.selectAction.innerHTML	= options;
 			 this.html.selectAction.value		= this.action.method;
-			 this.html.selectAction.onchange	= function() {
-				 self.action.method = this.value;
-				}
-		 this.divDescription.appendChild( this.html.selectAction );
+			 this.html.selectAction.onchange	= function() {self.action.method = this.value;}
+		 this.html.actionName.appendChild(this.html.selectAction); 
 		}
-	return this;
+	return root;
 }
 
 return PprogramActionPresentation;

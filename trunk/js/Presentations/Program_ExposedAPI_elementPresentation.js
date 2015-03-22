@@ -34,11 +34,14 @@ Program_ExposedAPI_elementPresentation.prototype.unserialize	= function(json, Pr
 	Program_UsePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
 	this.selector.variableId	= json.selector.variableId;
 	this.selector.variableName	= json.selector.variableName;
-	this.selector.variableTypes	= json.selector.variableTypes;
+	this.selector.variableTypes	= json.selector.variableTypes || [];
 	if(this.html.spanVarId) {
 		 this.html.spanVarId.innerHTML = '';
 		 this.html.spanVarId.classList.add( this.selector.variableId );
-		 this.html.spanVarId.appendChild( document.createTextNode(this.selector.name) );
+		 for(var i=0;i<this.selector.variableTypes.length; i++) {
+			 this.html.spanVarId.classList.add( this.selector.variableTypes[i] );
+			}
+		 this.html.spanVarId.appendChild( document.createTextNode(this.selector.variableName) );
 		}
 	return this;
 }

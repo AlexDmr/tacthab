@@ -28,7 +28,7 @@ ActionNode.prototype.setCommand = function(mtd, params) {
 ActionNode.prototype.Start = function() {
 	var self = this
 	  , res  = Pnode.prototype.Start.apply(this, []);
-	
+	console.log("ActionNode::Start", res, this.mtd, this.params);
 	if(res) {
 		if(this.children[0] && this.children[0].evalSelector) {
 			// Evaluate the targets
@@ -40,7 +40,12 @@ ActionNode.prototype.Start = function() {
 								, function(err) {console.log("Error  :", err); self.Stop();}
 								) 
 					 );
-			} else {this.Stop();}
+			} else {console.error( "Action not performed:\n"
+								 , "\tcall:", this.mtd, this.params
+								 , "\tchild", this.children[0]?this.children[0].id:'NONE'
+								 );
+					this.Stop();
+				   }
 		}
 	return res;
 }
