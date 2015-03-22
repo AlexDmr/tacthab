@@ -21,7 +21,8 @@ classes.push(Pselector_program.prototype.className);
 Pselector_program.prototype.getClasses	= function() {return classes;};
 
 Pselector_program.prototype.getProgramDeclaration	= function() {
-	return Pnode.prototype.getNode(this.selector.progDefId);
+	var context = this.getContext();
+	return context.variables[ this.selector.progDefId ];
 }
 
 Pselector_program.prototype.evalSelector	= function() {
@@ -30,7 +31,9 @@ Pselector_program.prototype.evalSelector	= function() {
 	var programDeclaration = this.getProgramDeclaration();
 	if(programDeclaration) {
 		 return programDeclaration.evalSelector();
-		} else {return [];}
+		} else {console.error("\tThere is no program declaration for", this.selector.progDefId);
+				return [];
+			   }
 }
 
 Pselector_program.prototype.updateType = function() {
@@ -44,8 +47,11 @@ Pselector_program.prototype.updateType = function() {
 }
 
 Pselector_program.prototype.serialize	= function() {
-	var json =	Pselector.prototype.serialize.apply(this, []);
+	var context = this.getContext();
+	var json	=	Pselector.prototype.serialize.apply(this, []);
+	var progDef	= context.variables[ this.selector.progDefId  ];
 	json.selector.progDefId	= this.selector.progDefId;
+	if(progDef) {json.selector.name	= progDef.getName();}
 	return json;
 }
 

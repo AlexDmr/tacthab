@@ -47,7 +47,9 @@ Pcall.prototype.execute = function() {
 	console.log("Pcall :", this.targets.length, this.mtdName, this.params);
 	// this.CB_success, this.CB_cancel
 	try {var A_res = new Array(this.targets.length);
-		 for(var i=0; i<A_res.length; i++) {this.executeFor(A_res, i);}
+		 if(A_res.length) {
+			 for(var i=0; i<A_res.length; i++) {this.executeFor(A_res, i);}
+			} else {self.CB_success();}
 		} catch(err) {self.CB_cancel(err);}
 }
 

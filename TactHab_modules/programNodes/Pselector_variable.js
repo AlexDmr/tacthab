@@ -59,7 +59,23 @@ Pselector_variable.prototype.getClasses	= function() {return classes;};
 
 Pselector_variable.prototype.getVariableDeclaration	= function() {
 	var context = this.getContext();
+	var varDef	= context.variables[ this.selector.variableId ]
+	  , progDef	= context.variables[ this.selector.progDefId  ];
+	if(progDef) {
+		 // Looking for variable in the context of the program referenced by progDef
+		 // console.error("MUST LOOK INTO PROGRAM", json.selector.name, "TO FIND VARIABLE", this.selector.variableId);
+		 var L_prog = progDef.evalSelector();
+		 if(L_prog.length) {
+			 var prog		= L_prog[0]
+			   , variables	= prog.getLocalVariables();
+			 varDef = variables[ this.selector.variableId ];
+			} else {console.error("\tThe referenced program", progDef.getName(), "is not present");}
+		}
+	return varDef;
+	/** OLD
+	var context = this.getContext();
 	return context.variables[ this.selector.variableId ];
+	*/
 }
 
 Pselector_variable.prototype.getValueNode	= function() {
@@ -92,15 +108,28 @@ Pselector_variable.prototype.serialize	= function() {
 	var context = this.getContext();
 	var json =	Pselector.prototype.serialize.apply(this, []);
 	json.selector.variableId	= this.selector.variableId;
-	json.selector.programId		= this.selector.programId;
+	json.selector.progDefId		= this.selector.progDefId;
 	var varDef	= context.variables[ this.selector.variableId ]
-	  , progDef	= context.variables[ this.selector.programId  ];
-	if(varDef) {
-		 json.selector.variableName	= varDef.getName();
-		} else {console.log("\tno varDef for", this.selector.variableId);}
+	  , progDef	= context.variables[ this.selector.progDefId  ];
 	if(progDef) {
 		 json.selector.name			= progDef.getName();
-		} else {console.log("\tno progDef for", this.selector.programId);}
+		 // Looking for variable in the context of the program referenced by progDef
+		 // console.error("MUST LOOK INTO PROGRAM", json.selector.name, "TO FIND VARIABLE", this.selector.variableId);
+		 var L_prog = progDef.evalSelector();
+		 if(L_prog.length) {
+			 var prog		= L_prog[0]
+			   , variables	= prog.getLocalVariables();
+			 if(variables[ this.selector.variableId ]) {
+				 json.selector.variableName		= variables[ this.selector.variableId ].getName();
+				 json.selector.variableTypes	= variables[ this.selector.variableId ].updateType();
+				} else {console.error("\tNo variable", this.selector.variableId, "in program", progDef.getName());}
+			} else {console.error("\tThe referenced program", progDef.getName(), "is not present");}
+		} else {if(varDef) {
+					 json.selector.variableName	= varDef.getName();
+					} else {console.log("\tno varDef for", this.selector.variableId);
+							console.log("\tno progDef for", this.selector.progDefId);
+						   }
+			   }
 	
 	return json;
 }
@@ -110,7 +139,7 @@ Pselector_variable.prototype.unserialize	= function(json, Putils) {
 	Pselector.prototype.unserialize.apply(this, [json, Putils]);
 	// className and id are fixed by the constructor of the object itself
 	this.selector.variableId	= json.selector.variableId;
-	this.selector.programId		= json.selector.programId
+	this.selector.progDefId		= json.selector.progDefId;
 	return this;
 }
 

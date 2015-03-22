@@ -102,7 +102,17 @@ ProgramNode.prototype.call = function(call) {
 		} else {call.execute();}
 }
 
-ProgramNode.prototype.getContext = function() {
+ProgramNode.prototype.getLocalVariables	= function() {
+	var variables = {}, def, varId;
+	for(i=0; i<this.definitions.children.length; i++) {
+		 def = this.definitions.children[i]; // Variable definition
+		 varId = def.getSelectorId()
+		 variables[ varId ] = def;
+		}
+	return variables;
+}
+
+ProgramNode.prototype.getContext		= function() {
 	if(this.filtering) return this.cacheContext;
 	this.filtering = true;
 	
@@ -112,46 +122,46 @@ ProgramNode.prototype.getContext = function() {
 		 context = Pnode.prototype.getContext.apply(this, []);
 		} else {context = {bricks:{}, variables:{}};
 				// Register Bricks
-				console.log("Program", this.id, "is root");
+				// console.log("Program", this.id, "is root");
 				var D_bricks = Brick.prototype.getBricks();
 				for(i in D_bricks) {context.bricks[i] = D_bricks[i];}
 			   }
 	
 	this.cacheContext = context;	
-	// Resgister Variables
+	// 1) Resgister Variables
 	var L_defs = this.definitions.children, varId, def;
 	for(i=0; i<L_defs.length; i++) {
 		 def = L_defs[i]; // Variable definition
 		 varId = def.getSelectorId()
 		 context.variables[ varId ] = def;
-		 // console.log("\t- add variable", varId, ":", def.getName(), ":", def.evalSelector().length, "elements" );
 		}
 		
-	// Filter context
-		 this.cacheContext = context;
-		 this.filtering = true;
-		 for(i=0; i<this.filterNodes.length; i++) {
-			 this.filterNodes[i].applyFilterOn( context );
+	// 2) Filter context
+	 this.cacheContext = context;
+	 this.filtering = true;
+	 for(i=0; i<this.filterNodes.length; i++) {
+		 this.filterNodes[i].applyFilterOn( context );
+		}
+		
+	// 3) Delete variables that are "empty" with respect to the context
+	var variables = {}, variable, L, v, L_str;
+	for(v in context.variables) {
+		 variable = context.variables[v];
+		 L = variable.evalSelector();
+		 var empty = true;
+		 for(i=0; i<L.length; i++) {// Are all objects present in the context?
+			 if(  (L[i].brickId	&& typeof context.bricks   [ L[i].brickId] !== 'undefined')
+			   || (L[i].id		&& typeof context.variables[ L[i].id     ] !== 'undefined') ) {empty = false; break;}
 			}
-		// Delete variables that are "empty" with respect to the context
-		var variables = {}, variable, L, v, L_str;
-		for(v in context.variables) {
-			 variable = context.variables[v];
-			 L = variable.evalSelector();
-			 var empty = true;
-			 for(i=0; i<L.length; i++) {// Are all objects present in the context?
-				 if(  (L[i].brickId	&& typeof context.bricks   [ L[i].brickId] !== 'undefined')
-				   || (L[i].id		&& typeof context.variables[ L[i].id     ] !== 'undefined') ) {empty = false; break;}
-				}
-			 if(!empty || !variable.isTypedAs('ProgramNode')) {variables[v] = variable;} else {
-				 L_str = "["; // XXX C'est quoi ce merdier ?
-				 for(i=0; i<L.length; i++) {L_str += L[i].id + ', ';}
-				 L_str += "]";
-				 console.log("\tRemoving variable", v, L_str);
-				}
+		 if(!empty || !variable.isTypedAs('ProgramNode')) {variables[v] = variable;} else {
+			 L_str = "["; // XXX C'est quoi ce merdier ?
+			 for(i=0; i<L.length; i++) {L_str += L[i].id + ', ';}
+			 L_str += "]";
+			 console.log("\tRemoving variable", v, L_str);
 			}
-		 context.variables = variables;
-		 this.filtering = false;
+		}
+	 context.variables = variables;
+	 this.filtering = false;
 		 
 		 
 	// console.log("</ProgramNode:getContext", this.id, ">");
