@@ -81,6 +81,14 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 												   );
 							}
 					  );
+	function Remap(json, Map) {
+		 var att, i;
+		 for(i in json) {
+			 if( Map[json[i]] ) {
+				 json[i] = Map[json[i]];
+				} else {if(typeof json[i] === 'object') {Remap(json[i], Map);}}
+			}
+		}
 	webServer.app.post( '/loadProgramFromDisk'
 					  , function(req, res) {
 							 var fileName	= req.body.fileName || 'default';
@@ -106,6 +114,15 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 																		 try {
 																			 var json = JSON.parse(data), parent;
 																			 console.log("File contains", json.programs.length, "programs");
+																			 // Allocating programs ? XXX
+																			 var Map = {}, pipoNode;
+																			 for(i=0; i<json.programs.length; i++) {
+																				 pipoNode = new Pnode();
+																				 Map[ json.programs[i].PnodeID ] = pipoNode.id;
+																				 console.log("\t", json.programs[i].PnodeID, '=>', pipoNode.id);
+																				}
+																			 Remap(json, Map);
+																			 // 
 																			 for(i=0; i<json.programs.length; i++) {
 																				 pg = Putils.unserialize( json.programs[i] );
 																				 var previousProg = Pnode.prototype.getNode( json.programs[i].PnodeID );
@@ -120,7 +137,9 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 																			 pgRootId = json.pgRootId;
 																			 console.log("Root program is", pgRootId);
 																			 pg = Pnode.prototype.getNode(pgRootId);
-																			 var str =  JSON.stringify( pg.serialize() );
+																			 var jsonPg = pg.serialize();
+																			 console.log("Serialization done...");
+																			 var str =  JSON.stringify( jsonPg );
 																			 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
 																			 res.end( str );
 																			} catch(err) {console.error("\terror reading file", fileName);

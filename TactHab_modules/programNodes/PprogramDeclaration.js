@@ -59,18 +59,18 @@ PprogramDeclaration.prototype.serialize	= function() {
 PprogramDeclaration.prototype.unserialize	= function(json, Putils) {
 	PvariableDeclaration.prototype.unserialize.apply(this, [json, Putils]);
 	// className and id are fixed by the constructor of the object itself
-	console.log("<PprogramDeclaration::unserialize programId", json.varDef.programId, ">");
+	// console.log("<PprogramDeclaration::unserialize programId", json.varDef.programId, ">");
 	if(json.varDef.programId !== null) {
 		 var subProgram = Pnode.prototype.getNode( json.varDef.programId );
 		 if(subProgram) {
-			 console.log("There is a node identified by", json.varDef.programId, ":", subProgram.className);
+			 // console.log("There is a node identified by", json.varDef.programId, ":", subProgram.className);
 			 this.varDef.programId	= json.varDef.programId;
 			 subProgram.setParent(this);
-			 console.log("\tparent of", subProgram.id, "is", subProgram.parent?subProgram.parent.id:'NONE');
-			} else {console.log("There is no node identified by", json.varDef.programId);}
+			 // console.log("\tparent of", subProgram.id, "is", subProgram.parent?subProgram.parent.id:'NONE');
+			} //else {console.log("There is no node identified by", json.varDef.programId);}
 		}
 	if(this.varDef.programId === null) {
-		 console.log("Creating a new sub-program for", json.varDef.programId);
+		 // console.log("Creating a new sub-program for", json.varDef.programId);
 		 var pg = new ProgramNode();
 		 pg.setParent(this);
 		 if(json.varDef.programId) {pg.substituteIdBy(json.varDef.programId);}

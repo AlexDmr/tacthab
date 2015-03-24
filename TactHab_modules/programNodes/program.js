@@ -132,8 +132,11 @@ ProgramNode.prototype.getContext		= function() {
 	var L_defs = this.definitions.children, varId, def;
 	for(i=0; i<L_defs.length; i++) {
 		 def = L_defs[i]; // Variable definition
-		 varId = def.getSelectorId()
-		 context.variables[ varId ] = def;
+		 try {
+			 varId = def.getSelectorId();
+			 context.variables[ varId ] = def;
+			 // console.log("ProgramNode::getContext", this.id, i, '/', L_defs.length, def.className, def.id);
+			} catch(err) {console.error("ProgramNode::getContext", this.id, "Impossible to get selectorId for", i, '/', L_defs.length, def.className, def.id);}
 		}
 		
 	// 2) Filter context
@@ -187,9 +190,11 @@ ProgramNode.prototype.unserialize	= function(json, Putils) {
 	this.definitions.setParent ( this );
 	this.instructions.setParent( this );
 	// Plug definitions part
-	var i;
+	var i, def;
 	for(i=0; i<json.pg.definitions.length; i++) {
-		 Putils.unserialize(json.pg.definitions[i], Putils).setParent ( this.definitions  );
+		 def = Putils.unserialize(json.pg.definitions[i], Putils)
+		 def.setParent ( this.definitions  );
+		 // console.log("ProgramNode::unserialize", this.id, def.className, def.id);
 		}
 	// instructions part
 	for(i=0; i<json.pg.instructions.length; i++) {

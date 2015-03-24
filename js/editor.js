@@ -237,10 +237,14 @@ var editor = {
 									);
 
 		 // Create new draggable for HTTP and socketIO
-		 this.createCateg("External").appendChild( this.createDragNode( 'on socketIO...'
+		 this.createCateg("Events").appendChild( this.createDragNode( 'on socketIO...'
 												 , { constructor	: PresoUtils.get('PeventFromSocketIOPresentation')
 												   , nodeType		: 'EventNode'
 												   , isNotType		: 'Pnode'
+												   } )
+									).appendChild( this.createDragNode( 'Event on something ...'
+												 , { constructor	: PresoUtils.get('PeventBrickPresentation')
+												   , nodeType		: ['EventNode']
 												   } )
 									);
 

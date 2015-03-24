@@ -46,7 +46,7 @@ var WebSocketClient = websocket.client
 										console.log("\t////Fhem => event\t\t:", msg.payload);
 									 break;
 									 case 'listentry'	:
-										console.log("\t////Fhem => listentry\t:", msg.payload.name);
+										console.log("\t////Fhem => listentry\t:", msg.payload.name, msg.payload.attributes.subType);
 									 break;
 									 case 'getreply'	:
 										console.log("\t////Fhem => reply\t\t:", msg.payload);
