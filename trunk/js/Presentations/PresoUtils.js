@@ -7,6 +7,7 @@ define	( [ './ProgramNodePresentation.js'
 		  , './WhenNodePresentation.js'
 		  , './PcontrolBrickPresentation.js'
 		  , './PfilterPresentation.js'
+		  , './PeventBrickPresentation.js'
 		  // Variables and programs
 		  , './Program_UsePresentation.js'
 		  , './Program_DefinitionPresentation.js'
@@ -33,6 +34,7 @@ define	( [ './ProgramNodePresentation.js'
 				  , WhenNodePresentation
 				  , PcontrolBrickPresentation
 				  , PfilterPresentation
+				  , PeventBrickPresentation
 				  // Variables
 				  , Program_UsePresentation
 				  , Program_DefinitionPresentation
@@ -60,6 +62,7 @@ var PresoUtils = {
 					  , 'WhenNode'								: WhenNodePresentation		, 'WhenNodePresentation'		: WhenNodePresentation
 					  , 'PcontrolBrick'							: PcontrolBrickPresentation
 					  , 'PfilterPresentation'					: PfilterPresentation
+					  , 'PeventBrickPresentation'				: PeventBrickPresentation
 					  // Variables
 					  , 'Program_UsePresentation'				: Program_UsePresentation
 					  , 'Program_DefinitionPresentation'		: Program_DefinitionPresentation
@@ -86,10 +89,11 @@ var PresoUtils = {
 		}
 	, unserialize	: function(json, cb) {
 		 // console.log("json.subType : ", json.subType);
+		 var parent;
 		 var Cname	= json.subType || json.className;
 		 var classe	= this.get( Cname );
 		 if(classe) {
-			 var parent	= new classe().init();
+			 parent	= new classe().init();
 			 parent.unserialize(json, PresoUtils);
 			} else {console.error( "Unknown class to unserialize:\n\tsubtype:"
 								 , json.subType, "\nclassName:", json.className

@@ -49,12 +49,14 @@ Pnode.prototype.appendClass		= function(classe) {D_classes[classe.prototype.clas
 
 // API for starting, stopping the instruction
 Pnode.prototype.serialize	= function() {
+	// console.log("serialize", this.id, this.className);
 	var json =	{ className: this.className
 				, PnodeID: this.id
 				, children: []
 				};
 	if(this.subType) {json.subType = this.subType;}
 	for(var i in this.children) {
+		 // console.log("\tchild", this.children[i].id, this.children[i].className);
 		 json.children.push( this.children[i].serialize() );
 		}
 	return json;
@@ -75,7 +77,10 @@ Pnode.prototype.getNode			= function(id)	{return D_nodes[id];}
 Pnode.prototype.substituteIdBy	= function(id)	{
 	 // Is there an object already having that id ?
 	 var obj = Pnode.prototype.getNode( id );
-	 if(obj && (obj !== this)) {obj.dispose(); console.log("Replacing object", id, ':', obj.className);}
+	 if(obj && (obj !== this)) {
+		 obj.dispose();
+		 console.log("Replacing object", id, ':', obj.className, "by", this.className, "now", id, '->', obj.id);
+		}
 	 
 	 // Replacing id and registrations
 	 delete D_nodes[this.id];

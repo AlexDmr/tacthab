@@ -10,6 +10,7 @@ define ([ './Pnode.js'
 		, './PvariableDeclaration.js'
 		, './PprogramDeclaration.js'
 		, './PfilterNode.js'
+		, './PeventBrick.js'
 		// Selectors
 		, './Pselector_ObjInstance.js'
 		, './Pselector_variable.js'
@@ -24,6 +25,7 @@ define ([ './Pnode.js'
 				  , PvariableDeclaration
 				  , PprogramDeclaration
 				  , PfilterNode
+				  , PeventBrick
 				  // Selectors
 				  , Pselector_ObjInstance
 				  , Pselector_variable
@@ -41,6 +43,7 @@ var Putils = {
 					  , 'PcontrolBrick'			: PcontrolBrick
 					  , 'PvariableDeclaration'	: PvariableDeclaration
 					  , 'PfilterNode'			: PfilterNode
+					  , 'PeventBrick'			: PeventBrick
 					  , 'PprogramDeclaration'	: PprogramDeclaration
 					  , 'Pselector_ObjInstance'	: Pselector_ObjInstance
 					  , 'Pselector_variable'	: Pselector_variable
@@ -50,11 +53,6 @@ var Putils = {
 		 var classe	= this.mapping[json.className];
 		 var parent	= new classe(null);
 		 parent.unserialize(json, this);
-		 /** DEBUG XXXif
-		 if(Pnode.prototype.getNode(json.PnodeID)) {
-			 parent.substituteIdBy(json.PnodeID);
-			}
-		 */
 		 return parent;
 		}
 };

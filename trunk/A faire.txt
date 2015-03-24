@@ -6,6 +6,9 @@ Démarrer et arréter un programme.
 Emettre des évènements lors de l'appaiation et de la dispariation des briques
 Permettre de s'y abonner dans les programmes
 	ex : lorsqu'apparait Kodi alors lui envoyer un média qui dit bonjour...
+	     lorsqu'un mediaPlayer apparait alors charger et lire un media qui dit bonjour...
+		 => Selecteur => introduit nouvelle variable dans le contexte
+		    WHEN un new media (call it XXX)
 
 	
 ----- Intégration des services google Map et Tag
@@ -37,3 +40,11 @@ Permettre de définir ses propres capteurs avec :
 
 Est-ce pertinent de définir seulement des objets/équipement ou bien aussi des classes?
 Est-ce en rapport avec des programmes paramétriques ? (les paramètres permettant alors de distinguer les objets ?)
+
+////Fhem => listentry   : EnO_contact_01800079 contact
+////Fhem => listentry   : EnO_switch_00099420 switch
+////Fhem => listentry   : EnO_4BS_0088B438 tempSensor.05
+////Fhem => listentry   : EnO_4BS_01037605 lightSensor.01
+////Fhem => listentry   : EnO_4BS_018166F0 tempSensor.05
+////Fhem => listentry   : EnO_4BS_0185B5B6 tempHumiSensor.02
+////Fhem => listentry   : EnO_UTE_008729D9 actuator.01

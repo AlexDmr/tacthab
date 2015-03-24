@@ -1,0 +1,10 @@
+.EventNode.content   {
+	background	: yellow;
+	border		: solid black 1px;
+	padding		: 0.2em;
+}
+
+.EventNode.content  > .targets, .EventNode.content  > .filter {
+	display		: inline-block;
+	border		: dashed black 1px;
+}
