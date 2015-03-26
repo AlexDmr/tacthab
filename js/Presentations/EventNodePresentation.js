@@ -5,6 +5,7 @@ define	( [ './PnodePresentation.js'
 		, function(PnodePresentation, DragDrop, utils) {
 // Desfining EventNodePresentation
 var EventNodePresentation = function() {
+	this.html = {};
 	PnodePresentation.prototype.constructor.apply(this, []);
 	return this;
 }
@@ -28,19 +29,21 @@ EventNodePresentation.prototype.Render	= function() {
 	var root = PnodePresentation.prototype.Render.apply(this, []);
 	root.classList.add('EventNode');
 	root.classList.remove('Pnode');
-	this.divDescription.innerHTML = ''; //'EventNode:' + this.PnodeID ;
-	var bt = document.createElement('button');
-		bt.addEventListener	( 'click'
-							, function() {
-								 console.log('trigger', self);
-								 utils.io.emit( 'call', { objectId	: self.PnodeID
-														, method	: 'triggerEvent'
-														, params	: JSON.stringify([])
-														} );
-								}
-							, false );
-		bt.innerText = 'TRIGGER';
-		this.divDescription.appendChild( bt );
+	if(typeof this.html.bt === 'undefined') {
+		this.divDescription.innerHTML = ''; //'EventNode:' + this.PnodeID ;
+		this.html.bt = document.createElement('button');
+			this.html.bt.addEventListener	( 'click'
+								, function() {
+									 console.log('trigger', self);
+									 utils.io.emit( 'call', { objectId	: self.PnodeID
+															, method	: 'triggerEvent'
+															, params	: JSON.stringify([])
+															} );
+									}
+								, false );
+			this.html.bt.innerText = 'TRIGGER';
+			this.divDescription.appendChild( this.html.bt );
+		}
 	return root;
 }
 

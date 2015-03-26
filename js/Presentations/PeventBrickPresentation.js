@@ -70,11 +70,46 @@ PeventBrickPresentation.prototype.appendFilter	= function(attribute, operator, v
 	this.html.filter.appendChild( filter );
 }
 
+PeventBrickPresentation.prototype.primitivePlug	= function(c) {
+	 // console.log("Primitive plug ", this.root, " ->", c.root);
+	 this.Render();
+	 var P		= this.html.targets
+	   , N		= c.Render()
+	   , self	= this
+	   , i, e, eventName, option;
+	 if(N.parentElement === null) {
+		 P.innerHTML = '';
+		 P.appendChild( N );
+		 console.log("Call ESA for", this.children[0].PnodeID);
+		 utils.call( c.PnodeID, 'getESA', []
+				   , function(esa) {
+						 console.log(esa);
+						 console.log("---ESA:", esa);
+						 var events = {};
+						 for(i in esa) {
+							 for(e=0; e<esa[i].events.length; e++) {
+								 eventName = esa[i].events[e];
+								 if(typeof events[eventName] === 'undefined') {
+									 events[eventName] = true;
+									 option = document.createElement('option');
+									 option.setAttribute('value', eventName);
+									 option.appendChild( document.createTextNode(eventName) );
+									 self.html.eventName.appendChild( option );
+									}
+								}
+							}
+						 self.html.eventName
+						}
+				   );
+		}
+	 return this;
+	}
+
 PeventBrickPresentation.prototype.Render	= function() {
 	var self = this;
 	var root = EventNodePresentation.prototype.Render.apply(this, []);
 	root.classList.add('PeventBrickPresentation');
-	if(typeof this.html.actionName === 'undefined') {
+	if(typeof this.html.targets === 'undefined') {
 		// Describe the event to be observed
 		this.divDescription.innerHTML = htmlTemplate;
 		// Targets
@@ -86,8 +121,6 @@ PeventBrickPresentation.prototype.Render	= function() {
 								  , ondrop			: function(evt, draggedNode, infoObj) {
 										 var Pnode = new infoObj.constructor(infoObj).init( '' );
 										 self.appendChild( Pnode );
-										 console.log("Creation of", Pnode);
-										 // Retrieve event list
 										}
 								  }
 								);
@@ -104,6 +137,10 @@ PeventBrickPresentation.prototype.Render	= function() {
 		 for(i=0; i<this.event.filters.length; i++) {
 			 filter = this.event.filters[i];
 			 this.appendFilter( filter.attribute, filter.operator, filter.value );
+			}
+		 // Add children?
+		 for(i=0; i<this.children.length; i++) {
+			 this.primitivePlug(this.children[i]);
 			}
 		}
 	

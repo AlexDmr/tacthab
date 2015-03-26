@@ -37,6 +37,13 @@ var classes = SequenceNode.prototype.getClasses().slice();
 classes.push(ProgramNode.prototype.className);
 ProgramNode.prototype.getClasses	= function() {return classes;};
 
+ProgramNode.prototype.getESA			= function() {
+	return { events	: ['Start', 'Stop']
+		   , states	: []
+		   , actions: []
+		   };
+}
+
 ProgramNode.prototype.getSubPrograms	= function() {
 	var L = [], def;
 	for(var i=0; i<this.definitions.children.length; i++) {

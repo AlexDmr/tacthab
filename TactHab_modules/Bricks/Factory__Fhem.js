@@ -47,6 +47,11 @@ var WebSocketClient = websocket.client
 									 break;
 									 case 'listentry'	:
 										console.log("\t////Fhem => listentry\t:", msg.payload.name, msg.payload.attributes.subType);
+										// Create related brick
+										if(msg.payload.arg === '^EnO_.*') {
+											 // EnOcean
+											 
+											}
 									 break;
 									 case 'getreply'	:
 										console.log("\t////Fhem => reply\t\t:", msg.payload);
