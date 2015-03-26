@@ -24,6 +24,15 @@ Pselector.prototype.Start			= function() {
 	return res;
 }
 
+Pselector.prototype.getESA			= function() {
+	var json	= {}
+	  , targets	= this.evalSelector();
+	for(var i=0; i<targets.length; i++) {
+		 json[targets[i].brickId] = targets[i].getESA();
+		}
+	return json;
+}
+
 Pselector.prototype.evalSelector	= function() {
 	var res;
 	if(this.children[0]) {

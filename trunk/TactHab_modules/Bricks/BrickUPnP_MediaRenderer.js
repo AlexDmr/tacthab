@@ -3,10 +3,13 @@ define( [ './BrickUPnP.js'
 		, '../UpnpServer/UpnpServer.js'
 		, '../webServer/webServer.js'
 		, './BrickUPnP_MediaServer.js'
+		, '../../js/AlxEvents.js'
 		]
 	  , function( BrickUPnP, BrickUPnPFactory
 				, UpnpServer, webServer
-				, BrickUPnP_MediaServer ) {
+				, BrickUPnP_MediaServer
+				, AlxEvents
+				) {
 	var xmldom		= require( 'xmldom' );
 	var xmldomparser= new xmldom.DOMParser();
 
@@ -19,6 +22,16 @@ define( [ './BrickUPnP.js'
 	BrickUPnP_MediaRenderer.prototype = new BrickUPnP(); BrickUPnP_MediaRenderer.prototype.unreference();
 	BrickUPnP_MediaRenderer.prototype.constructor = BrickUPnP_MediaRenderer;
 	BrickUPnP_MediaRenderer.prototype.getTypeName = function() {return "BrickUPnP_MediaRenderer";}
+
+	AlxEvents(BrickUPnP_MediaRenderer);
+
+	BrickUPnP_MediaRenderer.prototype.getESA			= function() {
+		 var esa = BrickUPnP.prototype.getESA();
+		 esa.events	= esa.events .concat(['Mute', 'TransportState', 'Volume', 'VolumeDB']);
+		 esa.states	= esa.states .concat([]);
+		 esa.actions= esa.actions.concat([]);
+		 return esa;
+		}
 
 	BrickUPnP_MediaRenderer.prototype.getMediasStates	= function() {
 		 return this.MediasStates;
@@ -207,6 +220,8 @@ define( [ './BrickUPnP.js'
 				 if(eventNode.hasAttribute('val')) {
 					 var val = eventNode.getAttribute('val');
 					 this.MediasStates[this.currentInstanceID || 0][eventNode.tagName] = val;
+					 console.log("BrickUPnP_MediaRenderer::event", eventNode.tagName, '=', val);
+					 this.emit(eventNode.tagName, {value: val});
 					 webServer.emit	( "eventForBrick_" + this.brickId
 									, { serviceType	: this.currentInstanceID
 									  , attribut	: eventNode.tagName

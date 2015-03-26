@@ -30,9 +30,11 @@ ActionNode.prototype.Start = function() {
 	  , res  = Pnode.prototype.Start.apply(this, []);
 	console.log("ActionNode::Start", res, this.mtd, this.params);
 	if(res) {
-		if(this.children[0] && this.children[0].evalSelector) {
+		if( (this.children[0] && this.children[0].evalSelector)
+		  ||this.targets
+		  ) {
 			// Evaluate the targets
-			var targets = this.children[0].evalSelector();
+			var targets = this.targets || this.children[0].evalSelector();
 			console.log("ActionNode->Calling", targets.length, this.mtd, this.params);
 			// Propagate the call
 			this.call( new Pcall( targets, this.mtd, this.params
@@ -65,6 +67,9 @@ ActionNode.prototype.unserialize	= function(json, Putils) {
 	var mtd = json.ActionNode.method;
 	if(mtd) {
 		 this.setCommand(mtd, json.ActionNode.params);
+		 if(json.ActionNode.targets) {
+			 this.targets = json.ActionNode.targets;
+			} else {delete this.targets;}
 		} else {console.error('action reference an invalid method : ', json.ActionNode.method);}
 	return this;
 }

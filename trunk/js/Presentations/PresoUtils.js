@@ -24,6 +24,8 @@ define	( [ './ProgramNodePresentation.js'
 		  , './UPnP/MediaRendererInstructions/MR_load_NodePresentation.js'
 		  // Hue
 		  , './PeventBrickPresentation_Hue.js'
+		  // HTTP
+		  , './PactionHTTP.js'
 		  ]
 		, function( ProgramNodePresentation
 				  , ParallelNodePresentation
@@ -51,6 +53,8 @@ define	( [ './ProgramNodePresentation.js'
 				  , MR_load_NodePresentation
 				  // Hue
 				  , PeventBrickPresentation_Hue
+				  // HTTP
+				  , PactionHTTP
 				  ) {
 var PresoUtils = {
 	  mapping		: { 'ProgramNode'							: ProgramNodePresentation
@@ -78,7 +82,9 @@ var PresoUtils = {
 					  , 'MR_Pause_NodePresentation'				: MR_Pause_NodePresentation
 					  , 'MR_Stop_NodePresentation'				: MR_Stop_NodePresentation
 					  // Hue
-					  , 'PeventBrickPresentation_Hue'	: PeventBrickPresentation_Hue
+					  , 'PeventBrickPresentation_Hue'			: PeventBrickPresentation_Hue
+					  // HTTP
+					  , 'PactionHTTP'							: PactionHTTP
 					  }
 	, get			: function(className) {
 		 var classe	= this.mapping[ className ];

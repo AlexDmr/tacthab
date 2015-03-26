@@ -15,7 +15,6 @@ var OP = { 'equal'			: function(a, b) {return a === b;}
 var PeventBrick = function(parent, children) {
 	 var self = this;
 	 Pevent.prototype.constructor.apply(this, [parent, children]);
-	 D_EventNode[this.id] = this;
 	 this.event = { targets		: []
 				  , eventName	: null
 				  , filters		: []

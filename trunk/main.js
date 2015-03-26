@@ -251,8 +251,8 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 				} catch(err) {console.error('  error', err);
 							  res = {error : err};
 							 }
-			} else	{console.error('No object identified by', json.objectId);
-					 res = {error : 'No object identified by' + json.objectId};
+			} else	{console.error('No object identified by ', json.objectId);
+					 res = {error : 'No object identified by ' + json.objectId + '.'};
 					}
 		 return res;
 		}

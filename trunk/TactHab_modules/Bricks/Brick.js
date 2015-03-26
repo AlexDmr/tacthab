@@ -24,6 +24,14 @@ define( [ '../../js/AlxEvents.js'
 		 this.unreference();
 		}	
 	AlxEvents(Brick);
+	
+	Brick.prototype.getESA			= function() {
+		return { events	: []
+			   , states	: []
+			   , actions: []
+			   };
+	}
+
 	Brick.prototype.getTypeName		= function() {return "Brick";}
 	Brick.prototype.getBrickFromId	= function(id) {return D_brick[id];}
 	Brick.prototype.unreference		= function() {
