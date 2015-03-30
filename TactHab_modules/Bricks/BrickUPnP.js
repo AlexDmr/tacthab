@@ -26,10 +26,6 @@ define( [ './Brick.js'
 			}
 		 Brick.prototype.dispose.apply(this, []);
 		}
-	BrickUPnP.prototype.serialize		= function() {
-		 var json = Brick.prototype.serialize.apply(this, []);
-		 return json;
-		}
 	BrickUPnP.prototype.UPnP_call		= function() {
 		 console.error( "BrickUPnP.prototype.UPnP_call : To be implemented");
 		}
@@ -64,7 +60,6 @@ define( [ './Brick.js'
 							}
 		 
 		 // Subscribe to events
-		 
 		 for(var s in device.services) {
 			 var service = device.services[s];
 			 // console.log( service.serviceType );
@@ -118,13 +113,11 @@ define( [ './Brick.js'
 			} else {console.error('document get an error:', event, error);}
 		}
 	BrickUPnP.prototype.serialize	= function() {
-		 var json = { brickId	: this.brickId
-					, classe	: 'BrickUPnP'
-					};
+		 var json = Brick.prototype.serialize.apply(this, []);
+		 json.brickId	= this.brickId;
+		 json.classe	= 'BrickUPnP';
 		 return json;
 		}
-		
-	
 	
 	return BrickUPnP;
 });

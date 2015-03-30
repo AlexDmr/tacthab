@@ -6,10 +6,13 @@ define	( [ 'fs-extra'
 		  , 'socket.io'
 		  , 'socket.io-client'
 		  , 'smtp-protocol'
+		  , 'request'
 		  ]
 		, function( fs, express, bodyParser, xmldom, multer
 				  , io, ioClient
-				  , smtp) {
+				  , smtp
+				  , request
+				  ) {
 // var fs			= require( 'fs-extra' );
 // var express		= require( 'express' );
 // var bodyParser	= require( 'body-parser' );
@@ -31,10 +34,10 @@ var webServer = {
 	, CB_subClient	: null
 	, mailServer	: {
 		  init		: function(port) {
-			 var self = this;
+			 // var self = this;
 			 var server = this.server = smtp.createServer(function (req) {
 				req.on('to', function (to, ack) {
-					var domain = to.split('@')[1] || 'localhost';
+					// var domain = to.split('@')[1] || 'localhost';
 					console.log('mail sent to:', to);
 					ack.accept();
 					// if (domain === 'localhost') ack.accept()
@@ -90,7 +93,7 @@ var webServer = {
 						socket.on ( 'call'
 								  , function(call, fctCB) {
 										 if(self.oncall) {
-											 res = self.oncall(call, fctCB);
+											 var res = self.oncall(call, fctCB);
 											 if( res !== undefined
 											   &&fctCB ) {
 												 fctCB( res );
@@ -107,7 +110,12 @@ var webServer = {
 						   , pass	= req.body.pass
 						   , title	= req.body.title
 						   , categs	= req.body.categories || [];
-						 
+						 console.log( "HTTP POST /wordPress\n"
+									, "\n\t-user   :", user
+									, "\n\t-pass   :", pass
+									, "\n\t-title  :", title
+									, "\n\t-categs :", categs
+									);
 						 res.end();
 					  } );
 		 // Init a socket.IO client to http://thacthab.herokuapp.com
@@ -143,7 +151,7 @@ var webServer = {
 		 for(var i in this.CB_wordPressEvent) {
 			 var ok = true;
 			 for(var c=0; c<categs.length; c++) {
-				 if( this.CB_wordPressEvent.categs.indexOf(categs[c]) === -1 ) {
+				 if( this.CB_wordPressEvent[i].categs.indexOf(categs[c]) === -1 ) {
 					 ok = false; 
 					 break;
 					}
@@ -151,7 +159,7 @@ var webServer = {
 			 if(ok) {
 				 // Call the callback
 				 try {
-					this.CB_wordPressEvent.CB(user, pass, title, categs);
+					this.CB_wordPressEvent[i].CB(user, pass, title, categs);
 					} catch(err) {console.error('wordPress event error : ', user, pass, "\ntitle:", title, "\ncategs:", categs, "\nerror:", err);}
 				}
 			}
@@ -160,6 +168,41 @@ var webServer = {
 	, subscribe_to_wordPressEvent	: function(CB, user, categs) {
 		 this.CB_wordPressEvent[user] = {user: user, CB: CB, categs: categs};
 		 return this;
+		}
+	, httpRequestJSONstringified	: function(json, CB_success, CB_error) {
+		 // console.log("httpRequestJSONstringified", json);
+		 // var json = JSON.parse(str);
+		 // console.log("json:", json);
+		 this.httpRequest( json.url
+						 , json.method
+						 , json.headers
+						 , json.body
+						 , CB_success, CB_error
+						 );
+		}
+	, httpRequest					: function(url, method, headers, body, CB_success, CB_error) {
+		 var options = { url	: url
+					   , body	: body
+					   , method	: method
+					   , headers: headers
+					   };
+		 // console.log("httpRequest");
+		 request( options
+				, function(error, response, body) {
+						 if(  error 
+						   || response.statusCode < 200
+						   || response.statusCode >= 300 ) {
+							    console.error(error, response.statusCode);
+							    return CB_error( {error: error, statusCode: response.statusCode, body: body} );
+							   }
+						 // Success
+						 CB_success( {success: body} );
+						}
+				);
+		}
+	, brickId			: 'webServer'	// 
+	, getDescription	: function() {
+		 return {type:'webServer', id:'webServer',name:'webServer'};
 		}
 };
 

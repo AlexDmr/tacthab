@@ -27,6 +27,8 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		  // OAuth
 		  , 'passport'
 		  , 'passport-google'
+		  // OpenHAB
+		  , './TactHab_modules/Bricks/Factory__OpenHAB.js'
 		  ]
 		, function( Putils, Pnode, UpnpServer
 		          , Brick, BrickUPnP_MediaRenderer, BrickUPnP_MediaServer
@@ -38,6 +40,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 				  , xmldom
 				  , passport
 				  , passportGoogle
+				  , Factory__OpenHAB
 				  ) {
 	// var DOMParser = xmldom.DOMParser;
 	// console.log("On se casse!"); return;
@@ -51,6 +54,33 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 	
 	var pgRootId = '';
 	var rootPath = __dirname.slice();
+	
+	// OpenHAB
+	var openHAB = Factory__OpenHAB.newBrick();
+	openHAB.changeIdTo( 'openHAB' );
+	openHAB.init( { host	: 'localhost'
+				  , port	: 8080
+				  , desc	: {}
+				  }
+				);
+	webServer.app.get ( '/openHAB'
+					  , function(req, res) {
+							 res.write( JSON.stringify(openHAB.devices) );
+							 res.end();
+							}
+					  );
+	webServer.app.post( '/openHAB'
+					  , function(req, res) {
+							 if(  req.body.host
+							   && req.body.port
+							   ) {
+							     } else {res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
+										 res.end( {error: "HTTP POST must contains a serverAddress and port."} );
+										}
+							}
+					  );
+					 
+	
 	// Configure server
 	webServer.app.post( '/saveProgram'
 					  , function(req, res) {
@@ -209,7 +239,10 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 									 || Pnode.prototype.getNode( pgRootId )
 									 || pipoPgRoot;
 							if(node) {
-								 json = JSON.stringify( node.getContextDescription() );
+								 try {json = JSON.stringify( node.getContextDescription() );
+									 } catch(err) {console.error("ERROR: getContextDescription", err, node);
+												   json = JSON.stringify( {} );
+												  }
 								 // console.log("/getContext", node.id, "\n", json);
 								} else {json = JSON.stringify( {} );}
 							res.end(json);
@@ -234,6 +267,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 					  );
 
 	function getObject(id) {
+		 if(id === 'webServer') {return webServer;}
 		 var obj = Pnode.prototype.getNode(id);
 		 if(!obj) {obj = Brick.prototype.getBrickFromId(id);}		 
 		 return obj;

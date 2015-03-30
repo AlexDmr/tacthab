@@ -1,8 +1,9 @@
 define( [ '../../js/AlxEvents.js'
+		, '../webServer/webServer.js'
 		]
-	  , function(AlxEvents) {
+	  , function(AlxEvents, webServer) {
 	var brickId = 0;
-	var D_brick = {};
+	var D_brick = {webServer: webServer};
 	
 	var ProtoBrick = D_brick.ProtoBrick = { brickId			: 'ProtoBrick'
 										  , getDescription	: function() {return {type:'ProtoBrick', id:'ProtoBrick',name:'ProtoBrick'};}

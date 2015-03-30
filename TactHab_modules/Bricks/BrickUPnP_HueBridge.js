@@ -11,6 +11,7 @@ define( [ './BrickUPnP.js'
 		 console.log( "BrickUPnP", this.brickId);
 		 this.authorizedConnection = false;
 		 this.Lamps = {};
+		 this.types.push( 'BrickUPnP_HueBridge' );
 		 return this;
 		}
 		
