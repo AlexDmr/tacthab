@@ -26,25 +26,31 @@ Pcall.prototype.update_res	= function(A_res, i, type, value) {
 }
 
 Pcall.prototype.executeFor	= function(A_res, i) {
-	var self = this;
-	try {var params = this.params.slice(0);
+	var self = this, obj, mtd, res, params;
+	try {params = this.params.slice(0);
 		 params.push( function(res) {self.update_res(A_res, i, 'success', res);}
 					, function(err) {self.update_res(A_res, i, 'error'  , err);}
 					);
-		 var obj = this.targets[i];
+		 obj = this.targets[i];
 		 if(obj) {
-			 var mtd = obj[this.mtdName];
-			 var res = mtd.apply(obj, params);
+			 mtd = obj[this.mtdName];
+			 res = mtd.apply(obj, params);
 			 if(res !== undefined) {this.update_res(A_res, i, 'success', res);}
 			} else {console.error("Unknown target object for method", this.mtdName);}
 		} catch (err) {
+			 console.error( "Error axecuting action:", err
+						  , "\n\t-mtd:", this.mtdName
+						  , "\n\t-obj:", obj?'PRESENT':'NONE'
+						  , "\n\t-par:", params
+						  , "\n\t-this.params:", this.params
+						  );
 			 A_res[i] = {error  : err};
 			}
 }
 
 Pcall.prototype.execute = function() {
 	var self = this;
-	console.log("Pcall :", this.targets.length, this.mtdName, this.params);
+	// console.log("Pcall :", this.targets.length, this.mtdName, this.params);
 	// this.CB_success, this.CB_cancel
 	try {var A_res = new Array(this.targets.length);
 		 if(A_res.length) {

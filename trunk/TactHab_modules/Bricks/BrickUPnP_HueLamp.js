@@ -10,6 +10,7 @@ function BrickUPnP_HueLamp(HueBridge, lampHueId, lampJS) {
 	this.prefixHTTP	= HueBridge.prefixHTTP;
 	this.update(lampJS);
 	var self = this;
+	this.types.push( 'BrickUPnP_HueLamp' );
 	this.set( { alert: "select"
 			  }
 			, function(err ) {console.log("Error ADD Hue", lampHueId, err );}

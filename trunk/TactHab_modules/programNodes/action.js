@@ -28,14 +28,21 @@ ActionNode.prototype.setCommand = function(mtd, params) {
 ActionNode.prototype.Start = function() {
 	var self = this
 	  , res  = Pnode.prototype.Start.apply(this, []);
-	console.log("ActionNode::Start", res, this.mtd, this.params);
+	// console.log("ActionNode::Start", res, this.mtd, this.params);
 	if(res) {
 		if( (this.children[0] && this.children[0].evalSelector)
 		  ||this.targets
 		  ) {
 			// Evaluate the targets
-			var targets = this.targets || this.children[0].evalSelector();
-			console.log("ActionNode->Calling", targets.length, this.mtd, this.params);
+			var targets, i, obj;
+			if(this.targets) {
+				 targets = [];
+				 for(i=0; i<this.targets.length; i++) {
+					 obj = Brick.prototype.getBrickFromId(this.targets[i]);
+					 if(obj) {targets.push(obj);} else {console.error("No brick for", this.targets[i]);}
+					}
+				} else {targets = this.children[0].evalSelector();}
+			// console.log("ActionNode->Calling", targets.length, this.mtd, this.params);
 			// Propagate the call
 			this.call( new Pcall( targets, this.mtd, this.params
 								, function(res) {console.log("Success:", res); self.Stop();}
@@ -43,8 +50,8 @@ ActionNode.prototype.Start = function() {
 								) 
 					 );
 			} else {console.error( "Action not performed:\n"
-								 , "\tcall:", this.mtd, this.params
-								 , "\tchild", this.children[0]?this.children[0].id:'NONE'
+								 , "\tcall  :", this.mtd, this.params
+								 , "\tchild :", this.children[0]?this.children[0].id:'NONE'
 								 );
 					this.Stop();
 				   }

@@ -9,7 +9,7 @@ var WebSocketClient = websocket.client
 	var BrickFhem = function() {
 		 // var self = this;
 		 BrickUPnP.prototype.constructor.apply(this, []);
-		 
+		 this.types.push( 'BrickFhem' );
 		 return this;
 		}
 
@@ -48,10 +48,19 @@ var WebSocketClient = websocket.client
 									 case 'listentry'	:
 										console.log("\t////Fhem => listentry\t:", msg.payload.name, msg.payload.attributes.subType);
 										// Create related brick
-										if(msg.payload.arg === '^EnO_.*') {
-											 // EnOcean
+										if(msg.payload.arg === 'EnO_.*') {	// EnOcean
+											 var subType = msg.payload.attributes.subType
+											   , fileName= /*process.cwd() +*/ './TactHab_modules/Bricks/Fhem/' + subType + '.js';
+											 console.log("\trequire", fileName);
 											 
-											}
+											 requirejs( [fileName]
+													, function( EnO_Brick ) {
+														 console.log(msg.type, '=>', EnO_Brick?'FOUND':'NOT FOUND');
+														 var brick = new EnO_Brick(self, msg.payload);
+														 brick.changeIdTo( msg.payload.name );
+														}
+													);
+											} else {console.error("listentry for", msg.payload.arg);}
 									 break;
 									 case 'getreply'	:
 										console.log("\t////Fhem => reply\t\t:", msg.payload);
@@ -62,7 +71,7 @@ var WebSocketClient = websocket.client
 									 default			:
 										console.error("\tUnknown Fhem message type", msg.type);
 									}
-								} catch(err) {console.error("!!! BrickFhem::onmessage ERROR:", err, "from\n", e);}
+								} catch(err) {console.error("!!! BrickFhem::onmessage ERROR:", err);}//, "from\n", e);}
 							});
 						 self.sendCommand( connection
 										 , { command	: 'subscribe'
