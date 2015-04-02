@@ -2,9 +2,12 @@ define	( [ './EventNodePresentation.js'
 		  , '../DragDrop.js'
 		  , '../utils.js'
 		  ]
-		, function(EventNodePresentation, DragDrop, utils) {
+		, function( EventNodePresentation, DragDrop, utils
+				  // , htmlTemplate, htmlTemplateFilter
+				  ) {
 
 // Load ressources
+
 var htmlTemplate = null, htmlTemplateFilter = null;
 utils.XHR( 'GET', 'js/Presentations/HTML_templates/PeventBrickPresentation.html'
 		 , function() {htmlTemplate = this.responseText;}
@@ -34,7 +37,8 @@ PeventBrickPresentation.prototype.serialize = function() {
 	json.subType = 'PeventBrickPresentation';
 	json.eventNode  = 	{ parameters: this.event.parameters
 						, eventName	: this.event.eventName
-						}
+						, filters	: []
+						};
 	if(this.html.filter) {
 		 var L_filters = this.html.filter.querySelectorAll( 'div.FILTER' )
 		   , filter;
@@ -80,27 +84,30 @@ PeventBrickPresentation.prototype.primitivePlug	= function(c) {
 	 if(N.parentElement === null) {
 		 P.innerHTML = '';
 		 P.appendChild( N );
-		 console.log("Call ESA for", this.children[0].PnodeID);
-		 utils.call( c.PnodeID, 'getESA', []
-				   , function(esa) {
-						 console.log(esa);
-						 console.log("---ESA:", esa);
-						 var events = {};
-						 for(i in esa) {
-							 for(e=0; e<esa[i].events.length; e++) {
-								 eventName = esa[i].events[e];
-								 if(typeof events[eventName] === 'undefined') {
-									 events[eventName] = true;
-									 option = document.createElement('option');
-									 option.setAttribute('value', eventName);
-									 option.appendChild( document.createTextNode(eventName) );
-									 self.html.eventName.appendChild( option );
+		 if(this.children[0].PnodeID) {
+			 console.log("Call ESA for", this.children[0].PnodeID);
+			 utils.call( c.PnodeID, 'getESA', []
+					   , function(esa) {
+							 console.log(esa);
+							 console.log("---ESA:", esa);
+							 if(esa.error) return;
+							 var events = {};
+							 for(i in esa) {
+								 for(e=0; e<esa[i].events.length; e++) {
+									 eventName = esa[i].events[e];
+									 if(typeof events[eventName] === 'undefined') {
+										 events[eventName] = true;
+										 option = document.createElement('option');
+										 option.setAttribute('value', eventName);
+										 option.appendChild( document.createTextNode(eventName) );
+										 self.html.eventName.appendChild( option );
+										 if(!self.event.eventName) {self.event.eventName = eventName;}
+										}
 									}
 								}
 							}
-						 self.html.eventName
-						}
-				   );
+					   );
+			}
 		}
 	 return this;
 	}

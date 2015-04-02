@@ -1,31 +1,38 @@
-define( [ '../Brick.js'
+define( [ './BrickFhem.js'
 		]
-	  , function(Brick) {
+	  , function(BrickFhem) {
 // Define
-function tempHumiSensor_02() {
-	Brick.apply(this, []);
+function tempHumiSensor_02(FhemBridge, listEntry) {
+	BrickFhem.apply(this, [FhemBridge, listEntry]);
+	this.TempHumi = {};
 	return this;
 }
 
-tempHumiSensor_02.prototype = new Brick();
+tempHumiSensor_02.prototype = new BrickFhem();
 	tempHumiSensor_02.prototype.unreference();
 	tempHumiSensor_02.prototype.types.push( 'tempHumiSensor_02' );
 tempHumiSensor_02.prototype.constructor		= tempHumiSensor_02;
 tempHumiSensor_02.prototype.getTypeName		= function() {return "tempHumiSensor_02";}
 
 tempHumiSensor_02.prototype.dispose			= function() {
-	 Brick.prototype.dispose.apply(this, []);
+	 BrickFhem.prototype.dispose.apply(this, []);
 	}
 	
-tempHumiSensor_02.prototype.serialize		= function() {
-	 var json = Brick.prototype.serialize.apply(this, []);
+tempHumiSensor_02.prototype.extractData		= function(data) {
+	 this.TempHumi = { temperature	: parseFloat( data.changed.temperature )
+					 , humidity		: parseFloat( data.changed.humidity )
+					 };
+	 var json  = { time			: new Date().getTime()
+				 , temperature	: this.TempHumi.temperature
+				 , humidity		: this.TempHumi.humidity
+				 };
 	 return json;
 	}
 
-tempHumiSensor_02.prototype.getDescription = function() {
-	 var json = Brick.prototype.getDescription.apply(this, []);
-	 return json;
-	}
+tempHumiSensor_02.prototype.update			= function(data) {
+		 var json = this.extractData(data);
+		 this.emit('update', json);
+		}
 
 return tempHumiSensor_02;
 });

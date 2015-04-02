@@ -136,6 +136,41 @@ var editor = {
 													   } )
 										);
 		 
+		 // Create new draggable for BrickFhem
+		 this.Fhem_categ = this.createCateg("Fhem");
+
+		 // Create new draggable for BrickFhem
+		 this.openHAB_categ = this.createCateg("openHAB");
+		 
+		 // Create new draggable for Hue
+		 this.createCateg("Hue lamp").appendChild( this.createDragNode( 'on...'
+												 , { constructor	: PresoUtils.get('PeventBrickPresentation_Hue')
+												   , nodeType		: 'EventNode'
+												   , isNotType		: 'Pnode'
+												   } )
+									);
+
+		 // Create new draggable for HTTP and socketIO
+		 this.createCateg("External").appendChild( this.createDragNode( 'on socketIO...'
+												 , { constructor	: PresoUtils.get('PeventFromSocketIOPresentation')
+												   , nodeType		: 'EventNode'
+												   , isNotType		: 'Pnode'
+												   } )
+									).appendChild( this.createDragNode( 'Event on something ...'
+												 , { constructor	: PresoUtils.get('PeventBrickPresentation')
+												   , nodeType		: ['EventNode']
+												   } )
+									).appendChild( this.createDragNode( 'HTTP request'
+												 , { constructor	: PresoUtils.get('PactionHTTP')
+												   , nodeType		: ['ActionNode', 'instruction']
+												   } )
+									).appendChild( this.createDragNode( 'Brick appear/disappear'
+												 , { constructor	: PresoUtils.get('PeventBrickAppear')
+												   , nodeType		: ['EventNode']
+												   } )
+									);
+
+
 		 // Process variables and bricks
 		 var variables = {};
 		 var inputHidden = document.getElementById('programId');
@@ -159,6 +194,27 @@ var editor = {
 													     } )
 													   );
 								}
+							 if(brick.type.indexOf('BrickFhem') !== -1) {
+								 self.Fhem_categ.appendChild( self.createDragNode( brick.name
+													   , { constructor	: PresoUtils.get('basicBrickPresentation')
+													     , nodeType		: brick.type.concat( ['SelectorNode'] )
+														 , id			: brick.id
+														 , uuid			: brick.id
+														 , name			: brick.name
+													     } )
+													   );
+								}
+							 if(brick.type.indexOf('BrickOpenHAB_item') !== -1) {
+								 self.openHAB_categ.appendChild( self.createDragNode( brick.name
+													   , { constructor	: PresoUtils.get('basicBrickPresentation')
+													     , nodeType		: brick.type.concat( ['SelectorNode'] )
+														 , id			: brick.id
+														 , uuid			: brick.id
+														 , name			: brick.name
+													     } )
+													   );
+								}
+								
 							}
 						 // Variables
 						 for(i in json.variables) {
@@ -227,32 +283,7 @@ var editor = {
 						}
 				    }
 				  );
-				  
-		 // Create new draggable for Hue
-		 this.createCateg("Hue lamp").appendChild( this.createDragNode( 'on...'
-												 , { constructor	: PresoUtils.get('PeventBrickPresentation_Hue')
-												   , nodeType		: 'EventNode'
-												   , isNotType		: 'Pnode'
-												   } )
-									);
-
-		 // Create new draggable for HTTP and socketIO
-		 this.createCateg("External").appendChild( this.createDragNode( 'on socketIO...'
-												 , { constructor	: PresoUtils.get('PeventFromSocketIOPresentation')
-												   , nodeType		: 'EventNode'
-												   , isNotType		: 'Pnode'
-												   } )
-									).appendChild( this.createDragNode( 'Event on something ...'
-												 , { constructor	: PresoUtils.get('PeventBrickPresentation')
-												   , nodeType		: ['EventNode']
-												   } )
-									).appendChild( this.createDragNode( 'HTTP request'
-												 , { constructor	: PresoUtils.get('PactionHTTP')
-												   , nodeType		: ['ActionNode', 'instruction']
-												   } )
-									);
-
-
+		
 		 // Main drop zone for programs
 		 DragDrop.newDropZone( htmlNodeProgram
 							 , { acceptedClasse		: 'ProgramNode'

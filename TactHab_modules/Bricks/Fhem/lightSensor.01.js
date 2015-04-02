@@ -1,31 +1,37 @@
-define( [ '../Brick.js'
+define( [ './BrickFhem.js'
+		, '../standards/lightSensor.js'
 		]
-	  , function(Brick) {
+	  , function(BrickFhem, lightSensor) {
 // Define
-function lightSensor_01() {
-	Brick.apply(this, []);
+function lightSensor_01(FhemBridge, listEntry) {
+	BrickFhem.apply(this, [FhemBridge, listEntry]);
 	this.types.push( 'lightSensor_01' );
+	this.lightSensor = {};
 	return this;
 }
 
-lightSensor_01.prototype = new Brick();
+lightSensor_01.prototype = new BrickFhem();
 	lightSensor_01.prototype.unreference();
+	lightSensor.apply(lightSensor_01.prototype, []);
 lightSensor_01.prototype.constructor		= lightSensor_01;
 lightSensor_01.prototype.getTypeName		= function() {return "lightSensor_01";}
 
 lightSensor_01.prototype.dispose			= function() {
-	 Brick.prototype.dispose.apply(this, []);
+	 BrickFhem.prototype.dispose.apply(this, []);
 	}
 	
-lightSensor_01.prototype.serialize		= function() {
-	 var json = Brick.prototype.serialize.apply(this, []);
+lightSensor_01.prototype.extractData		= function(data) {
+	 this.lightSensor.brightness = parseFloat( data.changed.brightness );
+	 var json  = { time			: new Date().getTime()
+				 , brightness	: this.lightSensor.brightness
+				 };
 	 return json;
 	}
 
-lightSensor_01.prototype.getDescription = function() {
-	 var json = Brick.prototype.getDescription.apply(this, []);
-	 return json;
-	}
+lightSensor_01.prototype.update			= function(data) {
+		 var json = this.extractData(data);
+		 this.emit('update', json);
+		}
 
 return lightSensor_01;
 });

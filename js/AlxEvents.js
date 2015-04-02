@@ -9,6 +9,7 @@ function AlxEvent(classe) {
 
 AlxEvent.prototype.emit	= function(eventName, event) {
 	if(this.AlxEvent && this.AlxEvent[eventName]) {
+		 // console.log("emiting to", this.AlxEvent[eventName]);
 		 for(var i=0; i<this.AlxEvent[eventName].length; i++) {
 			 this.AlxEvent[eventName][i].apply(this, [event])
 			}

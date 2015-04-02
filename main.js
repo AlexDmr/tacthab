@@ -58,9 +58,10 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 	// OpenHAB
 	var openHAB = Factory__OpenHAB.newBrick();
 	openHAB.changeIdTo( 'openHAB' );
-	openHAB.init( { host	: 'localhost'
+	openHAB.init( { host	: '127.0.0.1'
 				  , port	: 8080
 				  , desc	: {}
+				  , mqtt	: {host: '192.168.1.58', port: 1883}
 				  }
 				);
 	webServer.app.get ( '/openHAB'

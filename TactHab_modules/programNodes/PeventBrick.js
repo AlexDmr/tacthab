@@ -9,16 +9,16 @@ var OP = { 'equal'			: function(a, b) {return a === b;}
 		 , 'greaterOrEqual'	: function(a, b) {return parseFloat(a) >= parseFloat(b);}
 		 , 'lower'			: function(a, b) {return parseFloat(a) <  parseFloat(b);}
 		 , 'lowerOrEqual'	: function(a, b) {return parseFloat(a) <= parseFloat(b);}
-		};
+		 };
 
 // Definition of a PeventBrick
 var PeventBrick = function(parent, children) {
 	 var self = this;
-	 Pevent.prototype.constructor.apply(this, [parent, children]);
 	 this.event = { targets		: []
 				  , eventName	: null
 				  , filters		: []
 				  };
+	 Pevent.prototype.constructor.apply(this, [parent, children]);
 	 this.triggerEventCB = function(e) {self.triggerEvent(e);}
 	 return this;
 	}
@@ -31,6 +31,11 @@ PeventBrick.prototype.appendClass(PeventBrick);
 var classes = [];//Pnode.prototype.getClasses();
 classes.push(PeventBrick.prototype.className);
 PeventBrick.prototype.getClasses	= function() {return classes;};
+
+PeventBrick.prototype.dispose		= function() {
+	this.synchronizeWithTargets( [] );
+	Pevent.prototype.dispose.apply(this, []);
+}
 
 PeventBrick.prototype.Start			= function() {
 	var res = Pevent.prototype.Start.apply(this, []);
@@ -51,8 +56,9 @@ PeventBrick.prototype.Start			= function() {
 }
 
 PeventBrick.prototype.Stop			= function() {
-	Pevent.prototype.Stop.apply(this, []);
+	var res = Pevent.prototype.Stop.apply(this, []);
 	if(res) {
+		 this.synchronizeWithTargets( [] );
 		}
 	return res;
 }
@@ -63,8 +69,8 @@ PeventBrick.prototype.serialize		= function() {
 	json.subType = this.subType;
 	json.eventNode	= { /*objectId  : this.event.objectId
 					  , */
-					    eventName : this.event.eventName
-					  , filters: this.event.filters
+					    eventName	: this.event.eventName
+					  , filters		: this.event.filters
 					  };
 	return json;
 }
@@ -82,13 +88,17 @@ PeventBrick.prototype.unserialize	= function(json, Putils) {
 PeventBrick.prototype.synchronizeWithTargets	= function(targets) {
 	var i;
 	// Unsubscribe
+	console.log(this.event.targets.length, "unsubscribe");
 	for(i=0; i<this.event.targets.length; i++) {
+		 console.log("\t", this.id, "unsubscribe from", this.event.targets[i].brickId);
 		 this.event.targets[i].off(this.event.eventName, this.triggerEventCB);
 		}
 	
 	// Subscribe
+	console.log(targets.length, "subscribe");
 	this.event.target = targets;
 	for(i=0; i<targets.length; i++) {
+		 console.log("\t", this.id, "subscribe to", this.event.eventName, "on", targets[i].brickId);
 		 targets[i].on(this.event.eventName, this.triggerEventCB);
 		}
 		
@@ -108,6 +118,7 @@ PeventBrick.prototype.triggerEvent = function(event) {
 	if(this.parent && this.state) {
 		 // Check that filters match
 		 var att, val, op;
+		 console.log("PeventBrick", this.id, "filters", event, "\nwith", this.event);
 		 for(var i=0; i<this.event.filters.length; i++) {
 			 att = this.event.filters[i].att
 			 val = this.event.filters[i].val
