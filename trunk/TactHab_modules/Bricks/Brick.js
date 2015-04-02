@@ -15,35 +15,38 @@ define( [ '../../js/AlxEvents.js'
 		 this.Actions	= [];
 		 this.Events	= [];
 		 this.States	= [];
-		 ProtoBrick.emit('appear', this);
+		 ProtoBrick.emit('appear', {brickId: this.brickId});
 		 return this;
 		}
 
 	Brick.prototype.constructor		= Brick;
 	Brick.prototype.dispose			= function() {
+		 ProtoBrick.emit('disappear', {brickId: this.brickId});
 		 this.disposeAlxEvent();
 		 this.unreference();
 		}	
 	AlxEvents(Brick);
 	
 	Brick.prototype.getESA			= function() {
-		return { events	: []
-			   , states	: []
-			   , actions: []
+		return { events	: this.Events
+			   , states	: this.States
+			   , actions: this.Actions
 			   };
 	}
 
 	Brick.prototype.getTypeName		= function() {return "Brick";}
 	Brick.prototype.getBrickFromId	= function(id) {return D_brick[id];}
 	Brick.prototype.unreference		= function() {
-		 ProtoBrick.emit('disappear', this);
+		 ProtoBrick.emit('disappear', {brickId: this.brickId});
 		 delete D_brick[this.brickId];		
+		 return this;
 		}
 	Brick.prototype.changeIdTo		= function(newId) {
 		 this.unreference();
 		 D_brick[newId] = this;
 		 this.brickId	= newId;
-		 ProtoBrick.emit('appear', this);
+		 ProtoBrick.emit('appear', {brickId: this.brickId});
+		 return this;
 		}
 	Brick.prototype.getDescription	= function() {
 		return	{ type	: this.getTypes()
@@ -74,7 +77,11 @@ define( [ '../../js/AlxEvents.js'
 	Brick.prototype.toString	= function() {
 		 return JSON.stringify(this.serialize());
 		}
-	ProtoBrick.on	= Brick.prototype.on;
+	ProtoBrick.on	= function(event, CB) {
+		 console.log("ProtoBrick.on", event);
+		 Brick.prototype.on.apply(this, [event, CB]);
+		 return this;
+		}
 	ProtoBrick.off	= Brick.prototype.off;
 	ProtoBrick.emit	= Brick.prototype.emit;
 

@@ -8,6 +8,8 @@ define	( [ './ProgramNodePresentation.js'
 		  , './PcontrolBrickPresentation.js'
 		  , './PfilterPresentation.js'
 		  , './PeventBrickPresentation.js'
+		  , './PeventBrickAppear.js'
+		  , './basicBrickPresentation.js'
 		  // Variables and programs
 		  , './Program_UsePresentation.js'
 		  , './Program_DefinitionPresentation.js'
@@ -37,6 +39,8 @@ define	( [ './ProgramNodePresentation.js'
 				  , PcontrolBrickPresentation
 				  , PfilterPresentation
 				  , PeventBrickPresentation
+				  , PeventBrickAppear
+				  , basicBrickPresentation
 				  // Variables
 				  , Program_UsePresentation
 				  , Program_DefinitionPresentation
@@ -67,6 +71,8 @@ var PresoUtils = {
 					  , 'PcontrolBrick'							: PcontrolBrickPresentation
 					  , 'PfilterPresentation'					: PfilterPresentation
 					  , 'PeventBrickPresentation'				: PeventBrickPresentation
+					  , 'PeventBrickAppear'						: PeventBrickAppear
+					  , 'basicBrickPresentation'				: basicBrickPresentation
 					  // Variables
 					  , 'Program_UsePresentation'				: Program_UsePresentation
 					  , 'Program_DefinitionPresentation'		: Program_DefinitionPresentation

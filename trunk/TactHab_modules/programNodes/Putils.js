@@ -11,6 +11,7 @@ define ([ './Pnode.js'
 		, './PprogramDeclaration.js'
 		, './PfilterNode.js'
 		, './PeventBrick.js'
+		, './PeventBrickAppear.js'
 		// Selectors
 		, './Pselector_ObjInstance.js'
 		, './Pselector_variable.js'
@@ -26,6 +27,7 @@ define ([ './Pnode.js'
 				  , PprogramDeclaration
 				  , PfilterNode
 				  , PeventBrick
+				  , PeventBrickAppear
 				  // Selectors
 				  , Pselector_ObjInstance
 				  , Pselector_variable
@@ -44,6 +46,7 @@ var Putils = {
 					  , 'PvariableDeclaration'	: PvariableDeclaration
 					  , 'PfilterNode'			: PfilterNode
 					  , 'PeventBrick'			: PeventBrick
+					  , 'PeventBrickAppear'		: PeventBrickAppear
 					  , 'PprogramDeclaration'	: PprogramDeclaration
 					  , 'Pselector_ObjInstance'	: Pselector_ObjInstance
 					  , 'Pselector_variable'	: Pselector_variable

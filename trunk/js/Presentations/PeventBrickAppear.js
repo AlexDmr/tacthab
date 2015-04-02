@@ -4,59 +4,82 @@ define	( [ './EventNodePresentation.js'
 		  ]
 		, function(EventNodePresentation, DragDrop, utils) {
 
-var PeventBrickPresentation = function() {
-	EventNodePresentation.prototype.constructor.apply(this, []);
+var htmlTemplate = null;
+utils.XHR( 'GET', 'js/Presentations/HTML_templates/PeventBrickAppear.html'
+		 , function() {htmlTemplate = this.responseText;}
+		 );
+
+		 
+var PeventBrickAppear = function() {
 	this.event = {};
+	this.html  = {};
+	EventNodePresentation.prototype.constructor.apply(this, []);
 	return this;
 }
 
-PeventBrickPresentation.prototype = new EventNodePresentation();
-PeventBrickPresentation.prototype.className = 'PeventBrick';
+PeventBrickAppear.prototype = new EventNodePresentation();
+PeventBrickAppear.prototype.className = 'PeventBrickAppear';
 
-PeventBrickPresentation.prototype.serialize = function() {
+PeventBrickAppear.prototype.serialize = function() {
 	 var json = EventNodePresentation.prototype.serialize.apply(this, []);
-	 json.subType = 'PeventBrickPresentation';
+	 json.subType = 'PeventBrickAppear';
 	 json.eventNode  = 	{ targets	: ['ProtoBrick']
 						, parameters: this.event.parameters
 						, eventName	: this.event.eventName
-						}
+						};
 	 return json;
 	}
 
-PeventBrickPresentation.prototype.unserialize	= function(json, PresoUtils) {
+PeventBrickAppear.prototype.unserialize	= function(json, PresoUtils) {
 	// Describe action here
-	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
+	EventNodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
 	this.event.parameters	= json.eventNode.parameters;
 	this.event.eventName	= json.eventNode.eventName;
 	return this;
 }
 
-PeventBrickPresentation.prototype.Render	= function() {
+PeventBrickAppear.prototype.primitivePlug	= function(c) {
+	 // console.log("Primitive plug ", this.root, " ->", c.root);
+	 this.Render();
+	 var P		= this.html.targets
+	   , N		= c.Render();
+	 if(N.parentElement === null) {
+		 P.innerHTML = '';
+		 P.appendChild( N );
+		}
+	 return this;
+	}
+
+PeventBrickAppear.prototype.Render	= function() {
 	var self = this;
 	var root = EventNodePresentation.prototype.Render.apply(this, []);
-	root.classList.add('PeventBrickPresentation');
-	if(typeof this.html.actionName === 'undefined') {
-		 this.html.actionName = document.createElement('span');
-			this.html.actionName.classList.add( 'targetObjectId' );
-			this.html.actionName.innerHTML = "Object : ";
-			this.divDescription.appendChild( this.html.actionName );
-		 this.html.selectTargetObjectId = document.createElement('select');
-			this.html.selectTargetObjectId.classList.add('targetObjectId');
-			this.html.selectTargetObjectId.onchange = function() {self.action.objectId = parseInt(this.value); console.log(this.value);}
-			this.divDescription.appendChild( this.html.selectTargetObjectId );
-		 this.html.eventName = document.createElement('span');
-			this.html.eventName.classList.add( 'eventName' );
-			this.html.eventName.innerHTML = " on event : ";
-			this.divDescription.appendChild( this.html.eventName );
-		 this.html.selectEvent = document.createElement('select');
-			this.html.selectEvent.classList.add('selectEvent');
-			this.html.selectEvent.onchange = function() {self.action.objectId = parseInt(this.value); console.log(this.value);}
-			this.divDescription.appendChild( this.html.selectEvent );
+	root.classList.add('PeventBrickAppear');
+	if(typeof this.html.select === 'undefined') {
+		 this.divDescription.innerHTML = htmlTemplate;
+		 // Select operation
+		 this.html.select = this.divDescription.querySelector( 'select.operation' );
+			this.html.select.onchange = function() {self.event.eventName = this.value;}
+			if(self.event.eventName) {
+				 this.html.select.value = self.event.eventName;
+				} else {self.event.eventName = this.divDescription.querySelector( 'select.operation > option' ).value;
+					   }
+		 // Configure drop zone
+		this.html.targets	= this.divDescription.querySelector(".targets");
+		this.dropZoneTargets = DragDrop.newDropZone( this.html.targets
+							, { acceptedClasse	: 'SelectorNode'
+							  , CSSwhenAccepted	: 'possible2drop'
+							  , CSSwhenOver		: 'ready2drop'
+							  , ondrop			: function(evt, draggedNode, infoObj) {
+									 var Pnode = new infoObj.constructor(infoObj).init( '' );
+									 self.appendChild( Pnode );
+									}
+							  }
+							);
 		} 
 	
 	return root;
 }
 
 // Return the constructor
-return PeventBrickPresentation;
+return PeventBrickAppear;
 });

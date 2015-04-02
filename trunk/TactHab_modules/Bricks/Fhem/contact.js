@@ -1,31 +1,32 @@
-define( [ '../Brick.js'
+define( [ './BrickFhem.js'
 		]
-	  , function(Brick) {
+	  , function(BrickFhem) {
 // Define
-function contact() {
-	Brick.apply(this, []);
+function contact(FhemBridge, listEntry) {
+	BrickFhem.apply(this, [FhemBridge, listEntry]);
 	this.types.push( 'contact' );
 	return this;
 }
 
-contact.prototype = new Brick();
+contact.prototype = new BrickFhem();
 	contact.prototype.unreference();
 contact.prototype.constructor		= contact;
 contact.prototype.getTypeName		= function() {return "contact";}
 
 contact.prototype.dispose			= function() {
-	 Brick.prototype.dispose.apply(this, []);
+	 BrickFhem.prototype.dispose.apply(this, []);
 	}
 	
-contact.prototype.serialize		= function() {
-	 var json = Brick.prototype.serialize.apply(this, []);
-	 return json;
+contact.prototype.extractData		= function(data) {
+	 console.log("contact::extractData", data);
+	 return {};
 	}
 
-contact.prototype.getDescription = function() {
-	 var json = Brick.prototype.getDescription.apply(this, []);
-	 return json;
-	}
+contact.prototype.update			= function(data) {
+		 var json = this.extractData(data);
+		 this.emit('update', json);
+		}
+
 
 return contact;
 });

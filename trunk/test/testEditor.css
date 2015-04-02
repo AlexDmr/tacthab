@@ -2,6 +2,8 @@
 	position	: fixed;
 	top			: 8px;
 	right		: 8px;
+	bottom		: 8px;
+	overflow-y	: scroll;
 	border		: solid black 3px;
 	background	: grey;
 }

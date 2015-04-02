@@ -2,12 +2,12 @@ define( [ './Pnode.js'
 		, '../../js/AlxEvents.js'
 	    ]
 	  , function(Pnode, AlxEvents) {
-var D_EventNode	= {};	// Dedicated dictionnary
+// var D_EventNode	= {};	// Dedicated dictionnary
 
 // Definition of a node for programs
 var EventNode = function(parent, children) {
 	 Pnode.prototype.constructor.apply(this, [parent, children]);
-	 D_EventNode[this.id] = this;
+	 // D_EventNode[this.id] = this;
 	 this.event = {};
 	 return this;
 	}
@@ -24,7 +24,7 @@ classes.push(EventNode.prototype.className);
 EventNode.prototype.getClasses	= function() {return classes;};
 
 EventNode.prototype.dispose			= function() {
-	delete  D_EventNode[this.id];
+	// delete  D_EventNode[this.id];
 	return Pnode.prototype.dispose.apply(this, []);
 }
 

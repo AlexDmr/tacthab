@@ -1,31 +1,33 @@
-define( [ '../Brick.js'
+define( [ './BrickFhem.js'
 		]
-	  , function(Brick) {
+	  , function(BrickFhem) {
 // Define
-function EnO_4BS() {
-	Brick.apply(this, []);
+function EnO_4BS(FhemBridge, listEntry) {
+	BrickFhem.apply(this, [FhemBridge, listEntry]);
 	this.types.push( 'EnO_4BS' );
+	this.data = [];
 	return this;
 }
 
-EnO_4BS.prototype = new Brick();
+EnO_4BS.prototype = new BrickFhem();
 	EnO_4BS.prototype.unreference();
 EnO_4BS.prototype.constructor		= EnO_4BS;
 EnO_4BS.prototype.getTypeName		= function() {return "EnO_4BS";}
 
 EnO_4BS.prototype.dispose			= function() {
-	 Brick.prototype.dispose.apply(this, []);
-	}
-	
-EnO_4BS.prototype.serialize		= function() {
-	 var json = Brick.prototype.serialize.apply(this, []);
-	 return json;
+	 delete this.data;
+	 BrickFhem.prototype.dispose.apply(this, []);
 	}
 
-EnO_4BS.prototype.getDescription = function() {
-	 var json = Brick.prototype.getDescription.apply(this, []);
-	 return json;
+EnO_4BS.prototype.extractData		= function(data) {
+	 console.log("EnO_4BS::extractData", data);
+	 return {};
 	}
 
+EnO_4BS.prototype.update			= function(data) {
+		 var json = this.extractData(data);
+		 this.emit('update', json);
+		}
+		
 return EnO_4BS;
 });
