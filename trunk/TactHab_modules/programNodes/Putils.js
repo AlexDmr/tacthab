@@ -6,7 +6,7 @@ define ([ './Pnode.js'
 		, './Pevent.js'
 		, './PeventFromSocketIO.js'
 		, './Pwhen.js'
-		, './PcontrolBrick.js'
+		// , './PcontrolBrick.js'
 		, './PvariableDeclaration.js'
 		, './PprogramDeclaration.js'
 		, './PfilterNode.js'
@@ -22,7 +22,7 @@ define ([ './Pnode.js'
 				  , EventNode
 				  , PeventFromSocketIO
 				  , WhenNode
-				  , PcontrolBrick
+				  // , PcontrolBrick
 				  , PvariableDeclaration
 				  , PprogramDeclaration
 				  , PfilterNode
@@ -42,7 +42,7 @@ var Putils = {
 					  , 'EventNode'				: EventNode
 					  , 'PeventFromSocketIO'	: PeventFromSocketIO
 					  , 'WhenNode'				: WhenNode
-					  , 'PcontrolBrick'			: PcontrolBrick
+					  // , 'PcontrolBrick'			: PcontrolBrick
 					  , 'PvariableDeclaration'	: PvariableDeclaration
 					  , 'PfilterNode'			: PfilterNode
 					  , 'PeventBrick'			: PeventBrick
@@ -54,7 +54,8 @@ var Putils = {
 					  }
 	, unserialize	: function(json) {
 		 var classe	= this.mapping[json.className];
-		 var parent	= new classe(null);
+		 var parent	= new classe();
+		 parent.init();
 		 parent.unserialize(json, this);
 		 return parent;
 		}

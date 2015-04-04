@@ -5,9 +5,8 @@ define( [ './Pnode.js'
 	  , function(Pnode, Pselector, Brick) {
 // console.log('Pnode is a ', Pnode);
 // Definition of a node for programs
-var Pselector_ObjInstance = function(parent, children) {
-	 Pnode.prototype.constructor.apply(this, [parent, children]);
-	 this.selector = {};
+var Pselector_ObjInstance = function() {
+	 Pnode.prototype.constructor.apply(this, []);
 	 return this;
 	}
 
@@ -19,6 +18,12 @@ Pnode.prototype.appendClass( Pselector_ObjInstance );
 var classes = Pselector.prototype.getClasses().slice();
 classes.push(Pselector_ObjInstance.prototype.className);
 Pselector_ObjInstance.prototype.getClasses	= function() {return classes;};
+
+Pselector_ObjInstance.prototype.init		= function(parent, children) {
+	Pselector.prototype.init.apply(this, [parent, children]);
+	this.selector = {};
+	return this;
+}
 
 Pselector_ObjInstance.prototype.evalSelector	= function() {
 	var context	= this.getContext()

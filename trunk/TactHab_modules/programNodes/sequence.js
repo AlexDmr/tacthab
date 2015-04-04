@@ -3,9 +3,8 @@ define( [ './Pnode.js'
 	  , function(Pnode) {
 // console.log('Pnode is a ', Pnode);
 // Definition of a node for programs
-var SequenceNode = function(parent, children) {
-	 Pnode.prototype.constructor.apply(this, [parent, children]);
-	 this.currentChildIndex = -1;
+var SequenceNode = function() {
+	 Pnode.prototype.constructor.apply(this, []);
 	 return this;
 	}
 
@@ -18,7 +17,13 @@ var classes = Pnode.prototype.getClasses().slice();
 classes.push(SequenceNode.prototype.className);
 SequenceNode.prototype.getClasses	= function() {return classes;};
 
-SequenceNode.prototype.Start = function() {
+SequenceNode.prototype.init		= function(parent, children) {
+	Pnode.prototype.init.apply(this, [parent, children]);
+	this.currentChildIndex = -1;
+	return this;
+}
+
+SequenceNode.prototype.Start	= function() {
 	var res = Pnode.prototype.Start.apply(this, []);
 	if(res) {
 		 if(this.children.length) {

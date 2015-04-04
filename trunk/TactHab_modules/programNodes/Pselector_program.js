@@ -4,9 +4,8 @@ define( [ './Pnode.js'
 	    ]
 	  , function(Pnode, Pselector, ProgramNode) {
 // Definition of a node for Pselector_program
-var Pselector_program = function(parent, children) {
-	 Pnode.prototype.constructor.apply(this, [parent, children]);
-	 this.selector = {};
+var Pselector_program = function() {
+	 Pnode.prototype.constructor.apply(this, []);
 	 return this;
 	}
 
@@ -19,6 +18,12 @@ Pnode.prototype.appendClass( Pselector_program );
 var classes = Pselector.prototype.getClasses().slice();
 classes.push(Pselector_program.prototype.className);
 Pselector_program.prototype.getClasses	= function() {return classes;};
+
+Pselector_program.prototype.init		= function(parent, children) {
+	Pselector.prototype.init.apply(this, [parent, children]);
+	this.selector = {};
+	return this;
+}
 
 Pselector_program.prototype.getProgramDeclaration	= function() {
 	var context = this.getContext();

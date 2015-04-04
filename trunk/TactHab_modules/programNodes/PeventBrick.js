@@ -12,14 +12,8 @@ var OP = { 'equal'			: function(a, b) {return a === b;}
 		 };
 
 // Definition of a PeventBrick
-var PeventBrick = function(parent, children) {
-	 var self = this;
-	 this.event = { targets		: []
-				  , eventName	: null
-				  , filters		: []
-				  };
-	 Pevent.prototype.constructor.apply(this, [parent, children]);
-	 this.triggerEventCB = function(e) {self.triggerEvent(e);}
+var PeventBrick = function() {
+	 Pevent.prototype.constructor.apply(this, []);
 	 return this;
 	}
 
@@ -31,6 +25,17 @@ PeventBrick.prototype.appendClass(PeventBrick);
 var classes = [];//Pnode.prototype.getClasses();
 classes.push(PeventBrick.prototype.className);
 PeventBrick.prototype.getClasses	= function() {return classes;};
+
+PeventBrick.prototype.init			= function(parent, children) {
+	var self = this;
+	Pevent.prototype.init.apply(this, [parent, children]);
+	this.event = { targets		: []
+				 , eventName	: null
+				 , filters		: []
+				 };
+	this.triggerEventCB = function(e) {self.triggerEvent(e);}
+	return this;
+}
 
 PeventBrick.prototype.dispose		= function() {
 	this.synchronizeWithTargets( [] );

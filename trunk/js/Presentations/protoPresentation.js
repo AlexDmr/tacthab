@@ -12,58 +12,62 @@ define( function() {
  * @constructor
  * @alias module:protoPresentation
  */
-			 var Presentation = function() {
-				 this.uid	= this.getUniqueId();
-				 Presentation.prototype.init(null, []);
-				}
-			 Presentation.prototype.className = 'Presentation';
-			 Presentation.prototype.constructor = Presentation;
-			 Presentation.prototype.getUniqueId = function() {
-				 uid++;
-				 return 'PresoId_' + uid;
-				}
+var Presentation = function() {
+	this.uid	= this.getUniqueId();
+	Presentation.prototype.init.apply(this, [null, []]);
+	// this.init(null, []);
+	return  
+}
+
+Presentation.prototype.className = 'Presentation';
+Presentation.prototype.constructor = Presentation;
+Presentation.prototype.getUniqueId = function() {
+	uid++;
+	return 'PresoId_' + uid;
+}
+
 /**
  * Initialization method: Plug the node to parent and children.
  * @param {Presentation} parent parent {@link Presentation}, can be unspecified.
  * @param {Presentation[]} children children array {@link Presentation}, can be unspecified.
  */
-			 Presentation.prototype.init = function(parent, children) {
-				 this.root			= this.root || null;
-				 if(this.children) {
-					 for(var i=0; i<this.children.length; i++) {
-						 this.removeChild(this.children[i]);
-						}
-					}
-				 this.children 		= children  || [];
-				 this.setParent( parent );
-				 return this;
-				}
-			 // Definition of the Presentation class
-			 Presentation.prototype.setParent = function(p) {
-				 if(this.parent === p) {return;}
-				 if(this.parent) {
-					var parent = this.parent;
-					this.parent = null;
-					parent.removeChild(this);}
-				 this.parent = p;
-				 if(p) {
-					 if(typeof p.appendChild === "undefined") {
-						 console.error("Problem for parent", p);
-						}
-					 p.appendChild(this);
-					}
-				}
+ Presentation.prototype.init = function(parent, children) {
+	 this.root			= this.root || null;
+	 if(this.children) {
+		 for(var i=0; i<this.children.length; i++) {
+			 this.removeChild(this.children[i]);
+			}
+		}
+	 this.children 		= children  || [];
+	 this.setParent( parent );
+	 return this;
+	}
+ // Definition of the Presentation class
+ Presentation.prototype.setParent = function(p) {
+	 if(this.parent === p) {return;}
+	 if(this.parent) {
+		var parent = this.parent;
+		this.parent = null;
+		parent.removeChild(this);}
+	 this.parent = p;
+	 if(p) {
+		 if(typeof p.appendChild === "undefined") {
+			 console.error("Problem for parent", p);
+			}
+		 p.appendChild(this);
+		}
+	}
 /**
  * Append a {@link Presentation} child.
  * @param {Presentation} c {@link Presentation} to append.
  */
-			 Presentation.prototype.appendChild = function(c) {
-				 if(this.children.indexOf(c) == -1) {
-					 this.children.push(c);
-					 this.primitivePlug(c);
-					 c.setParent(this);
-					}
-				}
+ Presentation.prototype.appendChild = function(c) {
+	 if(this.children.indexOf(c) == -1) {
+		 this.children.push(c);
+		 this.primitivePlug(c);
+		 c.setParent(this);
+		}
+	}
 /**
  * Remove a {@link Presentation} child.
  * @param {Presentation} c {@link Presentation} to remove.
@@ -131,26 +135,26 @@ define( function() {
  * primitiveUnPlug is called by {@link removeChild}.
  * @param {Presentation} c {@link Presentation} which root has for parent a HTML node rendered by this Presentation.
  */
-			 Presentation.prototype.primitiveUnPlug	= function(c) {
-				 if(c.root && c.root.parentElement) {c.root.parentElement.removeChild(c.root);}
-				 if(c.root && c.root.parentNode   ) {c.root.parentNode.removeChild(c.root);}
-				}
-			 Presentation.prototype.setName			= function(name) {}
+ Presentation.prototype.primitiveUnPlug	= function(c) {
+	 if(c.root && c.root.parentElement) {c.root.parentElement.removeChild(c.root);}
+	 if(c.root && c.root.parentNode   ) {c.root.parentNode.removeChild(c.root);}
+	}
+ Presentation.prototype.setName			= function(name) {}
 /**
  * List all the descendants Presentation nodes.
  * @returns {Presentation[]} Array of all {@link Presentation} that have this node for ancestor.
  */
-			 Presentation.prototype.getDescendants	= function() {
-				 var L = [this], L_rep = [], n;
-				 while(L.length) {
-					 n = L[0];
-					 L_rep.push( L.splice(0,1)[0] );
-					 for(var i=0; i<n.children.length; i++) {L.push( n.children[i] );}
-					}
-				 return L_rep;
-				}
+ Presentation.prototype.getDescendants	= function() {
+	 var L = [this], L_rep = [], n;
+	 while(L.length) {
+		 n = L[0];
+		 L_rep.push( L.splice(0,1)[0] );
+		 for(var i=0; i<n.children.length; i++) {L.push( n.children[i] );}
+		}
+	 return L_rep;
+	}
 
-			 // Return the reference to the Presentation constructor
-			 return Presentation;
-			}
-	  );
+ // Return the reference to the Presentation constructor
+ return Presentation;
+}
+);

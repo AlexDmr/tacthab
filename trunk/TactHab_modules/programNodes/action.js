@@ -5,9 +5,7 @@ define( [ './Pnode.js'
 	  , function(Pnode, Pcall, Brick) {
 // Definition of a node for programs
 var ActionNode = function(parent, mtd, params) {
-	 Pnode.prototype.constructor.apply(this, [parent]);
-	 this.subType = 'ActionNode';
-	 this.setCommand(mtd, params);
+	 Pnode.prototype.constructor.apply(this, []);
 	 return this;
 	}
 
@@ -19,6 +17,13 @@ Pnode.prototype.appendClass(ActionNode);
 var classes = Pnode.prototype.getClasses();
 classes.push(ActionNode.prototype.className);
 ActionNode.prototype.getClasses	= function() {return classes;};
+
+ActionNode.prototype.init		= function(parent, children, mtd, params) {
+	Pnode.prototype.init.apply(this, [parent, children]);
+	this.subType = 'ActionNode';
+	this.setCommand(mtd, params);
+	return this;
+}
 
 ActionNode.prototype.setCommand = function(mtd, params) {
 	this.mtd	= mtd;

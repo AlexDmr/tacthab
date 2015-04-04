@@ -6,22 +6,27 @@ define( [ './Pnode.js'
 	  , function(Pnode, Pselector, Pevent, PvariableDeclaration) {
 // console.log('Pnode is a ', Pnode);
 // Definition of a node for programs
-var Pselector_variable = function(parent, children) {
-	 var self = this;
-	 Pnode.prototype.constructor.apply(this, [parent, children]);
-	 this.selector = {};
-	 this.CB_triggerEvent = function(event) {
-		 console.log("Propagate event", event);
-		 Pevent.prototype.triggerEvent.apply(self, [event]);
-		}
-	 return this;
-	}
+var Pselector_variable = function() {
+	Pnode.prototype.constructor.apply(this, []);
+	return this;
+}
 
 
 // API for starting, stopping the instruction
 Pselector_variable.prototype = new Pselector();
 Pselector_variable.prototype.className	= 'Pselector_variable';
 Pnode.prototype.appendClass( Pselector_variable );
+
+Pselector_variable.prototype.init		= function(parent, children) {
+	var self = this;
+	Pselector.prototype.init.apply(this, [parent, children]);
+	this.selector = {};
+	this.CB_triggerEvent = function(event) {
+		 console.log("Propagate event", event);
+		 Pevent.prototype.triggerEvent.apply(self, [event]);
+		}
+	return this;
+}
 
 Pselector_variable.prototype.dispose		= function() {
 	var valueNode = this.getValueNode();

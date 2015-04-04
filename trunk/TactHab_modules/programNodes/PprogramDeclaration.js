@@ -4,19 +4,23 @@ define( [ './Pnode.js'
 	    ]
 	  , function(Pnode, PvariableDeclaration, ProgramNode) {
 
-var PprogramDeclaration = function(parent, children) {
-	 this.varDef = {};
-	 PvariableDeclaration.apply(this, [parent, children]);
-	 this.varDef.type		= this.updateType()
-	 this.varDef.programId	= null;
-	 
-	 return this;
+var PprogramDeclaration = function() {
+	PvariableDeclaration.apply(this, []);
+	return this;
 }
 
 // API for starting, stopping the instruction
 PprogramDeclaration.prototype = new PvariableDeclaration();
 PprogramDeclaration.prototype.className	= 'PprogramDeclaration';
 Pnode.prototype.appendClass( PprogramDeclaration );
+
+PprogramDeclaration.prototype.init		= function(parent, children) {
+	PvariableDeclaration.prototype.init.apply(this, [parent, children]);
+	this.varDef = { type		: this.updateType()
+				  , programId	: null
+				  };
+	return this;
+}
 
 PprogramDeclaration.prototype.dispose	= function() {
 	var subProgram = Pnode.prototype.getNode( this.varDef.programId );

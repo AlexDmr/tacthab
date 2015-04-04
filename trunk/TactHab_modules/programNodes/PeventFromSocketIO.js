@@ -23,11 +23,21 @@ var op = { 'equal'			: function(a, b) {return a === b;}
 		 , 'lowerOrEqual'	: function(a, b) {return parseFloat(a) <= parseFloat(b);}
 		};
 		 
-var PeventFromSocketIO = function(parent, children) {
-	 var self = this;
-	 Pevent.prototype.constructor.apply(this, [parent, children]);
-	 this.event = {topic:'', filters:[]};
-	 this.triggerEventCB = function(data) {
+var PeventFromSocketIO = function() {
+	 Pevent.prototype.constructor.apply(this, []);
+	 return this;
+	}
+
+// API for starting, stopping the instruction
+PeventFromSocketIO.prototype = new Pevent();
+PeventFromSocketIO.prototype.className	= 'PeventFromSocketIO';
+PeventFromSocketIO.prototype.appendClass(PeventFromSocketIO);
+
+PeventFromSocketIO.prototype.init		= function(parent, children) {
+	var self = this;
+	Pevent.prototype.init.apply(this, [parent, children]);
+	this.event = {topic:'', filters:[]};
+	this.triggerEventCB = function(data) {
 		  // Apply filters
 		  var filters = self.event.filters
 		    , filter;
@@ -43,14 +53,8 @@ var PeventFromSocketIO = function(parent, children) {
 			}
 		  self.triggerEvent({event: self.event.topic, descr: data});
 		 }
-
-	 return this;
-	}
-
-// API for starting, stopping the instruction
-PeventFromSocketIO.prototype = new Pevent();
-PeventFromSocketIO.prototype.className	= 'PeventFromSocketIO';
-PeventFromSocketIO.prototype.appendClass(PeventFromSocketIO);
+	return this;
+}
 
 PeventFromSocketIO.prototype.dispose	= function() {
 	unregisterSocketIO_CB(this.event.topic, this.triggerEventCB);

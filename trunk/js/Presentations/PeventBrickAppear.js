@@ -63,7 +63,20 @@ PeventBrickAppear.prototype.Render	= function() {
 				 this.html.select.value = self.event.eventName;
 				} else {self.event.eventName = this.divDescription.querySelector( 'select.operation > option' ).value;
 					   }
-		 // Configure drop zone
+		// Configure variableName
+		this.html.variableName = this.divDescription.querySelector('span.variableName');
+		// Draggable property
+		DragDrop.newDraggable ( this.html.variableName
+							  , { constructor	: null //config.constructor
+								, htmlNode		: this.html.variableName
+								, nodeType		: null //config.nodeType
+								, config		: null //config
+								}
+							  );
+		
+		// Edition mode
+		utils.HCI.makeEditable( this.html.variableName );		
+		// Configure drop zone
 		this.html.targets	= this.divDescription.querySelector(".targets");
 		this.dropZoneTargets = DragDrop.newDropZone( this.html.targets
 							, { acceptedClasse	: 'SelectorNode'

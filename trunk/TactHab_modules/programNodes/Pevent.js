@@ -5,10 +5,8 @@ define( [ './Pnode.js'
 // var D_EventNode	= {};	// Dedicated dictionnary
 
 // Definition of a node for programs
-var EventNode = function(parent, children) {
-	 Pnode.prototype.constructor.apply(this, [parent, children]);
-	 // D_EventNode[this.id] = this;
-	 this.event = {};
+var EventNode = function() {
+	 Pnode.prototype.constructor.apply(this, []);
 	 return this;
 	}
 
@@ -22,6 +20,12 @@ AlxEvents(EventNode);
 var classes = [];//Pnode.prototype.getClasses();
 classes.push(EventNode.prototype.className);
 EventNode.prototype.getClasses	= function() {return classes;};
+
+EventNode.prototype.init			= function(parent, children) {
+	Pnode.prototype.init.apply(this, [parent, children]);
+	this.event = {};
+	return this;
+}
 
 EventNode.prototype.dispose			= function() {
 	// delete  D_EventNode[this.id];
@@ -64,6 +68,13 @@ EventNode.prototype.serialize		= function() {
 EventNode.prototype.unserialize	= function(json, Putils) {
 	Pnode.prototype.unserialize.apply(this, [json, Putils]);
 	return this;
+}
+
+EventNode.prototype.getNewVariableId	= function() {
+	// Find parent program
+	var prog = this.getProgram();
+	if(prog) {return prog.definitions.getVariableId();}
+	return null;
 }
 
 return EventNode;
