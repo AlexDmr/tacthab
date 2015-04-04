@@ -1,5 +1,6 @@
 define	( []
 		, function() {
+
 var DragDrop = {
 	  draggedNode	: null
 	, infoObj		: null
@@ -106,10 +107,19 @@ var DragDrop = {
 		 node.setAttribute('draggable', 'true');
 		 var self = this;
 		 node.addEventListener( 'dragstart'
-							  , function(event) {self.startingDrag( node, infoObj );}
+							  , function(event) {
+									 event.dataTransfer.setData('text/plain', "newDraggable");
+									 self.startingDrag( node, infoObj );
+									 // event.preventDefault();
+									 event.stopPropagation();
+									}
 							  , false );
 		 node.addEventListener( 'dragend'
-							  , function(event) {self.stoppingDrag( node, infoObj );}
+							  , function(event) {
+									 self.stoppingDrag( node, infoObj );
+									 event.preventDefault();
+									 event.stopPropagation();
+									} 
 							  , false );
 		}
 	, startingDrag	: function(node, infoObj) {

@@ -8,16 +8,8 @@ define( [ './parallel.js'
 	  , function( ParalleNode, SequenceNode
 				, Pdefinition, Pcall, Pnode, Brick) {
 // Definition of a node for programs
-var ProgramNode = function(parent, children) {
-	 SequenceNode.prototype.constructor.apply(this, [parent, children]);
-	 // Add a definition node
-	 this.definitions	= new Pdefinition(this, []); 
-	 // Add a parallel node
-	 this.instructions	= new ParalleNode(this, []);
-	 // Manage filters
-	 this.filterNodes	= [];
-	 this.filtering		= false;
-	 
+var ProgramNode = function() {
+	 SequenceNode.prototype.constructor.apply(this, []);
 	 return this;
 	}
 
@@ -26,6 +18,20 @@ ProgramNode.prototype = new SequenceNode();
 ProgramNode.prototype.constructor	= ProgramNode;
 ProgramNode.prototype.className	= 'ProgramNode';
 Pnode.prototype.appendClass(ProgramNode);
+
+ProgramNode.prototype.init			= function(parent, children) {
+	SequenceNode.prototype.init.apply(this, [parent, children]);
+	
+	// Add a definition node
+	this.definitions	= (new Pdefinition()).init(this, []); 
+	// Add a parallel node
+	this.instructions	= (new ParalleNode()).init(this, []);
+	// Manage filters
+	this.filterNodes	= [];
+	this.filtering		= false;
+	
+	return this;
+}
 
 ProgramNode.prototype.dispose		= function() {
 	if(this.definitions ) {this.definitions.dispose (); delete this.definitions ;}
@@ -37,6 +43,7 @@ var classes = SequenceNode.prototype.getClasses().slice();
 classes.push(ProgramNode.prototype.className);
 ProgramNode.prototype.getClasses	= function() {return classes;};
 
+ProgramNode.prototype.getProgram		= function() {return this;}
 ProgramNode.prototype.getESA			= function() {
 	return { events	: ['Start', 'Stop']
 		   , states	: []

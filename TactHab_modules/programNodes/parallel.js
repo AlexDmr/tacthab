@@ -3,8 +3,8 @@ define( [ './Pnode.js'
 	  , function(Pnode) {
 // console.log('Pnode is a ', Pnode);
 // Definition of a node for programs
-var ParallelNode = function(parent, children) {
-	 Pnode.prototype.constructor.apply(this, [parent, children]);
+var ParallelNode = function() {
+	 Pnode.prototype.constructor.apply(this, []);
 	 return this;
 	}
 

@@ -14,7 +14,17 @@ function getNodeId() {
 }
 
 // Definition of a node for programs
-var Pnode = function(parent, children) {
+var Pnode = function() {
+	 if(arguments.length) {
+		 console.error("no more argument for Pnode, use init !");
+		}
+	 return this;
+	}
+
+Pnode.prototype.constructor = Pnode;
+Pnode.prototype.className	= 'Pnode';
+
+Pnode.prototype.init		= function(parent, children) {
 	 this.parent	= parent	|| null;
 	 this.children	= children	|| [];
 		 if(parent) {parent.children.push(this);}
@@ -24,9 +34,7 @@ var Pnode = function(parent, children) {
 	 this.id			= getNodeId();
 	 D_nodes[this.id]	= this;
 	 return this;
-	}
-Pnode.prototype.constructor = Pnode;
-Pnode.prototype.className	= 'Pnode';
+}
 
 Pnode.prototype.dispose		= function() {
 	delete D_nodes[this.id];
@@ -40,6 +48,7 @@ Pnode.prototype.dispose		= function() {
 	return this;
 }
 
+Pnode.prototype.getProgram		= function() {if(this.parent) {return this.parent.getProgram();} else {return null;}}
 Pnode.prototype.evalSelector	= function() {return [];}
 Pnode.prototype.updateType		= function() {return [];}
 Pnode.prototype.isTypedAs		= function(t) {return this.updateType().indexOf(t) >= 0;}

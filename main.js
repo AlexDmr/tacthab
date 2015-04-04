@@ -148,7 +148,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 																			 // Allocating programs ? XXX
 																			 var Map = {}, pipoNode;
 																			 for(i=0; i<json.programs.length; i++) {
-																				 pipoNode = new Pnode();
+																				 pipoNode = (new Pnode()).init();
 																				 Map[ json.programs[i].PnodeID ] = pipoNode.id;
 																				 console.log("\t", json.programs[i].PnodeID, '=>', pipoNode.id);
 																				}
@@ -174,6 +174,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 																			 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
 																			 res.end( str );
 																			} catch(err) {console.error("\terror reading file", fileName);
+																						  console.trace(err);
 																						  res.writeHead(500);
 																						  res.end( "Error processing data file", err );
 																						 }
@@ -231,7 +232,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 				});
 			});
 	
-	var pipoPgRoot = new ProgramNode();
+	var pipoPgRoot = (new ProgramNode()).init();
 	webServer.app.post( '/getContext'
 					  , function(req, res) {
 							var nodeId = req.body.nodeId; 

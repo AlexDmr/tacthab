@@ -3,11 +3,10 @@ define( [ './Pnode.js'
 	  , function(Pnode) {
 // console.log('Pnode is a ', Pnode);
 // Definition of a node for programs
-var Pselector = function(parent, children) {
-	 Pnode.prototype.constructor.apply(this, [parent, children]);
-	 this.selector = {};
-	 return this;
-	}
+var Pselector = function() {
+	Pnode.prototype.constructor.apply(this, []);
+	return this;
+}
 
 // API for starting, stopping the instruction
 Pselector.prototype = new Pnode();
@@ -17,6 +16,12 @@ Pnode.prototype.appendClass( Pselector );
 var classes = Pnode.prototype.getClasses().slice();
 classes.push(Pselector.prototype.className);
 Pselector.prototype.getClasses	= function() {return classes;};
+
+Pselector.prototype.init		= function(parent, children) {
+	Pnode.prototype.init.apply(this, [parent, children]);
+	this.selector = {};
+	return this;
+}
 
 Pselector.prototype.Start			= function() {
 	var res = Pnode.prototype.Start.apply(this, []);

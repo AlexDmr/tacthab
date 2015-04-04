@@ -5,13 +5,10 @@ define( [ './Pevent.js'
 var ProtoBrick = Brick.prototype.getBrickFromId( 'ProtoBrick' );
 
 // Definition of a PeventBrick
-var PeventBrickAppear = function(parent, children) {
-	 var self = this;
-	 this.event = { eventName	: null };
-	 this.triggerEventCB = function(e) {self.triggerEvent(e);}
-	 Pevent.prototype.constructor.apply(this, [parent, children]);
-	 return this;
-	}
+var PeventBrickAppear = function() {
+	Pevent.prototype.constructor.apply(this, []);
+	return this;
+}
 
 // API for starting, stopping the instruction
 PeventBrickAppear.prototype = new Pevent();
@@ -21,6 +18,14 @@ PeventBrickAppear.prototype.appendClass(PeventBrickAppear);
 var classes = Pevent.prototype.getClasses();
 classes.push(PeventBrickAppear.prototype.className);
 PeventBrickAppear.prototype.getClasses	= function() {return classes;};
+
+PeventBrickAppear.prototype.init		= function(parent, children) {
+	var self = this;
+	Pevent.prototype.init.apply(this, [parent, children]);
+	this.event = { eventName	: null };
+	this.triggerEventCB = function(e) {self.triggerEvent(e);}
+	return this
+}
 
 PeventBrickAppear.prototype.dispose		= function() {
 	if(this.event.eventName) {ProtoBrick.off(this.event.eventName, this.triggerEventCB);}

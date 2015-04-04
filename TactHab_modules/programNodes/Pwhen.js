@@ -2,16 +2,8 @@ define( [ './Pnode.js'
 	    ]
 	  , function(Pnode) {
 // Definition of a when node for programs
-var WhenNode = function(parent, childEvent, childReaction, forever) {
-	 Pnode.prototype.constructor.apply(this, [parent]);
-	 this.when = { childEvent		: childEvent
-				 , childReaction	: childReaction
-				 };
-	 if(this.when.childEvent   ) {this.when.childEvent.setParent   (this);}
-	 if(this.when.childReaction) {this.when.childReaction.setParent(this);}
-	 if(typeof forever === 'undefined') {forever = true;}
-	 this.forever	= forever;
-	 
+var WhenNode = function() {
+	 Pnode.prototype.constructor.apply(this, []);	 
 	 return this;
 	}
 
@@ -23,6 +15,16 @@ Pnode.prototype.appendClass(WhenNode);
 var classes = Pnode.prototype.getClasses();
 classes.push(WhenNode.prototype.className);
 WhenNode.prototype.getClasses	= function() {return classes;};
+
+WhenNode.prototype.init			= function(parent, children) {
+	Pnode.prototype.init.apply(this, [parent, children]);
+	this.when = { childEvent	: null
+				, childReaction	: null
+				};
+	this.forever	= true;
+	
+	return this;
+}
 
 WhenNode.prototype.serialize	= function() {
 	if(this.when.childEvent   ) {this.when.childEvent.setParent    (null);}

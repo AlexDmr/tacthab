@@ -2,13 +2,8 @@ define( [ './Pnode.js'
 	    ]
 	  , function(Pnode) {
 // Definition of a node for PvariableDeclaration
-var PvariableDeclaration = function(parent, children) {
-	 Pnode.prototype.constructor.apply(this, [parent, children]);
-	 this.varDef  = { id	: undefined
-					, name	: ''
-					, expose: false
-					, type	: []
-					};
+var PvariableDeclaration = function() {
+	Pnode.prototype.constructor.apply(this, []);
 	 return this;
 }
 
@@ -21,7 +16,17 @@ var classes = Pnode.prototype.getClasses().slice();
 classes.push(PvariableDeclaration.prototype.className);
 PvariableDeclaration.prototype.getClasses	= function() {return classes;};
 
-PvariableDeclaration.prototype.getDescription = function() {
+PvariableDeclaration.prototype.init				= function(parent, children) {
+	Pnode.prototype.init.apply(this, [parent, children]);
+	this.varDef  = 	{ id	: undefined
+					, name	: ''
+					, expose: false
+					, type	: []
+					};
+	return this;
+}
+
+PvariableDeclaration.prototype.getDescription	= function() {
 	var descr =	{ type	: this.updateType()
 				, name	: this.varDef.name
 				, expose: this.varDef.expose
@@ -34,11 +39,6 @@ PvariableDeclaration.prototype.Start = function() {
 	var res = Pnode.prototype.Start.apply(this, []);
 	this.updateType();
 	this.Stop();
-	/* XXX Debug
-	if(this.children.length === 1) {
-		 this.children[0].Start();
-		} else {this.Stop();}
-	*/
 	return res;
 }
 

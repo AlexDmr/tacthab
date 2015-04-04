@@ -6,18 +6,9 @@ define( [ './program.js'
 				, Pnode
 				, _ ) {
 // Definition of a node for programs
-var PfilterNode = function(parent, children) {
-	 Pnode.prototype.constructor.apply(this, [parent, children]);
-	this.filter		= { programs	: null
-					  , objects		: null
-					  , HideExpose	: 'hide'
-					  };
-	 return this;
-	}
-PfilterNode.prototype.dispose		= function() {
-	Pnode.prototype.dispose.apply(this, []);
-	if(this.filter.programs) {this.filter.programs.dispose(); this.filter.programs = null;}
-	if(this.filter.objects ) {this.filter.objects.dispose (); this.filter.objects  = null;}
+var PfilterNode = function() {
+	Pnode.prototype.constructor.apply(this, []);
+	return this;
 }
 
 // API for starting, stopping the instruction
@@ -28,6 +19,21 @@ Pnode.prototype.appendClass(PfilterNode);
 var classes = Pnode.prototype.getClasses().slice();
 classes.push(PfilterNode.prototype.className);
 PfilterNode.prototype.getClasses	= function() {return classes;};
+
+PfilterNode.prototype.init			= function(parent, children) {
+	Pnode.prototype.init.apply(this, [parent, children]);
+	this.filter		= { programs	: null
+					  , objects		: null
+					  , HideExpose	: 'hide'
+					  };
+	return this;
+}
+
+PfilterNode.prototype.dispose		= function() {
+	Pnode.prototype.dispose.apply(this, []);
+	if(this.filter.programs) {this.filter.programs.dispose(); this.filter.programs = null;}
+	if(this.filter.objects ) {this.filter.objects.dispose (); this.filter.objects  = null;}
+}
 
 // API for starting, stopping the instruction
 PfilterNode.prototype.Start	= function() {

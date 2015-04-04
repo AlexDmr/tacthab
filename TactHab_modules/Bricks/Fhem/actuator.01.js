@@ -27,10 +27,12 @@ actuator_01.prototype.init				= function(FhemBridge, listEntry) {
 	clearInterval( this.timer );
 	this.timer = setInterval( function() {
 								 FhemBridge.sendCommand(
-									{ command	: "get"
+									/*{ command	: "get"
 									, device	: self.fhem.name
 									, property	: "measurement input energy"
-									});
+									}*/
+									{command : "get " + self.fhem.name + " measurement input energy"}
+									);
 								}
 							, this.actuator.intervalEval
 							);
