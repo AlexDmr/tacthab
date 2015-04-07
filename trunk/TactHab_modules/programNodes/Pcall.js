@@ -43,6 +43,7 @@ Pcall.prototype.executeFor	= function(A_res, i) {
 						  , "\n\t-obj:", obj?'PRESENT':'NONE'
 						  , "\n\t-par:", params
 						  , "\n\t-this.params:", this.params
+						  , "\n\t-obj:", obj
 						  );
 			 A_res[i] = {error  : err};
 			}
