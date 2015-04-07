@@ -127,12 +127,14 @@ var editor = {
 													   , nodeType		: ['ActionNode', 'instruction']
 													   } )
 										).appendChild( this.createDragNode( 'Every media renderers'
-													 , { constructor	: PresoUtils.get('MR_Selector_everyMediaRenderers')
+													 , { constructor	: PresoUtils.get('Pselector_ObjTypePresentation')
 													   , nodeType		: ['SelectorNode', 'BrickUPnP_MediaRenderer']
+													   , objectsType	: 'BrickUPnP_MediaRenderer'
 													   } )
 										).appendChild( this.createDragNode( 'Every media servers'
-													 , { constructor	: PresoUtils.get('MR_Selector_everyMediaServers')
+													 , { constructor	: PresoUtils.get('Pselector_ObjTypePresentation')
 													   , nodeType		: ['SelectorNode', 'BrickUPnP_MediaServer']
+													   , objectsType	: 'BrickUPnP_MediaServer'
 													   } )
 										);
 		 
