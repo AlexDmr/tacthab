@@ -52,7 +52,7 @@ PvariableDeclaration.prototype.getName		= function() {return this.varDef.name;}
 PvariableDeclaration.prototype.isExposed	= function() {return this.varDef.expose;}
 
 PvariableDeclaration.prototype.getSelectorId = function() {
-	 this.varDef.id = this.varDef.id || this.parent.getVariableId();
+	 this.varDef.id = this.parent.getVariableId(this.varDef.id, this);
 	 return this.varDef.id;
 	}
 

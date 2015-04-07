@@ -2,14 +2,18 @@ define	( [ './EventNodePresentation.js'
 		  , '../DragDrop.js'
 		  , '../utils.js'
 		  ]
-		, function(EventNodePresentation, DragDrop, utils) {
+		, function(EventNodePresentation, DragDrop, utils, Var_UsePresentation) {
 
 var htmlTemplate = null;
 utils.XHR( 'GET', 'js/Presentations/HTML_templates/PeventBrickAppear.html'
 		 , function() {htmlTemplate = this.responseText;}
 		 );
 
-		 
+var css = document.createElement('link');
+	css.setAttribute('rel' , 'stylesheet');
+	css.setAttribute('href', 'js/Presentations/HTML_templates/PeventBrickAppear.css');
+	document.head.appendChild(css);
+	
 var PeventBrickAppear = function() {
 	this.event = {};
 	this.html  = {};
@@ -31,10 +35,16 @@ PeventBrickAppear.prototype.serialize = function() {
 	}
 
 PeventBrickAppear.prototype.unserialize	= function(json, PresoUtils) {
+	var self = this;
+	
 	// Describe action here
 	EventNodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
 	this.event.parameters	= json.eventNode.parameters;
 	this.event.eventName	= json.eventNode.eventName;
+		
+	if(typeof this.html.select !== 'undefined') {
+		 this.html.select.value = self.event.eventName;
+		}
 	return this;
 }
 
@@ -63,19 +73,6 @@ PeventBrickAppear.prototype.Render	= function() {
 				 this.html.select.value = self.event.eventName;
 				} else {self.event.eventName = this.divDescription.querySelector( 'select.operation > option' ).value;
 					   }
-		// Configure variableName
-		this.html.variableName = this.divDescription.querySelector('span.variableName');
-		// Draggable property
-		DragDrop.newDraggable ( this.html.variableName
-							  , { constructor	: null //config.constructor
-								, htmlNode		: this.html.variableName
-								, nodeType		: null //config.nodeType
-								, config		: null //config
-								}
-							  );
-		
-		// Edition mode
-		utils.HCI.makeEditable( this.html.variableName );		
 		// Configure drop zone
 		this.html.targets	= this.divDescription.querySelector(".targets");
 		this.dropZoneTargets = DragDrop.newDropZone( this.html.targets

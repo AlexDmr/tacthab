@@ -43,20 +43,20 @@ var utils = {
 						);
 		}
 	, HCI : { makeEditable	: function(node) {
-				node.onclick = function(e) {
+				node.ondblclick = function(e) {
 									 // Turns text content into an input
 									 var input = document.createElement('input');
 									 input.value = node.innerHTML;
 									 this.innerHTML = ""; this.appendChild( input );
 									 input.focus();
-									 input.onclick = function(e) {
+									 input.ondblclick = function(e) {
 										 var name = this.value;
 										 // console.log(name);
 										 node.innerHTML = ""; node.appendChild( document.createTextNode( name ) );
 										 e.stopPropagation();
 										}
 									 input.onkeypress = function(e) {
-										 if (e.which === 13) {input.onclick(e);}
+										 if (e.which === 13) {input.ondblclick(e);}
 										};
 									 e.stopPropagation();
 									 e.preventDefault();

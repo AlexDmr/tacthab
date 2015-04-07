@@ -1,7 +1,3 @@
-*[draggable=true] {
-	display		: inline-block;
-}
-
 #instructionTypes {
 	position	: fixed;
 	top			: 8px;

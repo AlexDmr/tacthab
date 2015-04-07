@@ -20,10 +20,19 @@ EventNodePresentation.prototype.init = function(PnodeID, parent, children) {
 }
 
 EventNodePresentation.prototype.serialize = function() {
-	 var json = PnodePresentation.prototype.serialize.apply(this, []);
-	 json.subType = 'EventNodePresentation';
-	 return json;
-	}
+	var json = PnodePresentation.prototype.serialize.apply(this, []);
+	json.subType = 'EventNodePresentation';
+	if(this.implicitVariableId) {json.implicitVariableId = this.implicitVariableId;}
+	return json;
+}
+
+EventNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
+	// var self = this;
+	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
+	if(json.implicitVariableId) {this.implicitVariableId = json.implicitVariableId;}
+	return this;
+}
+
 EventNodePresentation.prototype.Render	= function() {
 	var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);

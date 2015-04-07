@@ -56,6 +56,9 @@ PeventBrickAppear.prototype.serialize		= function() {
 	json.subType = this.subType;
 	json.eventNode	= { eventName	: this.event.eventName
 					  };
+	if(this.children.length) {
+		 json.eventNode.varType	= this.children[0].updateType();
+		}
 	return json;
 }
 
@@ -86,6 +89,13 @@ PeventBrickAppear.prototype.triggerEvent = function(event) {
 	return false;
 }
 
+PeventBrickAppear.prototype.getRelatedTypes	= function() {
+	var types = Pevent.prototype.getRelatedTypes.apply(this, []);
+	if(this.children.length) {
+		 types = this.children[0].updateType();
+		}
+	return types;
+}
 
 return PeventBrickAppear;
 });

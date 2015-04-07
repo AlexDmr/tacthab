@@ -38,9 +38,9 @@ PeventFromSocketIO.prototype.init		= function(parent, children) {
 	Pevent.prototype.init.apply(this, [parent, children]);
 	this.event = {topic:'', filters:[]};
 	this.triggerEventCB = function(data) {
-		  // Apply filters
-		  var filters = self.event.filters
-		    , filter;
+		 // Apply filters
+		 var filters = self.event.filters
+		   , filter;
 		 for(var i=0; i<filters.length; i++) {
 			 filter = filters[i];
 			 if( typeof data[ filter.attribute ] === 'undefined') {console.log("skipping socketIO event cause attribute", filter.attribute, "is not present");

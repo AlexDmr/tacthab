@@ -47,7 +47,7 @@ ProgramNode.prototype.getProgram		= function() {return this;}
 ProgramNode.prototype.getESA			= function() {
 	return { events	: ['Start', 'Stop']
 		   , states	: []
-		   , actions: []
+		   , actions: ['Start', 'Stop']
 		   };
 }
 
@@ -140,8 +140,8 @@ ProgramNode.prototype.getContext		= function() {
 				var D_bricks = Brick.prototype.getBricks();
 				for(i in D_bricks) {context.bricks[i] = D_bricks[i];}
 			   }
+	this.cacheContext = context;
 	
-	this.cacheContext = context;	
 	// 1) Resgister Variables
 	var L_defs = this.definitions.children, varId, def;
 	for(i=0; i<L_defs.length; i++) {
@@ -170,12 +170,7 @@ ProgramNode.prototype.getContext		= function() {
 			 if(  (L[i].brickId	&& typeof context.bricks   [ L[i].brickId] !== 'undefined')
 			   || (L[i].id		&& typeof context.variables[ L[i].id     ] !== 'undefined') ) {empty = false; break;}
 			}
-		 if(!empty || !variable.isTypedAs('ProgramNode')) {variables[v] = variable;} else {
-			 L_str = "["; // XXX C'est quoi ce merdier ?
-			 for(i=0; i<L.length; i++) {L_str += L[i].id + ', ';}
-			 L_str += "]";
-			 console.log("\tRemoving variable", v, L_str);
-			}
+		 if(!empty || !variable.isTypedAs('ProgramNode')) {variables[v] = variable;}
 		}
 	 context.variables = variables;
 	 this.filtering = false;
