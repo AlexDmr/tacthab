@@ -20,6 +20,8 @@ WhenNode.prototype.init			= function(parent, children) {
 	Pnode.prototype.init.apply(this, [parent, children]);
 	this.when = { childEvent	: null
 				, childReaction	: null
+				, varName		: 'brick'
+				, varType		: []
 				};
 	this.forever	= true;
 	
@@ -33,16 +35,25 @@ WhenNode.prototype.serialize	= function() {
 	if(this.when.childEvent   ) {this.when.childEvent.setParent    (this);}
 	if(this.when.childReaction) {this.when.childReaction.setParent (this);}
 	
-	json.when = {};
-	if(this.when.childEvent   ) {json.when.childEvent		= this.when.childEvent   .serialize();}
-	if(this.when.childReaction) {json.when.childReaction	= this.when.childReaction.serialize();}
+	json.when = { varName	: this.when.varName
+				, varId		: this.getImplicitVariableId()
+				, varType	: []
+				};
+	if(this.when.childEvent   ) {json.when.childEvent		= this.when.childEvent   .serialize();
+								 // Check for implicite variable
+								 this.when.varType = json.when.varType = this.updateType();
+								}
+	if(this.when.childReaction) {json.when.childReaction	= this.when.childReaction.serialize();
+								}
 
 	return json;
 }
+
 WhenNode.prototype.unserialize	= function(json, Putils) {
 	Pnode.prototype.unserialize.apply(this, [json, Putils]);
 	this.when = { childEvent	: null
 				, childReaction	: null
+				, varName		: json.when.varName
 				};
 	if(json.when.childEvent   ) {this.when.childEvent		= Putils.unserialize( json.when.childEvent    );
 								 this.when.childEvent.setParent(this);
@@ -55,10 +66,39 @@ WhenNode.prototype.unserialize	= function(json, Putils) {
 
 WhenNode.prototype.Start = function() {
 	var res = Pnode.prototype.Start.apply(this, []);
-	if( res ) {
-		 if(this.when.childEvent) {this.when.childEvent.Start();}
+	if( res && this.when.childEvent ) {
+		 this.implicitVariableValue = null;
+		 this.when.childEvent.Start();
 		}
 	return res;
+}
+
+WhenNode.prototype.getContext		= function() {
+	var context = Pnode.prototype.getContext.apply(this, []);
+	// Add the implicit variable if it exists
+	console.log("<WhenNode::getContext>");
+	if(this.implicitVariableId) {
+		 console.log("\tadding variable", this.implicitVariableId);
+		 context.variables[this.implicitVariableId] = this;
+		}
+	console.log("</WhenNode::getContext>");
+	return context;
+}
+
+WhenNode.prototype.getDescription	= function() {
+	var descr =	{ type	: this.updateType()
+				, name	: this.when.varName
+				, expose: false
+				, id	: this.implicitVariableId
+				};
+	return descr;
+}
+
+WhenNode.prototype.evalSelector	= function() {
+	console.log("WhenNode::evalSelector", this.implicitVariableId, this.implicitVariableValue);
+	if(this.implicitVariableId && this.implicitVariableValue) {
+		 return [this.implicitVariableValue];
+		} else {return [];}
 }
 
 WhenNode.prototype.eventFromChild = function(child, event) {
@@ -67,14 +107,47 @@ WhenNode.prototype.eventFromChild = function(child, event) {
 		 // Stop the eventNode
 		 this.when.childEvent.Stop();
 		 // Start the thenNode
-		 if(this.when.childReaction) {this.when.childReaction.Start();}
+		 if(this.when.childReaction) {
+			 this.implicitVariableValue = event.brickId;
+			 this.when.childReaction.Start();
+			}
 		} else {error('WhenNode::eventFromChild received an event from a child wich is not the eventNode.');}
 }
+
 WhenNode.prototype.childStateChanged = function(child, prevState, newState) {
 	if(child === this.when.childReaction && newState === 0) {
 		 // Restart listening if forever is true, Stop otherwise
-		 if(this.forever) {this.when.childEvent.Start();} else {this.Stop();}
+		 if(this.forever) {
+			 // Set this.implicitVariableValue with respect to the event
+			 // this.implicitVariableValue = XXX;
+			 this.when.childEvent.Start();
+			} else {this.Stop();}
 		}
+}
+
+WhenNode.prototype.getName		= function() {
+	return this.when.varName;
+}
+
+WhenNode.prototype.updateType	= function() {
+	if(this.when.childEvent) return this.when.childEvent.getRelatedTypes();
+	return [];
+}
+
+WhenNode.prototype.getSelectorId			= function() {
+	return this.implicitVariableId;
+}
+
+WhenNode.prototype.getImplicitVariableId	= function() {
+	// Find parent program
+	try {var prog = this.getProgram();
+		 if(prog) {this.implicitVariableId = prog.definitions.getVariableId(this.implicitVariableId, this, "When_");
+				   console.log("EventNode::getImplicitVariableId =>", this.implicitVariableId);
+				   return this.implicitVariableId;
+				  } else {console.trace("EventNode::getImplicitVariableId NO PROGRAM ANCESTOR");}
+		} catch(err) {console.trace("ERROR EventNode::getImplicitVariableId", err);
+					 }
+	return null;
 }
 
 return WhenNode;

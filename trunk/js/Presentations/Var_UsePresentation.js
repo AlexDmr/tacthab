@@ -45,7 +45,7 @@ Var_UsePresentation.prototype.unserialize	= function(json, PresoUtils) {
 	// Describe action here
 	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
 	this.selector.variableId	= json.selector.variableId;
-	this.selector.name			= json.selector.name;
+	this.selector.name			= json.selector.variableName;
 	if(this.html.spanVarId) {
 		 this.html.spanVarId.innerHTML = '';
 		 this.html.spanVarId.classList.add( this.selector.variableId );

@@ -51,11 +51,17 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 	console.log('webServer.init(',__dirname,',8888)');
 	webServer.init(__dirname, '8888');
 	UpnpServer.init();
+	webServer.registerSocketIO_CB( 'tel'
+								 , function(data) {
+										 console.log("DEBUG socket.IO\n", data, "\n");
+										}
+								 );
 	
 	var pgRootId = '';
 	var rootPath = __dirname.slice();
 	
 	// OpenHAB
+	/*
 	var openHAB = Factory__OpenHAB.newBrick();
 	openHAB.changeIdTo( 'openHAB' );
 	openHAB.init( { host	: '127.0.0.1'
@@ -80,7 +86,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 										}
 							}
 					  );
-					 
+	*/
 	
 	// Configure server
 	webServer.app.post( '/saveProgram'

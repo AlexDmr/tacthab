@@ -58,23 +58,21 @@ EventNode.prototype.eventFromChild = function(child, event) {
 	if(this.parent && this.parent.eventFromChild) this.parent.eventFromChild(this, event);
 }
 
+EventNode.prototype.getRelatedTypes	= function() {
+	return [];
+}
+
 EventNode.prototype.serialize		= function() {
 	var json = Pnode.prototype.serialize.apply(this, []);
 	// Describe event here
 	json.subType = this.subType;
+	if(this.implicitVariableId) {json.implicitVariableId = this.implicitVariableId;}
 	return json;
 }
 
 EventNode.prototype.unserialize	= function(json, Putils) {
 	Pnode.prototype.unserialize.apply(this, [json, Putils]);
 	return this;
-}
-
-EventNode.prototype.getNewVariableId	= function() {
-	// Find parent program
-	var prog = this.getProgram();
-	if(prog) {return prog.definitions.getVariableId();}
-	return null;
 }
 
 return EventNode;
