@@ -1,14 +1,18 @@
------ Dynamique des programmes
-Démarrer et arréter un programme.
+----- Ajout d'un système de variable "classique"
+Numérique, chaîne de caractères, ... tableau ?
+Devraiton coupler cela avec la possibilité de définir ses propres éléments de javascript ?
 
 
------ Evènements d'apparition/dispariation des bricks
-Emettre des évènements lors de l'appaiation et de la dispariation des briques
-Permettre de s'y abonner dans les programmes
-	ex : lorsqu'apparait Kodi alors lui envoyer un média qui dit bonjour...
-	     lorsqu'un mediaPlayer apparait alors charger et lire un media qui dit bonjour...
-		 => Selecteur => introduit nouvelle variable dans le contexte
-		    WHEN un new media (call it XXX)
+----- Ajout de la possibilité d'injecter son propre code javascript
+Au niveau d'un programme, d'une instruction, d'un état, etc...
+
+
+----- Codage des programmes paramétriques !
+définition des paramtres. 
+Préciser lors de la définition d'un programme que certaines définitions sont à définir lors de l'appel?
+En cas d'appel, dupliquer le code du programme à l'endroit de l'appel?
+	- dans le programme appelant?
+	- Effacer ce code lorsque le programme se termine ou bien est arrété.
 
 	
 ----- Intégration des services google Map et Tag

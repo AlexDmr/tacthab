@@ -3,51 +3,61 @@ define	( [ './PnodePresentation.js'
 		  ]
 		, function(PnodePresentation, DragDrop) {
 
-var PfilterPresentation = function() {
+
+		
+var PForbidPresentation = function() {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
 	return this;
 }
 
-PfilterPresentation.prototype = new PnodePresentation();
-PfilterPresentation.prototype.className = 'PfilterNode';
+PForbidPresentation.prototype = new PnodePresentation();
+PForbidPresentation.prototype.className = 'PForbidNode';
 
-PfilterPresentation.prototype.init = function(PnodeID, parent, children) {
+PForbidPresentation.prototype.init = function(PnodeID, parent, children) {
 	this.html	= {};
 	this.filter	= {};
 	PnodePresentation.prototype.init.apply(this, [parent, children]);
 	this.PnodeID = PnodeID;
-	this.filter		= { programs	: null
+	this.forbid		= { programs	: null
 					  , objects		: null
-					  , HideExpose	: 'hide'
+					  , mtdName		: ''
+					  , parameters	: []
+					  , forbidden	: true
 					  };
 	this.html		= { programs	: null
 					  , objects		: null
 					  };
 	return this;
 }
-PfilterPresentation.prototype.serialize	= function() {
+
+PForbidPresentation.prototype.serialize	= function() {
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
 	// Describe action here
-	json.subType	= 'PfilterPresentation';
-	json.filter		= {HideExpose : this.filter.HideExpose};
-	if(this.filter.programs) {json.filter.programs = this.filter.programs.serialize();}
-	if(this.filter.objects ) {json.filter.objects  = this.filter.objects.serialize ();}
+	json.subType	= 'PForbidPresentation';
+	json.forbid = { forbidden	: this.forbid.forbidden
+				  , action		: this.forbid.action
+				  , parameters	: this.forbid.parameters
+				  }
+	if(this.forbid.programs) {json.forbid.programs = this.forbid.programs.serialize();}
+	if(this.forbid.objects ) {json.forbid.objects  = this.forbid.objects.serialize ();}
 	return json;
 }
 
 
-PfilterPresentation.prototype.unserialize	= function(json, PresoUtils) {
+PForbidPresentation.prototype.unserialize	= function(json, PresoUtils) {
 	// Describe action here
 	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
-	if(json.filter.programs) {this.filter.programs = PresoUtils.unserialize(json.filter.programs);}
-	if(json.filter.objects ) {this.filter.objects  = PresoUtils.unserialize(json.filter.objects );}
-	this.filter.HideExpose = json.filter.HideExpose;
+	if(json.forbid.programs) {this.forbid.programs = PresoUtils.unserialize(json.forbid.programs);}
+	if(json.forbid.objects ) {this.forbid.objects  = PresoUtils.unserialize(json.forbid.objects );}
+	this.forbid.forbidden	= json.forbid.forbidden;
+	this.forbid.action		= json.forbid.action;
+	this.forbid.parameters	= json.forbid.parameters;
 	this.updateHTML_programs_and_objects();
 	return this;
 }
 
-PfilterPresentation.prototype.updateHTML_programs_and_objects = function() {
+PForbidPresentation.prototype.updateHTML_programs_and_objects = function() {
 	if(this.html.programs && this.filter.programs) {
 		 this.html.programs.innerHTML = "";
 		 this.html.programs.appendChild( this.filter.programs.Render() );
@@ -63,7 +73,7 @@ PfilterPresentation.prototype.updateHTML_programs_and_objects = function() {
 		}
 }
 
-PfilterPresentation.prototype.Render	= function() {
+PForbidPresentation.prototype.Render	= function() {
 	var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);
 	root.classList.add('PfilterNode');
@@ -119,5 +129,5 @@ PfilterPresentation.prototype.Render	= function() {
 }
 
 // Return the constructor
-return PfilterPresentation;
+return PForbidPresentation;
 });

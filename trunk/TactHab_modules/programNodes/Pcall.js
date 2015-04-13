@@ -13,6 +13,16 @@ var Pcall = function(targets, mtdName, params, CB_success, CB_cancel) {
 	}
 Pcall.prototype.constructor = Pcall;
 
+Pcall.prototype.newCopy		= function() {
+	var call = new Pcall( this.targets.slice()
+						, this.mtdName.slice()
+						, this.params.slice()
+						, this.CB_success
+						, this.CB_cancel
+						);
+	return call;
+}
+
 Pcall.prototype.update_res	= function(A_res, i, type, value) {
 	A_res[i] = {type: type, value: value};
 	this.nb_res++;

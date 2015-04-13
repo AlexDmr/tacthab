@@ -1,15 +1,8 @@
 define( [ './Pevent.js'
 		, '../Bricks/Brick.js'
+		, '../../js/operators.js'
 	    ]
-	  , function(Pevent, Brick) {
-
-var OP = { 'equal'			: function(a, b) {return a === b;}
-		 , 'different'		: function(a, b) {return a !== b;}
-		 , 'greater'		: function(a, b) {return parseFloat(a) >  parseFloat(b);}
-		 , 'greaterOrEqual'	: function(a, b) {return parseFloat(a) >= parseFloat(b);}
-		 , 'lower'			: function(a, b) {return parseFloat(a) <  parseFloat(b);}
-		 , 'lowerOrEqual'	: function(a, b) {return parseFloat(a) <= parseFloat(b);}
-		 };
+	  , function(Pevent, Brick, OP) {
 
 // Definition of a PeventBrick
 var PeventBrick = function() {

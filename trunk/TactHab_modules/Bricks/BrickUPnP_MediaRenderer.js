@@ -4,31 +4,84 @@ define( [ './BrickUPnP.js'
 		, '../webServer/webServer.js'
 		, './BrickUPnP_MediaServer.js'
 		, '../../js/AlxEvents.js'
+		, '../../js/AlxAutomate.js'
 		]
 	  , function( BrickUPnP, BrickUPnPFactory
 				, UpnpServer, webServer
 				, BrickUPnP_MediaServer
-				, AlxEvents
+				, AlxEvents, AlxAutomate
 				) {
 	var xmldom		= require( 'xmldom' );
 	var xmldomparser= new xmldom.DOMParser();
 
 	var BrickUPnP_MediaRenderer = function() {
 		 BrickUPnP.prototype.constructor.apply(this, []);
-		 this.MediasStates = {};
-		 this.types.push( 'BrickUPnP_MediaRenderer' );
 		 return this;
 		}
 	BrickUPnP_MediaRenderer.prototype = new BrickUPnP(); BrickUPnP_MediaRenderer.prototype.unreference();
 	BrickUPnP_MediaRenderer.prototype.constructor = BrickUPnP_MediaRenderer;
 	BrickUPnP_MediaRenderer.prototype.getTypeName = function() {return "BrickUPnP_MediaRenderer";}
 
-	AlxEvents(BrickUPnP_MediaRenderer);
+	AlxEvents	(BrickUPnP_MediaRenderer);
+
+	BrickUPnP_MediaRenderer.prototype.init		= function(device) {
+		 var self = this;
+		 BrickUPnP.prototype.init.apply(this, [device]);
+		 this.types.push( 'BrickUPnP_MediaRenderer' );
+		 this.MediasStates = {};
+		 this.automatePlay = new AlxAutomate(	{ initialState	: "INIT"
+												, states	: { INIT	: { transitions : [ {state: 'PLAYING', eventName: 'TransportState', op: 'equal', value: 'PLAYING'}
+																						  , {state: 'STOPPED', eventName: 'TransportState', op: 'equal', value: 'STOPPED'}
+																						  , {state: 'PAUSED' , eventName: 'TransportState', op: 'equal', value: 'PAUSED_PLAYBACK'}
+																						  ]
+																		  }
+															  , PLAYING	: { enter		: {action: {}}
+																		  , transitions	: [ {state: 'STOPPED', eventName: 'TransportState', op: 'equal', value: 'STOPPED'}
+																						  , {state: 'PAUSED' , eventName: 'TransportState', op: 'equal', value: 'PAUSED_PLAYBACK'}
+																						  ]
+																		  }
+															  , STOPPED	: { enter		: {action: {}}
+																		  , transitions	: [ {state: 'PLAYING', eventName: 'TransportState', op: 'equal', value: 'PLAYING'}
+																						  , {state: 'PAUSED' , eventName: 'TransportState', op: 'equal', value: 'PAUSED_PLAYBACK'}
+																						  ]
+																		  }
+															  , PAUSED	: { enter		: {action: {}}
+																		  , transitions	: [ {state: 'STOPPED', eventName: 'TransportState', op: 'equal', value: 'STOPPED'}
+																						  , {state: 'PLAYING', eventName: 'TransportState', op: 'equal', value: 'PLAYING'}
+																						  ]
+																		  }
+															  }
+												, events	: [ 'PLAYING', 'STOPPED', 'PAUSED']
+												, eventSrc	: self
+												, actions	: { PLAY	: {eventName: 'TransportState', value:'PLAYING'			}
+															  , STOP	: {eventName: 'TransportState', value:'STOPPED'			}
+															  , PAUSED	: {eventName: 'TransportState', value:'PAUSED_PLAYBACK'	}
+															  }
+												}
+											);
+		 this.automatePlay.on('enter_PLAYING', function(e) {console.log("enter_PLAYING", e);});
+		 this.automatePlay.on('leave_PLAYING', function(e) {console.log("leave_PLAYING", e);});
+		 this.automatePlay.on('enter_STOPPED', function(e) {console.log("enter_STOPPED", e);});
+		 this.automatePlay.on('leave_STOPPED', function(e) {console.log("leave_STOPPED", e);});
+		 this.automatePlay.on('enter_PAUSED' , function(e) {console.log("enter_PAUSED" , e);});
+		 this.automatePlay.on('leave_PAUSED' , function(e) {console.log("leave_PAUSED" , e);});
+		 return this;
+		}
 
 	BrickUPnP_MediaRenderer.prototype.getESA			= function() {
 		 var esa = BrickUPnP.prototype.getESA();
 		 esa.events	= esa.events .concat(['Mute', 'TransportState', 'Volume', 'VolumeDB']);
-		 esa.states	= esa.states .concat([]);
+		 /*
+		   stateVars : ['playState']
+		   states	 : { stateVar: 'play', name: 'PLAYING', enter	: [ {eventName: 'TransportState', op:'equal', value:'PLAYING'} ]
+														  , leave	: [ ]
+														  , update	: [ {eventName: 'TransportState', op:'equal', value:'PLAYING'} ]
+					   }
+		 */
+		 esa.states	= esa.states .concat( [ {name: 'PLAYING', enter:[], leave:[], update:[]}
+										  , {name: 'STOPPED', enter:[], leave:[], update:[]}
+										  ]
+										);
 		 esa.actions= esa.actions.concat([]);
 		 return esa;
 		}
@@ -107,7 +160,7 @@ define( [ './BrickUPnP.js'
 							);
 		}
 	BrickUPnP_MediaRenderer.prototype.Play		= function(cb) {
-		 var self = this;
+		 // var self = this;
 		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
 		 service.callAction	( 'Play'
 							, { InstanceID		: 0
@@ -130,7 +183,7 @@ define( [ './BrickUPnP.js'
 								}
 							);
 		}
-	BrickUPnP_MediaRenderer.prototype.Stop		= function() {
+	BrickUPnP_MediaRenderer.prototype.Stop		= function(cb) {
 		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
 		 service.callAction	( 'Stop'
 							, { InstanceID		: 0
@@ -155,7 +208,7 @@ define( [ './BrickUPnP.js'
 								}
 							);
 		}
-	BrickUPnP_MediaRenderer.prototype.SetVolume	= function(volume) {
+	BrickUPnP_MediaRenderer.prototype.SetVolume	= function(volume, cb) {
 		 volume = Math.min(100, Math.max(0, Math.round(volume)));
 		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:RenderingControl'];
 		 service.callAction	( 'SetVolume'
@@ -172,11 +225,6 @@ define( [ './BrickUPnP.js'
 	BrickUPnP_MediaRenderer.prototype.goToTime	= function(time) {
 		 
 		}
-	BrickUPnP_MediaRenderer.prototype.init		= function(device) {
-		 var self = this;
-		 BrickUPnP.prototype.init.apply(this, [device]);
-		 return this;
-		}
 
 	// UPnP events
 	BrickUPnP_MediaRenderer.prototype.UPnPEvent	= function(event, service) {
@@ -184,27 +232,28 @@ define( [ './BrickUPnP.js'
 		 return BrickUPnP.prototype.UPnPEvent.apply(this, [event, service]);
 		}
 	BrickUPnP_MediaRenderer.prototype.UpdateEvent	= function(eventNode, service) {
+		 var i, val, content;
 		 // console.log("\t", this.brickId, service.serviceType, "<" + eventNode.tagName + ">");
 		 switch(eventNode.tagName) {
 			 case 'InstanceID'					:
-				var val = eventNode.getAttribute('val');
+				val = eventNode.getAttribute('val');
 				this.currentInstanceID = val;
 				if(typeof this.MediasStates[val] === 'undefined') {this.MediasStates[val] = {};}
-				for(var i=0; i<eventNode.childNodes.length; i++) {
+				for(i=0; i<eventNode.childNodes.length; i++) {
 					 this.UpdateEvent( eventNode.childNodes.item(i), service );
 					}
 				break;
 			 case 'LastChange':
 				var doc = xmldomparser.parseFromString(eventNode.textContent, 'text/xml');
 				// console.log( "doc.documentElement:", doc.documentElement.childNodes.length);
-				for(var i=0; i<doc.documentElement.childNodes.length; i++) {
+				for(i=0; i<doc.documentElement.childNodes.length; i++) {
 					 this.UpdateEvent( doc.documentElement.childNodes.item(i), service );
 					}
 			 break;
 			 case 'SourceProtocolInfo'		:
 			 case 'SinkProtocolInfo'		:
 			 case 'CurrentConnectionIDs'	:
-				var content = eventNode.textContent;
+				content = eventNode.textContent;
 				if (typeof this.MediasStates[service.serviceType] === 'undefined') {
 					 this.MediasStates[service.serviceType] = {};
 					}
@@ -218,7 +267,7 @@ define( [ './BrickUPnP.js'
 			 break;
 			 default:
 				 if(eventNode.hasAttribute('val')) {
-					 var val = eventNode.getAttribute('val');
+					 val = eventNode.getAttribute('val');
 					 this.MediasStates[this.currentInstanceID || 0][eventNode.tagName] = val;
 					 console.log("BrickUPnP_MediaRenderer::event", eventNode.tagName, '=', val);
 					 this.emit(eventNode.tagName, {value: val});

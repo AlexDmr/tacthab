@@ -1,7 +1,8 @@
 define( [ './Pevent.js'
 		, '../webServer/webServer.js'
+		, '../../js/operators.js'
 	    ]
-	  , function(Pevent, webServer) {
+	  , function(Pevent, webServer, op) {
 		  
 // Deal with socket subscription
 // var D_events = {};
@@ -13,15 +14,6 @@ function unregisterSocketIO_CB(topic, CB) {
 	// console.log("unregisterSocketIO_CB", topic, CB);
 	webServer.unregisterSocketIO_CB(topic, CB);
 }
-
-// Definition of a PeventFromSocketIO
-var op = { 'equal'			: function(a, b) {return a === b;}
-		 , 'different'		: function(a, b) {return a !== b;}
-		 , 'greater'		: function(a, b) {return parseFloat(a) >  parseFloat(b);}
-		 , 'greaterOrEqual'	: function(a, b) {return parseFloat(a) >= parseFloat(b);}
-		 , 'lower'			: function(a, b) {return parseFloat(a) <  parseFloat(b);}
-		 , 'lowerOrEqual'	: function(a, b) {return parseFloat(a) <= parseFloat(b);}
-		};
 		 
 var PeventFromSocketIO = function() {
 	 Pevent.prototype.constructor.apply(this, []);

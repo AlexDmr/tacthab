@@ -27,8 +27,10 @@ ProgramNode.prototype.init			= function(parent, children) {
 	// Add a parallel node
 	this.instructions	= (new ParalleNode()).init(this, []);
 	// Manage filters
-	this.filterNodes	= [];
 	this.filtering		= false;
+	this.filterNodes	= [];
+
+	this.filterCallNodes= [];	
 	
 	return this;
 }
@@ -98,24 +100,32 @@ ProgramNode.prototype.getExposedAPI_serialized	= function() {
 	return json;
 }
 
-ProgramNode.prototype.RegisterFilter = function(filterNode) {
-	for(var i=0; i<this.filterNodes.length; i++) {
-		 if(this.filterNodes[i] === filterNode) {this.filterNodes.splice(i, 1); break;}
+/**
+  * Managing call
+*/
+ProgramNode.prototype.RegisterFilterCall	= function(filterCallNode) {
+	for(var i=0; i<this.filterCallNodes.length; i++) {
+		 if(this.filterCallNodes[i] === filterCallNode) {this.filterCallNodes.splice(i, 1); break;}
 		}
-	this.filterNodes.push(filterNode);
+	this.filterCallNodes.push(filterCallNode);
 	return this;
 }
 
-ProgramNode.prototype.call = function(call) {
+ProgramNode.prototype.call					= function(call) {
 	// Filter call
+	for(var i=0; i<this.filterCallNodes.length; i++) {
+		 this.filterCallNodes[i].applyFilterOn( call );
+		}
 	
 	// Propagate an action call if it is not forbidden
-	// console.log('ProgramNode::call', call);
 	if(this.parent) {
 		 return this.parent.call(call);
 		} else {call.execute();}
 }
 
+/**
+  * Managing context
+*/
 ProgramNode.prototype.getLocalVariables	= function() {
 	var variables = {}, def, varId;
 	for(i=0; i<this.definitions.children.length; i++) {
@@ -124,6 +134,14 @@ ProgramNode.prototype.getLocalVariables	= function() {
 		 variables[ varId ] = def;
 		}
 	return variables;
+}
+
+ProgramNode.prototype.RegisterFilter = function(filterNode) {
+	for(var i=0; i<this.filterNodes.length; i++) {
+		 if(this.filterNodes[i] === filterNode) {this.filterNodes.splice(i, 1); break;}
+		}
+	this.filterNodes.push(filterNode);
+	return this;
 }
 
 ProgramNode.prototype.getContext		= function() {
@@ -181,7 +199,9 @@ ProgramNode.prototype.getContext		= function() {
 	return context;
 }
 
-// API for starting, stopping the instruction
+/**
+  * Serialization
+*/
 ProgramNode.prototype.serialize	= function() {
 	this.definitions.setParent ( null );
 	this.instructions.setParent( null );
