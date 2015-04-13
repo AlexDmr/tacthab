@@ -61,13 +61,13 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 	var rootPath = __dirname.slice();
 	
 	// OpenHAB
-	/*
+	
 	var openHAB = Factory__OpenHAB.newBrick();
 	openHAB.changeIdTo( 'openHAB' );
 	openHAB.init( { host	: '127.0.0.1'
 				  , port	: 8080
 				  , desc	: {}
-				  , mqtt	: {host: '192.168.1.58', port: 1883}
+				  , mqtt	: {host: '192.168.1.24', port: 1883}
 				  }
 				);
 	webServer.app.get ( '/openHAB'
@@ -86,7 +86,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 										}
 							}
 					  );
-	*/
+	
 	
 	// Configure server
 	webServer.app.post( '/saveProgram'

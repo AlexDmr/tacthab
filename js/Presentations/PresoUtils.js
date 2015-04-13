@@ -7,6 +7,7 @@ define	( [ './ProgramNodePresentation.js'
 		  , './WhenNodePresentation.js'
 		  , './PcontrolBrickPresentation.js'
 		  , './PfilterPresentation.js'
+		  , './PForbidPresentation.js'
 		  , './PeventBrickPresentation.js'
 		  , './PeventBrickAppear.js'
 		  , './basicBrickPresentation.js'
@@ -39,6 +40,7 @@ define	( [ './ProgramNodePresentation.js'
 				  , WhenNodePresentation
 				  , PcontrolBrickPresentation
 				  , PfilterPresentation
+				  , PForbidPresentation
 				  , PeventBrickPresentation
 				  , PeventBrickAppear
 				  , basicBrickPresentation
@@ -72,6 +74,7 @@ var PresoUtils = {
 					  , 'WhenNode'								: WhenNodePresentation		, 'WhenNodePresentation'		: WhenNodePresentation
 					  , 'PcontrolBrick'							: PcontrolBrickPresentation
 					  , 'PfilterPresentation'					: PfilterPresentation
+					  , 'PForbidPresentation'					: PForbidPresentation
 					  , 'PeventBrickPresentation'				: PeventBrickPresentation
 					  , 'PeventBrickAppear'						: PeventBrickAppear
 					  , 'basicBrickPresentation'				: basicBrickPresentation
