@@ -24,8 +24,8 @@ PForbidNode.prototype.getClasses	= function() {return classes;};
 
 PForbidNode.prototype.init			= function(parent, children) {
 	Pnode.prototype.init.apply(this, [parent, children]);
-	this.forbid		= { programs	: []
-					  , objects		: []
+	this.forbid		= { programs	: null
+					  , objects		: null
 					  , mtdName		: ''
 					  , parameters	: []
 					  , forbidden	: true

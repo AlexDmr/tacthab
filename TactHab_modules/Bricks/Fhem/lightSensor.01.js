@@ -1,7 +1,6 @@
 define( [ './BrickFhem.js'
-		, '../standards/lightSensor.js'
 		]
-	  , function(BrickFhem, lightSensor) {
+	  , function(BrickFhem) {
 // Define
 function lightSensor_01(FhemBridge, listEntry) {
 	BrickFhem.apply(this, [FhemBridge, listEntry]);
@@ -10,9 +9,7 @@ function lightSensor_01(FhemBridge, listEntry) {
 	return this;
 }
 
-lightSensor_01.prototype = new BrickFhem();
-	lightSensor_01.prototype.unreference();
-	lightSensor.apply(lightSensor_01.prototype, []);
+lightSensor_01.prototype = new BrickFhem(); lightSensor_01.prototype.unreference();
 lightSensor_01.prototype.constructor		= lightSensor_01;
 lightSensor_01.prototype.getTypeName		= function() {return "lightSensor_01";}
 
