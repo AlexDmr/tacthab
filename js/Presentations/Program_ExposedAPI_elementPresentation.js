@@ -20,8 +20,9 @@ Program_ExposedAPI_elementPresentation.prototype.className = 'Pselector_variable
 
 Program_ExposedAPI_elementPresentation.prototype.init		= function(PnodeID, parent, children) {
 	Program_UsePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
-	this.selector.variableId	= null;
-	this.selector.variableTypes	= [];
+	if(typeof this.selector === 'undefined') {this.selector = {};}
+	this.selector.variableId	= this.selector.variableId		|| null;
+	this.selector.variableTypes	= this.selector.variableTypes	|| [];
 	return this;
 }
 

@@ -6,11 +6,17 @@ define	( [ '../../ActionNodePresentation.js'
 	// 
 	var MR_Play_NodePresentation = function() {
 		 ActionNodePresentation.apply(this, []);
-		 this.action.method	= 'Play';
 		 return this;
 		}
 	
 	MR_Play_NodePresentation.prototype = new ActionNodePresentation();
+
+	MR_Play_NodePresentation.prototype.init		= function(PnodeID, parent, children) {
+		 ActionNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+		 this.action.method	= 'Play';
+		 return this;
+		}
+
 	MR_Play_NodePresentation.prototype.serialize = function() {
 		 // this.action.method	= 'Play';
 		 var json = ActionNodePresentation.prototype.serialize.apply(this, []);
@@ -18,7 +24,7 @@ define	( [ '../../ActionNodePresentation.js'
 		 return json;
 		}
 	MR_Play_NodePresentation.prototype.Render = function() {
-		 var self = this;
+		 // var self = this;
 		 var root = ActionNodePresentation.prototype.Render.apply(this,[]);
 		 this.html.actionName.innerHTML = "Play";
 		 DragDrop.updateConfig(this.dropZoneSelectorId, {acceptedClasse: [['BrickUPnP_MediaRenderer']]});

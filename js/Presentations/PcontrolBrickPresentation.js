@@ -32,7 +32,7 @@ PcontrolBrickPresentation.prototype.unserialize	= function(json, PresoUtils) {
 }
 
 PcontrolBrickPresentation.prototype.Render	= function() {
-	var self = this;
+	// var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);
 	root.classList.add('PcontrolBrick');
 	this.divDescription.innerHTML = 'Controler: ' + this.PnodeID + ' for login <input type="text"></input>' ;

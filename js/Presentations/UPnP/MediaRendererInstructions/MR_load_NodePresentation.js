@@ -7,8 +7,15 @@ define	( [ './MR_Play_NodePresentation.js'
 	
 	
 	var MR_load_NodePresentation = function() {
-		 var self = this;
 		 MR_Play_NodePresentation.apply(this, []);
+		 return this;
+		}
+	
+	MR_load_NodePresentation.prototype = new MR_Play_NodePresentation();
+	
+	MR_load_NodePresentation.prototype.init			= function(PnodeID, parent, children) {
+		 var self = this;
+		 MR_Play_NodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
 		 this.action.method	= 'loadMedia';
 		 this.forceRendering = false;
 		 this.cbSelected = function(event) {
@@ -22,7 +29,6 @@ define	( [ './MR_Play_NodePresentation.js'
 		 return this;
 		}
 	
-	MR_load_NodePresentation.prototype = new MR_Play_NodePresentation();
 	MR_load_NodePresentation.prototype.unserialize = function(json, PresoUtils) {
 		 var self = this;
 		 MR_Play_NodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);

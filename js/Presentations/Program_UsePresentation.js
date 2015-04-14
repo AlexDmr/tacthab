@@ -24,8 +24,9 @@ Program_UsePresentation.prototype.constructor	= Program_UsePresentation
 
 Program_UsePresentation.prototype.init = function(PnodeID, parent, children) {
 	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
-	this.selector	= { progDefId	: null
-					  , name		: ''
+	if(typeof this.selector === 'undefined') {this.selector = {};}
+	this.selector	= { progDefId	: this.selector.progDefId	|| null
+					  , name		: this.selector.name		|| ''
 					  };
 	return this;
 }
