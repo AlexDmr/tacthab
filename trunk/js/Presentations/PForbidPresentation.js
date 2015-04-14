@@ -1,8 +1,19 @@
 define	( [ './PnodePresentation.js'
 		  , '../DragDrop.js'
+		  , '../utils.js'
 		  ]
-		, function(PnodePresentation, DragDrop) {
+		, function(PnodePresentation, DragDrop, utils) {
 
+// linking CSS
+var css = document.createElement('link');
+	css.setAttribute('rel' , 'stylesheet');
+	css.setAttribute('href', 'js/Presentations/HTML_templates/PForbidPresentation.css');
+	document.body.appendChild(css);
+	
+var htmlTemplate = null;
+utils.XHR( 'GET', 'js/Presentations/HTML_templates/PForbidPresentation.html'
+		 , function() {htmlTemplate = this.responseText;}
+		 );
 
 		
 var PForbidPresentation = function() {
@@ -15,8 +26,6 @@ PForbidPresentation.prototype = new PnodePresentation();
 PForbidPresentation.prototype.className = 'PForbidNode';
 
 PForbidPresentation.prototype.init = function(PnodeID, parent, children) {
-	this.html	= {};
-	this.filter	= {};
 	PnodePresentation.prototype.init.apply(this, [parent, children]);
 	this.PnodeID = PnodeID;
 	this.forbid		= { programs	: null
@@ -56,8 +65,10 @@ PForbidPresentation.prototype.unserialize	= function(json, PresoUtils) {
 	this.updateHTML_programs_and_objects();
 	return this;
 }
-
+//
+// XXX à changer ici pour prendre en compte les bons attributs
 PForbidPresentation.prototype.updateHTML_programs_and_objects = function() {
+	return;
 	if(this.html.programs && this.filter.programs) {
 		 this.html.programs.innerHTML = "";
 		 this.html.programs.appendChild( this.filter.programs.Render() );
@@ -76,8 +87,10 @@ PForbidPresentation.prototype.updateHTML_programs_and_objects = function() {
 PForbidPresentation.prototype.Render	= function() {
 	var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);
-	root.classList.add('PfilterNode');
+	root.classList.add('PForbidPresentation');
 	if(this.html.programs === null) {
+		 this.divDescription.innerHTML = htmlTemplate;
+		 /*
 		 this.html.select_HiddenExpose = document.createElement('select');
 			this.html.select_HiddenExpose.classList.add( 'HideExpose' );
 			this.html.select_HiddenExpose.innerHTML = '<option class="hide" value="hide">Hide elements</option><option class="expose" value="expose">Expose elements</option>';
@@ -123,6 +136,7 @@ PForbidPresentation.prototype.Render	= function() {
 											}
 									  }
 									);
+		 */
 		} 
 	this.updateHTML_programs_and_objects();
 	return root;

@@ -88,7 +88,13 @@ var editor = {
 													 , { constructor	: PresoUtils.get('PfilterPresentation')
 													   , nodeType		: ['PfilterNode', 'instruction']
 													   } )
+										).appendChild( this.createDragNode( 'Forbid/allow action'
+													 , { constructor	: PresoUtils.get('PForbidPresentation')
+													   , nodeType		: ['PForbidNode', 'instruction']
+													   } )
 										);
+		
+		
 		 // Create new draggable for programs
 		 this.program_categ =
 		 this.createCateg("Programs").appendChild( this.createDragNode( 'New sub-program'

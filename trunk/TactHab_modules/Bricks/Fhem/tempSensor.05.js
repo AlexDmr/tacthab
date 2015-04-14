@@ -1,7 +1,7 @@
 define( [ './BrickFhem.js'
-		, '../standards/temperature.js'
+		// , '../standards/temperature.js'
 		]
-	  , function(BrickFhem, temperatureSensor) {
+	  , function(BrickFhem) {
 // Define
 function tempSensor_05(FhemBridge, listEntry) {
 	BrickFhem.apply(this, [FhemBridge, listEntry]);
