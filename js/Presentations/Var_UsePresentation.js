@@ -10,11 +10,8 @@ var css = document.createElement('link');
 var Var_UsePresentation = function(infoObj) {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
-	this.selector	= { variableId	: null
-					  , name		: ''
-					  };
-	this.html			= {};
 	if(infoObj) {
+		 this.init();
 		 this.selector.variableId	= infoObj.config.id;
 		 this.selector.name			= infoObj.config.name;
 		}
@@ -25,8 +22,10 @@ Var_UsePresentation.prototype = new PnodePresentation();
 Var_UsePresentation.prototype.className = 'Pselector_variable';
 
 Var_UsePresentation.prototype.init = function(PnodeID, parent, children) {
-	PnodePresentation.prototype.init.apply(this, [parent, children]);
-	this.PnodeID = PnodeID;
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	this.selector	= { variableId	: null
+					  , name		: ''
+					  };
 	return this;
 }
 

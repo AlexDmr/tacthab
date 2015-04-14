@@ -26,8 +26,7 @@ PForbidPresentation.prototype = new PnodePresentation();
 PForbidPresentation.prototype.className = 'PForbidNode';
 
 PForbidPresentation.prototype.init = function(PnodeID, parent, children) {
-	PnodePresentation.prototype.init.apply(this, [parent, children]);
-	this.PnodeID = PnodeID;
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
 	this.forbid		= { programs	: null
 					  , objects		: null
 					  , mtdName		: ''
@@ -68,19 +67,23 @@ PForbidPresentation.prototype.unserialize	= function(json, PresoUtils) {
 //
 // XXX à changer ici pour prendre en compte les bons attributs
 PForbidPresentation.prototype.updateHTML_programs_and_objects = function() {
-	return;
-	if(this.html.programs && this.filter.programs) {
+	if(this.html.programs && this.forbid.programs) {
 		 this.html.programs.innerHTML = "";
-		 this.html.programs.appendChild( this.filter.programs.Render() );
+		 this.html.programs.appendChild( this.forbid.programs.Render() );
 		 DragDrop.deleteDropZone( this.dropZoneProgramsId );
 		}
-	if(this.html.objects && this.filter.objects) {
+	if(this.html.objects && this.forbid.objects) {
 		 this.html.objects.innerHTML = "";
-		 this.html.objects.appendChild ( this.filter.objects.Render () );
+		 this.html.objects.appendChild ( this.forbid.objects.Render () );
 		 DragDrop.deleteDropZone( this.dropZoneObjectsId );
 		}
-	if(this.html.select_HiddenExpose) {
-		 this.html.select_HiddenExpose.querySelector( 'option.'+this.filter.HideExpose ).setAttribute('selected', 'selected');
+	if(this.html.selectForbidden) {
+		 this.html.selectForbidden.querySelector( 'option[value='+this.forbid.forbidden+']' ).setAttribute('selected', 'selected');
+		}
+	if(this.html.selectActions && this.forbid.objects) {
+		 // call for possible actions and update the select.
+		 this.html.selectActions.innerHTML = '';
+		 // utils.call( '
 		}
 }
 
@@ -90,53 +93,41 @@ PForbidPresentation.prototype.Render	= function() {
 	root.classList.add('PForbidPresentation');
 	if(this.html.programs === null) {
 		 this.divDescription.innerHTML = htmlTemplate;
-		 /*
-		 this.html.select_HiddenExpose = document.createElement('select');
-			this.html.select_HiddenExpose.classList.add( 'HideExpose' );
-			this.html.select_HiddenExpose.innerHTML = '<option class="hide" value="hide">Hide elements</option><option class="expose" value="expose">Expose elements</option>';
-			this.html.select_HiddenExpose.onchange = function() {
-														 self.filter.HideExpose = self.html.select_HiddenExpose.value;
-														}
-			this.divDescription.appendChild( this.html.select_HiddenExpose );
+		
+		// Select actions to be forbidden/allowed
+		 this.html.selectActions	= this.divDescription.querySelector('select.actions');
+		 
+		// Select forbidden/allowed
+		 this.html.selectForbidden	= this.divDescription.querySelector('select.forbidden');
+			this.html.selectForbidden.onchange = function() {
+													 self.forbid.forbidden = (self.html.selectForbidden.value === 'true');
+													}
 
-		// Drop zone for objects to be hidden/exposed
-		 this.html.objects = document.createElement('span');
-			this.html.objects.classList.add('objects');
-			this.html.objects.innerHTML = "Insert a \"Objects Selector\" here";
-			this.divDescription.appendChild( this.html.objects );
-			this.dropZoneObjectsId = DragDrop.newDropZone( this.html.objects
+		// Drop zone for objects to be forbidden/allowed
+		 this.html.objects			= this.divDescription.querySelector('.targets');
+		 this.dropZoneObjectsId = DragDrop.newDropZone( this.html.objects
 									, { acceptedClasse	: ['SelectorNode']
 									  , CSSwhenAccepted	: 'possible2drop'
 									  , CSSwhenOver		: 'ready2drop'
 									  , ondrop			: function(evt, draggedNode, infoObj) {
-											 self.filter.objects = new infoObj.constructor(infoObj).init( '' );
+											 self.forbid.objects = new infoObj.constructor(infoObj).init( '' );
 											 self.updateHTML_programs_and_objects();
 											}
 									  }
 									);
 
-		// label 
-		 this.html.label = document.createElement('span');
-			this.html.label.classList.add( 'labelHide' );
-			this.html.label.innerHTML = " for programs ";
-			this.divDescription.appendChild( this.html.label );
-
 		// Drop zone for programs for which objects will be hidden/exposed
-		 this.html.programs = document.createElement('span');
-			this.html.programs.classList.add('programs');
-			this.html.programs.innerHTML = "Insert a \"Program Selector\" here";
-			this.divDescription.appendChild( this.html.programs );
+		 this.html.programs			= this.divDescription.querySelector('.programs');
 			this.dropZoneProgramsId = DragDrop.newDropZone( this.html.programs
 									, { acceptedClasse	: ['SelectorNode', 'Program']
 									  , CSSwhenAccepted	: 'possible2drop'
 									  , CSSwhenOver		: 'ready2drop'
 									  , ondrop			: function(evt, draggedNode, infoObj) {
-											 self.filter.programs = new infoObj.constructor(infoObj).init( '' );
+											 self.forbid.programs = new infoObj.constructor(infoObj).init( '' );
 											 self.updateHTML_programs_and_objects();
 											}
 									  }
 									);
-		 */
 		} 
 	this.updateHTML_programs_and_objects();
 	return root;

@@ -61,7 +61,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 	var rootPath = __dirname.slice();
 	
 	// OpenHAB
-	
+	/*
 	var openHAB = Factory__OpenHAB.newBrick();
 	openHAB.changeIdTo( 'openHAB' );
 	openHAB.init( { host	: '127.0.0.1'
@@ -87,7 +87,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 							}
 					  );
 	
-	
+	*/
 	// Configure server
 	webServer.app.post( '/saveProgram'
 					  , function(req, res) {
@@ -347,7 +347,8 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 				 if(previousProgram) {
 					 console.log( "Substitute program", previousProgram.id, "by the new one");
 					 pg.substituteIdBy( previousProgram.id );
-					 previousProgram.dispose(); 
+					 try {previousProgram.dispose(); 
+						 } catch(err) {console.trace("Error when disposing previous program", previousProgram.id, err);}
 					}
 				 pg.setParent(parent);
 				 if(pgRootId === '' && parent === null) {pgRootId = pg.id; console.log("Now pgRootId =", pgRootId);}

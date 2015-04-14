@@ -13,6 +13,23 @@ var WhenNodePresentation = function() {
 WhenNodePresentation.prototype = new PnodePresentation();
 WhenNodePresentation.prototype.className = 'WhenNode';
 
+WhenNodePresentation.prototype.init = function(PnodeID, parent, children) {
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	this.PnodeID = PnodeID;
+	this.when = { childEvent	: null
+				, childReaction	: null
+				, varName		: 'brick'
+				, varType		: []
+				};
+	this.configDragVar    = { constructor	: Var_UsePresentation
+							, htmlNode		: null		// this.html.variableName
+							, nodeType		: []		// this.event.varType
+							, id			: null		// this.event.varId
+							, name			: 'brick'	// self.event.eventName
+							};
+	return this;
+}
+
 WhenNodePresentation.prototype.serialize	= function() {
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
 	json.children = []; // info debug to be sure to remove children, should already be empty.
@@ -45,24 +62,6 @@ WhenNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
 	this.configDragVar.config	= { id		: this.configDragVar.id
 								  , name	: this.configDragVar.name
 								  };
-	return this;
-}
-
-WhenNodePresentation.prototype.init = function(PnodeID, parent, children) {
-	PnodePresentation.prototype.init.apply(this, [parent, children]);
-	this.PnodeID = PnodeID;
-	this.html = {};
-	this.when = { childEvent	: null
-				, childReaction	: null
-				, varName		: 'brick'
-				, varType		: []
-				};
-	this.configDragVar    = { constructor	: Var_UsePresentation
-							, htmlNode		: null		// this.html.variableName
-							, nodeType		: []		// this.event.varType
-							, id			: null		// this.event.varId
-							, name			: 'brick'	// self.event.eventName
-							};
 	return this;
 }
 

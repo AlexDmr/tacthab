@@ -33,8 +33,6 @@ var L_Pnodes = {};
 var PnodePresentation = function() {
 	// console.log(this);
 	protoPresentation.prototype.constructor.apply(this, []);
-	this.state	= null;
-	this.html	= {};
 	return this;
 }
 
@@ -51,6 +49,8 @@ PnodePresentation.prototype.init = function(PnodeID, parent, children) {
 	protoPresentation.prototype.init.apply(this, [parent, children]);
 	this.PnodeID = PnodeID;
 	if(this.PnodeID) L_Pnodes[this.PnodeID] = this;
+	this.state	= null;
+	this.html	= {};
 	return this;
 }
 

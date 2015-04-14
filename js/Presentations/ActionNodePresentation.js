@@ -6,10 +6,6 @@ define	( [ './PnodePresentation.js'
 var ActionNodePresentation = function() {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
-	this.action			= { method		: ''
-						  , params		: []
-						  };
-	this.html			= {};
 	return this;
 }
 
@@ -17,8 +13,11 @@ ActionNodePresentation.prototype = new PnodePresentation();
 ActionNodePresentation.prototype.className = 'ActionNode';
 
 ActionNodePresentation.prototype.init = function(PnodeID, parent, children) {
-	PnodePresentation.prototype.init.apply(this, [parent, children]);
-	this.PnodeID = PnodeID;
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	this.action			= { method		: ''
+						  , params		: []
+						  };
+	this.html			= {};
 	return this;
 }
 ActionNodePresentation.prototype.serialize	= function() {

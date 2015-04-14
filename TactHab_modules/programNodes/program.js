@@ -9,7 +9,7 @@ define( [ './parallel.js'
 				, Pdefinition, Pcall, Pnode, Brick) {
 // Definition of a node for programs
 var ProgramNode = function() {
-	 SequenceNode.prototype.constructor.apply(this, []);
+	 SequenceNode.apply(this, []);
 	 return this;
 	}
 
