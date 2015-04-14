@@ -39,7 +39,7 @@ PForbidPresentation.prototype.init = function(PnodeID, parent, children) {
 	return this;
 }
 
-PForbidPresentation.prototype.serialize	= function() {
+PForbidPresentation.prototype.serialize		= function() {
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
 	// Describe action here
 	json.subType	= 'PForbidPresentation';
@@ -67,6 +67,7 @@ PForbidPresentation.prototype.unserialize	= function(json, PresoUtils) {
 //
 // XXX à changer ici pour prendre en compte les bons attributs
 PForbidPresentation.prototype.updateHTML_programs_and_objects = function() {
+	var self = this;
 	if(this.html.programs && this.forbid.programs) {
 		 this.html.programs.innerHTML = "";
 		 this.html.programs.appendChild( this.forbid.programs.Render() );
@@ -82,8 +83,23 @@ PForbidPresentation.prototype.updateHTML_programs_and_objects = function() {
 		}
 	if(this.html.selectActions && this.forbid.objects) {
 		 // call for possible actions and update the select.
-		 this.html.selectActions.innerHTML = '';
-		 // utils.call( '
+		 if(this.PnodeID)
+		 utils.call	( this.PnodeID, 'getESA', []
+					, function(esa) {
+						 var i, option;
+						 console.log("esa", esa);
+						 self.html.selectActions.innerHTML = '';
+						 for(i in esa.actions) {
+							 option = document.createElement('option');
+								option.value = i;
+								option.appendChild( document.createTextNode(i) );
+							 self.html.selectActions.appendChild( option );
+							}
+						 if(self.forbid.mtdName) {
+							 self.html.selectActions.value = self.forbid.mtdName;
+							}
+						}
+					) 
 		}
 }
 

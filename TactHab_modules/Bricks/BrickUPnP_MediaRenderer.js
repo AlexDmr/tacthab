@@ -70,19 +70,9 @@ define( [ './BrickUPnP.js'
 
 	BrickUPnP_MediaRenderer.prototype.getESA			= function() {
 		 var esa = BrickUPnP.prototype.getESA();
-		 esa.events	= esa.events .concat(['Mute', 'TransportState', 'Volume', 'VolumeDB']);
-		 /*
-		   stateVars : ['playState']
-		   states	 : { stateVar: 'play', name: 'PLAYING', enter	: [ {eventName: 'TransportState', op:'equal', value:'PLAYING'} ]
-														  , leave	: [ ]
-														  , update	: [ {eventName: 'TransportState', op:'equal', value:'PLAYING'} ]
-					   }
-		 */
-		 esa.states	= esa.states .concat( [ {name: 'PLAYING', enter:[], leave:[], update:[]}
-										  , {name: 'STOPPED', enter:[], leave:[], update:[]}
-										  ]
-										);
-		 esa.actions= esa.actions.concat([]);
+		 esa.actions	= this.automatePlay.automate.actions;
+		 esa.events		= this.automatePlay.automate.events ;		 
+		 esa.states		= this.automatePlay.automate.states ;
 		 return esa;
 		}
 

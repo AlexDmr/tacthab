@@ -39,6 +39,17 @@ PForbidNode.prototype.dispose		= function() {
 	if(this.forbid.objects ) {this.forbid.objects.dispose (); this.forbid.objects  = null;}
 }
 
+PForbidNode.prototype.getESA		= function() {
+	var res = {events:{}, states:{}, actions:{}}, L;
+	if(this.forbid.objects) {
+		 L = this.forbid.objects.evalSelector();
+		 if(L.length) {
+			 res = L[0].getESA();
+			}
+		}
+	return res;
+}
+
 // API for starting, stopping the instruction
 PForbidNode.prototype.Start	= function() {
 	var res = Pnode.prototype.Start.apply(this, []);
