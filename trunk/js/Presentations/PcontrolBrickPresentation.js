@@ -14,7 +14,7 @@ PcontrolBrickPresentation.prototype = new PnodePresentation();
 PcontrolBrickPresentation.prototype.className = 'PcontrolBrick';
 
 PcontrolBrickPresentation.prototype.init = function(PnodeID, parent, children) {
-	PnodePresentation.prototype.init.apply(this, [parent, children]);
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
 	this.PnodeID = PnodeID;
 	return this;
 }

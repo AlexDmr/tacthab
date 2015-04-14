@@ -6,10 +6,6 @@ define	( [ './PnodePresentation.js'
 var Program_DefinitionPresentation = function() {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
-	this.varDef	= { name	: ''
-				  , expose	: false
-				  };
-	this.html			= {};
 	return this;
 }
 
@@ -17,8 +13,10 @@ Program_DefinitionPresentation.prototype = new PnodePresentation();
 Program_DefinitionPresentation.prototype.className = 'PprogramDeclaration';
 
 Program_DefinitionPresentation.prototype.init = function(PnodeID, parent, children) {
-	PnodePresentation.prototype.init.apply(this, [parent, children]);
-	this.PnodeID = PnodeID;
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	this.varDef	= { name	: ''
+				  , expose	: false
+				  };
 	return this;
 }
 

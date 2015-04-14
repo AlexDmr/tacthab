@@ -24,7 +24,7 @@ Var_DefinitionPresentation.prototype = new PnodePresentation();
 Var_DefinitionPresentation.prototype.className = 'PvariableDeclaration';
 
 Var_DefinitionPresentation.prototype.init = function(PnodeID, parent, children) {
-	PnodePresentation.prototype.init.apply(this, [parent, children]);
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
 	this.PnodeID = PnodeID;
 	return this;
 }

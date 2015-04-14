@@ -10,11 +10,8 @@ var css = document.createElement('link');
 var Program_UsePresentation = function(infoObj) {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
-	this.selector	= { progDefId	: null
-					  , name		: ''
-					  };
-	this.html			= {};
 	if(infoObj) {
+		 this.init();
 		 this.selector.progDefId	= infoObj.config.id;
 		 this.selector.name			= infoObj.config.name;
 		}
@@ -26,8 +23,10 @@ Program_UsePresentation.prototype.className		= 'Pselector_program';
 Program_UsePresentation.prototype.constructor	= Program_UsePresentation
 
 Program_UsePresentation.prototype.init = function(PnodeID, parent, children) {
-	PnodePresentation.prototype.init.apply(this, [parent, children]);
-	this.PnodeID = PnodeID;
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	this.selector	= { progDefId	: null
+					  , name		: ''
+					  };
 	return this;
 }
 

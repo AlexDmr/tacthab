@@ -7,6 +7,7 @@ define( [ './Brick.js'
 	BrickFactory.prototype.constructor = BrickFactory;
 	BrickFactory.prototype.newBrick	= function() {
 		 var n = new this.constr();
+		 // n.init();
 		 return n;
 		}
 	BrickFactory.prototype.removeBrick	= function(brickId) {

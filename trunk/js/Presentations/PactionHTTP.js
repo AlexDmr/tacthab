@@ -16,11 +16,7 @@ var css = document.createElement('link');
 // Defining PactionHTTP
 var PactionHTTP = function() {
 	// console.log(this);
-	this.html			= {};
 	PnodePresentation.prototype.constructor.apply(this, []);
-	this.action			= { method		: 'httpRequest'
-						  , params		: []
-						  };
 	return this;
 }
 
@@ -28,8 +24,10 @@ PactionHTTP.prototype = new PnodePresentation();
 PactionHTTP.prototype.className = 'ActionNode';
 
 PactionHTTP.prototype.init = function(PnodeID, parent, children) {
-	PnodePresentation.prototype.init.apply(this, [parent, children]);
-	this.PnodeID = PnodeID;
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	this.action			= { method		: 'httpRequest'
+						  , params		: []
+						  };
 	return this;
 }
 PactionHTTP.prototype.serialize	= function() {

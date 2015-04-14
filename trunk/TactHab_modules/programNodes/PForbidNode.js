@@ -35,8 +35,8 @@ PForbidNode.prototype.init			= function(parent, children) {
 
 PForbidNode.prototype.dispose		= function() {
 	Pnode.prototype.dispose.apply(this, []);
-	if(this.filter.programs) {this.filter.programs.dispose(); this.filter.programs = null;}
-	if(this.filter.objects ) {this.filter.objects.dispose (); this.filter.objects  = null;}
+	if(this.forbid.programs) {this.forbid.programs.dispose(); this.forbid.programs = null;}
+	if(this.forbid.objects ) {this.forbid.objects.dispose (); this.forbid.objects  = null;}
 }
 
 // API for starting, stopping the instruction
@@ -45,12 +45,12 @@ PForbidNode.prototype.Start	= function() {
 	
 	// Get program
 	var programs;
-	if(this.filter.programs) {
-		 programs = this.filter.programs.evalSelector();
+	if(this.forbid.programs) {
+		 programs = this.forbid.programs.evalSelector();
 		 console.log("RegisterFilterCall for", programs.length, "programs.");
 		} else {programs = [];}
 	
-	// Register this filter
+	// Register this forbid
 	for(var i=0; i<programs.length; i++) {
 		 programs[i].RegisterFilterCall(this);
 		}
@@ -77,8 +77,8 @@ PForbidNode.prototype.doesFilterApplyOnPrameters	= function(call) {
 }
 
 PForbidNode.prototype.applyFilterOn					= function(originalCall, currentCall) {
-	if(this.filter.objects && originalCall.mtdName === this.forbid.mtdName) {
-		var objects = this.filter.objects.evalSelector()
+	if(this.forbid.objects && originalCall.mtdName === this.forbid.mtdName) {
+		var objects = this.forbid.objects.evalSelector()
 		  , filteredObject, i;
 		 if(this.forbid.forbidden) {														// Do we have to remove some targets?
 			 // filteredObject = _.intersection(objects, currentCall.targets);

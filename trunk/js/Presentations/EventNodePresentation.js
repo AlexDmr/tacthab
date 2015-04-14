@@ -5,7 +5,6 @@ define	( [ './PnodePresentation.js'
 		, function(PnodePresentation, DragDrop, utils) {
 // Desfining EventNodePresentation
 var EventNodePresentation = function() {
-	this.html = {};
 	PnodePresentation.prototype.constructor.apply(this, []);
 	return this;
 }
@@ -14,8 +13,7 @@ EventNodePresentation.prototype = new PnodePresentation();
 EventNodePresentation.prototype.className = 'EventNode';
 
 EventNodePresentation.prototype.init = function(PnodeID, parent, children) {
-	PnodePresentation.prototype.init.apply(this, [parent, children]);
-	this.PnodeID = PnodeID;
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
 	return this;
 }
 

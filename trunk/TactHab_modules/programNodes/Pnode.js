@@ -66,7 +66,8 @@ Pnode.prototype.serialize	= function() {
 	if(this.subType) {json.subType = this.subType;}
 	for(var i in this.children) {
 		 // console.log("\tchild", this.children[i].id, this.children[i].className);
-		 json.children.push( this.children[i].serialize() );
+		 try {json.children.push( this.children[i].serialize() );
+			 } catch(err) {console.trace("Error serialiazing", json.children[i], "\n______________________\n", err);}
 		}
 	return json;
 }
@@ -76,7 +77,9 @@ Pnode.prototype.unserialize	= function(json, Putils) {
 	var children = this.children.slice();
 	var i;
 	for(i=0; i<children.length		; i++) {children[i].setParent(null);}
-	for(i=0; i<json.children.length	; i++) {Putils.unserialize(json.children[i], Putils).setParent(this);}
+	for(i=0; i<json.children.length	; i++) {try	{Putils.unserialize(json.children[i], Putils).setParent(this);
+												} catch(err) {console.trace("Error unserializing", json.children[i], "\n______________________\n", err);}
+										   }
 	return this;
 } 
 

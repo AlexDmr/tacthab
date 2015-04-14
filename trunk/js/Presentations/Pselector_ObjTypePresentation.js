@@ -10,11 +10,9 @@ var css = document.createElement('link');
 
 var Pselector_ObjTypePresentation = function(infoObj) {
 	// console.log(this);
-	this.selector	= { objectsType	: null
-					  };
-	this.html		= {};
 	PnodePresentation.prototype.constructor.apply(this, []);
 	if(infoObj) {
+		 this.init();
 		 this.selector.objectsType	= infoObj.config.objectsType;
 		}
 	return this;
@@ -24,8 +22,9 @@ Pselector_ObjTypePresentation.prototype = new PnodePresentation();
 Pselector_ObjTypePresentation.prototype.className = 'Pselector_ObjType';
 
 Pselector_ObjTypePresentation.prototype.init = function(PnodeID, parent, children) {
-	PnodePresentation.prototype.init.apply(this, [parent, children]);
-	this.PnodeID = PnodeID;
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	this.selector	= { objectsType	: null
+					  };
 	return this;
 }
 

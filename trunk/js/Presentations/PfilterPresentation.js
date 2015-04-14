@@ -13,9 +13,7 @@ PfilterPresentation.prototype = new PnodePresentation();
 PfilterPresentation.prototype.className = 'PfilterNode';
 
 PfilterPresentation.prototype.init = function(PnodeID, parent, children) {
-	this.html	= {};
-	this.filter	= {};
-	PnodePresentation.prototype.init.apply(this, [parent, children]);
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
 	this.PnodeID = PnodeID;
 	this.filter		= { programs	: null
 					  , objects		: null
