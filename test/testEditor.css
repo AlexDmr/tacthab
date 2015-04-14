@@ -1,0 +1,56 @@
+#instructionTypes {
+	position	: fixed;
+	top			: 8px;
+	right		: 8px;
+	bottom		: 8px;
+	overflow-y	: scroll;
+	border		: solid black 3px;
+	background	: grey;
+}
+
+#instructionTypes details  > details {
+	margin-left	: 1em;
+}
+
+div.instructionType {
+	background	: #6BF;
+	border		: solid black 1px;
+	margin		: 1px;
+}
+
+div.instructionType.Implemented {
+	background	: #6F6;
+}
+
+div.Pnode {
+	background	: grey;
+}
+
+div.Pnode.state_1 {
+	background	: green;
+}
+
+html, body {
+	height		: 100%;
+	margin		: 0px;
+	padding		: 0px;
+}
+
+#program {
+	margin		: 0px;
+	height		: 100%;
+	padding-top	: 1.5em;
+}
+
+#program div.children {
+	margin-left	: 10px;
+	border-left	: solid black 1px;
+}
+
+.possible2drop {
+	background	: #FFC;
+}
+
+.ready2drop {
+	background	: #FF5;
+}

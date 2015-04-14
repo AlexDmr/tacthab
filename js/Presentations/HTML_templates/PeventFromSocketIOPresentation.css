@@ -1,0 +1,9 @@
+.PeventFromSocketIOPresentation   {
+	background	: yellow;
+	border		: solid black 1px;
+	padding		: 0.2em;
+}
+
+.PeventFromSocketIOPresentation  > .description {
+
+}

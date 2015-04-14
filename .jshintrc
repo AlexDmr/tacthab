@@ -1,0 +1,23 @@
+{
+  "undef"		: true,
+  "unused"		: true,
+  "laxbreak"	: true,
+  "laxcomma"	: true,
+  "asi"			: true,
+  "esnext"		: true,
+  "devel"		: true,
+  "latedef"		: true,
+  "undef"		: true,
+  "unused"		: "vars",
+  "globals"		: { "define"	: false
+				  , "error"		: false
+				  , "document"	: false
+				  , "__dirname"	: false
+				  , "require"	: false
+				  , "setTimeout"	: false
+				  , "clearTimeout"	: false
+				  , "clearInterval"	: false
+				  , "exports"		: false
+				  , "DOMParser"		: false
+				  }
+}

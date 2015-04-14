@@ -1,0 +1,37 @@
+<!doctype html>
+
+<html>
+<head>
+	<meta charset="utf-8">
+	<script data-main="test/testEditor.js" src="js/require.js"></script>
+	<!--<script src="/socket.io/socket.io.js"></script>-->
+	<link href="test/testEditor.css" rel="stylesheet" type="text/css"></link>
+	<link href="test/topMenu.css"    rel="stylesheet" type="text/css"></link>
+</head>
+<body>
+	<!--<h1>Test program editor</h1>-->
+	<div id="serverCommands" class="topMenu">
+		<span class="item">
+			<span class="label">Server</span>
+			<div class="subItems">
+				<div class="subItems">
+					<input type="text" id="fileName"/>
+					<button id="DiskSaveToServer"  >Save to server</button>
+					<button id="DiskLoadFromServer">Load from server</button>
+				</div>
+				<button id="sendToServer"  >Serialize to server  </button>
+				<button id="loadFromServer">Unserialize from server</button>
+			</div>
+		</span>
+		<span class="item">
+			<span class="label">Program</span>
+			<div class="subItems">
+				<button id="startProgram">Start</button>
+				<button id="stopProgram">Stop</button>
+			</div>
+		</span>
+	</div>
+	<div id="instructionTypes"></div>
+	<div id="program"></div>
+</body>
+</html>
