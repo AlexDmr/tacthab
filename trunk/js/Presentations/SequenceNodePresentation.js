@@ -20,7 +20,7 @@ SequenceNodePresentation.prototype.serialize = function() {
 	 return json;
 	}
 SequenceNodePresentation.prototype.Render	= function() {
-	var self = this;
+	// var self = this;
 	var root = PnodeNChildPresentation.prototype.Render.apply(this, []);
 	root.classList.add('SequenceNode')
 	this.divDescription.innerText = 'SequenceNode ' + this.PnodeID + ' (presentation ' + this.uid + ')' ;

@@ -114,7 +114,7 @@ PnodePresentation.prototype.setState	= function(prev, next) {
  * @returns {object} HTML root node representing {@link PnodePresentation}.
  */
 PnodePresentation.prototype.Render		= function() {
-	var self = this;
+	// var self = this;
 	var root = protoPresentation.prototype.Render.apply(this, []);
 	root.classList.add('Pnode');
 	if(this.state) {root.classList.add(this.state);}

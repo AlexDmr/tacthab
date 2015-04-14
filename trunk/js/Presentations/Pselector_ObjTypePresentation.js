@@ -23,7 +23,8 @@ Pselector_ObjTypePresentation.prototype.className = 'Pselector_ObjType';
 
 Pselector_ObjTypePresentation.prototype.init = function(PnodeID, parent, children) {
 	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
-	this.selector	= { objectsType	: null
+	if(typeof this.selector === 'undefined') {this.selector = {};}
+	this.selector	= { objectsType	: this.selector.objectsType	|| null
 					  };
 	return this;
 }

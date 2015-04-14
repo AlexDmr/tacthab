@@ -61,7 +61,7 @@ PactionHTTP.prototype.unserialize	= function(json, PresoUtils) {
 }
 
 PactionHTTP.prototype.Render	= function() {
-	var self = this;
+	// var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);
 	root.classList.add('ActionNode');
 	root.classList.add('PactionHTTP');
