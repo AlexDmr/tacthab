@@ -15,8 +15,6 @@ var css = document.createElement('link');
 	document.head.appendChild(css);
 	
 var PeventBrickAppear = function() {
-	this.event = {};
-	this.html  = {};
 	EventNodePresentation.prototype.constructor.apply(this, []);
 	return this;
 }
@@ -24,7 +22,12 @@ var PeventBrickAppear = function() {
 PeventBrickAppear.prototype = new EventNodePresentation();
 PeventBrickAppear.prototype.className = 'PeventBrickAppear';
 
-PeventBrickAppear.prototype.serialize = function() {
+PeventBrickAppear.prototype.init		= function(PnodeID, parent, children) {
+	EventNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	return this;
+}
+
+PeventBrickAppear.prototype.serialize	= function() {
 	 var json = EventNodePresentation.prototype.serialize.apply(this, []);
 	 json.subType = 'PeventBrickAppear';
 	 json.eventNode  = 	{ targets	: ['ProtoBrick']
@@ -80,7 +83,11 @@ PeventBrickAppear.prototype.Render	= function() {
 							  , CSSwhenAccepted	: 'possible2drop'
 							  , CSSwhenOver		: 'ready2drop'
 							  , ondrop			: function(evt, draggedNode, infoObj) {
-									 var Pnode = new infoObj.constructor(infoObj).init( '' );
+									 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																				, undefined	// parent
+																				, undefined	// children
+																				, infoObj
+																				);
 									 self.appendChild( Pnode );
 									}
 							  }

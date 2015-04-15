@@ -3,26 +3,24 @@ define	( [ './Program_UsePresentation.js'
 		  ]
 		, function(Program_UsePresentation, DragDrop) {
 
-var Program_ExposedAPI_elementPresentation = function(infoObj) {
+var Program_ExposedAPI_elementPresentation = function() {
 	// console.log(this);
-	Program_UsePresentation.apply(this, [infoObj]);
-	if(infoObj) {
-		 this.init();
-		 this.selector.variableId	= infoObj.config.variableId;
-		 this.selector.variableName	= infoObj.config.variableName;
-		 this.selector.variableTypes= infoObj.config.variableTypes;
-		}
+	Program_UsePresentation.apply(this, []);
 	return this;
 }
 
 Program_ExposedAPI_elementPresentation.prototype = new Program_UsePresentation();
 Program_ExposedAPI_elementPresentation.prototype.className = 'Pselector_variable';
 
-Program_ExposedAPI_elementPresentation.prototype.init		= function(PnodeID, parent, children) {
-	Program_UsePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
-	if(typeof this.selector === 'undefined') {this.selector = {};}
-	this.selector.variableId	= this.selector.variableId		|| null;
-	this.selector.variableTypes	= this.selector.variableTypes	|| [];
+Program_ExposedAPI_elementPresentation.prototype.init		= function(PnodeID, parent, children, infoObj) {
+	Program_UsePresentation.prototype.init.apply(this, [PnodeID, parent, children, infoObj]);
+	if(infoObj) {
+		 this.selector.variableId	= infoObj.config.variableId;
+		 this.selector.variableName	= infoObj.config.variableName;
+		 this.selector.variableTypes= infoObj.config.variableTypes;
+		} else {this.selector.variableId	= null;
+				this.selector.variableTypes	= [];
+			   }
 	return this;
 }
 

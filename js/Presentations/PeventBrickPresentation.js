@@ -22,15 +22,18 @@ var css = document.createElement('link');
 	document.head.appendChild( css );
 
 var PeventBrickPresentation = function() {
-	this.html  = {};
-	EventNodePresentation.prototype.constructor.apply(this, []);
-	this.event = {filters:[]};
+	EventNodePresentation.apply(this, []);
 	return this;
 }
 
 PeventBrickPresentation.prototype = new EventNodePresentation();
 PeventBrickPresentation.prototype.className = 'PeventBrick';
 
+PeventBrickPresentation.prototype.init		= function(PnodeID, parent, children) {
+	EventNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	this.event = {filters:[]};
+	return this;
+}
 
 PeventBrickPresentation.prototype.serialize = function() {
 	var json = EventNodePresentation.prototype.serialize.apply(this, []);
@@ -126,7 +129,11 @@ PeventBrickPresentation.prototype.Render	= function() {
 								  , CSSwhenAccepted	: 'possible2drop'
 								  , CSSwhenOver		: 'ready2drop'
 								  , ondrop			: function(evt, draggedNode, infoObj) {
-										 var Pnode = new infoObj.constructor(infoObj).init( '' );
+										 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																					, undefined	// parent
+																					, undefined	// children
+																					, infoObj
+																					);
 										 self.appendChild( Pnode );
 										}
 								  }

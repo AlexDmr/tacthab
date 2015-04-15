@@ -13,10 +13,6 @@ var css = document.createElement('link');
 var Var_DefinitionPresentation = function() {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
-	this.varDef			= { name	: ''
-						  , expose	: false
-						  };
-	this.html			= {};
 	return this;
 }
 
@@ -25,7 +21,9 @@ Var_DefinitionPresentation.prototype.className = 'PvariableDeclaration';
 
 Var_DefinitionPresentation.prototype.init = function(PnodeID, parent, children) {
 	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
-	this.PnodeID = PnodeID;
+	this.varDef			= { name	: ''
+						  , expose	: false
+						  };
 	return this;
 }
 Var_DefinitionPresentation.prototype.serialize	= function() {
@@ -99,7 +97,11 @@ Var_DefinitionPresentation.prototype.Render	= function() {
 								  , CSSwhenAccepted	: 'possible2drop'
 								  , CSSwhenOver		: 'ready2drop'
 								  , ondrop			: function(evt, draggedNode, infoObj) {
-										 var Pnode = new infoObj.constructor(infoObj).init( '' );
+										 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																					, undefined	// parent
+																					, undefined	// children
+																					, infoObj
+																					);
 										 self.appendChild( Pnode );
 										}
 								  }

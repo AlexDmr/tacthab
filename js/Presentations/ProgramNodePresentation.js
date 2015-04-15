@@ -99,7 +99,11 @@ ProgramNodePresentation.prototype.Render	= function() {
 								  , CSSwhenAccepted	: 'possible2drop'
 								  , CSSwhenOver		: 'ready2drop'
 								  , ondrop			: function(evt, draggedNode, infoObj) {
-										 var Pnode = new infoObj.constructor().init( '' );
+										 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																					, undefined	// parent
+																					, undefined	// children
+																					, infoObj
+																					);
 										 self.appendDefinitionNode( Pnode );
 										}
 								  }
@@ -119,7 +123,11 @@ ProgramNodePresentation.prototype.Render	= function() {
 								  , CSSwhenAccepted	: 'possible2drop'
 								  , CSSwhenOver		: 'ready2drop'
 								  , ondrop			: function(evt, draggedNode, infoObj) {
-										 var Pnode = new infoObj.constructor().init( '' );
+										 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																					, undefined	// parent
+																					, undefined	// children
+																					, infoObj
+																					);
 										 self.appendInstructionNode( Pnode );
 										}
 								  }

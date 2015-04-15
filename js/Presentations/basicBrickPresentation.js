@@ -5,17 +5,21 @@ define	( [ './PnodePresentation.js'
 				  , SelectorNodePresentation
 				  ) {
 
-function basicBrickPresentation(infoObj) {
-	SelectorNodePresentation.apply(this, [infoObj]);
-	// this.selector.type.push( 'MediaRenderer' );
-	if(infoObj) this.selector.objectId = infoObj.config.uuid;
+function basicBrickPresentation() {
+	SelectorNodePresentation.apply(this, []);
 }
 
 basicBrickPresentation.prototype = new SelectorNodePresentation();
 basicBrickPresentation.prototype.className = 'Pselector_ObjInstance';
 
+basicBrickPresentation.prototype.init	= function(PnodeID, parent, children, infoObj) {
+	SelectorNodePresentation.prototype.init.apply(this, [PnodeID, parent, children, infoObj]);
+	if(infoObj) this.selector.objectId = infoObj.config.uuid;
+	return this;
+}
+
 basicBrickPresentation.prototype.Render = function() {
-	var self = this;
+	// var self = this;
 	var root = SelectorNodePresentation.prototype.Render.apply(this, []);
 	// Call server for the latest description of Media Player this.selector.objectId
 	root.innerHTML = "";

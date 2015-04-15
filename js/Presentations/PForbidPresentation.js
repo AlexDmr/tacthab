@@ -87,7 +87,7 @@ PForbidPresentation.prototype.updateHTML_programs_and_objects = function() {
 		 utils.call	( this.PnodeID, 'getESA', []
 					, function(esa) {
 						 var i, option;
-						 console.log("esa", esa);
+						 // console.log("esa", esa);
 						 self.html.selectActions.innerHTML = '';
 						 for(i in esa.actions) {
 							 option = document.createElement('option');
@@ -126,7 +126,12 @@ PForbidPresentation.prototype.Render	= function() {
 									  , CSSwhenAccepted	: 'possible2drop'
 									  , CSSwhenOver		: 'ready2drop'
 									  , ondrop			: function(evt, draggedNode, infoObj) {
-											 self.forbid.objects = new infoObj.constructor(infoObj).init( '' );
+											 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																						, undefined	// parent
+																						, undefined	// children
+																						, infoObj
+																						);
+											 self.forbid.objects = Pnode; // new infoObj.constructor(infoObj).init( '' );
 											 self.updateHTML_programs_and_objects();
 											}
 									  }
@@ -139,7 +144,12 @@ PForbidPresentation.prototype.Render	= function() {
 									  , CSSwhenAccepted	: 'possible2drop'
 									  , CSSwhenOver		: 'ready2drop'
 									  , ondrop			: function(evt, draggedNode, infoObj) {
-											 self.forbid.programs = new infoObj.constructor(infoObj).init( '' );
+											 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																						, undefined	// parent
+																						, undefined	// children
+																						, infoObj
+																						);
+											 self.forbid.programs = Pnode; //new infoObj.constructor(infoObj).init( '' );
 											 self.updateHTML_programs_and_objects();
 											}
 									  }

@@ -2,21 +2,27 @@ define	( [ './PnodePresentation.js'
 		  ]
 		, function(PnodePresentation) {
 
-function SelectorNodePresentation(infoObj) {
+function SelectorNodePresentation() {
 	PnodePresentation.apply(this, []);
 	// console.log("SelectorNodePresentation::constructor", infoObj);
-	this.selector = { name: 'There should be a name here'
-					, type: ['selector']
-					};
-	if(infoObj) {
-		 this.selector.name = infoObj.config.name;
-		}
 }
 
 SelectorNodePresentation.prototype = new PnodePresentation();
 SelectorNodePresentation.prototype.className = 'SelectorNode';
 
-SelectorNodePresentation.prototype.Render = function() {
+SelectorNodePresentation.prototype.init		= function(PnodeID, parent, children, infoObj) {
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children, infoObj]);
+	this.selector = { name: 'There should be a name here'
+					, type: ['selector']
+					};
+	if(infoObj) {
+		 this.init();
+		 this.selector.name = infoObj.config.name;
+		}
+	return this;
+}
+
+SelectorNodePresentation.prototype.Render	= function() {
 	var root = PnodePresentation.prototype.Render.apply(this, []);
 	this.divDescription.innerHTML = '';
 	this.divDescription.appendChild( document.createTextNode(this.selector.name) );

@@ -6,13 +6,17 @@ define	( [ './PnodePresentation.js'
 
 function PprogramActionPresentation() {
 	ActionNodePresentation.apply(this, []);
-	this.html = {};
-	this.action.method = 'Start';
 	return this;
 }
 
 PprogramActionPresentation.prototype = new ActionNodePresentation();
 PprogramActionPresentation.prototype.className = 'ActionNode';
+
+PprogramActionPresentation.prototype.init		= function(PnodeID, parent, children) {
+	ActionNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	this.action.method = 'Start';
+	return this;
+}
 
 PprogramActionPresentation.prototype.serialize	= function() {
 	var json = ActionNodePresentation.prototype.serialize.apply(this, []);

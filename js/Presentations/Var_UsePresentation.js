@@ -7,26 +7,24 @@ var css = document.createElement('link');
 	css.setAttribute('href', 'css/Var_UsePresentation.css');
 	document.head.appendChild( css );
 
-var Var_UsePresentation = function(infoObj) {
+var Var_UsePresentation = function() {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
-	if(infoObj) {
-		 this.init();
-		 this.selector.variableId	= infoObj.config.id;
-		 this.selector.name			= infoObj.config.name;
-		}
 	return this;
 }
 
 Var_UsePresentation.prototype = new PnodePresentation();
 Var_UsePresentation.prototype.className = 'Pselector_variable';
 
-Var_UsePresentation.prototype.init = function(PnodeID, parent, children) {
-	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
-	if(typeof this.selector === 'undefined') {this.selector = {};}
-	this.selector	= { variableId	: this.selector.variableId	|| null
-					  , name		: this.selector.name		|| ''
+Var_UsePresentation.prototype.init = function(PnodeID, parent, children, infoObj) {
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children, infoObj]);
+	this.selector	= { variableId	: null
+					  , name		: ''
 					  };
+	if(infoObj) {
+		 this.selector.variableId	= infoObj.config.id;
+		 this.selector.name			= infoObj.config.name;
+		}
 	return this;
 }
 

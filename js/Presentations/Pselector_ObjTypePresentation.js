@@ -8,24 +8,22 @@ var css = document.createElement('link');
 	css.setAttribute('href', 'js/Presentations/HTML_templates/Pselector_ObjTypePresentation.css');
 	document.head.appendChild( css );
 
-var Pselector_ObjTypePresentation = function(infoObj) {
+var Pselector_ObjTypePresentation = function() {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
-	if(infoObj) {
-		 this.init();
-		 this.selector.objectsType	= infoObj.config.objectsType;
-		}
 	return this;
 }
 
 Pselector_ObjTypePresentation.prototype = new PnodePresentation();
 Pselector_ObjTypePresentation.prototype.className = 'Pselector_ObjType';
 
-Pselector_ObjTypePresentation.prototype.init = function(PnodeID, parent, children) {
-	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
-	if(typeof this.selector === 'undefined') {this.selector = {};}
-	this.selector	= { objectsType	: this.selector.objectsType	|| null
+Pselector_ObjTypePresentation.prototype.init = function(PnodeID, parent, children, infoObj) {
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children, infoObj]);
+	this.selector	= { objectsType	: null
 					  };
+	if(infoObj) {
+		 this.selector.objectsType	= infoObj.config.objectsType;
+		}
 	return this;
 }
 

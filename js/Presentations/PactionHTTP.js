@@ -16,7 +16,7 @@ var css = document.createElement('link');
 // Defining PactionHTTP
 var PactionHTTP = function() {
 	// console.log(this);
-	PnodePresentation.prototype.constructor.apply(this, []);
+	PnodePresentation.apply(this, []);
 	return this;
 }
 

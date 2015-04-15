@@ -21,13 +21,17 @@ utils.XHR( 'GET', 'js/Presentations/HTML_templates/PeventFromSocketIOPresentatio
 // Defining PeventFromSocketIOPresentation
 var PeventFromSocketIOPresentation = function() {
 	EventNodePresentation.prototype.constructor.apply(this, []);
-	this.event = {topic: '', filters:[]};
-	this.html = {};
 	return this;
 }
 
 PeventFromSocketIOPresentation.prototype = new EventNodePresentation();
 PeventFromSocketIOPresentation.prototype.className = 'PeventFromSocketIO';
+
+PeventFromSocketIOPresentation.prototype.init		= function(PnodeID, parent, children) {
+	EventNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	this.event = {topic: '', filters:[]};
+	return this;
+}
 
 PeventFromSocketIOPresentation.prototype.serialize	= function() {
 	var json = EventNodePresentation.prototype.serialize.apply(this, []);

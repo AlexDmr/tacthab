@@ -5,7 +5,7 @@ define	( [ './PnodePresentation.js'
 		, function(PnodePresentation, DragDrop, utils) {
 // Desfining EventNodePresentation
 var EventNodePresentation = function() {
-	PnodePresentation.prototype.constructor.apply(this, []);
+	PnodePresentation.apply(this, []);
 	return this;
 }
 

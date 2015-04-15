@@ -7,14 +7,9 @@ var css = document.createElement('link');
 	css.setAttribute('href', 'css/Program_UsePresentation.css');
 	document.head.appendChild( css );
 
-var Program_UsePresentation = function(infoObj) {
+var Program_UsePresentation = function() {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);
-	if(infoObj) {
-		 this.init();
-		 this.selector.progDefId	= infoObj.config.id;
-		 this.selector.name			= infoObj.config.name;
-		}
 	return this;
 }
 
@@ -22,12 +17,15 @@ Program_UsePresentation.prototype = new PnodePresentation();
 Program_UsePresentation.prototype.className		= 'Pselector_program';
 Program_UsePresentation.prototype.constructor	= Program_UsePresentation
 
-Program_UsePresentation.prototype.init = function(PnodeID, parent, children) {
-	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
-	if(typeof this.selector === 'undefined') {this.selector = {};}
-	this.selector	= { progDefId	: this.selector.progDefId	|| null
-					  , name		: this.selector.name		|| ''
+Program_UsePresentation.prototype.init = function(PnodeID, parent, children, infoObj) {
+	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children, infoObj]);
+	this.selector	= { progDefId	: null
+					  , name		: ''
 					  };
+	if(infoObj) {
+		 this.selector.progDefId	= infoObj.config.id;
+		 this.selector.name			= infoObj.config.name;
+		}
 	return this;
 }
 

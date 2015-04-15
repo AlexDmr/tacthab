@@ -85,7 +85,12 @@ WhenNodePresentation.prototype.Render	= function() {
 								  , CSSwhenOver		: 'ready2drop'
 								  , ondrop			: function(evt, draggedNode, infoObj) {
 										 self.removeChild( self.when.childEvent );
-										 self.when.childEvent = new infoObj.constructor(infoObj).init( '' );
+										 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																					, undefined	// parent
+																					, undefined	// children
+																					, infoObj
+																					);
+										 self.when.childEvent = Pnode; //new infoObj.constructor(infoObj).init( '' );
 										 self.divEvent.innerText = '';
 										 self.appendChild(  self.when.childEvent );
 										 // DragDrop.deleteDropZone( self.dropZoneEventId );
@@ -121,7 +126,12 @@ WhenNodePresentation.prototype.Render	= function() {
 								  , CSSwhenOver		: 'ready2drop'
 								  , ondrop			: function(evt, draggedNode, infoObj) {
 										 self.removeChild( self.when.childReaction );
-										 self.when.childReaction = new infoObj.constructor(infoObj).init( '' );
+										 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																					, undefined	// parent
+																					, undefined	// children
+																					, infoObj
+																					);
+										 self.when.childReaction = Pnode; //new infoObj.constructor(infoObj).init( '' );
 										 self.divReaction.innerText = '';
 										 self.appendChild( self.when.childReaction );
 										 // DragDrop.deleteDropZone( self.dropZoneReactionId );

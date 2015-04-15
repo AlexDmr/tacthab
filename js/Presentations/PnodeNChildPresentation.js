@@ -5,7 +5,7 @@ define	( [ './PnodePresentation.js'
 
 var PnodeNChildPresentation = function() {
 	// console.log(this);
-	PnodePresentation.prototype.constructor.apply(this, []);
+	PnodePresentation.apply(this, []);
 	return this;
 }
 
@@ -34,7 +34,11 @@ PnodeNChildPresentation.prototype.Render	= function() {
 								  , CSSwhenAccepted	: 'possible2drop'
 								  , CSSwhenOver		: 'ready2drop'
 								  , ondrop			: function(evt, draggedNode, infoObj) {
-										 var Pnode = new infoObj.constructor(infoObj).init( '' );
+										 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																					, undefined	// parent
+																					, undefined	// children
+																					, infoObj
+																					);
 										 self.appendChild( Pnode );
 										}
 								  }

@@ -8,16 +8,22 @@ define	( [ './PnodePresentation.js'
 				  , utils
 				  ) {
 
-function MR_Instance_SelectorNodePresentation(infoObj) {
-	SelectorNodePresentation.apply(this, [infoObj]);
-	this.selector.type.push( 'MediaRenderer' );
-	if(infoObj) this.selector.objectId = infoObj.config.uuid;
+function MR_Instance_SelectorNodePresentation() {
+	SelectorNodePresentation.apply(this, []);
+	return this;
 }
 
 MR_Instance_SelectorNodePresentation.prototype = new SelectorNodePresentation();
 MR_Instance_SelectorNodePresentation.prototype.className = 'Pselector_ObjInstance';
 
-MR_Instance_SelectorNodePresentation.prototype.Render = function() {
+MR_Instance_SelectorNodePresentation.prototype.init		= function(PnodeID, parent, children, infoObj) {
+	SelectorNodePresentation.prototype.init.apply(this, [PnodeID, parent, children, infoObj]);
+	this.selector.type.push( 'MediaRenderer' );
+	if(infoObj) this.selector.objectId = infoObj.config.uuid;
+	return this;
+}
+
+MR_Instance_SelectorNodePresentation.prototype.Render	= function() {
 	var self = this;
 	var root = SelectorNodePresentation.prototype.Render.apply(this, []);
 	// Call server for the latest description of Media Player this.selector.objectId
