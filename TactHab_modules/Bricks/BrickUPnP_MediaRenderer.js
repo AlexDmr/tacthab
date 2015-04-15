@@ -53,9 +53,11 @@ define( [ './BrickUPnP.js'
 															  }
 												, events	: [ 'PLAYING', 'STOPPED', 'PAUSED']
 												, eventSrc	: self
-												, actions	: { PLAY	: {eventName: 'TransportState', value:'PLAYING'			}
-															  , STOP	: {eventName: 'TransportState', value:'STOPPED'			}
-															  , PAUSED	: {eventName: 'TransportState', value:'PAUSED_PLAYBACK'	}
+												, actions	: { Play		: {eventName: 'TransportState', value:'PLAYING'			}
+															  , Stop		: {eventName: 'TransportState', value:'STOPPED'			}
+															  , Pause		: {eventName: 'TransportState', value:'PAUSED_PLAYBACK'	}
+															  , setVolume	: {}
+															  , goToTime	: {}
 															  }
 												}
 											);
@@ -184,7 +186,7 @@ define( [ './BrickUPnP.js'
 								}
 							);
 		}
-	BrickUPnP_MediaRenderer.prototype.GetVolume	= function(callback) {
+	BrickUPnP_MediaRenderer.prototype.getVolume	= function(callback) {
 		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:RenderingControl'];
 		 service.callAction	( 'GetVolume'
 							, { InstanceID		: 0
@@ -198,7 +200,7 @@ define( [ './BrickUPnP.js'
 								}
 							);
 		}
-	BrickUPnP_MediaRenderer.prototype.SetVolume	= function(volume, cb) {
+	BrickUPnP_MediaRenderer.prototype.setVolume	= function(volume, cb) {
 		 volume = Math.min(100, Math.max(0, Math.round(volume)));
 		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:RenderingControl'];
 		 service.callAction	( 'SetVolume'

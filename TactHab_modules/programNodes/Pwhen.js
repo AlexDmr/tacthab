@@ -30,6 +30,7 @@ WhenNode.prototype.init			= function(parent, children) {
 }
 
 WhenNode.prototype.serialize	= function() {
+	// console.log("<WhenNode::serialize id=", this.id, ">");
 	if(this.when.childEvent   ) {this.when.childEvent.setParent    (null);}
 	if(this.when.childReaction) {this.when.childReaction.setParent (null);}
 	var json = Pnode.prototype.serialize.apply(this, []);
@@ -47,6 +48,7 @@ WhenNode.prototype.serialize	= function() {
 	if(this.when.childReaction) {json.when.childReaction	= this.when.childReaction.serialize();
 								}
 
+	// console.log("</WhenNode::serialize id=", this.id, ">");
 	return json;
 }
 
@@ -104,7 +106,9 @@ WhenNode.prototype.eventFromChild = function(child, event) {
 		 this.when.childEvent.Stop();
 		 // Start the thenNode
 		 if(this.when.childReaction) {
-			 this.implicitVariableValue = Brick.prototype.getBrickFromId( event.brickId );
+			 if(event && event.brickId) {
+				 this.implicitVariableValue = Brick.prototype.getBrickFromId( event.brickId );
+				} else {this.implicitVariableValue = null;}
 			 this.when.childReaction.Start();
 			}
 		} else {error('WhenNode::eventFromChild received an event from a child wich is not the eventNode.');}

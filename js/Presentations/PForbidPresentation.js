@@ -95,9 +95,9 @@ PForbidPresentation.prototype.updateHTML_programs_and_objects = function() {
 								option.appendChild( document.createTextNode(i) );
 							 self.html.selectActions.appendChild( option );
 							}
-						 if(self.forbid.mtdName) {
-							 self.html.selectActions.value = self.forbid.mtdName;
-							}
+						 if(self.forbid.action) {
+							 self.html.selectActions.value = self.forbid.action;
+							} else {self.forbid.action = option.value;}
 						}
 					) 
 		}
@@ -112,6 +112,7 @@ PForbidPresentation.prototype.Render	= function() {
 		
 		// Select actions to be forbidden/allowed
 		 this.html.selectActions	= this.divDescription.querySelector('select.actions');
+		 this.html.selectActions.onchange = function() {self.forbid.action = self.html.selectActions.value;}
 		 
 		// Select forbidden/allowed
 		 this.html.selectForbidden	= this.divDescription.querySelector('select.forbidden');

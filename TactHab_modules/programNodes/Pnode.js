@@ -64,10 +64,10 @@ Pnode.prototype.serialize	= function() {
 				, children: []
 				};
 	if(this.subType) {json.subType = this.subType;}
-	for(var i in this.children) {
+	for(var i=0; i<this.children.length; i++) {
 		 // console.log("\tchild", this.children[i].id, this.children[i].className);
 		 try {json.children.push( this.children[i].serialize() );
-			 } catch(err) {console.trace("Error serialiazing", json.children[i], "\n______________________\n", err);}
+			 } catch(err) {console.trace("Error in",  this.id, this.className,"serialiazing children", i, "\n______________________\n", err);}
 		}
 	return json;
 }

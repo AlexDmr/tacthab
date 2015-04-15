@@ -108,8 +108,10 @@ Pselector_variable.prototype.updateType = function() {
 		}
 	return this.selector.type;
 }
+Pselector_variable.prototype.getRelatedTypes = Pselector_variable.prototype.updateType;
 
 Pselector_variable.prototype.serialize	= function() {
+	// console.log("<Pselector_variable::serialize id=", this.id, ">");
 	var context = this.getContext();
 	var json =	Pselector.prototype.serialize.apply(this, []);
 	json.selector.variableId	= this.selector.variableId;
@@ -136,6 +138,7 @@ Pselector_variable.prototype.serialize	= function() {
 						   }
 			   }
 	
+	// console.log("</Pselector_variable::serialize id=", this.id, ">");
 	return json;
 }
 

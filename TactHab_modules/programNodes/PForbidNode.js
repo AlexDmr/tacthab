@@ -26,7 +26,7 @@ PForbidNode.prototype.init			= function(parent, children) {
 	Pnode.prototype.init.apply(this, [parent, children]);
 	this.forbid		= { programs	: null
 					  , objects		: null
-					  , mtdName		: ''
+					  , action		: ''
 					  , parameters	: []
 					  , forbidden	: true
 					  };
@@ -78,9 +78,9 @@ PForbidNode.prototype.Stop	= function() {
 
 PForbidNode.prototype.doesFilterApplyOnPrameters	= function(call) {
 	var op, value;
-	for(var i=0; i<this.parameters.length; i++) {
-		 op		= this.parameters[i].op;
-		 value	= this.parameters[i].value;
+	for(var i=0; i<this.forbid.parameters.length; i++) {
+		 op		= this.forbid.parameters[i].op;
+		 value	= this.forbid.parameters[i].value;
 		 if(  call.parameters.length
 		   && !OP[op](call.parameters, value) ) {return false;}
 		}
@@ -88,7 +88,7 @@ PForbidNode.prototype.doesFilterApplyOnPrameters	= function(call) {
 }
 
 PForbidNode.prototype.applyFilterOn					= function(originalCall, currentCall) {
-	if(this.forbid.objects && originalCall.mtdName === this.forbid.mtdName) {
+	if(this.forbid.objects && originalCall.mtdName === this.forbid.action) {
 		var objects = this.forbid.objects.evalSelector()
 		  , filteredObject, i;
 		 if(this.forbid.forbidden) {														// Do we have to remove some targets?

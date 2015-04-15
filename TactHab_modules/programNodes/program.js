@@ -113,21 +113,25 @@ ProgramNode.prototype.RegisterFilterCall	= function(filterCallNode) {
 
 ProgramNode.prototype.call					= function(call) {
 	// Filter call
-	for(var i=0; i<this.filterCallNodes.length; i++) {
-		 this.filterCallNodes[i].applyFilterOn( call );
-		}
+	var actualCall;
+	if(this.filterCallNodes.length) {
+		 actualCall = call.newCopy();
+		 for(var i=0; i<this.filterCallNodes.length; i++) {
+			 this.filterCallNodes[i].applyFilterOn( call, actualCall );
+			}
+		} else {actualCall = call;}
 	
 	// Propagate an action call if it is not forbidden
 	if(this.parent) {
-		 return this.parent.call(call);
-		} else {call.execute();}
+		 return this.parent.call(actualCall);
+		} else {actualCall.execute();}
 }
 
 /**
   * Managing context
 */
 ProgramNode.prototype.getLocalVariables	= function() {
-	var variables = {}, def, varId;
+	var variables = {}, def, varId, i;
 	for(i=0; i<this.definitions.children.length; i++) {
 		 def = this.definitions.children[i]; // Variable definition
 		 varId = def.getSelectorId()
@@ -179,7 +183,7 @@ ProgramNode.prototype.getContext		= function() {
 		}
 		
 	// 3) Delete variables that are "empty" with respect to the context
-	var variables = {}, variable, L, v, L_str;
+	var variables = {}, variable, L, v;
 	for(v in context.variables) {
 		 variable = context.variables[v];
 		 L = variable.evalSelector();
