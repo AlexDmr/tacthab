@@ -42,6 +42,21 @@ var utils = {
 							}
 						);
 		}
+	, getUrlEncodedParameters	: function(a) {
+		 if(typeof(a) === 'string') {
+			 a = a.split('&');
+			}
+		 if (a === "") return {};
+		 var b = {};
+		 for (var i = 0; i < a.length; ++i) {
+			var p=a[i].split('=', 2);
+			if (p.length == 1)
+				b[ decodeURIComponent(p[0]) ] = "";
+			else
+				b[ decodeURIComponent(p[0]) ] = decodeURIComponent(p[1].replace(/\+/g, " "));
+			}
+		 return b;
+		}
 	, HCI : { makeEditable	: function(node) {
 				node.ondblclick = function(e) {
 									 // Turns text content into an input

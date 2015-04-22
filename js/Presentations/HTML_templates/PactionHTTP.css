@@ -24,3 +24,19 @@ div.PactionHTTP div.PactionHTTP_root > div.params > textarea {
 	display		: block;
 	width		: 100%;
 }
+
+.listKeyValue > .prototype {
+	display		: none;
+}
+
+.listKeyValue textarea.value {
+	height		: 1em;
+}
+
+div.PactionHTTP div.PactionHTTP_root > div.params  .listKeyValue, div.PactionHTTP div.PactionHTTP_root > div.params.keyValue > textarea.body {
+	display		: none;
+}
+
+div.PactionHTTP div.PactionHTTP_root > div.params.keyValue  .listKeyValue, div.PactionHTTP div.PactionHTTP_root > div.params > textarea.body {
+	display		: block;
+}

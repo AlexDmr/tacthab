@@ -7,11 +7,13 @@ define	( [ 'fs-extra'
 		  , 'socket.io-client'
 		  , 'smtp-protocol'
 		  , 'request'
+		  , 'path'
 		  ]
 		, function( fs, express, bodyParser, xmldom, multer
 				  , io, ioClient
 				  , smtp
 				  , request
+				  , path
 				  ) {
 // var fs			= require( 'fs-extra' );
 // var express		= require( 'express' );
@@ -21,6 +23,10 @@ define	( [ 'fs-extra'
 // var io			= require( 'socket.io' );
 // var smtp			= require( 'smtp-protocol' );
 
+var TLS_SSL =	{ key	: fs.readFileSync( path.join('MM.pem'		 ))
+				, cert	: fs.readFileSync( path.join('certificat.pem'))
+				};	
+					
 var webServer = {
 	  fs			: fs
 	, express		: express
@@ -186,13 +192,20 @@ var webServer = {
 					   , method	: method
 					   , headers: headers
 					   };
+		 if(url.indexOf('https://') === 0) {
+			 options.agentOptions = { cert				: TLS_SSL.cert
+									, key				: TLS_SSL.key
+									// , passphrase		: 'password'
+									, securityOptions	: 'SSL_OP_NO_SSLv3'
+									};
+			}
 		 // console.log("httpRequest");
 		 request( options
 				, function(error, response, body) {
 						 if(  error 
 						   || response.statusCode < 200
 						   || response.statusCode >= 300 ) {
-							    console.error(error, response.statusCode);
+							    console.error(error, response?response.statusCode:'NO response');
 							    return CB_error( {error: error, statusCode: response.statusCode, body: body} );
 							   }
 						 // Success
