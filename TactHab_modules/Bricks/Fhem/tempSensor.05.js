@@ -13,6 +13,7 @@ tempSensor_05.prototype = new BrickFhem();
 	tempSensor_05.prototype.unreference();
 tempSensor_05.prototype.constructor		= tempSensor_05;
 tempSensor_05.prototype.getTypeName		= function() {return "tempSensor_05";}
+tempSensor_05.prototype.getTypes		= function() {var L=BrickFhem.prototype.getTypes(); L.push(tempSensor_05.prototype.getTypeName()); return L;}
 
 tempSensor_05.prototype.dispose			= function() {
 	 BrickFhem.prototype.dispose.apply(this, []);

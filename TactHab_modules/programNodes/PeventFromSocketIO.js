@@ -6,13 +6,12 @@ define( [ './Pevent.js'
 		  
 // Deal with socket subscription
 // var D_events = {};
-function registerSocketIO_CB  (topic, CB) {
-	webServer.registerSocketIO_CB  (topic, CB);
+function registerSocketIO_CB  (topic, re, CB) {
+	webServer.registerSocketIO_CB  (topic, re, CB);
 }
 
-function unregisterSocketIO_CB(topic, CB) {
-	// console.log("unregisterSocketIO_CB", topic, CB);
-	webServer.unregisterSocketIO_CB(topic, CB);
+function unregisterSocketIO_CB(topic, re, CB) {
+	webServer.unregisterSocketIO_CB(topic, re, CB);
 }
 		 
 var PeventFromSocketIO = function() {
@@ -49,7 +48,7 @@ PeventFromSocketIO.prototype.init		= function(parent, children) {
 }
 
 PeventFromSocketIO.prototype.dispose	= function() {
-	unregisterSocketIO_CB(this.event.topic, this.triggerEventCB);
+	unregisterSocketIO_CB(this.event.topic, this.event.isRegExp, this.triggerEventCB);
 	this.triggerEventCB = null;
 	Pevent.prototype.dispose.apply(this, []);
 	return this;
@@ -65,6 +64,7 @@ PeventFromSocketIO.prototype.serialize		= function() {
 	// Describe event here
 	json.event = { topic	: this.event.topic
 				 , filters	: this.event.filters
+				 , isRegExp	: this.event.isRegExp
 				 }
 
 	return json;
@@ -76,10 +76,11 @@ PeventFromSocketIO.prototype.unserialize	= function(json, Putils) {
 	this.subType = json.subType;
 	// Describe event here
 	if(this.event.topic && this.event.topic !== '')
-		unregisterSocketIO_CB(this.event.topic, this.triggerEventCB);
+		unregisterSocketIO_CB(this.event.topic, this.event.isRegExp, this.triggerEventCB);
 	this.event.topic	= json.event.topic;
+	this.event.isRegExp	= json.event.isRegExp;
 	if(this.event.topic && this.event.topic !== '')
-		registerSocketIO_CB  (this.event.topic, this.triggerEventCB);
+		registerSocketIO_CB  (this.event.topic, this.event.isRegExp, this.triggerEventCB);
 	this.event.filters = json.event.filters;
 	
 	return this;

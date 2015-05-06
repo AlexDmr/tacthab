@@ -12,6 +12,7 @@ contact.prototype = new BrickFhem();
 	contact.prototype.unreference();
 contact.prototype.constructor		= contact;
 contact.prototype.getTypeName		= function() {return "contact";}
+contact.prototype.getTypes		= function() {var L=BrickFhem.prototype.getTypes(); L.push(contact.prototype.getTypeName()); return L;}
 
 contact.prototype.dispose			= function() {
 	 BrickFhem.prototype.dispose.apply(this, []);

@@ -10,14 +10,14 @@ var WebSocketClient = websocket.client
 	var BrickFhem = function() {
 		 // var self = this;
 		 BrickUPnP.prototype.constructor.apply(this, []);
-		 this.types.push( 'BrickFhem' );
 		 return this;
 		}
 
 	BrickFhem.prototype = new BrickUPnP(); BrickFhem.prototype.unreference();
 	BrickFhem.prototype.constructor = BrickFhem;
 	BrickFhem.prototype.getTypeName = function() {return "BrickFhem";}
-
+	BrickFhem.prototype.getTypes		= function() {var L=BrickUPnP.prototype.getTypes(); L.push(BrickFhem.prototype.getTypeName()); return L;}
+	
 	BrickFhem.prototype.sendCommand	= function(cmd) {
 		 // console.log("sending to Fhem:", cmd);
 		 this.connection.send( JSON.stringify( { type		: 'command'

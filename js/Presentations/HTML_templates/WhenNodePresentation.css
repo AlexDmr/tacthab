@@ -1,0 +1,7 @@
+.WhenNodePresentation > .children > .ImplicitVariable {
+	display		: none;
+}
+
+.WhenNodePresentation > .children > .ImplicitVariable.display {
+	display		: block;
+}

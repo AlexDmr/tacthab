@@ -10,7 +10,6 @@ function BrickUPnP_HueLamp(HueBridge, lampHueId, lampJS) {
 	this.prefixHTTP	= HueBridge.prefixHTTP;
 	this.update(lampJS);
 	var self = this;
-	this.types.push( 'BrickUPnP_HueLamp' );
 	this.set( { alert: "select"
 			  }
 			, function(err ) {console.log("Error ADD Hue", lampHueId, err );}
@@ -23,7 +22,12 @@ function BrickUPnP_HueLamp(HueBridge, lampHueId, lampJS) {
 	return this;
 }
 
-BrickUPnP_HueLamp.prototype			= new Brick(); BrickUPnP_HueLamp.prototype.unreference();
+BrickUPnP_HueLamp.prototype				= new Brick(); BrickUPnP_HueLamp.prototype.unreference();
+BrickUPnP_HueLamp.prototypeconstructor	= BrickUPnP_HueLamp;
+BrickUPnP_HueLamp.prototype.getTypeName		= function() {return 'BrickUPnP_HueLamp';}
+BrickUPnP_HueLamp.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickUPnP_HueLamp.prototype.getTypeName()); return L;}
+BrickUPnP_HueLamp.prototype.registerType('BrickUPnP_HueLamp', BrickUPnP_HueLamp.prototype);
+
 BrickUPnP_HueLamp.prototype.update	= function(lampJS) {
 	// Check for changes, trigger events
 	

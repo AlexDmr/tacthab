@@ -14,6 +14,7 @@ EventNodePresentation.prototype.className = 'EventNode';
 
 EventNodePresentation.prototype.init = function(PnodeID, parent, children) {
 	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	this.event = {};
 	return this;
 }
 

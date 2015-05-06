@@ -44,13 +44,14 @@ Pselector_ObjType.prototype.evalSelector	= function() {
 
 Pselector_ObjType.prototype.updateType = function() {
 	Pselector.prototype.updateType.apply(this, []);
-	console.log("Pselector_ObjType::updateType =>", this.selector.objectsType);
-	return [this.selector.objectsType];
+	// console.log("Pselector_ObjType::updateType =>", this.selector.objectsType);
+	return Brick.prototype.getTypesFromName(this.selector.objectsType);
 }
 
 Pselector_ObjType.prototype.serialize	= function() {
 	var json =	Pselector.prototype.serialize.apply(this, []);
 	json.selector.objectsType	= this.selector.objectsType;
+	json.selector.objectsTypes	= Brick.prototype.getTypes(this.selector.objectsType);
 	return json;
 }
 

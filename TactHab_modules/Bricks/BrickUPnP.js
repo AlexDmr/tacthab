@@ -12,12 +12,14 @@ define( [ './Brick.js'
 		 this.subscriptions	= [];
 		 this.UPnP			= {};
 		 this.UPnP_states	= {};
-		 this.types.push( 'BrickUPnP' );
 		 return this;
 		}
 	BrickUPnP.prototype = new Brick(); BrickUPnP.prototype.unreference();
 	BrickUPnP.prototype.constructor		= BrickUPnP;
 	BrickUPnP.prototype.getTypeName		= function() {return "BrickUPnP";}
+	BrickUPnP.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickUPnP.prototype.getTypeName()); return L;}
+	BrickUPnP.prototype.registerType('BrickUPnP', BrickUPnP.prototype);
+	
 	
 	BrickUPnP.prototype.dispose			= function() {
 		 for(var i=0; i<this.subscriptions.length; i++) {

@@ -15,13 +15,6 @@ define	( [ 'fs-extra'
 				  , request
 				  , path
 				  ) {
-// var fs			= require( 'fs-extra' );
-// var express		= require( 'express' );
-// var bodyParser	= require( 'body-parser' );
-// var xmldom		= require( 'xmldom' );
-// var multer		= require( 'multer' );
-// var io			= require( 'socket.io' );
-// var smtp			= require( 'smtp-protocol' );
 
 var TLS_SSL =	{ key	: fs.readFileSync( path.join('MM.pem'		 ))
 				, cert	: fs.readFileSync( path.join('certificat.pem'))
@@ -38,6 +31,7 @@ var webServer = {
 	, app			: null
 	, CB_addClient	: null
 	, CB_subClient	: null
+	, D_CB_socketIO	: {}
 	, mailServer	: {
 		  init		: function(port) {
 			 // var self = this;
@@ -75,7 +69,7 @@ var webServer = {
 			}
 		}
 	, oncall		: null
-	, init			: function(staticPath, HTTP_port) {
+	, init			: function(staticPath, HTTP_port, logPass) {
 		 var self = this;
 		 this.mailServer.init(25);
 		 
@@ -125,33 +119,60 @@ var webServer = {
 						 res.end();
 					  } );
 		 // Init a socket.IO client to http://thacthab.herokuapp.com
-		 this.socketioClient = ioClient( "http://thacthab.herokuapp.com" );
-		 this.socketioClient.on( 'connect'
-							   , function() {
-									 console.log("Connected to http://thacthab.herokuapp.com");
-									}
-							   );
-		 /*this.socketioClient.on( 'tel'
-							   , function(data) {
-									 console.log('tel:', data);
-									}
-							   );
-		 this.socketioClient.on( 'google'
-							   , function(data) {
-									 console.log('google:', data);
-									}
-							   );*/
-		 this.socketioClient.on( 'disconnect'
-							   , function() {
-									 console.log("Disconnected from http://thacthab.herokuapp.com");
-									}
-							   );
+		 var socket = this.socketioClient = ioClient( "https://thacthab.herokuapp.com" );
+		 if(logPass.thacthab) {
+			 this.socketioClient.on( 'connect'
+								   , function() {
+										 console.log("Connected to https://thacthab.herokuapp.com");
+										 socket.emit( 'login'
+													, {login: logPass.thacthab.login, pass: logPass.thacthab.pass}
+													, function(res) {
+														 console.log("login =>", res);
+														 if(res === 'banco') {
+															 socket.emit( "subscribe"
+																		, { id		: 'all'
+																		  , data	: { title	: '.*'
+																					  , regexp	: true
+																					  }
+																		  }
+																		);
+															 socket.on	( 'all'
+																		, function(data) {
+																			 console.log("receive", data);
+																			 for(var i in self.D_CB_socketIO) {self.D_CB_socketIO[i](data);}
+																			}
+																		);
+															}
+														}
+													);
+										}
+								   );
+			 this.socketioClient.on( 'disconnect'
+								   , function() {
+										 console.log("Disconnected from https://thacthab.herokuapp.com");
+										}
+								   );
+			}
 		}
-	, registerSocketIO_CB			: function(topic, CB) {
-		 this.socketioClient.on(topic, CB);
+	, registerSocketIO_CB			: function(topic, re, CB) {
+		 var title = re?'*':'_', RE;
+		 title += topic;
+		 if(re) {
+			 RE = new RegExp(re);
+			 this.D_CB_socketIO[title] = function(data) {
+				 if(RE.test(data.title)) {CB(data);}
+				}
+			} else {this.D_CB_socketIO[title] = function(data) {
+						 if(topic === data.title) {CB(data);}
+						}
+				   }
+		 // this.socketioClient.on(topic, CB);
 		}
-	, unregisterSocketIO_CB			: function(topic, CB) {
-		 this.socketioClient.removeListener(topic, CB);
+	, unregisterSocketIO_CB			: function(topic, re, CB) {
+		 // this.socketioClient.removeListener(topic, CB);
+		 var title = re?'*':'_';
+		 title += topic;
+		 delete this.D_CB_socketIO[title];
 		}
 	, wordPressEvent				: function(user, pass, title, categs) {
 		 for(var i in this.CB_wordPressEvent) {

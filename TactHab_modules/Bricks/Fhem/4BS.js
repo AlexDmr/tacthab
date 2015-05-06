@@ -4,7 +4,6 @@ define( [ './BrickFhem.js'
 // Define
 function EnO_4BS(FhemBridge, listEntry) {
 	BrickFhem.apply(this, [FhemBridge, listEntry]);
-	this.types.push( 'EnO_4BS' );
 	this.data = [];
 	return this;
 }
@@ -13,6 +12,7 @@ EnO_4BS.prototype = new BrickFhem();
 	EnO_4BS.prototype.unreference();
 EnO_4BS.prototype.constructor		= EnO_4BS;
 EnO_4BS.prototype.getTypeName		= function() {return "EnO_4BS";}
+EnO_4BS.prototype.getTypes		= function() {var L=BrickFhem.prototype.getTypes(); L.push(EnO_4BS.prototype.getTypeName()); return L;}
 
 EnO_4BS.prototype.dispose			= function() {
 	 delete this.data;

@@ -13,6 +13,7 @@ EnO_switch.prototype = new BrickFhem();
 	EnO_switch.prototype.unreference();
 EnO_switch.prototype.constructor		= EnO_switch;
 EnO_switch.prototype.getTypeName		= function() {return "EnO_switch";}
+EnO_switch.prototype.getTypes		= function() {var L=BrickFhem.prototype.getTypes(); L.push(EnO_switch.prototype.getTypeName()); return L;}
 
 EnO_switch.prototype.dispose			= function() {
 	 BrickFhem.prototype.dispose.apply(this, []);

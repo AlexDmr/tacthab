@@ -13,14 +13,15 @@ define( [ './Brick.js'
 //__________________________________________________________________________________________________________
 var BrickOpenHAB_item = function() {
 	Brick.apply(this, []);
-	this.types.push( 'BrickOpenHAB_item' );
 	return this;
 }
 
 BrickOpenHAB_item.prototype = new Brick(); BrickOpenHAB_item.prototype.unreference();
-BrickOpenHAB_item.prototype.constructor = BrickOpenHAB_item;
-BrickOpenHAB_item.prototype.getTypeName = function() {return "BrickOpenHAB_item";}
+BrickOpenHAB_item.prototype.constructor		= BrickOpenHAB_item;
+BrickOpenHAB_item.prototype.getTypeName 	= function() {return "BrickOpenHAB_item";}
+BrickOpenHAB_item.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickOpenHAB_item.prototype.getTypeName()); return L;}
 
+BrickOpenHAB_item.prototype.registerType('BrickOpenHAB_item', BrickOpenHAB_item.prototype);
 AlxEvent(BrickOpenHAB_item);	// Managing events
 
 BrickOpenHAB_item.prototype.dispose	= function() {
@@ -53,13 +54,13 @@ BrickOpenHAB_item.prototype.update	= function(topic, message) {
 var BrickOpenHAB = function() {
 	 // var self = this;
 	 BrickUPnP.prototype.constructor.apply(this, []);
-	 this.types.push( 'BrickOpenHAB' );
 	 return this;
 	}
 
 BrickOpenHAB.prototype = new BrickUPnP(); BrickOpenHAB.prototype.unreference();
 BrickOpenHAB.prototype.constructor = BrickOpenHAB;
 BrickOpenHAB.prototype.getTypeName = function() {return "BrickOpenHAB";}
+BrickOpenHAB.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickOpenHAB.prototype.getTypeName()); return L;}
 
 BrickOpenHAB.prototype.sendCommand	= function(cmd) {
 	}

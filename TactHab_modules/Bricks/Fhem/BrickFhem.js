@@ -5,7 +5,6 @@ define( [ '../Brick.js'
 // Define
 function BrickFhem(FhemBridge, listEntry) {
 	Brick.apply(this, []);
-	this.types.push( 'BrickFhem' );
 	this.init(FhemBridge, listEntry);
 	return this;
 }
@@ -14,6 +13,7 @@ BrickFhem.prototype = new Brick();
 	BrickFhem.prototype.unreference();
 BrickFhem.prototype.constructor		= BrickFhem;
 BrickFhem.prototype.getTypeName		= function() {return "BrickFhem";}
+BrickFhem.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickFhem.prototype.getTypeName()); return L;}
 
 AlxEvents(BrickFhem);	// Add events handling
 

@@ -5,6 +5,11 @@ define	( [ './PnodePresentation.js'
 		  ]
 		, function(PnodePresentation, utils, DragDrop, Var_UsePresentation) {
 
+var css = document.createElement('link');
+	css.setAttribute('rel' , 'stylesheet');
+	css.setAttribute('href', 'js/Presentations/HTML_templates/WhenNodePresentation.css');
+	document.head.appendChild( css );
+
 var WhenNodePresentation = function() {
 	PnodePresentation.prototype.constructor.apply(this, []);
 	return this;
@@ -54,6 +59,9 @@ WhenNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
 		 for(var i=0; i<this.when.varType.length; i++) {
 			 this.html.variableName.classList.add( this.when.varType[i] );
 			}
+		 if( this.when.varType.indexOf('Brick') === 0) {
+			 this.divImplicitVariable.classList.add('display'); 
+			} else {this.divImplicitVariable.classList.remove('display');}
 		}
 
 	this.configDragVar.nodeType	= this.when.varType;
@@ -68,7 +76,7 @@ WhenNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
 WhenNodePresentation.prototype.Render	= function() {
 	var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);
-	root.classList.add('ActionNode');
+	root.classList.add('WhenNodePresentation');
 	if(!this.divChildren) {
 		 this.divDescription.innerHTML = 'WhenNode:' + this.PnodeID ;
 		 
@@ -99,6 +107,10 @@ WhenNodePresentation.prototype.Render	= function() {
 								);
 		// Implicit variable
 		 this.divImplicitVariable = document.createElement('div');
+		 this.divImplicitVariable.classList.add('ImplicitVariable');
+		 if( this.when && this.when.varType && this.when.varType.indexOf('Brick') === 0) {
+			 this.divImplicitVariable.classList.add('display'); 
+			} else {this.divImplicitVariable.classList.remove('display');}
 		 this.divImplicitVariable.innerHTML = '<span class="label">let the call it <div class="variableName Pnode Pselector_variable">brick</div>)</span>'
 		 this.divChildren.appendChild( this.divImplicitVariable );
 		 // Configure variableName

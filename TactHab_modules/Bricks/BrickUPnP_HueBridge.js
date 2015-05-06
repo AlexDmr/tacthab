@@ -11,13 +11,14 @@ define( [ './BrickUPnP.js'
 		 console.log( "BrickUPnP", this.brickId);
 		 this.authorizedConnection = false;
 		 this.Lamps = {};
-		 this.types.push( 'BrickUPnP_HueBridge' );
 		 return this;
 		}
 		
 	BrickUPnP_HueBridge.prototype = new BrickUPnP(); BrickUPnP_HueBridge.prototype.unreference();
 	BrickUPnP_HueBridge.prototype.constructor	= BrickUPnP_HueBridge;
 	BrickUPnP_HueBridge.prototype.getTypeName	= function() {return "BrickUPnP_HueBridge";}
+	BrickUPnP_HueBridge.prototype.getTypes		= function() {var L=BrickUPnP.prototype.getTypes(); L.push(BrickUPnP_HueBridge.prototype.getTypeName()); return L;}
+
 	BrickUPnP_HueBridge.prototype.connect		= function() {
 		 var self = this;
 		 request( { url		: self.prefixHTTP + '/api/TActHab8888'

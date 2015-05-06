@@ -29,6 +29,8 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		  , 'passport-google'
 		  // OpenHAB
 		  , './TactHab_modules/Bricks/Factory__OpenHAB.js'
+		  // File system
+		  , 'fs-extra'
 		  ]
 		, function( Putils, Pnode, UpnpServer
 		          , Brick, BrickUPnP_MediaRenderer, BrickUPnP_MediaServer
@@ -41,6 +43,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 				  , passport
 				  , passportGoogle
 				  , Factory__OpenHAB
+				  , fs
 				  ) {
 	// var DOMParser = xmldom.DOMParser;
 	// console.log("On se casse!"); return;
@@ -48,8 +51,11 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 		 webServer.emit('updateState', {objectId: node.id, prevState: 'state_'+prev, nextState: 'state_'+next});
 		}
 
+	var logPass = {};
+	try {logPass = JSON.parse( fs.readFileSync("logins.json") );
+		} catch(err) {console.error("Error reading logings file:", err);}
 	console.log('webServer.init(',__dirname,',8888)');
-	webServer.init(__dirname, '8888');
+	webServer.init(__dirname, '8888', logPass);
 	UpnpServer.init();
 	webServer.registerSocketIO_CB( 'tel'
 								 , function(data) {

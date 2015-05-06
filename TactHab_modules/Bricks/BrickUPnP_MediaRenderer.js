@@ -19,15 +19,16 @@ define( [ './BrickUPnP.js'
 		 return this;
 		}
 	BrickUPnP_MediaRenderer.prototype = new BrickUPnP(); BrickUPnP_MediaRenderer.prototype.unreference();
-	BrickUPnP_MediaRenderer.prototype.constructor = BrickUPnP_MediaRenderer;
-	BrickUPnP_MediaRenderer.prototype.getTypeName = function() {return "BrickUPnP_MediaRenderer";}
-
+	BrickUPnP_MediaRenderer.prototype.registerType('BrickUPnP_MediaRenderer', BrickUPnP_MediaRenderer.prototype);
+	BrickUPnP_MediaRenderer.prototype.constructor	= BrickUPnP_MediaRenderer;
+	BrickUPnP_MediaRenderer.prototype.getTypeName	= function() {return "BrickUPnP_MediaRenderer";}
+	BrickUPnP_MediaRenderer.prototype.getTypes		= function() {var L=BrickUPnP.prototype.getTypes(); L.push(BrickUPnP_MediaRenderer.prototype.getTypeName()); return L;}
+	
 	AlxEvents	(BrickUPnP_MediaRenderer);
 
 	BrickUPnP_MediaRenderer.prototype.init		= function(device) {
 		 var self = this;
 		 BrickUPnP.prototype.init.apply(this, [device]);
-		 this.types.push( 'BrickUPnP_MediaRenderer' );
 		 this.MediasStates = {};
 		 this.automatePlay = new AlxAutomate(	{ initialState	: "INIT"
 												, states	: { INIT	: { transitions : [ {state: 'PLAYING', eventName: 'TransportState', op: 'equal', value: 'PLAYING'}

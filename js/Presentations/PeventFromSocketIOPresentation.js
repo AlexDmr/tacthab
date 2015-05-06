@@ -29,7 +29,7 @@ PeventFromSocketIOPresentation.prototype.className = 'PeventFromSocketIO';
 
 PeventFromSocketIOPresentation.prototype.init		= function(PnodeID, parent, children) {
 	EventNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
-	this.event = {topic: '', filters:[]};
+	this.event = {topic: '', filters:[], isRegExp: false};
 	return this;
 }
 
@@ -38,6 +38,7 @@ PeventFromSocketIOPresentation.prototype.serialize	= function() {
 	json.subType = 'PeventFromSocketIOPresentation';
 	json.event = { topic	: this.event.topic
 				 , filters	: []
+				 , isRegExp	: this.event.isRegExp
 				 };
 	if(this.html.filter) {
 		 var L_filters = this.html.filter.querySelectorAll( 'div.FILTER' )
@@ -94,6 +95,9 @@ PeventFromSocketIOPresentation.prototype.Render	= function() {
 		this.html.eventTopic	= this.divDescription.querySelector("input.receive.topic");
 			this.html.eventTopic.onkeyup = function() {self.event.topic = self.html.eventTopic.value;};
 			this.html.eventTopic.setAttribute('value', this.event.topic);
+		this.html.isRegExp		= this.divDescription.querySelector('input.isRegExp');
+			this.html.isRegExp.checked	= this.event.isRegExp;
+			this.html.isRegExp.onchange = function() {self.event.isRegExp = self.html.isRegExp.checked;}
 		this.html.addFilter	= this.divDescription.querySelector(".filter > input.addFilter");
 			this.html.addFilter.onclick	= function() {self.appendFilter();}
 		 // Add filters

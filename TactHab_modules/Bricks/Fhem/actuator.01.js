@@ -6,7 +6,6 @@ function actuator_01(FhemBridge, listEntry) {
 	this.actuator = { intervalEval	: 3000
 					};
 	BrickFhem.apply(this, [FhemBridge, listEntry]);
-	this.types.push( 'actuator_01' );
 	this.data = [];
 	this.timer = null;
 	return this;
@@ -16,6 +15,7 @@ actuator_01.prototype = new BrickFhem();
 	actuator_01.prototype.unreference();
 actuator_01.prototype.constructor		= actuator_01;
 actuator_01.prototype.getTypeName		= function() {return "actuator_01";}
+actuator_01.prototype.getTypes		= function() {var L=BrickFhem.prototype.getTypes(); L.push(actuator_01.prototype.getTypeName()); return L;}
 
 actuator_01.prototype.dispose			= function() {
 	BrickFhem.prototype.dispose.apply(this, []);
