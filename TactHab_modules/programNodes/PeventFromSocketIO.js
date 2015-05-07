@@ -15,9 +15,9 @@ function unregisterSocketIO_CB(topic, re, CB) {
 }
 		 
 var PeventFromSocketIO = function() {
-	 Pevent.prototype.constructor.apply(this, []);
-	 return this;
-	}
+	Pevent.prototype.constructor.apply(this, []);
+	return this;
+}
 
 // API for starting, stopping the instruction
 PeventFromSocketIO.prototype = new Pevent();

@@ -121,6 +121,7 @@ var webServer = {
 		 // Init a socket.IO client to http://thacthab.herokuapp.com
 		 var socket = this.socketioClient = ioClient( "https://thacthab.herokuapp.com" );
 		 if(logPass.thacthab) {
+			 this.socketioClient.off();
 			 this.socketioClient.on( 'connect'
 								   , function() {
 										 console.log("Connected to https://thacthab.herokuapp.com");
@@ -139,7 +140,16 @@ var webServer = {
 															 socket.on	( 'all'
 																		, function(data) {
 																			 console.log("receive", data);
-																			 for(var i in self.D_CB_socketIO) {self.D_CB_socketIO[i](data);}
+																			 // Process message into several variables
+																			 try {var obj = JSON.parse(data.message);
+																				  for(var att in obj) {
+																					 if(typeof data[att] === 'undefined') {data[att] = obj[att];}
+																					}
+																				 } catch(err) {}
+																			 // Callbacks...
+																			 for(var i in self.D_CB_socketIO) {
+																				 self.D_CB_socketIO[i](data);
+																				}
 																			}
 																		);
 															}
@@ -172,7 +182,8 @@ var webServer = {
 		 // this.socketioClient.removeListener(topic, CB);
 		 var title = re?'*':'_';
 		 title += topic;
-		 delete this.D_CB_socketIO[title];
+		 if(CB === this.D_CB_socketIO[title])
+			delete this.D_CB_socketIO[title];
 		}
 	, wordPressEvent				: function(user, pass, title, categs) {
 		 for(var i in this.CB_wordPressEvent) {
