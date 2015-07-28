@@ -113,7 +113,12 @@ var editor = {
 													 , { constructor	: PresoUtils.get('Var_DefinitionPresentation')
 													   , nodeType		: 'DefinitionNode'
 													   } )
+										).appendChild( this.createDragNode( 'New text'
+													 , { constructor	: PresoUtils.get('Pselector_TextPresentation')
+													   , nodeType		: 'SelectorNode'
+													   } )
 										);
+										
 		 // Create new draggable for MediaRenderer
 		 this.MR_categ = 
 		 this.createCateg("MediaRenderer").appendChild( this.createDragNode( 'Load'

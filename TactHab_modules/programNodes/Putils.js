@@ -18,6 +18,8 @@ define ([ './Pnode.js'
 		, './Pselector_variable.js'
 		, './Pselector_program.js'
 		, './Pselector_ObjType.js'
+		// Traditionnal variable types
+		, './Pselector_Text.js'
 		]
 		, function( Pnode, ProgramNode, ParalleNode
 				  , ActionNode, SequenceNode
@@ -36,6 +38,8 @@ define ([ './Pnode.js'
 				  , Pselector_variable
 				  , Pselector_program
 				  , Pselector_ObjType
+				  // Traditionnal variable types
+				  , Pselector_Text
 				  ) {
 var Putils = {
 	  mapping		: { 'Pnode'					: Pnode
@@ -57,6 +61,7 @@ var Putils = {
 					  , 'Pselector_variable'	: Pselector_variable
 					  , 'Pselector_program'		: Pselector_program
 					  , 'Pselector_ObjType'		: Pselector_ObjType
+					  , 'Pselector_Text'		: Pselector_Text
 					  }
 	, unserialize	: function(json) {
 		 var classe	= this.mapping[json.className];

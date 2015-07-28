@@ -5,48 +5,36 @@ define( [ './Brick.js'
 		, 'request'
 		, 'mqtt'
 		, '../../js/AlxEvents.js'
+		, './types/Color.js'
+		, './types/Contact.js'
+		, './types/DateTime.js'
+		, './types/Dimmer.js'
+		, './types/Number.js'
+		, './types/RollerShutter.js'
+		, './types/String.js'
+		, './types/Switch.js'
 		]
-	  , function(Brick, BrickUPnP, BrickUPnPFactory, webServer, request, mqtt, AlxEvent) {
+	  , function( Brick, BrickUPnP, BrickUPnPFactory, webServer, request, mqtt, AlxEvent
+				, Brick_Color
+				, Brick_Contact
+				, Brick_DateTime
+				, Brick_Dimmer
+				, Brick_Number
+				, Brick_RollerShutter
+				, Brick_String
+				, Brick_Switch
+				) {
 
-//__________________________________________________________________________________________________________
-//__________________________________________________________________________________________________________
-//__________________________________________________________________________________________________________
-var BrickOpenHAB_item = function() {
-	Brick.apply(this, []);
-	return this;
-}
+var openHab_types = { 'Color'			: Brick_Color
+					, 'Contact'			: Brick_Contact
+					, 'DateTime'		: Brick_DateTime
+					, 'Dimmer'			: Brick_Dimmer
+					, 'Number'			: Brick_Number
+					, 'RollerShutter'	: Brick_RollerShutter
+					, 'String'			: Brick_String
+					, 'Switch'			: Brick_Switch
+					};
 
-BrickOpenHAB_item.prototype = new Brick(); BrickOpenHAB_item.prototype.unreference();
-BrickOpenHAB_item.prototype.constructor		= BrickOpenHAB_item;
-BrickOpenHAB_item.prototype.getTypeName 	= function() {return "BrickOpenHAB_item";}
-BrickOpenHAB_item.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickOpenHAB_item.prototype.getTypeName()); return L;}
-
-BrickOpenHAB_item.prototype.registerType('BrickOpenHAB_item', BrickOpenHAB_item.prototype);
-AlxEvent(BrickOpenHAB_item);	// Managing events
-
-BrickOpenHAB_item.prototype.dispose	= function() {
-	if(this.client) {this.client.close();}
-	Brick.prototype.dispose.apply(this, []);
-	return this;
-}
-
-BrickOpenHAB_item.prototype.init	= function(device) {
-	Brick.prototype.init.apply(this, [device]);
-	this.name = device.name;
-	return this;
-}
-
-BrickOpenHAB_item.prototype.getESA	= function() {
-		return { events	: [ 'update' ]
-			   , states	: []
-			   , actions: []
-			   };
-	}
-
-BrickOpenHAB_item.prototype.update	= function(topic, message) {
-	this.emit('update', {topic:topic, message:message});
-	return this;
-}
 
 //__________________________________________________________________________________________________________
 //__________________________________________________________________________________________________________
@@ -83,90 +71,97 @@ BrickOpenHAB.prototype.getIdFromName= function(name) {
 
 BrickOpenHAB.prototype.processItem	= function(item) {
 	var self	= this;
-	// var name = JSON.parse(item).name;
-	console.log("--- openHAB item:", item.name);
-	var brick = new BrickOpenHAB_item().changeIdTo( this.getIdFromName(item.name) ).init(item);
+	// item:
+	//	- type
+	//	- name
+	//	- state
+	//	- link
+	console.log("--- openHAB item:", item);
+	// var brick = new BrickOpenHAB_item().changeIdTo( this.getIdFromName(item.name) ).init(item);
+	var brick = new openHab_types[item.type]().changeIdTo( this.getIdFromName(item.name) ).init(item);
 }
 	
 BrickOpenHAB.prototype.init = function(device) {
 	var self = this;
 	BrickUPnP.prototype.init.apply(this, [device]);
 	// Connect to MQTT
-	var MQTT_broker = { servers			: [ { host: device.mqtt.host, port: device.mqtt.port }
-										  , { host: '192.168.1.58', port: 1883 }
-										  , { host: '192.168.1.14', port: 1883 }
-										  ]
-					  ,	protocolId		: 'MQIsdp'
-					  ,	protocolVersion	: 3
-					  };//'tcp://' + device.host + ':1883';
-	console.log("MQTT::broker trying to connect to", MQTT_broker);
-	var client  = mqtt.connect( null, MQTT_broker );
-	this.client = client;
-	client.on( 'connect'
-			  , function () {
-					 console.log("MQTT::connect connected to the broker");
-					 client.publish('/TActHab/newClient', 'new TActHab client launched');
-					 client.subscribe( '/openHAB/out/#' );
-					}
-			  );
-
-	client.on( 'close'
-			 , function() {console.error("MQTT::close");}
-			 );
-
-	client.on( 'offline'
-			 , function() {console.error("MQTT::offline");}
-			 );
-			 
-	client.on( 'error'
-			 , function(err) {console.error("MQTT::error", err);}
-			 );
-			 
-	client.on( 'message'
-			  , function (topic, message) {
-					 var name, prefix, brick;
-					 // What is the topic about ?
-					 console.log("MQTT::message topic is", topic);
-					 prefix = "/openHAB/out/command/";
-					 if(topic.lastIndexOf(prefix, 0) === 0) {
-						 name = topic.slice(prefix.length);
-						} else {prefix = "/openHAB/out/state/";
-								if(topic.lastIndexOf(prefix, 0) === 0) {
-									 name = topic.slice(prefix.length);
-									}
-							   }
-					 if(name && (brick = Brick.prototype.getBrickFromId(self.getIdFromName(name))) ) {
-						 // message is Buffer 
-						 var msg   = message.toString();
-						 brick.update(topic, msg);
+	if( device.mqtt ) {
+		var MQTT_broker = { servers			: [ { host: device.mqtt.host, port: device.mqtt.port }
+											  ]
+						  ,	protocolId		: 'MQIsdp'
+						  ,	protocolVersion	: 3
+						  };
+		console.log("MQTT::broker trying to connect to", MQTT_broker);
+		var client  = mqtt.connect( null, MQTT_broker );
+		this.client = client;
+		client.on( 'connect'
+				  , function () {
+						 console.log("MQTT::connect connected to the broker");
+						 client.publish('/TActHab/newClient', 'new TActHab client launched');
+						 client.subscribe( '#' );
 						}
-					}
-			  );
+				  );
+
+		client.on( 'close'
+				 , function() {console.error("MQTT::close");}
+				 );
+
+		client.on( 'offline'
+				 , function() {console.error("MQTT::offline");}
+				 );
+				 
+		client.on( 'error'
+				 , function(err) {console.error("MQTT::error", err);}
+				 );
+				 
+		client.on( 'message'
+				  , function (topic, message) {
+						 var name, operation, prefix, brick, subtopic;
+						 // What is the topic about ?
+						 console.log("MQTT::message topic is", topic, message.toString());
+						 prefix = "/" + device.mqtt.prefix + "/out/";
+						 if(topic.lastIndexOf(prefix, 0) === 0) {
+							 subtopic	= topic.slice(prefix.length).split( '/' );
+							 name		= subtopic[0];
+							 operation	= subtopic[1];
+							} 
+						 if(name && (brick = Brick.prototype.getBrickFromId(self.getIdFromName(name))) ) {
+							 // message is Buffer 
+							 var msg   = message.toString();
+							 brick.update(operation, msg);
+							}
+						}
+				  );
+		} // if device.mqtt
 
 	// Retrieve description
-	request	( 'http://' + device.host + ':' + device.port + '/rest/items?type=json'
-			, function (error, response, body) {
-			  if (!error) {
-					
-				 var json = JSON.parse( body ), type, item;
-				 self.devices = {};
-				 json = json.item || [];
-				 console.log("\n____________________________\nBrickOpenHAB::init", json.length, "items");
-				 for(var i=0; i<json.length; i++) {
-					 type = json[i].type;
-					 if(typeof self.devices[type] === 'undefined') {self.devices[type] = [];}
-					 self.devices[type].push( json[i] );
-					 item = self.devices[type][self.devices[type].length-1];
-					 if(type === 'GroupItem') {
-						 self.processGroupItem( item );
-						} else {// Subscribe to events
-								self.processItem( item );
-							   } // Heating_GF_Living
-					}
-				} else {console.error("Error accessing to OpenHAB", error);
-					   }
-			});
-	return this;
+	var P = new Promise	( function(resolve, reject) {
+							request	( 'http://' + device.host + ':' + device.port + '/rest/items?type=json'
+									, function (error, response, body) {
+									  if (!error) {
+										 var json = JSON.parse( body ), type, item;
+										 self.devices = {};
+										 json = json.item || [];
+										 console.log("\n____________________________\nBrickOpenHAB::init", json.length, "items");
+										 for(var i=0; i<json.length; i++) {
+											 type = json[i].type;
+											 if(typeof self.devices[type] === 'undefined') {self.devices[type] = [];}
+											 self.devices[type].push( json[i] );
+											 item = self.devices[type][self.devices[type].length-1];
+											 if(type === 'GroupItem') {
+												 self.processGroupItem( item );
+												} else {// Subscribe to events
+														self.processItem( item );
+													   } // Heating_GF_Living
+											}
+										 resolve( self.devices );
+										} else {console.error("Error accessing to OpenHAB", error);
+												reject( "Error accessing to OpenHAB" + error);
+											   }
+									});
+							}
+						); // Promise
+	return P;
 }
 	
 //---------------------------------------------------------------------------------------

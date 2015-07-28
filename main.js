@@ -66,19 +66,12 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 	var pgRootId = '';
 	var rootPath = __dirname.slice();
 	
-	// OpenHAB
-	/*
-	var openHAB = Factory__OpenHAB.newBrick();
-	openHAB.changeIdTo( 'openHAB' );
-	openHAB.init( { host	: '127.0.0.1'
-				  , port	: 8080
-				  , desc	: {}
-				  , mqtt	: {host: '192.168.1.24', port: 1883}
-				  }
-				);
+	// <openHab>
+	var openHAB; // glados.a4h.inrialpes.fr   8080     MQTTT: glados.a4h.inrialpes.fr  1883
 	webServer.app.get ( '/openHAB'
 					  , function(req, res) {
-							 res.write( JSON.stringify(openHAB.devices) );
+							 if(openHAB)
+								res.write( JSON.stringify(openHAB.devices) );
 							 res.end();
 							}
 					  );
@@ -86,14 +79,28 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 					  , function(req, res) {
 							 if(  req.body.host
 							   && req.body.port
-							   ) {
-							     } else {res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
-										 res.end( {error: "HTTP POST must contains a serverAddress and port."} );
-										}
-							}
-					  );
+							   ) {openHAB = Factory__OpenHAB.newBrick();
+								  openHAB.changeIdTo( 'openHAB' );
+								  var json = { host	: req.body.host
+											 , port	: parseInt( req.body.port )
+											 , desc	: {} 
+											 };
+								  if(  req.body.MQTT_host
+									&& req.body.MQTT_port ) {json.mqtt = { host		: req.body.MQTT_host
+																		 , port		: parseInt(req.body.MQTT_port)
+																		 , prefix	: req.body.MQTT_prefix || 'a4h' };
+															}
+								  openHAB.init( json ).then ( function(devices) {
+																res.end( JSON.stringify(devices) );} 
+													  ).catch( function(reasons) {res.writeHead(200, {'Content-type': 'text/plain; charset=utf-8'});
+																				 res.end( "HTTP POST must contains a serverAddress and port:\n" + reasons );
+																				}
+															);
+								} // if req.body.host
+							} // function
+					  ); // post
 	
-	*/
+	// </openHab>
 	// Configure server
 	webServer.app.post( '/saveProgram'
 					  , function(req, res) {
@@ -125,7 +132,7 @@ requirejs( [ './TactHab_modules/programNodes/Putils.js'
 							}
 					  );
 	function Remap(json, Map) {
-		 var att, i;
+		 var i;
 		 for(i in json) {
 			 if( Map[json[i]] ) {
 				 json[i] = Map[json[i]];
