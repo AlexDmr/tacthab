@@ -67,7 +67,8 @@ define( [ './Brick.js'
 			 // console.log( service.serviceType );
 			 self.UPnP_states[service.serviceType] = {};
 			 service.on("stateChange", function(event) {
-				 self.UPnPEvent(event.textXML, this);
+				 try {self.UPnPEvent(event.textXML, this);
+					 } catch(err) {console.error("ERROR calling UPnPEvent on", device.friendlyName, ":", err);}
 				});
 			 service.on	( 'newSubscription'
 						, function(data) {
@@ -95,7 +96,8 @@ define( [ './Brick.js'
 		 for(var i=0; i<L.length; i++) {
 			 var pos;
 			 if(L.item(i).childNodes.length > 1) {pos = 1;} else {pos = 0;}
-			 this.UpdateEvent( L.item(i).childNodes[pos], service );
+			 try {this.UpdateEvent( L.item(i).childNodes[pos], service );
+				 } catch(err) {console.error("ERROR updating UPnP event: ",  L.item(i).childNodes[pos].tagName);}
 			}
 		 return L.length;
 		}
@@ -105,7 +107,7 @@ define( [ './Brick.js'
 		 var doc = null, error;
 		 try {
 			 doc = xmldomparser.parseFromString(event, 'text/xml');
-			} catch(err) {error = err;}
+			} catch(err) {error = err; console.error("ERROR while parsing event:", err);}
 		 if(doc) {
 			 // console.log("Event parsed succesfully");
 			 // for(var i in event) {console.log(i);}
