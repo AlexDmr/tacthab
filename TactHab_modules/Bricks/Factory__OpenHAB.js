@@ -33,6 +33,15 @@ var openHab_types = { 'Color'			: Brick_Color
 					, 'RollerShutter'	: Brick_RollerShutter
 					, 'String'			: Brick_String
 					, 'Switch'			: Brick_Switch
+					, 'ColorItem'			: Brick_Color
+					, 'ContactItem'			: Brick_Contact
+					, 'DateTimeItem'		: Brick_DateTime
+					, 'DimmerItem'			: Brick_Dimmer
+					, 'NumberItem'			: Brick_Number
+					, 'RollerShutterItem'	: Brick_RollerShutter
+					, 'RollershutterItem'	: Brick_RollerShutter
+					, 'StringItem'			: Brick_String
+					, 'SwitchItem'			: Brick_Switch
 					};
 
 
@@ -76,9 +85,12 @@ BrickOpenHAB.prototype.processItem	= function(item) {
 	//	- name
 	//	- state
 	//	- link
-	console.log("--- openHAB item:", item);
 	// var brick = new BrickOpenHAB_item().changeIdTo( this.getIdFromName(item.name) ).init(item);
-	var brick = new openHab_types[item.type]().changeIdTo( this.getIdFromName(item.name) ).init(item);
+	var constr = openHab_types[item.type];
+	if(constr) {
+		 console.log("--- openHAB item:", item.type, item.name);
+		 var brick = new constr().changeIdTo( this.getIdFromName(item.name) ).init(item);
+		} else {console.log("!!! openHAB unsupported item:", item.type);}
 }
 	
 BrickOpenHAB.prototype.init = function(device) {

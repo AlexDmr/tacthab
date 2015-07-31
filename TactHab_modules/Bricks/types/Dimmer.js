@@ -1,7 +1,7 @@
 define	( [ './BrickOpenHAB_item.js' ]
 		, function(BrickOpenHAB_item) {
 
-var BrickOpenHAB_Dimmer = function(Brick) {
+var BrickOpenHAB_Dimmer = function() {
 	BrickOpenHAB_item.apply(this, []);
 	return this;
 }

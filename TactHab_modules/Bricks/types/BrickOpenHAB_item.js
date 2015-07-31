@@ -1,12 +1,12 @@
 define	( [ '../Brick.js', '../../../js/AlxEvents.js' ]
 		, function(Brick, AlxEvents) {
 
-var BrickOpenHAB_item = function(Brick) {
+var BrickOpenHAB_item = function() {
 	Brick.apply(this, []);
 	return this;
 }
 
-BrickOpenHAB_item.prototype = Object.create( Brick.prototype ); BrickOpenHAB_item.prototype.unreference();
+BrickOpenHAB_item.prototype = Object.create( Brick.prototype ); //BrickOpenHAB_item.prototype.unreference();
 BrickOpenHAB_item.prototype.constructor		= BrickOpenHAB_item;
 BrickOpenHAB_item.prototype.getTypeName 	= function() {return "BrickOpenHAB_item";}
 BrickOpenHAB_item.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickOpenHAB_item.prototype.getTypeName()); return L;}

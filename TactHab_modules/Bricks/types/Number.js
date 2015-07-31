@@ -1,7 +1,7 @@
 define	( [ './BrickOpenHAB_item.js' ]
 		, function(BrickOpenHAB_item) {
 
-var BrickOpenHAB_Number = function(Brick) {
+var BrickOpenHAB_Number = function() {
 	BrickOpenHAB_item.apply(this, []);
 	return this;
 }
