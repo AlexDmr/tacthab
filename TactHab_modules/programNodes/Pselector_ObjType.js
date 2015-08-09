@@ -1,8 +1,8 @@
-define( [ './Pnode.js'
-		, './Pselector.js'
-		, '../Bricks/Brick.js'
-	    ]
-	  , function(Pnode, Pselector, Brick) {
+var Pnode		= require( './Pnode.js' )
+  , Pselector	= require( './Pselector.js' )
+  , Brick		= require( '../Bricks/Brick.js' )
+  ;
+
 // console.log('Pnode is a ', Pnode);
 // Definition of a node for programs
 var Pselector_ObjType = function() {
@@ -11,7 +11,8 @@ var Pselector_ObjType = function() {
 	}
 
 // API for starting, stopping the instruction
-Pselector_ObjType.prototype = new Pselector();
+Pselector_ObjType.prototype = Object.create(Pselector.prototype); //new Pselector();
+Pselector_ObjType.prototype.constructor	= Pselector_ObjType;
 Pselector_ObjType.prototype.className	= 'Pselector_ObjType';
 Pnode.prototype.appendClass( Pselector_ObjType );
 
@@ -63,5 +64,5 @@ Pselector_ObjType.prototype.unserialize	= function(json, Putils) {
 	return this;
 }
 
-return Pselector_ObjType;
-});
+module.exports = Pselector_ObjType;
+

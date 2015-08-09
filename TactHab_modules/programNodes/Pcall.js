@@ -1,6 +1,5 @@
-define( [ 'async'
-	    ]
-	  , function(async) {
+// var async	= require( 'async' );
+
 // Definition of a call for programs
 var Pcall = function(targets, mtdName, params, CB_success, CB_cancel) {
 	 this.CB_cancel	= CB_cancel;
@@ -11,6 +10,7 @@ var Pcall = function(targets, mtdName, params, CB_success, CB_cancel) {
 	 this.nb_res	= 0;
 	 return this;
 	}
+Pcall.prototype = Object.create( {} );
 Pcall.prototype.constructor = Pcall;
 
 Pcall.prototype.newCopy		= function() {
@@ -36,7 +36,7 @@ Pcall.prototype.update_res	= function(A_res, i, type, value) {
 }
 
 Pcall.prototype.executeFor	= function(A_res, i) {
-	var self = this, obj, mtd, res, params;
+	var self = this, obj, mtd, result, params;
 	try {params = this.params.slice(0);
 		 params.push( function(res) {self.update_res(A_res, i, 'success', res);}
 					, function(err) {self.update_res(A_res, i, 'error'  , err);}
@@ -44,8 +44,8 @@ Pcall.prototype.executeFor	= function(A_res, i) {
 		 obj = this.targets[i];
 		 if(obj) {
 			 mtd = obj[this.mtdName];
-			 res = mtd.apply(obj, params);
-			 if(res !== undefined) {this.update_res(A_res, i, 'success', res);}
+			 result = mtd.apply(obj, params);
+			 if(result !== undefined) {this.update_res(A_res, i, 'success', result);}
 			} else {console.error("Unknown target object for method", this.mtdName);}
 		} catch (err) {
 			 console.error( "Error axecuting action:", err
@@ -74,5 +74,4 @@ Pcall.prototype.cancel = function() {
 	this.CB_cancel();
 }
 
-return Pcall;
-});
+module.exports = Pcall;

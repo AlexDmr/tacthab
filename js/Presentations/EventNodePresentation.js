@@ -1,16 +1,17 @@
-define	( [ './PnodePresentation.js'
-		  , '../DragDrop.js'
-		  , '../utils.js'
-		  ]
-		, function(PnodePresentation, DragDrop, utils) {
+var PnodePresentation	= require( './PnodePresentation.js' )
+  // , DragDrop			= require( '../DragDrop.js' )
+  , utils				= require( '../utils.js' )
+  ;
+  
 // Desfining EventNodePresentation
 var EventNodePresentation = function() {
 	PnodePresentation.apply(this, []);
 	return this;
 }
 
-EventNodePresentation.prototype = new PnodePresentation();
-EventNodePresentation.prototype.className = 'EventNode';
+EventNodePresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
+EventNodePresentation.prototype.constructor	= EventNodePresentation;
+EventNodePresentation.prototype.className	= 'EventNode';
 
 EventNodePresentation.prototype.init = function(PnodeID, parent, children) {
 	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
@@ -56,5 +57,5 @@ EventNodePresentation.prototype.Render	= function() {
 }
 
 // Return the constructor
-return EventNodePresentation;
-});
+module.exports = EventNodePresentation;
+

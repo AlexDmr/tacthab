@@ -1,7 +1,7 @@
-define( [ './Pnode.js'
-		, '../../js/AlxEvents.js'
-	    ]
-	  , function(Pnode, AlxEvents) {
+var Pnode		= require( './Pnode.js' )
+  , AlxEvents	= require( '../../js/AlxEvents.js' )
+  ;
+
 // var D_EventNode	= {};	// Dedicated dictionnary
 
 // Definition of a node for programs
@@ -11,7 +11,8 @@ var EventNode = function() {
 	}
 
 // API for starting, stopping the instruction
-EventNode.prototype = new Pnode();
+EventNode.prototype = Object.create( Pnode.prototype ); // new Pnode();
+EventNode.prototype.constructor	= EventNode;
 EventNode.prototype.className	= 'EventNode';
 Pnode.prototype.appendClass(EventNode);
 
@@ -55,7 +56,7 @@ EventNode.prototype.triggerEvent = function(event) {
 
 EventNode.prototype.eventFromChild = function(child, event) {
 	console.log(this.className + "::eventFromChild(", child, " ,", event, ")");
-	if(this.parent && this.parent.eventFromChild) this.parent.eventFromChild(this, event);
+	if(this.parent && this.parent.eventFromChild) {this.parent.eventFromChild(this, event);}
 }
 
 EventNode.prototype.getRelatedTypes	= function() {
@@ -75,5 +76,5 @@ EventNode.prototype.unserialize	= function(json, Putils) {
 	return this;
 }
 
-return EventNode;
-});
+module.exports = EventNode;
+

@@ -1,27 +1,27 @@
-define ([ './Pnode.js'
-		, './program.js'
-		, './parallel.js'
-		, './action.js'
-		, './sequence.js'
-		, './Pevent.js'
-		, './PeventFromSocketIO.js'
-		, './Pwhen.js'
+/*define ([ 
+		, 
+		, 
+		, 
+		, 
+		, 
+		, 
+		, 
 		// , './PcontrolBrick.js'
-		, './PvariableDeclaration.js'
-		, './PprogramDeclaration.js'
-		, './PfilterNode.js'
-		, './PForbidNode.js'
-		, './PeventBrick.js'
-		, './PeventBrickAppear.js'
+		, 
+		, 
+		, 
+		, 
+		, 
+		, 
 		// Selectors
-		, './Pselector_ObjInstance.js'
-		, './Pselector_variable.js'
-		, './Pselector_program.js'
-		, './Pselector_ObjType.js'
+		, 
+		, 
+		, 
+		, 
 		// Traditionnal variable types
-		, './Pselector_Text.js'
+		, 
 		]
-		, function( Pnode, ProgramNode, ParalleNode
+ Pnode, ProgramNode, ParalleNode
 				  , ActionNode, SequenceNode
 				  , EventNode
 				  , PeventFromSocketIO
@@ -40,38 +40,45 @@ define ([ './Pnode.js'
 				  , Pselector_ObjType
 				  // Traditionnal variable types
 				  , Pselector_Text
-				  ) {
+				  ) {*/
 var Putils = {
-	  mapping		: { 'Pnode'					: Pnode
-					  , 'ProgramNode'			: ProgramNode
-					  , 'ParalleNode'			: ParalleNode
-					  , 'ActionNode'			: ActionNode
-					  , 'SequenceNode'			: SequenceNode
-					  , 'EventNode'				: EventNode
-					  , 'PeventFromSocketIO'	: PeventFromSocketIO
-					  , 'WhenNode'				: WhenNode
-					  // , 'PcontrolBrick'			: PcontrolBrick
-					  , 'PvariableDeclaration'	: PvariableDeclaration
-					  , 'PfilterNode'			: PfilterNode
-					  , 'PForbidNode'			: PForbidNode
-					  , 'PeventBrick'			: PeventBrick
-					  , 'PeventBrickAppear'		: PeventBrickAppear
-					  , 'PprogramDeclaration'	: PprogramDeclaration
-					  , 'Pselector_ObjInstance'	: Pselector_ObjInstance
-					  , 'Pselector_variable'	: Pselector_variable
-					  , 'Pselector_program'		: Pselector_program
-					  , 'Pselector_ObjType'		: Pselector_ObjType
-					  , 'Pselector_Text'		: Pselector_Text
+	  mapping		: { 'Pnode'					: require( './Pnode.js' )	// Pnode
+					  , 'ProgramNode'			: require( './program.js' )	// ProgramNode
+					  , 'ParalleNode'			: require( './parallel.js' )	// ParalleNode
+					  , 'ActionNode'			: require( './action.js' )	// ActionNode
+					  , 'SequenceNode'			: require( './sequence.js' )	// SequenceNode
+					  , 'EventNode'				: require( './Pevent.js' )	// EventNode
+					  , 'PeventFromSocketIO'	: require( './PeventFromSocketIO.js' )	// PeventFromSocketIO
+					  , 'WhenNode'				: require( './Pwhen.js' )	// WhenNode
+					  , 'PvariableDeclaration'	: require( './PvariableDeclaration.js' )	// PvariableDeclaration
+					  , 'PfilterNode'			: require( './PfilterNode.js' )	// PfilterNode
+					  , 'PForbidNode'			: require( './PForbidNode.js' )	// PForbidNode
+					  , 'PeventBrick'			: require( './PeventBrick.js' )	// PeventBrick
+					  , 'PeventBrickAppear'		: require( './PeventBrickAppear.js' )	// PeventBrickAppear
+					  , 'PprogramDeclaration'	: require( './PprogramDeclaration.js' )	// PprogramDeclaration
+					  , 'Pselector_ObjInstance'	: require( './Pselector_ObjInstance.js' )	// Pselector_ObjInstance
+					  , 'Pselector_variable'	: require( './Pselector_variable.js' )	// Pselector_variable
+					  , 'Pselector_program'		: require( './Pselector_program.js' )	// Pselector_program
+					  , 'Pselector_ObjType'		: require( './Pselector_ObjType.js' )	// Pselector_ObjType
+					  , 'Pselector_Text'		: require( './Pselector_Text.js' )	// Pselector_Text
 					  }
 	, unserialize	: function(json) {
-		 var classe	= this.mapping[json.className];
-		 var parent	= new classe();
-		 parent.init();
-		 parent.unserialize(json, this);
+		 var classe	= this.mapping[json.className], parent;
+		 if(!classe) {
+			 classe =  require( './' + json.className + '.js' ); 
+			}
+		 if(classe) {
+			 try {parent	= new classe();
+				  parent.init();
+				  parent.unserialize(json, this);
+				 } catch(err) {console.error( "Error unserializing", json.className, ":", err);
+							   parent = undefined;
+							  }
+			}
 		 return parent;
 		}
 };
 
-return Putils;
-});
+module.exports = Putils;
+
 

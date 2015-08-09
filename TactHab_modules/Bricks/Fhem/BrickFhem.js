@@ -1,7 +1,7 @@
-define( [ '../Brick.js'
-		, '../../../js/AlxEvents.js'
-		]
-	  , function(Brick, AlxEvents) {
+var Brick		= require( '../Brick.js' )
+  , AlxEvents	= require( '../../../js/AlxEvents.js' )
+  ;
+	  
 // Define
 function BrickFhem(FhemBridge, listEntry) {
 	Brick.apply(this, []);
@@ -9,8 +9,7 @@ function BrickFhem(FhemBridge, listEntry) {
 	return this;
 }
 
-BrickFhem.prototype = new Brick();
-	BrickFhem.prototype.unreference();
+BrickFhem.prototype = Object.create(Brick.prototype ); //new Brick(); BrickFhem.prototype.unreference();
 BrickFhem.prototype.constructor		= BrickFhem;
 BrickFhem.prototype.getTypeName		= function() {return "BrickFhem";}
 BrickFhem.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickFhem.prototype.getTypeName()); return L;}
@@ -54,5 +53,4 @@ BrickFhem.prototype.getESA			= function() {
 			   };
 	}
 
-return BrickFhem;
-});
+module.exports = BrickFhem;

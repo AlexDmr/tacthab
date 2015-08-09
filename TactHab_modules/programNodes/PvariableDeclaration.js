@@ -1,6 +1,5 @@
-define( [ './Pnode.js'
-	    ]
-	  , function(Pnode) {
+var Pnode = require( './Pnode.js' );
+
 // Definition of a node for PvariableDeclaration
 var PvariableDeclaration = function() {
 	Pnode.prototype.constructor.apply(this, []);
@@ -8,7 +7,8 @@ var PvariableDeclaration = function() {
 }
 
 // API for starting, stopping the instruction
-PvariableDeclaration.prototype = new Pnode();
+PvariableDeclaration.prototype = Object.create(Pnode.prototype); //new Pnode();
+PvariableDeclaration.prototype.constructor	= PvariableDeclaration
 PvariableDeclaration.prototype.className	= 'PvariableDeclaration';
 Pnode.prototype.appendClass( PvariableDeclaration );
 
@@ -45,7 +45,7 @@ PvariableDeclaration.prototype.Start = function() {
 PvariableDeclaration.prototype.childStateChanged = function(child, prevState, newState) {
 	if(child === this.children[0]) {
 		 if(newState === 0){this.Stop();}
-		} else {error('PvariableDeclaration::childStateChanged : a child state changed but this was not the expected child !');}
+		} else {throw new Error('PvariableDeclaration::childStateChanged : a child state changed but this was not the expected child !');}
 }
 
 PvariableDeclaration.prototype.getName		= function() {return this.varDef.name;}
@@ -92,5 +92,4 @@ PvariableDeclaration.prototype.unserialize	= function(json, Putils) {
 } 
 
 
-return PvariableDeclaration;
-});
+module.exports = PvariableDeclaration;

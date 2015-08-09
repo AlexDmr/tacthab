@@ -1,16 +1,16 @@
-define	( [ './PnodePresentation.js'
-		  , './ActionNodePresentation.js'
-		  , '../DragDrop.js'
-		  ]
-		, function(PnodePresentation, ActionNodePresentation, DragDrop) {
+var /*PnodePresentation		= require( './PnodePresentation.js' )
+  ,*/ ActionNodePresentation	= require( './ActionNodePresentation.js' )
+  // , DragDrop				= require( '../DragDrop.js' )
+  ;
 
 function PprogramActionPresentation() {
 	ActionNodePresentation.apply(this, []);
 	return this;
 }
 
-PprogramActionPresentation.prototype = new ActionNodePresentation();
-PprogramActionPresentation.prototype.className = 'ActionNode';
+PprogramActionPresentation.prototype = Object.create( ActionNodePresentation.prototype ); // new ActionNodePresentation();
+PprogramActionPresentation.prototype.constructor	= PprogramActionPresentation;
+PprogramActionPresentation.prototype.className		= 'ActionNode';
 
 PprogramActionPresentation.prototype.init		= function(PnodeID, parent, children) {
 	ActionNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
@@ -33,7 +33,8 @@ PprogramActionPresentation.prototype.unserialize	= function(json, Putils) {
 }
 
 PprogramActionPresentation.prototype.Render			= function() {
-	var root = ActionNodePresentation.prototype.Render.apply(this, []);
+	var root = ActionNodePresentation.prototype.Render.apply(this, [])
+	  , self = this;
 	if(!this.html.selectAction) {
 		 this.html.actionName.innerHTML		= '';
 		 this.html.divSelector.innerHTML	= '[DROP PROGRAMS HERE]';
@@ -47,5 +48,5 @@ PprogramActionPresentation.prototype.Render			= function() {
 	return root;
 }
 
-return PprogramActionPresentation;
-} );
+module.exports = PprogramActionPresentation;
+

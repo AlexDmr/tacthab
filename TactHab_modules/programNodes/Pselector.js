@@ -1,6 +1,5 @@
-define( [ './Pnode.js'
-	    ]
-	  , function(Pnode) {
+var Pnode = require( './Pnode.js' );
+
 // console.log('Pnode is a ', Pnode);
 // Definition of a node for programs
 var Pselector = function() {
@@ -9,7 +8,8 @@ var Pselector = function() {
 }
 
 // API for starting, stopping the instruction
-Pselector.prototype = new Pnode();
+Pselector.prototype = Object.create( Pnode.prototype ); //new Pnode();
+Pselector.prototype.constructor	= Pselector;
 Pselector.prototype.className	= 'Pselector';
 Pnode.prototype.appendClass( Pselector );
 
@@ -73,5 +73,5 @@ Pselector.prototype.unserialize	= function(json, Putils) {
 	return this;
 }
 
-return Pselector;
-});
+module.exports = Pselector;
+

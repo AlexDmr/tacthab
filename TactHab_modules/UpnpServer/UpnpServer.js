@@ -1,5 +1,3 @@
-define	( [ ]
-		, function() { //(fs, express, bodyParser, xmldom, multer) {
 var UpnpControlPoint = require('node-upnp-controlpoint').UpnpControlPoint;
 
 var UpnpServer = {
@@ -18,7 +16,7 @@ var UpnpServer = {
 		}
 	, DeviceDetected	: function(device) {
 		 var uuid = device.uuid
-		   , udn  = device.udn
+		   // , udn  = device.udn
 		   , type = device.deviceType
 		   , name = device.friendlyName
 		   , host = device.host
@@ -44,11 +42,10 @@ var UpnpServer = {
 		 delete this.D_CB[id];
 		}
 	, CallBack			: function(type, device) {
-		 var D = {};
-		 for(var i in this.D_CB) {D[i] = this.D_CB[i];}
-		 for(var i in D) {D[i].CB(type, device);}
+		 var D = {}, i;
+		 for(i in this.D_CB) {D[i] = this.D_CB[i];}
+		 for(i in D) {D[i].CB(type, device);}
 		}
 };
 
-return UpnpServer;
-});
+module.exports = UpnpServer;

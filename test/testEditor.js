@@ -1,3 +1,4 @@
+/*
 require.config({
     paths : {
         //create alias to plugins (not needed if plugins are on the baseUrl)
@@ -12,23 +13,22 @@ require.config({
     }
 });
 
+*/
 
-define ( [ "../js/utils.js"
-		 , '../js/domReady.js'
-		 , '../js/editor.js'
-         // , 'async!http://maps.google.com/maps/api/js?sensor=false'
-		 // , 'goog!visualization,1,packages:[corechart,geochart]'
-		 ]
-	   , function(utils, domReady, editor) {
-			 domReady( function() {
-				 // Editor
-				 testEvt = new Object();
-				 testEvt.utils	= utils;
-				 testEvt.editor	= editor;
-				 editor.init( 'instructionType'
-							, document.getElementById('program')
-							, utils.io);
-				});
-			 return null;
-			}
-);
+var utils		= require( "../js/utils.js" )
+  , domReady	= require( '../js/domReady.js' )
+  , editor		= require( '../js/editor.js' )
+  ;
+  
+  
+ domReady( function() {
+	 // Editor
+	 var testEvt = {};
+	 testEvt.utils	= utils;
+	 testEvt.editor	= editor;
+	 editor.init( 'instructionType'
+				, document.getElementById('program')
+				, utils.io);
+	});
+
+

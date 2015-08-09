@@ -1,5 +1,7 @@
-define	( [ '../Brick.js', '../../../js/AlxEvents.js' ]
-		, function(Brick, AlxEvents) {
+var Brick		= require( '../Brick.js' )
+  , AlxEvents	= require( '../../../js/AlxEvents.js' )
+  , openHabTypes= require( '../../../js/openHabTypes.js' )
+  ;
 
 var BrickOpenHAB_item = function() {
 	Brick.apply(this, []);
@@ -32,10 +34,30 @@ BrickOpenHAB_item.prototype.getESA	= function() {
 			   };
 	}
 
-BrickOpenHAB_item.prototype.update	= function(topic, operation, message) {
+BrickOpenHAB_item.prototype.setFactory	= function(factory) {this.factory = factory;}
+
+BrickOpenHAB_item.prototype.sendCommand	= function(topic, message) {
+	 if(this.factory) {
+		 this.factory.sendCommand(this, message);
+		}
+	}
+
+BrickOpenHAB_item.prototype.publish		= function(topic, message) {
+	 if(this.factory) {
+		 this.factory.publish(topic, message);
+		}
+	}
+
+BrickOpenHAB_item.prototype.update		= function(topic, operation, message) {
+	console.log	( this.brickId, this.getTypeName(), "::update"
+				, "\n\t- topic     :", topic
+				, "\n\t- operation :", operation
+				, "\n\t- message   :", message
+				)
 	this.emit('update', {topic:topic, operation:operation, message:message});
 	return this;
 }
 
-return BrickOpenHAB_item;
-});
+BrickOpenHAB_item.types	= openHabTypes;
+
+module.exports = BrickOpenHAB_item;

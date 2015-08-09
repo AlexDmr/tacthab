@@ -1,6 +1,8 @@
-define	( [ '../../socket.io/socket.io'
-		  ]
-		, function(io) {
+var io = require(//'../node_modules/socket.io/lib/client.js'
+				//'../../socket.io/socket.io' 
+				'socket.io-client'
+				);
+
 var callId = 0;
 var utils = {
 	XHR : function(method, ad, params) {
@@ -43,22 +45,22 @@ var utils = {
 						);
 		}
 	, getUrlEncodedParameters	: function(a) {
-		 if(typeof(a) === 'string') {
+		 if(typeof a === 'string') {
 			 a = a.split('&');
 			}
-		 if (a === "") return {};
+		 if (a === "") {return {};}
 		 var b = {};
 		 for (var i = 0; i < a.length; ++i) {
 			var p=a[i].split('=', 2);
-			if (p.length == 1)
-				b[ decodeURIComponent(p[0]) ] = "";
-			else
-				b[ decodeURIComponent(p[0]) ] = decodeURIComponent(p[1].replace(/\+/g, " "));
+			if (p.length === 1) {
+				 b[ decodeURIComponent(p[0]) ] = "";
+				} else {b[ decodeURIComponent(p[0]) ] = decodeURIComponent(p[1].replace(/\+/g, " "));
+					   }
 			}
 		 return b;
 		}
 	, HCI : { makeEditable	: function(node) {
-				node.ondblclick = function(e) {
+				node.ondblclick = function(evt) {
 									 // Turns text content into an input
 									 var input = document.createElement('input');
 									 input.value = node.innerHTML;
@@ -73,13 +75,13 @@ var utils = {
 									 input.onkeypress = function(e) {
 										 if (e.which === 13) {input.ondblclick(e);}
 										};
-									 e.stopPropagation();
-									 e.preventDefault();
+									 evt.stopPropagation();
+									 evt.preventDefault();
 									}
 
 				}
 			}
 };
 
-return utils;
-});
+module.exports = utils;
+

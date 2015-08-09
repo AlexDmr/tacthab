@@ -1,113 +1,46 @@
-define	( [ './ProgramNodePresentation.js'
-		  , './ParallelNodePresentation.js'
-		  , './ActionNodePresentation.js'
-		  , './SequenceNodePresentation.js'
-		  , './EventNodePresentation.js'
-		  , './PeventFromSocketIOPresentation.js'
-		  , './WhenNodePresentation.js'
-		  , './PcontrolBrickPresentation.js'
-		  , './PfilterPresentation.js'
-		  , './PForbidPresentation.js'
-		  , './PeventBrickPresentation.js'
-		  , './PeventBrickAppear.js'
-		  , './basicBrickPresentation.js'
-		  , './Pselector_ObjTypePresentation'
-		  // Variables and programs
-		  , './Program_UsePresentation.js'
-		  , './Program_DefinitionPresentation.js'
-		  , './Var_DefinitionPresentation.js'
-		  , './SelectorNodePresentation.js'
-		  , './MR_Instance_SelectorNodePresentation.js'
-		  , './Var_UsePresentation.js'
-		  , './PprogramActionPresentation.js'
-		  , './Program_ExposedAPI_elementPresentation.js'
-		  // General type variables
-		  , './Pselector_TextPresentation.js'
-		  // Média Renderer
-		  , './UPnP/MediaRendererInstructions/MR_Play_NodePresentation.js'
-		  , './UPnP/MediaRendererInstructions/MR_Pause_NodePresentation.js'
-		  , './UPnP/MediaRendererInstructions/MR_Stop_NodePresentation.js'
-		  , './UPnP/MediaRendererInstructions/MR_load_NodePresentation.js'
-		  // Hue
-		  , './PeventBrickPresentation_Hue.js'
-		  // HTTP
-		  , './PactionHTTP.js'
-		  ]
-		, function( ProgramNodePresentation
-				  , ParallelNodePresentation
-				  , ActionNodePresentation
-				  , SequenceNodePresentation
-				  , EventNodePresentation
-				  , PeventFromSocketIOPresentation
-				  , WhenNodePresentation
-				  , PcontrolBrickPresentation
-				  , PfilterPresentation
-				  , PForbidPresentation
-				  , PeventBrickPresentation
-				  , PeventBrickAppear
-				  , basicBrickPresentation
-				  , Pselector_ObjTypePresentation
-				  // Variables
-				  , Program_UsePresentation
-				  , Program_DefinitionPresentation
-				  , Var_DefinitionPresentation
-				  , SelectorNodePresentation
-				  , MR_Instance_SelectorNodePresentation
-				  , Var_UsePresentation
-				  , PprogramActionPresentation
-				  , Program_ExposedAPI_elementPresentation
-				  // General type variables
-				  , Pselector_TextPresentation
-				  // Media Renderer
-				  , MR_Play_NodePresentation
-				  , MR_Pause_NodePresentation
-				  , MR_Stop_NodePresentation
-				  , MR_load_NodePresentation
-				  // Hue
-				  , PeventBrickPresentation_Hue
-				  // HTTP
-				  , PactionHTTP
-				  ) {
 var PresoUtils = {
-	  mapping		: { 'ProgramNode'							: ProgramNodePresentation
-					  , 'ParalleNode'							: ParallelNodePresentation
-					  , 'ActionNode'							: ActionNodePresentation
-					  , 'SequenceNode'							: SequenceNodePresentation	, 'SequenceNodePresentation'	: SequenceNodePresentation
-					  , 'EventNode'								: EventNodePresentation		, 'EventNodePresentation'		: EventNodePresentation
-					  , 'PeventFromSocketIOPresentation'		: PeventFromSocketIOPresentation
-					  , 'WhenNode'								: WhenNodePresentation		, 'WhenNodePresentation'		: WhenNodePresentation
-					  , 'PcontrolBrick'							: PcontrolBrickPresentation
-					  , 'PfilterPresentation'					: PfilterPresentation
-					  , 'PForbidPresentation'					: PForbidPresentation
-					  , 'PeventBrickPresentation'				: PeventBrickPresentation
-					  , 'PeventBrickAppear'						: PeventBrickAppear
-					  , 'basicBrickPresentation'				: basicBrickPresentation
-					  , 'Pselector_ObjTypePresentation'			: Pselector_ObjTypePresentation
+	  mapping		: { 'ProgramNode'							: require( './ProgramNodePresentation.js' )
+					  , 'ParalleNode'							: require( './ParallelNodePresentation.js' )
+					  , 'ActionNode'							: require( './ActionNodePresentation.js' )
+					  , 'SequenceNode'							: require( './SequenceNodePresentation.js' )	, 'SequenceNodePresentation'	: require( './SequenceNodePresentation.js' )
+					  , 'EventNode'								: require( './EventNodePresentation.js' )		, 'EventNodePresentation'		: require( './EventNodePresentation.js' )
+					  , 'PeventFromSocketIOPresentation'		: require( './PeventFromSocketIOPresentation.js' )
+					  , 'WhenNode'								: require( './WhenNodePresentation.js' )		, 'WhenNodePresentation'		: require( './WhenNodePresentation.js' )
+					  , 'PcontrolBrick'							: require( './PcontrolBrickPresentation.js' )
+					  , 'PfilterPresentation'					: require( './PfilterPresentation.js' )
+					  , 'PForbidPresentation'					: require( './PForbidPresentation.js' )
+					  , 'PeventBrickPresentation'				: require( './PeventBrickPresentation.js' )
+					  , 'PeventBrickAppear'						: require( './PeventBrickAppear.js' )
+					  , 'basicBrickPresentation'				: require( './basicBrickPresentation.js' )
+					  , 'Pselector_ObjTypePresentation'			: require( './Pselector_ObjTypePresentation' )
+					  , 'openHab_Action_OnOff'					: require( './openHab/openHab_Action_OnOff.js' )
 					  // Variables
-					  , 'Program_UsePresentation'				: Program_UsePresentation
-					  , 'Program_DefinitionPresentation'		: Program_DefinitionPresentation
-					  , 'Var_DefinitionPresentation'			: Var_DefinitionPresentation
-					  , 'SelectorNodePresentation'				: SelectorNodePresentation
-					  , 'MR_Instance_SelectorNodePresentation'	: MR_Instance_SelectorNodePresentation
-					  , 'Var_UsePresentation'					: Var_UsePresentation
-					  , 'PprogramActionPresentation'			: PprogramActionPresentation
-					  , 'Program_ExposedAPI_elementPresentation': Program_ExposedAPI_elementPresentation
+					  , 'Program_UsePresentation'				: require( './Program_UsePresentation.js' )
+					  , 'Program_DefinitionPresentation'		: require( './Program_DefinitionPresentation.js' )
+					  , 'Var_DefinitionPresentation'			: require( './Var_DefinitionPresentation.js' )
+					  , 'SelectorNodePresentation'				: require( './SelectorNodePresentation.js' )
+					  , 'MR_Instance_SelectorNodePresentation'	: require( './MR_Instance_SelectorNodePresentation.js' )
+					  , 'Var_UsePresentation'					: require( './Var_UsePresentation.js' )
+					  , 'PprogramActionPresentation'			: require( './PprogramActionPresentation.js' )
+					  , 'Program_ExposedAPI_elementPresentation': require( './Program_ExposedAPI_elementPresentation.js' )
 					  // General type variables
-					  , 'Pselector_TextPresentation'			: Pselector_TextPresentation
+					  , 'Pselector_TextPresentation'			: require( './Pselector_TextPresentation.js' )
 					  // MediaRenderer
-					  , 'MR_Play_NodePresentation'				: MR_Play_NodePresentation
-					  , 'MR_load_NodePresentation'				: MR_load_NodePresentation
-					  , 'MR_Pause_NodePresentation'				: MR_Pause_NodePresentation
-					  , 'MR_Stop_NodePresentation'				: MR_Stop_NodePresentation
+					  , 'MR_Play_NodePresentation'				: require( './UPnP/MediaRendererInstructions/MR_Play_NodePresentation.js' )
+					  , 'MR_load_NodePresentation'				: require( './UPnP/MediaRendererInstructions/MR_load_NodePresentation.js' )
+					  , 'MR_Pause_NodePresentation'				: require( './UPnP/MediaRendererInstructions/MR_Pause_NodePresentation.js' )
+					  , 'MR_Stop_NodePresentation'				: require( './UPnP/MediaRendererInstructions/MR_Stop_NodePresentation.js' )
 					  // Hue
-					  , 'PeventBrickPresentation_Hue'			: PeventBrickPresentation_Hue
+					  , 'PeventBrickPresentation_Hue'			: require( './PeventBrickPresentation_Hue.js' )
 					  // HTTP
-					  , 'PactionHTTP'							: PactionHTTP
+					  , 'PactionHTTP'							: require( './PactionHTTP.js' )
 					  }
 	, get			: function(className) {
 		 var classe	= this.mapping[ className ];
 		 if(!classe) {
 			 console.error('This dependency has not been loaded yet :', className);
+			 try {throw new Error(""); //this.mapping[ className ] = require( className );
+				 } catch(err) {console.error("Impossible to post-load dependency", className)}
 			}
 		 return this.mapping[className];
 		}
@@ -127,5 +60,5 @@ var PresoUtils = {
 		}
 };
 
-return PresoUtils;
-});
+module.exports = PresoUtils;
+

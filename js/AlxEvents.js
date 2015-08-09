@@ -1,5 +1,4 @@
-define(	[]
-	  , function() {
+
 function AlxEvent(classe) {
 	classe.prototype.emit				= AlxEvent.prototype.emit;
 	classe.prototype.on					= AlxEvent.prototype.on;
@@ -48,5 +47,4 @@ AlxEvent.prototype.disposeAlxEvent	= function(eventName, callback) {
 	return this;
 }
 
-return AlxEvent;
-});
+module.exports = AlxEvent;

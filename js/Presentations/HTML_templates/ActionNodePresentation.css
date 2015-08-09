@@ -1,0 +1,36 @@
+div.Pnode.ActionNodePresentation {
+	border			: solid black 1px;
+	border-radius	: 1em;
+	padding			: 0.4em;
+	background		: lightblue;
+	display			: inline-block;
+	/*flex-flow		: row;*/
+}
+
+.ActionNodePresentation > .action_symbol {
+	/*flex			: 0 32px;*/
+	width			: 32px;
+	height			: 32px;
+}
+
+div.Pnode.ActionNodePresentation > * {
+	display			: inline-block;
+}
+
+.ActionNodePresentation > .action_description {
+	/*flex			: 1;*/
+}
+
+.ActionNodePresentation  p {
+	margin			: 0px;
+	padding			: 0px;
+}
+
+.ActionNodePresentation p.actionName {
+	border-bottom	: dashed black 1px;
+	background		: lightblue;
+}
+
+.ActionNodePresentation p.selector {
+	background		: #B9B9FF;
+}

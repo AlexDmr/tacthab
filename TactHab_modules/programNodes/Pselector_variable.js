@@ -1,9 +1,9 @@
-define( [ './Pnode.js'
-		, './Pselector.js'
-		, './Pevent.js'
-		, './PvariableDeclaration.js'
-	    ]
-	  , function(Pnode, Pselector, Pevent, PvariableDeclaration) {
+var Pnode					= require( './Pnode.js' )
+  , Pselector				= require( './Pselector.js' )
+  , Pevent					= require( './Pevent.js' )
+  // , PvariableDeclaration	= require( './PvariableDeclaration.js' )
+  ;
+
 // console.log('Pnode is a ', Pnode);
 // Definition of a node for programs
 var Pselector_variable = function() {
@@ -13,7 +13,8 @@ var Pselector_variable = function() {
 
 
 // API for starting, stopping the instruction
-Pselector_variable.prototype = new Pselector();
+Pselector_variable.prototype = Object.create( Pselector.prototype ); //new Pselector();
+Pselector_variable.prototype.constructor= Pselector_variable;
 Pselector_variable.prototype.className	= 'Pselector_variable';
 Pnode.prototype.appendClass( Pselector_variable );
 
@@ -104,7 +105,7 @@ Pselector_variable.prototype.updateType = function() {
 	// XXX Get type from object if it exists
 	if(typeof this.selector.variableId !== 'undefined') {
 		 var variableDeclaration = this.getVariableDeclaration();
-		 if(variableDeclaration) this.selector.type = variableDeclaration.updateType();
+		 if(variableDeclaration) {this.selector.type = variableDeclaration.updateType();}
 		}
 	return this.selector.type;
 }
@@ -151,5 +152,5 @@ Pselector_variable.prototype.unserialize	= function(json, Putils) {
 	return this;
 }
 
-return Pselector_variable;
-});
+module.exports = Pselector_variable;
+

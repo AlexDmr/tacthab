@@ -1,14 +1,13 @@
-define	( [ './PnodePresentation.js'
-		  ]
-		, function(PnodePresentation) {
+var PnodePresentation = require( './PnodePresentation.js' );
 
 function SelectorNodePresentation() {
 	PnodePresentation.apply(this, []);
-	// console.log("SelectorNodePresentation::constructor", infoObj);
+	return this;
 }
 
-SelectorNodePresentation.prototype = new PnodePresentation();
-SelectorNodePresentation.prototype.className = 'SelectorNode';
+SelectorNodePresentation.prototype = Object.create( PnodePresentation.prototype );
+SelectorNodePresentation.prototype.constructor	= SelectorNodePresentation;
+SelectorNodePresentation.prototype.className	= 'SelectorNode';
 
 SelectorNodePresentation.prototype.init		= function(PnodeID, parent, children, infoObj) {
 	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children, infoObj]);
@@ -47,5 +46,4 @@ SelectorNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
 	return this;
 }
 
-return SelectorNodePresentation;
-});
+module.exports = SelectorNodePresentation;

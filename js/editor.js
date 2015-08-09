@@ -1,15 +1,40 @@
-define	( [ './DragDrop.js'
-		  , './utils.js'
-		  , './Presentations/PresoUtils.js'
-		  , './Presentations/PnodePresentation.js'
-		  , './async.js'
-		  ]
-		, function( DragDrop, utils, PresoUtils
-				  , PnodePresentation
-				  , async
-				  , BrickUPnP_MediaRenderer
-				  ) {
+var DragDrop				= require( './DragDrop.js' )
+  , utils					= require( './utils.js' )
+  , PresoUtils				= require( './Presentations/PresoUtils.js' )
+  , PnodePresentation		= require( './Presentations/PnodePresentation.js' )
+  // , async					= require( './async.js' )
+  // , BrickUPnP_MediaRenderer	= require(  )
+  ;
 
+function createSubCateg(editor, subCateg, variable, api, t, i) {
+	 subCateg.appendChild( editor.createDragNode ( api[t][i].name
+											     , { constructor	: PresoUtils.get('Program_ExposedAPI_elementPresentation')
+												   , nodeType		: api[t][i].type.concat( ['SelectorNode', t] )
+												   , variableTypes	: api[t][i].type.concat( ['SelectorNode', t] )
+												   , id				: variable.id	// id du program
+												   , variableId		: api[t][i].id	// id de la variable
+												   , name			: variable.name	// nom du programme
+												   , variableName	: api[t][i].name// nom de la variable
+												   }
+												 )
+						 );
+	}
+function CB_subCateg(editor, categ_pg, variable) {
+	 return function(api) {
+		 var subCateg;
+		 console.log("Add", api, "to", categ_pg);
+		 for(var t in api) {
+			 if(api[t].length) {
+				 subCateg = editor.createCateg(t);
+				 categ_pg.appendChild( subCateg.root );
+				 for(var i=0; i<api[t].length; i++) {
+					 createSubCateg(editor, subCateg, variable, api, t, i);
+					}
+				}															 
+			}
+		}
+	}
+	
 var editor = {
 	  htmlNodeTypes		: null
 	, htmlNodeProgram	: null
@@ -153,7 +178,24 @@ var editor = {
 		 this.Fhem_categ = this.createCateg("Fhem");
 
 		 // Create new draggable for BrickFhem
-		 this.openHAB_categ = this.createCateg("openHAB");
+		 this.openHAB_categ = 
+		 this.createCateg("openHAB"		).appendChild(	(this.openHab_instructions	= 
+														 this.createCateg("Instructions").appendChild( this.createDragNode( 'Do On/Off'
+																									 , { constructor	: PresoUtils.get('openHab_Action_OnOff')
+																									   , nodeType		: ['ActionNode', 'instruction']
+																									   , objectsType	: 'openHab_Action_OnOff'
+																									   } )
+																									 )
+														).root
+										).appendChild( (this.openHab_colors			= this.createCateg("BrickOpenHAB_Color")			).root
+										).appendChild( (this.openHab_contacts		= this.createCateg("BrickOpenHAB_Contact")			).root
+										).appendChild( (this.openHab_datetimes		= this.createCateg("BrickOpenHAB_DateTime")			).root
+										).appendChild( (this.openHab_dimmers		= this.createCateg("BrickOpenHAB_Dimmer")			).root
+										).appendChild( (this.openHab_numbers		= this.createCateg("BrickOpenHAB_Number")			).root
+										).appendChild( (this.openHab_rollershutters	= this.createCateg("BrickOpenHAB_RollerShutter")	).root
+										).appendChild( (this.openHab_strings		= this.createCateg("BrickOpenHAB_String")			).root
+										).appendChild( (this.openHab_switchs		= this.createCateg("BrickOpenHAB_Switch")			).root
+										);
 		 
 		 // Create new draggable for Hue
 		 this.createCateg("Hue lamp").appendChild( this.createDragNode( 'on...'
@@ -193,39 +235,48 @@ var editor = {
 					, onload	: function() {
 						 var json = JSON.parse( this.responseText ); 
 						 console.log('/getContext of ', variables.nodeId, ':', json );
-						 var i, brick, variable;
+						 var i, brick, variable, item;
 						 // Bricks
 						 for(i in json.bricks) {
 							 brick = json.bricks[i];
 							 if(brick.type.indexOf('BrickUPnP_MediaRenderer') !== -1) {
-								 self.MR_categ.appendChild( self.createDragNode( brick.name
-													   , { constructor	: PresoUtils.get('MR_Instance_SelectorNodePresentation')
-													     , nodeType		: brick.type.concat( ['SelectorNode'] )
-														 , id			: brick.id
-														 , uuid			: brick.id
-														 , name			: brick.name
-													     } )
-													   );
+								 self.MR_categ.appendChild	( self.createDragNode( brick.name
+															, { constructor	: PresoUtils.get('MR_Instance_SelectorNodePresentation')
+															  , nodeType	: brick.type.concat( ['SelectorNode'] )
+															  , id			: brick.id
+															  , uuid		: brick.id
+															  , name		: brick.name
+															  } )
+															);
 								}
 							 if(brick.type.indexOf('BrickFhem') !== -1) {
 								 self.Fhem_categ.appendChild( self.createDragNode( brick.name
-													   , { constructor	: PresoUtils.get('basicBrickPresentation')
-													     , nodeType		: brick.type.concat( ['SelectorNode'] )
-														 , id			: brick.id
-														 , uuid			: brick.id
-														 , name			: brick.name
-													     } )
-													   );
+															, { constructor	: PresoUtils.get('basicBrickPresentation')
+															  , nodeType	: brick.type.concat( ['SelectorNode'] )
+															  , id			: brick.id
+															  , uuid		: brick.id
+															  , name		: brick.name
+															  } )
+															);
 								}
 							 if(brick.type.indexOf('BrickOpenHAB_item') !== -1) {
-								 self.openHAB_categ.appendChild( self.createDragNode( brick.name
-													   , { constructor	: PresoUtils.get('basicBrickPresentation')
-													     , nodeType		: brick.type.concat( ['SelectorNode'] )
-														 , id			: brick.id
-														 , uuid			: brick.id
-														 , name			: brick.name
-													     } )
-													   );
+								 item = self.createDragNode	( brick.name
+															, { constructor	: PresoUtils.get('basicBrickPresentation')
+															  , nodeType	: brick.type.concat( ['SelectorNode'] )
+															  , id			: brick.id
+															  , uuid		: brick.id
+															  , name		: brick.name
+															  }
+															);
+								 if(brick.type.indexOf("BrickOpenHAB_Switch")			>= 0) {self.openHab_switchs.appendChild		  (item);}
+								 if(brick.type.indexOf("BrickOpenHAB_String")			>= 0) {self.openHab_strings.appendChild		  (item);}
+								 if(brick.type.indexOf("BrickOpenHAB_RollerShutter")	>= 0) {self.openHab_rollershutters.appendChild(item);}
+								 if(brick.type.indexOf("BrickOpenHAB_Number")			>= 0) {self.openHab_numbers.appendChild		  (item);}
+								 if(brick.type.indexOf("BrickOpenHAB_Dimmer")			>= 0) {self.openHab_dimmers.appendChild		  (item);}
+								 if(brick.type.indexOf("BrickOpenHAB_DateTime")			>= 0) {self.openHab_datetimes.appendChild	  (item);}
+								 if(brick.type.indexOf("BrickOpenHAB_Contact")			>= 0) {self.openHab_contacts.appendChild	  (item);}
+								 if(brick.type.indexOf("BrickOpenHAB_Color")			>= 0) {self.openHab_colors.appendChild		  (item);}
+								 if(!item.parentNode) {console.error("Unknown openHab brick type:", brick);}
 								}
 								
 							}
@@ -254,32 +305,7 @@ var editor = {
 													 );
 								 // Make a call to retrieve exposed API for this program
 								 utils.call	( variable.programId, 'getExposedAPI_serialized', []
-											, function(categ_pg, variable) {
-												 return function(api) {
-													 console.log("Add", api, "to", categ_pg);
-													 for(var t in api) {
-														 if(api[t].length) {
-															 var subCateg = self.createCateg(t);
-															 categ_pg.appendChild( subCateg.root );
-															 for(var i=0; i<api[t].length; i++) {
-																 function createSubCateg(t, i) {
-																	 subCateg.appendChild( self.createDragNode ( api[t][i].name
-																											   , { constructor	: PresoUtils.get('Program_ExposedAPI_elementPresentation')
-																												 , nodeType		: api[t][i].type.concat( ['SelectorNode', t] )
-																												 , variableTypes: api[t][i].type.concat( ['SelectorNode', t] )
-																												 , id			: variable.id	// id du program
-																												 , variableId	: api[t][i].id	// id de la variable
-																												 , name			: variable.name	// nom du programme
-																												 , variableName	: api[t][i].name// nom de la variable
-																												 } )
-																						 );
-																	}
-																 createSubCateg(t, i);
-																}
-															}															 
-														}
-													}
-												}(categ_pg, variable)
+											, CB_subCateg(self, categ_pg, variable)
 											);
 								 
 								} else {self.variables_categ.appendChild( self.createDragNode( variable.name
@@ -317,7 +343,7 @@ var editor = {
 		   , bt_save	= document.getElementById('DiskSaveToServer')
 		   , bt_dskLoad	= document.getElementById('DiskLoadFromServer');
 		 bt_save.onclick = function() {
-								 var inputHidden = document.getElementById('programId');
+								 // var inputHidden = document.getElementById('programId'); // Already defined
 								 if(!inputHidden) {console.error("no program to save"); return;}
 								 utils.XHR( 'POST', '/saveProgram'
 										  , { variables	: { pgRootId	: inputHidden.value
@@ -346,7 +372,7 @@ var editor = {
 										  );
 								}
 		 bt_load.onclick = function() {
-								 var inputHidden = document.getElementById('programId');
+								 // var inputHidden = document.getElementById('programId'); // Already defined
 								 var ressource = '/loadProgram';
 								 if(inputHidden) {
 									 ressource += '?programId=' + encodeURIComponent( inputHidden.value );
@@ -366,11 +392,11 @@ var editor = {
 		 
 		 bt_send.addEventListener( 'click'
 								 , function() {
-									 var variables		= {program: JSON.stringify(self.rootProgram.serialize())};
-									 var inputHidden	= document.getElementById('programId');
-									 if(inputHidden) {variables.programId = inputHidden.value;}
+									 var variablesSend		= {program: JSON.stringify(self.rootProgram.serialize())};
+									 // var inputHidden	= document.getElementById('programId'); // Already defined
+									 if(inputHidden) {variablesSend.programId = inputHidden.value;}
 									 utils.XHR( 'POST', '/loadProgram'
-											  , { variables	: variables
+											  , { variables	: variablesSend
 												, onload	: function() {
 													 // console.log('loadProgram, server sent:', this);
 													 var json = JSON.parse( this.responseText );
@@ -382,7 +408,7 @@ var editor = {
 								 , false );
 		 bt_start.addEventListener( 'click'
 								  , function() {
-										var inputHidden = document.getElementById('programId');
+										// var inputHidden = document.getElementById('programId'); // Already defined
 										if(inputHidden) {utils.XHR( 'POST', '/Start'
 																  , {variables: {programId: inputHidden.value}}
 																  ); }
@@ -390,7 +416,7 @@ var editor = {
 								  , false );
 		 bt_stop.addEventListener ( 'click'
 								  , function() {
-										var inputHidden = document.getElementById('programId');
+										// var inputHidden = document.getElementById('programId'); // Already defined
 										if(inputHidden) {utils.XHR( 'POST', '/Stop'
 																  , {variables: {programId: inputHidden.value}}
 																  ); }
@@ -422,5 +448,4 @@ var editor = {
 		}
 };
 
-return editor;
-});
+module.exports = editor;

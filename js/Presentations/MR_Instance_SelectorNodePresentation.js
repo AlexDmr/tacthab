@@ -1,25 +1,22 @@
-define	( [ './PnodePresentation.js'
-		  , './SelectorNodePresentation.js'
-		  , './UPnP/MediaBrowser.js'
-		  , '../utils.js'
-		  ]
-		, function( PnodePresentation, SelectorNodePresentation
-				  , MediaBrowser
-				  , utils
-				  ) {
+var /*PnodePresentation			= require( './PnodePresentation.js' )
+  , */SelectorNodePresentation	= require( './SelectorNodePresentation.js' )
+  , MediaBrowser				= require( './UPnP/MediaBrowser.js' )
+  , utils						= require( '../utils.js' )
+  ;
 
 function MR_Instance_SelectorNodePresentation() {
 	SelectorNodePresentation.apply(this, []);
 	return this;
 }
 
-MR_Instance_SelectorNodePresentation.prototype = new SelectorNodePresentation();
-MR_Instance_SelectorNodePresentation.prototype.className = 'Pselector_ObjInstance';
+MR_Instance_SelectorNodePresentation.prototype = Object.create( SelectorNodePresentation.prototype ); // new SelectorNodePresentation();
+MR_Instance_SelectorNodePresentation.prototype.constructor	= MR_Instance_SelectorNodePresentation;
+MR_Instance_SelectorNodePresentation.prototype.className	= 'Pselector_ObjInstance';
 
 MR_Instance_SelectorNodePresentation.prototype.init		= function(PnodeID, parent, children, infoObj) {
 	SelectorNodePresentation.prototype.init.apply(this, [PnodeID, parent, children, infoObj]);
 	this.selector.type.push( 'MediaRenderer' );
-	if(infoObj) this.selector.objectId = infoObj.config.uuid;
+	if(infoObj) {this.selector.objectId = infoObj.config.uuid;}
 	return this;
 }
 
@@ -70,5 +67,4 @@ MR_Instance_SelectorNodePresentation.prototype.unserialize	= function(json, Pres
 	return this;
 }
 
-return MR_Instance_SelectorNodePresentation;
-});
+module.exports = MR_Instance_SelectorNodePresentation;

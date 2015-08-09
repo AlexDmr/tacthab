@@ -1,7 +1,6 @@
-define(	[ './operators.js'
-		, './AlxEvents.js'
-		]
-	  , function(OP, AlxEvents) {
+var OP			= require( './operators.js' )
+  , AlxEvents	= require( './AlxEvents.js' )
+  ;
 
 //
 function AlxAutomate(jsonDescr) {
@@ -9,6 +8,8 @@ function AlxAutomate(jsonDescr) {
 	return this;
 }
 
+AlxAutomate.prototype = Object.create( {} );
+AlxAutomate.prototype.constructor = AlxAutomate;
 AlxEvents(AlxAutomate);
 
 AlxAutomate.prototype.init		= function(jsonDescr) {
@@ -65,8 +66,8 @@ AlxAutomate.prototype.whichStateIfActiobn			= function(actionName) {
 }
 
 AlxAutomate.prototype.goingToState					= function(stateName) {
-	var L = []
-	  , s = this.currentState;
+	/*var L = []
+	  , s = this.currentState;*/
 	
 	// Find the shortest actions path to go to stateName from currentState
 	
@@ -106,5 +107,5 @@ AlxAutomate.prototype.goingToState					= function(stateName) {
  */
 
  
-return AlxAutomate;
-});
+module.exports = AlxAutomate;
+

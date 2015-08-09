@@ -1,8 +1,7 @@
-define( [ './Pevent.js'
-		, '../Bricks/Brick.js'
-		, '../../js/operators.js'
-	    ]
-	  , function(Pevent, Brick, OP) {
+var Pevent	= require( './Pevent.js' )
+  , Brick	= require( '../Bricks/Brick.js' )
+  , OP		= require( '../../js/operators.js' )
+  ;
 
 // Definition of a PeventBrick
 var PeventBrick = function() {
@@ -11,8 +10,9 @@ var PeventBrick = function() {
 	}
 
 // API for starting, stopping the instruction
-PeventBrick.prototype = new Pevent();
-PeventBrick.prototype.className	= 'PeventBrick';
+PeventBrick.prototype = Object.create( Pevent.prototype ); // new Pevent();
+PeventBrick.prototype.constructor	= PeventBrick;
+PeventBrick.prototype.className		= 'PeventBrick';
 PeventBrick.prototype.appendClass(PeventBrick);
 
 var classes = [];//Pnode.prototype.getClasses();
@@ -103,7 +103,7 @@ PeventBrick.prototype.synchronizeWithTargets	= function(targets) {
 }
 
 PeventBrick.prototype.syncWithBrick = function(brickId, eventName, filters) {
-	var self = this;
+	// var self = this;
 	var brick = Brick.prototype.getBrickFromId(brickId);
 	if(brick) {
 		 brick.on( eventName
@@ -124,7 +124,7 @@ PeventBrick.prototype.triggerEvent = function(event) {
 			 // Check
 			 if(  typeof event[att] === 'undefined'
 			   || !OP[op](event[att], val)
-			   ) return false;
+			   ) {return false;}
 			}
 		 this.parent.eventFromChild(this, event);
 		 return true;
@@ -133,5 +133,5 @@ PeventBrick.prototype.triggerEvent = function(event) {
 }
 
 
-return PeventBrick;
-});
+module.exports = PeventBrick;
+

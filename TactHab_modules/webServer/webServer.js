@@ -1,21 +1,15 @@
-define	( [ 'fs-extra'
-		  , 'express'
-		  , 'body-parser'
-		  , 'xmldom'
-		  , 'multer'
-		  , 'socket.io'
-		  , 'socket.io-client'
-		  , 'smtp-protocol'
-		  , 'request'
-		  , 'path'
-		  ]
-		, function( fs, express, bodyParser, xmldom, multer
-				  , io, ioClient
-				  , smtp
-				  , request
-				  , path
-				  ) {
-
+var fs				= require( 'fs-extra' )
+  , express			= require( 'express' )
+  , bodyParser		= require( 'body-parser' )
+  , xmldom			= require( 'xmldom' )
+  , multer			= require( 'multer' )
+  , io				= require( 'socket.io' )
+  , ioClient		= require( 'socket.io-client' )
+  , smtp			= require( 'smtp-protocol' )
+  , request			= require( 'request' )
+  , path			= require( 'path' )
+  ;
+  
 var TLS_SSL =	{ key	: fs.readFileSync( path.join('MM.pem'		 ))
 				, cert	: fs.readFileSync( path.join('certificat.pem'))
 				};	
@@ -27,7 +21,7 @@ var webServer = {
 	, xmldom		: xmldom
 	, DOMParser		: xmldom.DOMParser
 	, XMLSerializer	: xmldom.XMLSerializer
-	, multer		: multer
+	, multer		: multer({ dest: 'uploads/' })
 	, app			: null
 	, CB_addClient	: null
 	, CB_subClient	: null
@@ -78,9 +72,9 @@ var webServer = {
 		 this.app	  = this.express();
 		 console.log('HTTP (port:', HTTP_port, ') served from', staticPath);
 		 this.server  = this.app.use( this.express.static(staticPath) )
-								.use( this.bodyParser.urlencoded({ extended: false }) )
+								.use( this.bodyParser.urlencoded({ extended: true }) )
 								.use( this.bodyParser.json() )
-								.use( this.multer({ dest: './uploads/'}) )
+								.use( this.multer.single() )
 								.listen( HTTP_port ) ;
 		 this.clients = {};
 		 this.io	= io;
@@ -145,7 +139,7 @@ var webServer = {
 																				  for(var att in obj) {
 																					 if(typeof data[att] === 'undefined') {data[att] = obj[att];}
 																					}
-																				 } catch(err) {}
+																				 } catch(err) {console.error("Error processing message from websocket:", err)}
 																			 // Callbacks...
 																			 for(var i in self.D_CB_socketIO) {
 																				 self.D_CB_socketIO[i](data);
@@ -182,8 +176,9 @@ var webServer = {
 		 // this.socketioClient.removeListener(topic, CB);
 		 var title = re?'*':'_';
 		 title += topic;
-		 if(CB === this.D_CB_socketIO[title])
-			delete this.D_CB_socketIO[title];
+		 if(CB === this.D_CB_socketIO[title]) {
+			 delete this.D_CB_socketIO[title];
+			}
 		}
 	, wordPressEvent				: function(user, pass, title, categs) {
 		 for(var i in this.CB_wordPressEvent) {
@@ -218,9 +213,9 @@ var webServer = {
 						 , CB_success, CB_error
 						 );
 		}
-	, httpRequest					: function(url, method, headers, body, CB_success, CB_error) {
+	, httpRequest					: function(url, method, headers, bodyMsg, CB_success, CB_error) {
 		 var options = { url	: url
-					   , body	: body
+					   , body	: bodyMsg
 					   , method	: method
 					   , headers: headers
 					   };
@@ -251,6 +246,4 @@ var webServer = {
 		}
 };
 
-return webServer;
-
-}); // END
+module.exports = webServer;

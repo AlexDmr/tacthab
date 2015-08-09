@@ -3,10 +3,9 @@
  * @module PnodePresentation_module
  * @see module:protoPresentation
  */
- define	( [ './protoPresentation.js'
-		  , '../DragDrop.js'
-		  ]
-		, function(protoPresentation, DragDrop) {
+var protoPresentation	= require( './protoPresentation.js' )
+  // , DragDrop			= require( '../DragDrop.js' )
+  ;
 var L_Pnodes = {};
 
 /**
@@ -36,8 +35,9 @@ var PnodePresentation = function() {
 	return this;
 }
 
-PnodePresentation.prototype = new protoPresentation();
-PnodePresentation.prototype.className = 'PnodePresentation';
+PnodePresentation.prototype = Object.create( protoPresentation.prototype ); // new protoPresentation();
+PnodePresentation.prototype.constructor	= PnodePresentation;
+PnodePresentation.prototype.className	= 'PnodePresentation';
 
 /**
  * Initialization method: link the presentation with the corresponding program node identified on the server by PnodeID.
@@ -48,7 +48,7 @@ PnodePresentation.prototype.className = 'PnodePresentation';
 PnodePresentation.prototype.init = function(PnodeID, parent, children) {
 	protoPresentation.prototype.init.apply(this, [parent, children]);
 	this.PnodeID = PnodeID;
-	if(this.PnodeID) L_Pnodes[this.PnodeID] = this;
+	if(this.PnodeID) {L_Pnodes[this.PnodeID] = this;}
 	this.state	= null;
 	this.html	= {};
 	return this;
@@ -85,7 +85,7 @@ PnodePresentation.prototype.serialize	= function() {
  */
 PnodePresentation.prototype.unserialize	= function(json, PresoUtils) {
 	this.PnodeID = json.PnodeID;
-	if(this.PnodeID) L_Pnodes[this.PnodeID] = this;
+	if(this.PnodeID) {L_Pnodes[this.PnodeID] = this;}
 	this.Render();
 	for(var i in json.children) {
 		 this.appendChild( PresoUtils.unserialize(json.children[i]), PresoUtils );
@@ -141,5 +141,5 @@ PnodePresentation.prototype.deletePrimitives = function() {
 }
 
 // Return the constructor
-return PnodePresentation;
-});
+module.exports = PnodePresentation;
+

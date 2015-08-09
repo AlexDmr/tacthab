@@ -1,8 +1,7 @@
-define( [ './Pevent.js'
-		, '../webServer/webServer.js'
-		, '../../js/operators.js'
-	    ]
-	  , function(Pevent, webServer, op) {
+var Pevent		= require( './Pevent.js' )
+  , webServer	= require( '../webServer/webServer.js' )
+  , op			= require( '../../js/operators.js' )
+  ;
 		  
 // Deal with socket subscription
 // var D_events = {};
@@ -20,8 +19,9 @@ var PeventFromSocketIO = function() {
 }
 
 // API for starting, stopping the instruction
-PeventFromSocketIO.prototype = new Pevent();
-PeventFromSocketIO.prototype.className	= 'PeventFromSocketIO';
+PeventFromSocketIO.prototype = Object.create( Pevent.prototype ); //new Pevent();
+PeventFromSocketIO.prototype.constructor	= PeventFromSocketIO;
+PeventFromSocketIO.prototype.className		= 'PeventFromSocketIO';
 PeventFromSocketIO.prototype.appendClass(PeventFromSocketIO);
 
 PeventFromSocketIO.prototype.init		= function(parent, children) {
@@ -75,12 +75,14 @@ PeventFromSocketIO.prototype.unserialize	= function(json, Putils) {
 	Pevent.prototype.unserialize.apply(this, [json, Putils]);
 	this.subType = json.subType;
 	// Describe event here
-	if(this.event.topic && this.event.topic !== '')
-		unregisterSocketIO_CB(this.event.topic, this.event.isRegExp, this.triggerEventCB);
+	if(this.event.topic && this.event.topic !== '') {
+		 unregisterSocketIO_CB(this.event.topic, this.event.isRegExp, this.triggerEventCB);
+		}
 	this.event.topic	= json.event.topic;
 	this.event.isRegExp	= json.event.isRegExp;
-	if(this.event.topic && this.event.topic !== '')
-		registerSocketIO_CB  (this.event.topic, this.event.isRegExp, this.triggerEventCB);
+	if(this.event.topic && this.event.topic !== '') {
+		 registerSocketIO_CB  (this.event.topic, this.event.isRegExp, this.triggerEventCB);
+		}
 	this.event.filters = json.event.filters;
 	
 	return this;
@@ -92,6 +94,6 @@ PeventFromSocketIO.prototype.triggerEvent = function(event) {
 	return res;
 }
 
-return PeventFromSocketIO;
-});
+module.exports = PeventFromSocketIO;
+
 

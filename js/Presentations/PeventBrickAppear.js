@@ -1,9 +1,9 @@
-define	( [ './EventNodePresentation.js'
-		  , '../DragDrop.js'
-		  , '../utils.js'
-		  ]
-		, function(EventNodePresentation, DragDrop, utils, Var_UsePresentation) {
+var EventNodePresentation	= require( './EventNodePresentation.js' )
+  , DragDrop				= require( '../DragDrop.js' )
+  , utils					= require( '../utils.js' )
+  ;
 
+// XXX Try direct loading
 var htmlTemplate = null;
 utils.XHR( 'GET', 'js/Presentations/HTML_templates/PeventBrickAppear.html'
 		 , function() {htmlTemplate = this.responseText;}
@@ -19,8 +19,9 @@ var PeventBrickAppear = function() {
 	return this;
 }
 
-PeventBrickAppear.prototype = new EventNodePresentation();
-PeventBrickAppear.prototype.className = 'PeventBrickAppear';
+PeventBrickAppear.prototype = Object.create( EventNodePresentation.prototype ); // new EventNodePresentation();
+PeventBrickAppear.prototype.constructor	= PeventBrickAppear;
+PeventBrickAppear.prototype.className	= 'PeventBrickAppear';
 
 PeventBrickAppear.prototype.init		= function(PnodeID, parent, children) {
 	EventNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
@@ -98,5 +99,4 @@ PeventBrickAppear.prototype.Render	= function() {
 }
 
 // Return the constructor
-return PeventBrickAppear;
-});
+module.exports = PeventBrickAppear;

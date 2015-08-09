@@ -1,6 +1,5 @@
-define( [ './Pnode.js'
-	    ]
-	  , function(Pnode) {
+var Pnode = require( './Pnode.js' );
+
 // console.log('Pnode is a ', Pnode);
 // Definition of a node for programs
 var ParallelNode = function() {
@@ -9,7 +8,8 @@ var ParallelNode = function() {
 	}
 
 // API for starting, stopping the instruction
-ParallelNode.prototype = new Pnode();
+ParallelNode.prototype = Object.create( Pnode.prototype ); //new Pnode();
+ParallelNode.prototype.constructor	= ParallelNode;
 ParallelNode.prototype.className	= 'ParallelNode';
 Pnode.prototype.appendClass(ParallelNode);
 
@@ -37,5 +37,6 @@ ParallelNode.prototype.childStateChanged = function(child, prevState, newState) 
 		}
 	this.Stop();
 }
-return ParallelNode;
-});
+
+module.exports = ParallelNode;
+

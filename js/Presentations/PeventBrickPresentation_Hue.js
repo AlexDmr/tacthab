@@ -1,19 +1,19 @@
-define	( [ './PeventBrickPresentation.js'
-		  , '../DragDrop.js'
-		  , '../utils.js'
-		  ]
-		, function(PeventBrickPresentation, DragDrop, utils) {
+var PeventBrickPresentation	= require( './PeventBrickPresentation.js' )
+  // , DragDrop				= require( '../DragDrop.js' )
+  // , utils					= require( '../utils.js' )
+  ;
 
 var PeventBrickPresentation_Hue = function() {
 	PeventBrickPresentation.prototype.constructor.apply(this, []);
 	return this;
 }
 
-PeventBrickPresentation_Hue.prototype = new PeventBrickPresentation();
-PeventBrickPresentation_Hue.prototype.className = 'PeventBrick';
+PeventBrickPresentation_Hue.prototype = Object.create( PeventBrickPresentation.prototype ); // new PeventBrickPresentation();
+PeventBrickPresentation_Hue.prototype.constructor	= PeventBrickPresentation_Hue;
+PeventBrickPresentation_Hue.prototype.className		= 'PeventBrick';
 
 PeventBrickPresentation_Hue.prototype.Render	= function() {
-	var self = this;
+	// var self = this;
 	var root = PeventBrickPresentation.prototype.Render.apply(this, []);
 	root.classList.add('PeventBrickPresentation_Hue');
 	// Add possible events
@@ -29,13 +29,13 @@ PeventBrickPresentation_Hue.prototype.Render	= function() {
 		 this.html.selectEvent.appendChild( option );
 		}
 	this.html.selectEvent.onchange = function() {
-		 var i = parseInt(this.value);
-		 var event = events[i];
+		 // var i = parseInt(this.value);
+		 // var event = events[i];
 		 // XXX register event information to be serialized...
 		}
 	return root;
 }
 
 // Return the constructor
-return PeventBrickPresentation_Hue;
-});
+module.exports = PeventBrickPresentation_Hue;
+

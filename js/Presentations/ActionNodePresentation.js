@@ -1,7 +1,15 @@
-define	( [ './PnodePresentation.js'
-		  , '../DragDrop.js'
-		  ]
-		, function(PnodePresentation, DragDrop) {
+var PnodePresentation	= require( './PnodePresentation.js' )
+  , DragDrop			= require( '../DragDrop.js' )
+  , htmlTemplateText	= require( 'raw!./HTML_templates/ActionNodePresentation.html' )
+  ;
+
+var css = document.createElement('link');
+css.setAttribute('rel' , 'stylesheet');
+css.setAttribute('href', 'js/Presentations/HTML_templates/ActionNodePresentation.css');
+document.head.appendChild(css);
+
+var htmlTemplate = document.createElement('div');
+htmlTemplate.innerHTML = htmlTemplateText;
 
 var ActionNodePresentation = function() {
 	// console.log(this);
@@ -9,7 +17,8 @@ var ActionNodePresentation = function() {
 	return this;
 }
 
-ActionNodePresentation.prototype = new PnodePresentation();
+ActionNodePresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
+ActionNodePresentation.prototype.className = ActionNodePresentation;
 ActionNodePresentation.prototype.className = 'ActionNode';
 
 ActionNodePresentation.prototype.init = function(PnodeID, parent, children) {
@@ -20,6 +29,7 @@ ActionNodePresentation.prototype.init = function(PnodeID, parent, children) {
 	this.html			= {};
 	return this;
 }
+
 ActionNodePresentation.prototype.serialize	= function() {
 	var json = PnodePresentation.prototype.serialize.apply(this, []);
 	// Describe action here
@@ -50,36 +60,32 @@ ActionNodePresentation.prototype.primitivePlug	= function(c) {
 	}
 
 ActionNodePresentation.prototype.Render	= function() {
-	var self = this;
-	var root = PnodePresentation.prototype.Render.apply(this, []);
+	var self = this
+	  , root = PnodePresentation.prototype.Render.apply(this, []);
 	root.classList.add('ActionNode');
+	root.classList.add('ActionNodePresentation');
 	if(typeof this.html.actionName === 'undefined') {
-		 this.html.actionName = document.createElement('span');
-			this.html.actionName.classList.add( 'actionName' );
-			this.html.actionName.innerHTML = "ACTION";
-			this.divDescription.appendChild( this.html.actionName );
-		 this.html.divSelector = document.createElement('span');
-			this.html.divSelector.classList.add('selector');
-			this.html.divSelector.innerHTML = "Drop medias here";
-			this.dropZoneSelectorId = DragDrop.newDropZone( this.html.divSelector
-								, { acceptedClasse	: 'SelectorNode'
-								  , CSSwhenAccepted	: 'possible2drop'
-								  , CSSwhenOver		: 'ready2drop'
-								  , ondrop			: function(evt, draggedNode, infoObj) {
-										 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
-																					, undefined	// parent
-																					, undefined	// children
-																					, infoObj
-																					);
-										 self.appendChild( Pnode );
-										}
-								  }
-								);
-			this.divDescription.appendChild( this.html.divSelector );
-		} 
+		 this.copyHTML(htmlTemplate, root);
+		 this.html.actionName	= root.querySelector(".actionName");
+		 this.html.divSelector	= root.querySelector(".selector");
+		 this.dropZoneSelectorId = DragDrop.newDropZone	( this.html.divSelector
+														, { acceptedClasse	: 'SelectorNode'
+														  , CSSwhenAccepted	: 'possible2drop'
+														  , CSSwhenOver		: 'ready2drop'
+														  , ondrop			: function(evt, draggedNode, infoObj) {
+																 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																											, undefined	// parent
+																											, undefined	// children
+																											, infoObj
+																											);
+																 self.appendChild( Pnode );
+																}
+														  }
+														);
+		}
 	return root;
 }
 
 // Return the constructor
-return ActionNodePresentation;
-});
+module.exports = ActionNodePresentation;
+

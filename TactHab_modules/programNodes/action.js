@@ -1,8 +1,8 @@
-define( [ './Pnode.js'
-		, './Pcall.js'
-		, '../Bricks/Brick.js'
-	    ]
-	  , function(Pnode, Pcall, Brick) {
+var Pnode = require( './Pnode.js' )
+  , Pcall = require( './Pcall.js' )
+  , Brick = require( '../Bricks/Brick.js' )
+  ;
+
 // Definition of a node for programs
 var ActionNode = function(parent, mtd, params) {
 	 Pnode.prototype.constructor.apply(this, []);
@@ -10,8 +10,9 @@ var ActionNode = function(parent, mtd, params) {
 	}
 
 // API for starting, stopping the instruction
-ActionNode.prototype = new Pnode();
-ActionNode.prototype.className	= 'ActionNode';
+ActionNode.prototype = Object.create( Pnode.prototype ); //new Pnode();
+ActionNode.prototype.constructor	= ActionNode;
+ActionNode.prototype.className		= 'ActionNode';
 Pnode.prototype.appendClass(ActionNode);
 
 var classes = Pnode.prototype.getClasses();
@@ -32,9 +33,9 @@ ActionNode.prototype.setCommand = function(mtd, params) {
 }
 ActionNode.prototype.Start = function() {
 	var self = this
-	  , res  = Pnode.prototype.Start.apply(this, []);
-	// console.log("ActionNode::Start", res, this.mtd, this.params);
-	if(res) {
+	  , result  = Pnode.prototype.Start.apply(this, []);
+	// console.log("ActionNode::Start", result, this.mtd, this.params);
+	if(result) {
 		if( (this.children[0] && this.children[0].evalSelector)
 		  ||this.targets
 		  ) {
@@ -61,7 +62,7 @@ ActionNode.prototype.Start = function() {
 					this.Stop();
 				   }
 		}
-	return res;
+	return result;
 }
 ActionNode.prototype.serialize		= function() {
 	var json = Pnode.prototype.serialize.apply(this, []);
@@ -86,6 +87,6 @@ ActionNode.prototype.unserialize	= function(json, Putils) {
 	return this;
 }
 
-return ActionNode;
-});
+module.exports = ActionNode;
+
 

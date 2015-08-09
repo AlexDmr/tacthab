@@ -1,7 +1,8 @@
-define	( [ './PnodePresentation.js'
-		  , '../utils.js'
-		  ]
-		, function(PnodePresentation, utils) {
+var PnodePresentation	= require( './PnodePresentation.js' )
+  , utils				= require( '../utils.js' )
+  ;
+  
+// XXX Try direct loading
 // Retrieving htmlTemplate
 var htmlTemplate = '';
 utils.XHR( 'GET', 'js/Presentations/HTML_templates/PactionHTTP.html'
@@ -20,8 +21,9 @@ var PactionHTTP = function() {
 	return this;
 }
 
-PactionHTTP.prototype = new PnodePresentation();
-PactionHTTP.prototype.className = 'ActionNode';
+PactionHTTP.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
+PactionHTTP.prototype.constructor	= PactionHTTP;
+PactionHTTP.prototype.className		= 'ActionNode';
 
 PactionHTTP.prototype.init = function(PnodeID, parent, children) {
 	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
@@ -124,5 +126,5 @@ PactionHTTP.prototype.Render	= function() {
 }
 
 // Return the constructor
-return PactionHTTP;
-});
+module.exports = PactionHTTP;
+

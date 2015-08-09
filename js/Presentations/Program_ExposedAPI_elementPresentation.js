@@ -1,7 +1,6 @@
-define	( [ './Program_UsePresentation.js'
-		  , '../DragDrop.js'
-		  ]
-		, function(Program_UsePresentation, DragDrop) {
+var Program_UsePresentation	= require( './Program_UsePresentation.js' )
+  // , DragDrop				= require( '../DragDrop.js' )
+  ;
 
 var Program_ExposedAPI_elementPresentation = function() {
 	// console.log(this);
@@ -9,8 +8,9 @@ var Program_ExposedAPI_elementPresentation = function() {
 	return this;
 }
 
-Program_ExposedAPI_elementPresentation.prototype = new Program_UsePresentation();
-Program_ExposedAPI_elementPresentation.prototype.className = 'Pselector_variable';
+Program_ExposedAPI_elementPresentation.prototype = Object.create( Program_UsePresentation.prototype ); // new Program_UsePresentation();
+Program_ExposedAPI_elementPresentation.prototype.constructor	= Program_ExposedAPI_elementPresentation;
+Program_ExposedAPI_elementPresentation.prototype.className		= 'Pselector_variable';
 
 Program_ExposedAPI_elementPresentation.prototype.init		= function(PnodeID, parent, children, infoObj) {
 	Program_UsePresentation.prototype.init.apply(this, [PnodeID, parent, children, infoObj]);
@@ -74,5 +74,5 @@ Program_ExposedAPI_elementPresentation.prototype.Render	= function() {
 }
 
 // Return the constructor
-return Program_ExposedAPI_elementPresentation;
-});
+module.exports = Program_ExposedAPI_elementPresentation;
+

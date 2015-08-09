@@ -1,13 +1,12 @@
-define	( [ './EventNodePresentation.js'
-		  , '../DragDrop.js'
-		  , '../utils.js'
-		  ]
-		, function( EventNodePresentation, DragDrop, utils
+var EventNodePresentation	= require( './EventNodePresentation.js' )
+  , DragDrop				= require( '../DragDrop.js' )
+  , utils					= require( '../utils.js' )
+  ;
 				  // , htmlTemplate, htmlTemplateFilter
-				  ) {
 
 // Load ressources
 
+// XXX Try direct loading
 var htmlTemplate = null, htmlTemplateFilter = null;
 utils.XHR( 'GET', 'js/Presentations/HTML_templates/PeventBrickPresentation.html'
 		 , function() {htmlTemplate = this.responseText;}
@@ -26,8 +25,9 @@ var PeventBrickPresentation = function() {
 	return this;
 }
 
-PeventBrickPresentation.prototype = new EventNodePresentation();
-PeventBrickPresentation.prototype.className = 'PeventBrick';
+PeventBrickPresentation.prototype = Object.create( EventNodePresentation.prototype ); // new EventNodePresentation();
+PeventBrickPresentation.prototype.constructor	= PeventBrickPresentation;
+PeventBrickPresentation.prototype.className		= 'PeventBrick';
 
 PeventBrickPresentation.prototype.init		= function(PnodeID, parent, children) {
 	EventNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
@@ -93,7 +93,7 @@ PeventBrickPresentation.prototype.primitivePlug	= function(c) {
 					   , function(esa) {
 							 console.log(esa);
 							 console.log("---ESA:", esa);
-							 if(esa.error) return;
+							 if(esa.error) {return;}
 							 var events = {};
 							 for(i in esa) {
 								 for(e=0; e<esa[i].events.length; e++) {
@@ -141,7 +141,7 @@ PeventBrickPresentation.prototype.Render	= function() {
 		// Event name
 		this.html.eventName	= this.divDescription.querySelector(".EventNode.content > .eventName");
 			this.html.eventName.onchange = function() {self.event.eventName = self.html.eventName.value;};
-			if(this.event.eventName) this.html.eventName.setAttribute('value', this.event.eventName);
+			if(this.event.eventName) {this.html.eventName.setAttribute('value', this.event.eventName);}
 		// Filter
 		this.html.filter		= this.divDescription.querySelector(".EventNode.content > .filter");
 		this.html.addFilter	= this.divDescription.querySelector(".filter > input.addFilter");
@@ -162,5 +162,5 @@ PeventBrickPresentation.prototype.Render	= function() {
 }
 
 // Return the constructor
-return PeventBrickPresentation;
-});
+module.exports = PeventBrickPresentation;
+

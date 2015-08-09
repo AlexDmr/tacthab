@@ -1,8 +1,8 @@
-define( [ './Pnode.js'
-		, './Pselector.js'
-		, '../Bricks/Brick.js'
-	    ]
-	  , function(Pnode, Pselector, Brick) {
+var Pnode		= require( './Pnode.js' )
+  , Pselector	= require( './Pselector.js' )
+  , Brick		= require( '../Bricks/Brick.js' )
+  ;
+
 // console.log('Pnode is a ', Pnode);
 // Definition of a node for programs
 var Pselector_ObjInstance = function() {
@@ -11,7 +11,8 @@ var Pselector_ObjInstance = function() {
 	}
 
 // API for starting, stopping the instruction
-Pselector_ObjInstance.prototype = new Pselector();
+Pselector_ObjInstance.prototype = Object.create( Pselector.prototype ); //new Pselector();
+Pselector_ObjInstance.prototype.constructor	= Pselector_ObjInstance;
 Pselector_ObjInstance.prototype.className	= 'Pselector_ObjInstance';
 Pnode.prototype.appendClass( Pselector_ObjInstance );
 
@@ -42,7 +43,7 @@ Pselector_ObjInstance.prototype.updateType = function() {
 	// XXX Get type from object if it exists
 	if(typeof this.selector.objectId !== 'undefined') {
 		 var brick = Brick.prototype.getBrickFromId( this.selector.objectId );
-		 if(brick) this.selector.type = brick.getTypes();
+		 if(brick) {this.selector.type = brick.getTypes();}
 		}
 	return this.selector.type;
 }
@@ -60,5 +61,4 @@ Pselector_ObjInstance.prototype.unserialize	= function(json, Putils) {
 	return this;
 }
 
-return Pselector_ObjInstance;
-});
+module.exports = Pselector_ObjInstance;

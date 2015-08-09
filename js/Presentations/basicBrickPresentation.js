@@ -1,20 +1,18 @@
-define	( [ './PnodePresentation.js'
-		  , './SelectorNodePresentation.js'
-		  ]
-		, function( PnodePresentation
-				  , SelectorNodePresentation
-				  ) {
+var /*PnodePresentation			= require( './PnodePresentation.js' )
+  , */SelectorNodePresentation	= require( './SelectorNodePresentation.js' )
+  ;
 
 function basicBrickPresentation() {
 	SelectorNodePresentation.apply(this, []);
 }
 
-basicBrickPresentation.prototype = new SelectorNodePresentation();
+basicBrickPresentation.prototype = Object.create( SelectorNodePresentation.prototype ); // new SelectorNodePresentation();
+basicBrickPresentation.prototype.className = basicBrickPresentation;
 basicBrickPresentation.prototype.className = 'Pselector_ObjInstance';
 
 basicBrickPresentation.prototype.init	= function(PnodeID, parent, children, infoObj) {
 	SelectorNodePresentation.prototype.init.apply(this, [PnodeID, parent, children, infoObj]);
-	if(infoObj) this.selector.objectId = infoObj.config.uuid;
+	if(infoObj) {this.selector.objectId = infoObj.config.uuid;}
 	return this;
 }
 
@@ -42,5 +40,4 @@ basicBrickPresentation.prototype.unserialize	= function(json, PresoUtils) {
 	return this;
 }
 
-return basicBrickPresentation;
-});
+module.exports = basicBrickPresentation;

@@ -29,4 +29,12 @@
 		, "socket.io-client": "latest"
 		, "mqtt"			: "latest"
     }
+	, "devDependencies" : {
+		  "grunt": "latest"
+		, "grunt-contrib-jshint"	: "latest"
+		, "gruntify-eslint"			: "latest"
+		, "grunt-contrib-watch"		: "latest"
+		, "grunt-webpack"			: "latest"
+		, "raw-loader"				: "latest"
+	}
 }

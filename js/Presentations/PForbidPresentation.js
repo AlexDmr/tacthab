@@ -1,8 +1,7 @@
-define	( [ './PnodePresentation.js'
-		  , '../DragDrop.js'
-		  , '../utils.js'
-		  ]
-		, function(PnodePresentation, DragDrop, utils) {
+var PnodePresentation	= require( './PnodePresentation.js' )
+  , DragDrop			= require( '../DragDrop.js' )
+  , utils				= require( '../utils.js' )
+  ;
 
 // linking CSS
 var css = document.createElement('link');
@@ -22,8 +21,9 @@ var PForbidPresentation = function() {
 	return this;
 }
 
-PForbidPresentation.prototype = new PnodePresentation();
-PForbidPresentation.prototype.className = 'PForbidNode';
+PForbidPresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
+PForbidPresentation.prototype.constructor	= PForbidPresentation;
+PForbidPresentation.prototype.className		= 'PForbidNode';
 
 PForbidPresentation.prototype.init = function(PnodeID, parent, children) {
 	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
@@ -83,23 +83,24 @@ PForbidPresentation.prototype.updateHTML_programs_and_objects = function() {
 		}
 	if(this.html.selectActions && this.forbid.objects) {
 		 // call for possible actions and update the select.
-		 if(this.PnodeID)
-		 utils.call	( this.PnodeID, 'getESA', []
-					, function(esa) {
-						 var i, option;
-						 // console.log("esa", esa);
-						 self.html.selectActions.innerHTML = '';
-						 for(i in esa.actions) {
-							 option = document.createElement('option');
-								option.value = i;
-								option.appendChild( document.createTextNode(i) );
-							 self.html.selectActions.appendChild( option );
+		 if(this.PnodeID) {
+			 utils.call	( this.PnodeID, 'getESA', []
+						, function(esa) {
+							 var i, option;
+							 // console.log("esa", esa);
+							 self.html.selectActions.innerHTML = '';
+							 for(i in esa.actions) {
+								 option = document.createElement('option');
+									option.value = i;
+									option.appendChild( document.createTextNode(i) );
+								 self.html.selectActions.appendChild( option );
+								}
+							 if(self.forbid.action) {
+								 self.html.selectActions.value = self.forbid.action;
+								} else {self.forbid.action = option.value;}
 							}
-						 if(self.forbid.action) {
-							 self.html.selectActions.value = self.forbid.action;
-							} else {self.forbid.action = option.value;}
-						}
-					) 
+						)
+			}
 		}
 }
 
@@ -161,5 +162,5 @@ PForbidPresentation.prototype.Render	= function() {
 }
 
 // Return the constructor
-return PForbidPresentation;
-});
+module.exports = PForbidPresentation;
+

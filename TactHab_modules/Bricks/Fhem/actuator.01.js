@@ -1,6 +1,5 @@
-define( [ './BrickFhem.js'
-		]
-	  , function(BrickFhem) {
+var BrickFhem = require( './BrickFhem.js' );
+
 // Define
 function actuator_01(FhemBridge, listEntry) {
 	this.actuator = { intervalEval	: 3000
@@ -11,8 +10,7 @@ function actuator_01(FhemBridge, listEntry) {
 	return this;
 }
 
-actuator_01.prototype = new BrickFhem();
-	actuator_01.prototype.unreference();
+actuator_01.prototype = Object.create(BrickFhem.prototype ); //new BrickFhem(); actuator_01.prototype.unreference();
 actuator_01.prototype.constructor		= actuator_01;
 actuator_01.prototype.getTypeName		= function() {return "actuator_01";}
 actuator_01.prototype.getTypes		= function() {var L=BrickFhem.prototype.getTypes(); L.push(actuator_01.prototype.getTypeName()); return L;}
@@ -48,5 +46,4 @@ actuator_01.prototype.update			= function(data) {
 	this.emit('update', json);
 }
 
-return actuator_01;
-});
+module.exports = actuator_01;

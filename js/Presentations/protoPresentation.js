@@ -2,8 +2,7 @@
  * Module defining the generic presentation node of scene graph..
  * @module protoPresentation
  */
-define( function() {
-			 var uid = 0;
+var uid = 0;
 			 // Define the Presentation constructor
 /**
  * Represents PnodePresentation a program node in the scene graph.
@@ -19,6 +18,7 @@ var Presentation = function() {
 	return  
 }
 
+Presentation.prototype = Object.create( {} );
 Presentation.prototype.className = 'Presentation';
 Presentation.prototype.constructor = Presentation;
 Presentation.prototype.getUniqueId = function() {
@@ -62,10 +62,19 @@ Presentation.prototype.getUniqueId = function() {
  * @param {Presentation} c {@link Presentation} to append.
  */
  Presentation.prototype.appendChild = function(c) {
-	 if(this.children.indexOf(c) == -1) {
+	 if(this.children.indexOf(c) === -1) {
 		 this.children.push(c);
 		 this.primitivePlug(c);
 		 c.setParent(this);
+		}
+	}
+/**
+ * Copy children of source to dest
+ */
+ Presentation.prototype.copyHTML = function(node_source, node_dest) {
+	 node_dest.innerHTML = "";
+	 for(var i=0; i<node_source.children.length; i++) {
+		 node_dest.appendChild( node_source.children[i].cloneNode(true) );
 		}
 	}
 /**
@@ -155,6 +164,4 @@ Presentation.prototype.getUniqueId = function() {
 	}
 
  // Return the reference to the Presentation constructor
- return Presentation;
-}
-);
+module.exports = Presentation;

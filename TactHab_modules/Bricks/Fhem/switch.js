@@ -1,6 +1,5 @@
-define( [ './BrickFhem.js'
-		]
-	  , function(BrickFhem) {
+var BrickFhem = require( './BrickFhem.js' );
+
 // Define
 function EnO_switch(FhemBridge, listEntry) {
 	BrickFhem.apply(this, [FhemBridge, listEntry]);
@@ -9,8 +8,8 @@ function EnO_switch(FhemBridge, listEntry) {
 	return this;
 }
 
-EnO_switch.prototype = new BrickFhem();
-	EnO_switch.prototype.unreference();
+EnO_switch.prototype = Object.create(BrickFhem.prototype ); //new BrickFhem();
+	// EnO_switch.prototype.unreference();
 EnO_switch.prototype.constructor		= EnO_switch;
 EnO_switch.prototype.getTypeName		= function() {return "EnO_switch";}
 EnO_switch.prototype.getTypes		= function() {var L=BrickFhem.prototype.getTypes(); L.push(EnO_switch.prototype.getTypeName()); return L;}
@@ -42,6 +41,4 @@ EnO_switch.prototype.update			= function(data) {
 	this.emit('update', json);
 }
 
-return EnO_switch;
-
-});
+module.exports = EnO_switch;

@@ -1,12 +1,11 @@
-define( [ './parallel.js'
-		, './sequence.js'
-		, './Pdefinition.js'
-		, './Pcall.js'
-		, './Pnode.js'
-		, '../Bricks/Brick.js'
-	    ]
-	  , function( ParalleNode, SequenceNode
-				, Pdefinition, Pcall, Pnode, Brick) {
+var Pnode			= require( './Pnode.js' )
+  , ParalleNode		= require( './parallel.js' )
+  , SequenceNode	= require( './sequence.js' )
+  , Pdefinition		= require( './Pdefinition.js' )
+  // , Pcall			= require( './Pcall.js' )
+  , Brick			= require( '../Bricks/Brick.js' )
+  ;
+
 // Definition of a node for programs
 var ProgramNode = function() {
 	 SequenceNode.apply(this, []);
@@ -14,7 +13,7 @@ var ProgramNode = function() {
 	}
 
 // API for starting, stopping the instruction
-ProgramNode.prototype = new SequenceNode();
+ProgramNode.prototype = Object.create( SequenceNode.prototype ); //new SequenceNode();
 ProgramNode.prototype.constructor	= ProgramNode;
 ProgramNode.prototype.className	= 'ProgramNode';
 Pnode.prototype.appendClass(ProgramNode);
@@ -149,7 +148,7 @@ ProgramNode.prototype.RegisterFilter = function(filterNode) {
 }
 
 ProgramNode.prototype.getContext		= function() {
-	if(this.filtering) return this.cacheContext;
+	if(this.filtering) {return this.cacheContext;}
 	this.filtering = true;
 	
 	var context, i;
@@ -236,5 +235,4 @@ ProgramNode.prototype.unserialize	= function(json, Putils) {
 	return this;
 }
 
-return ProgramNode;
-});
+module.exports = ProgramNode;

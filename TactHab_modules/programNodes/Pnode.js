@@ -1,17 +1,7 @@
-define( [ //'../webServer/webServer.js'
-	    ]
-	  , function(/*webServer*/) {
 var states		= {0:'stopped', 1:'started'};
 var id			= 0;
 var D_nodes		= {};
 var D_classes	= {};
-
-function getNodeId() {
-	var PnodeID;
-	do	{PnodeID = 'Node' + (id++);
-		} while( Pnode.prototype.getNode(PnodeID) );
-	return PnodeID;
-}
 
 // Definition of a node for programs
 var Pnode = function() {
@@ -21,6 +11,14 @@ var Pnode = function() {
 	 return this;
 	}
 
+function getNodeId() {
+	var PnodeID;
+	do	{PnodeID = 'Node' + (id++);
+		} while( Pnode.prototype.getNode(PnodeID) );
+	return PnodeID;
+}
+
+Pnode.prototype = Object.create( {} );
 Pnode.prototype.constructor = Pnode;
 Pnode.prototype.className	= 'Pnode';
 
@@ -85,19 +83,19 @@ Pnode.prototype.unserialize	= function(json, Putils) {
 
 Pnode.prototype.isInstanceOf= function(classe)	{return this.getClasses().indexOf(classe) >= 0;}
 
-Pnode.prototype.getNode			= function(id)	{return D_nodes[id];}
-Pnode.prototype.substituteIdBy	= function(id)	{
+Pnode.prototype.getNode			= function(idNode)	{return D_nodes[idNode];}
+Pnode.prototype.substituteIdBy	= function(idNode)	{
 	 // Is there an object already having that id ?
-	 var obj = Pnode.prototype.getNode( id );
+	 var obj = Pnode.prototype.getNode( idNode );
 	 if(obj && (obj !== this)) {
 		 obj.dispose();
-		 console.log("Replacing object", id, ':', obj.className, "by", this.className, "now", id, '->', obj.id);
+		 console.log("Replacing object", idNode, ':', obj.className, "by", this.className, "now", idNode, '->', obj.id);
 		}
 	 
 	 // Replacing id and registrations
 	 delete D_nodes[this.id];
-	 this.id	= id;
-	 D_nodes[id]= this;
+	 this.id	= idNode;
+	 D_nodes[idNode]= this;
 	 
 	 return this;
 	}
@@ -139,7 +137,7 @@ Pnode.prototype.setState = function(state) {
 			 Pnode.prototype.CB_setState.apply(this, [this, prevState, state]);
 			}
 		 // console.log(this.className, "setting state to ", state);
-		 if(this.parent) this.parent.childStateChanged(this, prevState, state);
+		 if(this.parent) {this.parent.childStateChanged(this, prevState, state);}
 		 return true;
 		} else {return false;}
 }
@@ -152,7 +150,7 @@ Pnode.prototype.call = function(call) {
 	// Propagate an action call if it is not forbidden
 	if(this.parent) {
 		 return this.parent.call(call);
-		} else {error("Call cannot be propagated");}
+		} else {throw new Error("Call cannot be propagated because there is no parent node");}
 }
 
 Pnode.prototype.getContextDescription = function() {
@@ -175,5 +173,4 @@ Pnode.prototype.getContext = function() {
 		} else {return {variables:{}, bricks:{}};}
 }
 
-return Pnode;
-});
+module.exports = Pnode;

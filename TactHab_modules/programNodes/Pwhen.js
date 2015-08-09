@@ -1,7 +1,7 @@
-define( [ './Pnode.js'
-		, '../Bricks/Brick.js'
-	    ]
-	  , function(Pnode, Brick) {
+var Pnode = require( './Pnode.js' )
+  , Brick = require( '../Bricks/Brick.js' )
+  ;
+
 // Definition of a when node for programs
 var WhenNode = function() {
 	 Pnode.prototype.constructor.apply(this, []);	 
@@ -9,7 +9,7 @@ var WhenNode = function() {
 	}
 
 // API for starting, stopping the instruction
-WhenNode.prototype = new Pnode();
+WhenNode.prototype = Object.create(Pnode.prototype); //new Pnode();
 WhenNode.prototype.className	= 'WhenNode';
 Pnode.prototype.appendClass(WhenNode);
 
@@ -111,7 +111,7 @@ WhenNode.prototype.eventFromChild = function(child, event) {
 				} else {this.implicitVariableValue = null;}
 			 this.when.childReaction.Start();
 			}
-		} else {error('WhenNode::eventFromChild received an event from a child wich is not the eventNode.');}
+		} else {throw new Error('WhenNode::eventFromChild received an event from a child wich is not the eventNode.');}
 }
 
 WhenNode.prototype.childStateChanged = function(child, prevState, newState) {
@@ -130,7 +130,7 @@ WhenNode.prototype.getName		= function() {
 }
 
 WhenNode.prototype.updateType	= function() {
-	if(this.when.childEvent) return this.when.childEvent.getRelatedTypes();
+	if(this.when.childEvent) {return this.when.childEvent.getRelatedTypes();}
 	return [];
 }
 
@@ -149,5 +149,5 @@ WhenNode.prototype.getImplicitVariableId	= function() {
 	return null;
 }
 
-return WhenNode;
-});
+module.exports = WhenNode;
+

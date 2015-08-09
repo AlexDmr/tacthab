@@ -1,12 +1,11 @@
-define	( [ './PnodePresentation.js'
-		  , '../DragDrop.js'
-		  , '../utils.js'
-		  , './widgets/AlxTextEditor.js'
-		  ]
-		, function(PnodePresentation, DragDrop, utils, AlxTextEditor) {
+var PnodePresentation	= require( './PnodePresentation.js' )
+  // , DragDrop			= require( '../DragDrop.js' )
+  , utils				= require( '../utils.js' )
+  , AlxTextEditor		= require( './widgets/AlxTextEditor.js' )
+  ;
 
+// XXX Try direct loading
 var htmlTemplate;
-
 utils.XHR( 'GET', 'js/Presentations/HTML_templates/Pselector_TextPresentation.html'
 		 , function() {htmlTemplate = this.responseText;}
 		 );
@@ -22,8 +21,9 @@ var Pselector_TextPresentation = function() {
 	return this;
 }
 
-Pselector_TextPresentation.prototype = new PnodePresentation();
-Pselector_TextPresentation.prototype.className = 'Pselector_Text';
+Pselector_TextPresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
+Pselector_TextPresentation.prototype.constructor	= Pselector_TextPresentation;
+Pselector_TextPresentation.prototype.className		= 'Pselector_Text';
 
 Pselector_TextPresentation.prototype.init = function(PnodeID, parent, children, infoObj) {
 	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children, infoObj]);
@@ -65,5 +65,5 @@ Pselector_TextPresentation.prototype.Render	= function() {
 }
 
 // Return the constructor
-return Pselector_TextPresentation;
-});
+module.exports = Pselector_TextPresentation;
+

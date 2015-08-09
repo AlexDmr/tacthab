@@ -1,7 +1,5 @@
-define( [ './BrickFhem.js'
-		// , '../standards/temperature.js'
-		]
-	  , function(BrickFhem) {
+var BrickFhem = require( './BrickFhem.js' );
+
 // Define
 function tempSensor_05(FhemBridge, listEntry) {
 	BrickFhem.apply(this, [FhemBridge, listEntry]);
@@ -9,8 +7,7 @@ function tempSensor_05(FhemBridge, listEntry) {
 	return this;
 }
 
-tempSensor_05.prototype = new BrickFhem();
-	tempSensor_05.prototype.unreference();
+tempSensor_05.prototype = Object.create(BrickFhem.prototype ); //new BrickFhem(); tempSensor_05.prototype.unreference();
 tempSensor_05.prototype.constructor		= tempSensor_05;
 tempSensor_05.prototype.getTypeName		= function() {return "tempSensor_05";}
 tempSensor_05.prototype.getTypes		= function() {var L=BrickFhem.prototype.getTypes(); L.push(tempSensor_05.prototype.getTypeName()); return L;}
@@ -41,5 +38,4 @@ tempSensor_05.prototype.update			= function(data) {
 		 this.emit('update', json);
 		}
 
-return tempSensor_05;
-});
+module.exports = tempSensor_05; // XXXX should it be that way ?

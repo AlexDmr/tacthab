@@ -1,9 +1,8 @@
-define	( [ './PnodePresentation.js'
-		  , '../utils.js'
-		  , '../DragDrop.js'
-		  , './Var_UsePresentation.js'
-		  ]
-		, function(PnodePresentation, utils, DragDrop, Var_UsePresentation) {
+var PnodePresentation	= require( './PnodePresentation.js' )
+  , utils				= require( '../utils.js' )
+  , DragDrop			= require( '../DragDrop.js' )
+  , Var_UsePresentation	= require( './Var_UsePresentation.js' )
+  ;
 
 var css = document.createElement('link');
 	css.setAttribute('rel' , 'stylesheet');
@@ -15,8 +14,9 @@ var WhenNodePresentation = function() {
 	return this;
 }
 
-WhenNodePresentation.prototype = new PnodePresentation();
-WhenNodePresentation.prototype.className = 'WhenNode';
+WhenNodePresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
+WhenNodePresentation.prototype.constructor	= WhenNodePresentation;
+WhenNodePresentation.prototype.className	= 'WhenNode';
 
 WhenNodePresentation.prototype.init = function(PnodeID, parent, children) {
 	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
@@ -176,5 +176,5 @@ WhenNodePresentation.prototype.primitivePlug	= function(c) {
 }
 
 // Return the constructor
-return WhenNodePresentation;
-});
+module.exports = WhenNodePresentation;
+

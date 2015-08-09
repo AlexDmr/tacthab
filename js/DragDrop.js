@@ -1,6 +1,3 @@
-define	( []
-		, function() {
-
 var DragDrop = {
 	  draggedNode	: null
 	, infoObj		: null
@@ -18,7 +15,7 @@ var DragDrop = {
 		 return this;
 		}
 	, deleteDropZone: function(id) {
-		 if(typeof this.dropZones[id] === 'undefined') return;
+		 if(typeof this.dropZones[id] === 'undefined') {return;}
 		 var config = this.dropZones[id].config
 		   , node   = this.dropZones[id].node;
 		 node.removeEventListener('dragenter'	, config.dragenter	, false);
@@ -154,6 +151,4 @@ var DragDrop = {
 		}
 };
 
-return DragDrop;
-
-});
+module.exports = DragDrop;

@@ -1,8 +1,7 @@
-define	( [ './EventNodePresentation.js'
-		  , '../DragDrop.js'
-		  , '../utils.js'
-		  ]
-		, function(EventNodePresentation, DragDrop, utils) {
+var EventNodePresentation	= require( './EventNodePresentation.js' )
+  // , DragDrop				= require( '../DragDrop.js' )
+  , utils					= require( '../utils.js' )
+  ;
 
 // linking CSS
 var css = document.createElement('link');
@@ -24,8 +23,9 @@ var PeventFromSocketIOPresentation = function() {
 	return this;
 }
 
-PeventFromSocketIOPresentation.prototype = new EventNodePresentation();
-PeventFromSocketIOPresentation.prototype.className = 'PeventFromSocketIO';
+PeventFromSocketIOPresentation.prototype = Object.create( EventNodePresentation.prototype ); // new EventNodePresentation();
+PeventFromSocketIOPresentation.prototype.constructor	= PeventFromSocketIOPresentation;
+PeventFromSocketIOPresentation.prototype.className		= 'PeventFromSocketIO';
 
 PeventFromSocketIOPresentation.prototype.init		= function(PnodeID, parent, children) {
 	EventNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
@@ -111,5 +111,5 @@ PeventFromSocketIOPresentation.prototype.Render	= function() {
 }
 
 // Return the constructor
-return PeventFromSocketIOPresentation;
-});
+module.exports = PeventFromSocketIOPresentation;
+

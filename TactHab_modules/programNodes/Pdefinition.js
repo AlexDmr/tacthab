@@ -1,7 +1,7 @@
-define( [ './Pnode.js'
-		, './sequence.js'
-	    ]
-	  , function(Pnode, SequenceNode) {
+var Pnode			= require( './Pnode.js' )
+  , SequenceNode	= require( './sequence.js' )
+  ;
+
 // console.log('Pnode is a ', Pnode);
 // Definition of a node for programs
 var DefinitionNode = function() {
@@ -10,8 +10,9 @@ var DefinitionNode = function() {
 }
 
 // API for starting, stopping the instruction
-DefinitionNode.prototype = new SequenceNode();
-DefinitionNode.prototype.className	= 'DefinitionNode';
+DefinitionNode.prototype = Object.create( SequenceNode.prototype ); //)new SequenceNode();
+DefinitionNode.prototype.constructor	= DefinitionNode;
+DefinitionNode.prototype.className		= 'DefinitionNode';
 Pnode.prototype.appendClass(DefinitionNode);
 
 var classes = SequenceNode.prototype.getClasses().slice();
@@ -31,7 +32,7 @@ DefinitionNode.prototype.getVariableId	= function(id, node, prefix) {
 	if(!program) {console.error('!!!!!!!!!! => THERE IS NO PROGRAM ANCESTOR FOR DefinitionNode:', this.id);}
 	if(id) {
 		 if(this.Dico[id] && this.Dico[id] !== node) {console.trace("ERROR: variable already in use", id);
-													  throw(new Error("ERROR: variable already in use"));
+													  throw new Error("ERROR: variable already in use");
 													 }
 		 this.Dico[id] = node;
 		 return id;
@@ -56,5 +57,5 @@ DefinitionNode.prototype.getVariableId	= function(id, node, prefix) {
 	return name;
 }
 
-return DefinitionNode;
-});
+module.exports = DefinitionNode;
+

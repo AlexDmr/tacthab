@@ -1,7 +1,7 @@
-define( [ './Pevent.js'
-		, '../Bricks/Brick.js'
-	    ]
-	  , function(Pevent, Brick) {
+var Pevent	= require( './Pevent.js' )
+  , Brick	= require( '../Bricks/Brick.js' )
+  ;
+  
 var ProtoBrick = Brick.prototype.getBrickFromId( 'ProtoBrick' );
 
 // Definition of a PeventBrick
@@ -11,7 +11,8 @@ var PeventBrickAppear = function() {
 }
 
 // API for starting, stopping the instruction
-PeventBrickAppear.prototype = new Pevent();
+PeventBrickAppear.prototype = Object.create( Pevent.prototype ); //new Pevent();
+PeventBrickAppear.prototype.constructor	= PeventBrickAppear;
 PeventBrickAppear.prototype.className	= 'PeventBrickAppear';
 PeventBrickAppear.prototype.appendClass(PeventBrickAppear);
 
@@ -97,5 +98,5 @@ PeventBrickAppear.prototype.getRelatedTypes	= function() {
 	return types;
 }
 
-return PeventBrickAppear;
-});
+module.exports = PeventBrickAppear;
+

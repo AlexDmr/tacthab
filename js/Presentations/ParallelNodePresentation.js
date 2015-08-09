@@ -1,14 +1,13 @@
-define	( [ './PnodeNChildPresentation.js'
-		  ]
-		, function(PnodeNChildPresentation) {
+var PnodeNChildPresentation = require( './PnodeNChildPresentation.js' );
 
 var ParallelNodePresentation = function() {
 	PnodeNChildPresentation.prototype.constructor.apply(this, []);
 	return this;
 }
 
-ParallelNodePresentation.prototype = new PnodeNChildPresentation();
-ParallelNodePresentation.prototype.className = 'ParallelNode';
+ParallelNodePresentation.prototype = Object.create( PnodeNChildPresentation.prototype ); // new PnodeNChildPresentation();
+ParallelNodePresentation.prototype.constructor	= ParallelNodePresentation;
+ParallelNodePresentation.prototype.className	= 'ParallelNode';
 
 ParallelNodePresentation.prototype.init = function(PnodeID, parent, children) {
 	PnodeNChildPresentation.prototype.init.apply(this, [PnodeID, parent, children]);
@@ -29,5 +28,5 @@ ParallelNodePresentation.prototype.Render	= function() {
 }
 
 // Return the constructor
-return ParallelNodePresentation;
-});
+module.exports = ParallelNodePresentation;
+

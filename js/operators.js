@@ -1,6 +1,5 @@
-define	( []
-		, function() {
-// Definition of a PeventFromSocketIO
+/*eslint eqeqeq:0 */
+
 var op = { 'equal'			: function(a, b) {return a == b;}
 		 , 'different'		: function(a, b) {return a != b;}
 		 , 'greater'		: function(a, b) {return parseFloat(a) >  parseFloat(b);}
@@ -15,5 +14,4 @@ var op = { 'equal'			: function(a, b) {return a == b;}
 									}
 		};
 
-return op;
-});
+module.exports = op;

@@ -1,14 +1,8 @@
-define	( [ './PnodePresentation.js'
-		  ,	'./PnodeNChildPresentation.js'
-		  , './SequenceNodePresentation.js'
-		  , './ParallelNodePresentation.js'
-		  , '../DragDrop.js'
-		  ]
-		, function( PnodePresentation
-				  , PnodeNChildPresentation
-				  , SequenceNodePresentation
-				  , ParallelNodePresentation
-				  , DragDrop) {
+var PnodePresentation			= require( './PnodePresentation.js' )
+  , PnodeNChildPresentation		= require( './PnodeNChildPresentation.js' )
+  // , SequenceNodePresentation	= require( './SequenceNodePresentation.js' )
+  // , ParallelNodePresentation	= require( './ParallelNodePresentation.js' )
+  , DragDrop					= require( '../DragDrop.js' )
 
 var ProgramNodePresentation = function() {
 	// console.log(this);
@@ -16,8 +10,9 @@ var ProgramNodePresentation = function() {
 	return this;
 }
 
-ProgramNodePresentation.prototype = new PnodeNChildPresentation();
-ProgramNodePresentation.prototype.className = 'ProgramNode';
+ProgramNodePresentation.prototype = Object.create( PnodeNChildPresentation.prototype ); //new PnodeNChildPresentation();
+ProgramNodePresentation.prototype.constructor	= ProgramNodePresentation;
+ProgramNodePresentation.prototype.className		= 'ProgramNode';
 
 ProgramNodePresentation.prototype.init = function(PnodeID, parent, children) {
 	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
@@ -150,5 +145,5 @@ ProgramNodePresentation.prototype.deletePrimitives = function() {
 }
 
 // Return the constructor
-return ProgramNodePresentation;
-});
+module.exports = ProgramNodePresentation;
+

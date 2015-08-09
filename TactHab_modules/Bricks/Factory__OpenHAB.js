@@ -1,38 +1,31 @@
-define( [ './Brick.js'
-		, './BrickUPnP.js'
-		, './BrickUPnPFactory.js'
-		, '../webServer/webServer.js'
-		, 'request'
-		, 'mqtt'
-		, '../../js/AlxEvents.js'
-		, './types/Color.js'
-		, './types/Contact.js'
-		, './types/DateTime.js'
-		, './types/Dimmer.js'
-		, './types/Number.js'
-		, './types/RollerShutter.js'
-		, './types/String.js'
-		, './types/Switch.js'
-		]
-	  , function( Brick, BrickUPnP, BrickUPnPFactory, webServer, request, mqtt, AlxEvent
-				, Brick_Color
-				, Brick_Contact
-				, Brick_DateTime
-				, Brick_Dimmer
-				, Brick_Number
-				, Brick_RollerShutter
-				, Brick_String
-				, Brick_Switch
-				) {
+/*eslint no-wrap-func: 0 */
 
-var openHab_types = { 'Color'			: Brick_Color
-					, 'Contact'			: Brick_Contact
-					, 'DateTime'		: Brick_DateTime
-					, 'Dimmer'			: Brick_Dimmer
-					, 'Number'			: Brick_Number
-					, 'RollerShutter'	: Brick_RollerShutter
-					, 'String'			: Brick_String
-					, 'Switch'			: Brick_Switch
+var Brick				= require( './Brick.js' )
+  , BrickUPnP			= require( './BrickUPnP.js' )
+  , BrickUPnPFactory	= require( './BrickUPnPFactory.js' )
+  // , webServer			= require( '../webServer/webServer.js' )
+  , request				= require( 'request' )
+  , mqtt				= require( 'mqtt' )
+  // , AlxEvent			= require( '../../js/AlxEvents.js' )
+  , Brick_Color			= require( './types/Color.js' )
+  , Brick_Contact		= require( './types/Contact.js' )
+  , Brick_DateTime		= require( './types/DateTime.js' )
+  , Brick_Dimmer		= require( './types/Dimmer.js' )
+  , Brick_Number		= require( './types/Number.js' )
+  , Brick_RollerShutter	= require( './types/RollerShutter.js' )
+  , Brick_String		= require( './types/String.js' )
+  , Brick_Switch		= require( './types/Switch.js' )
+  ;
+
+
+var openHab_types = { 'Color'				: Brick_Color
+					, 'Contact'				: Brick_Contact
+					, 'DateTime'			: Brick_DateTime
+					, 'Dimmer'				: Brick_Dimmer
+					, 'Number'				: Brick_Number
+					, 'RollerShutter'		: Brick_RollerShutter
+					, 'String'				: Brick_String
+					, 'Switch'				: Brick_Switch
 					, 'ColorItem'			: Brick_Color
 					, 'ContactItem'			: Brick_Contact
 					, 'DateTimeItem'		: Brick_DateTime
@@ -51,15 +44,29 @@ var openHab_types = { 'Color'			: Brick_Color
 var BrickOpenHAB = function() {
 	 // var self = this;
 	 BrickUPnP.prototype.constructor.apply(this, []);
+	 this.config = {mqtt: null};
 	 return this;
 	}
 
-BrickOpenHAB.prototype = new BrickUPnP(); BrickOpenHAB.prototype.unreference();
+BrickOpenHAB.prototype = Object.create(BrickUPnP.prototype); //new BrickUPnP(); BrickOpenHAB.prototype.unreference();
 BrickOpenHAB.prototype.constructor = BrickOpenHAB;
 BrickOpenHAB.prototype.getTypeName = function() {return "BrickOpenHAB";}
 BrickOpenHAB.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickOpenHAB.prototype.getTypeName()); return L;}
 
-BrickOpenHAB.prototype.sendCommand	= function(cmd) {
+BrickOpenHAB.prototype.sendCommand	= function(brick, command) {
+	var topic;
+	if(this.config) {
+		 topic = "/" + this.config.mqtt + "/in/" + brick.name + "/command";
+		 this.publish(topic, command);
+		}
+	return this;
+}
+
+BrickOpenHAB.prototype.publish		= function(topic, message) {
+	 if(this.client) {
+		 this.client.publish(topic, message);
+		}
+	 return this;
 	}
 
 BrickOpenHAB.prototype.processGroupItem = function(groupItem) {
@@ -75,11 +82,11 @@ BrickOpenHAB.prototype.processGroupItem = function(groupItem) {
 }
 
 BrickOpenHAB.prototype.getIdFromName= function(name) {
-	return name; //this.brickId + '_item_' + name;
+	return name;
 }
 
 BrickOpenHAB.prototype.processItem	= function(item) {
-	var self	= this;
+	// var self	= this;
 	// item:
 	//	- type
 	//	- name
@@ -89,7 +96,7 @@ BrickOpenHAB.prototype.processItem	= function(item) {
 	var constr = openHab_types[item.type];
 	if(constr) {
 		 console.log("--- openHAB item:", item.type, item.name);
-		 var brick = new constr().changeIdTo( this.getIdFromName(item.name) ).init(item);
+		 /*var brick =*/ new constr().changeIdTo( this.getIdFromName(item.name) ).init(item).setFactory(this);
 		} else {console.log("!!! openHAB unsupported item:", item.type);}
 }
 	
@@ -98,6 +105,7 @@ BrickOpenHAB.prototype.init = function(device) {
 	BrickUPnP.prototype.init.apply(this, [device]);
 	// Connect to MQTT
 	if( device.mqtt ) {
+		this.config.mqtt = device.mqtt;
 		var MQTT_broker = { servers			: [ { host: device.mqtt.host, port: device.mqtt.port }
 											  ]
 						  ,	protocolId		: 'MQIsdp'
@@ -139,8 +147,9 @@ BrickOpenHAB.prototype.init = function(device) {
 							} 
 						 if(name && (brick = Brick.prototype.getBrickFromId(self.getIdFromName(name))) ) {
 							 // message is Buffer 
+							 console.log(name, operation)
 							 var msg   = message.toString();
-							 brick.update(operation, msg);
+							 brick.update(topic, operation, msg);
 							}
 						}
 				  );
@@ -185,5 +194,4 @@ var Factory__OpenHAB = new BrickUPnPFactory( 'Factory__OpenHAB'
 											}
 										); 
 	
-return Factory__OpenHAB;
-});
+module.exports = Factory__OpenHAB;

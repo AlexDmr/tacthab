@@ -1,7 +1,6 @@
-define	( [ './PnodePresentation.js'
-		  , '../DragDrop.js'
-		  ]
-		, function(PnodePresentation, DragDrop) {
+var PnodePresentation	= require( './PnodePresentation.js' )
+  // , DragDrop			= require( '../DragDrop.js' )
+  ;
 		
 var css = document.createElement('link');
 	css.setAttribute('rel' , 'stylesheet');
@@ -14,8 +13,9 @@ var Pselector_ObjTypePresentation = function() {
 	return this;
 }
 
-Pselector_ObjTypePresentation.prototype = new PnodePresentation();
-Pselector_ObjTypePresentation.prototype.className = 'Pselector_ObjType';
+Pselector_ObjTypePresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
+Pselector_ObjTypePresentation.prototype.constructor	= Pselector_ObjTypePresentation;
+Pselector_ObjTypePresentation.prototype.className	= 'Pselector_ObjType';
 
 Pselector_ObjTypePresentation.prototype.init = function(PnodeID, parent, children, infoObj) {
 	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children, infoObj]);
@@ -76,5 +76,5 @@ Pselector_ObjTypePresentation.prototype.Render	= function() {
 }
 
 // Return the constructor
-return Pselector_ObjTypePresentation;
-});
+module.exports = Pselector_ObjTypePresentation;
+

@@ -1,6 +1,5 @@
-define( [ './BrickFhem.js'
-		]
-	  , function(BrickFhem) {
+var BrickFhem = require( './BrickFhem.js' );
+
 // Define
 function contact(FhemBridge, listEntry) {
 	BrickFhem.apply(this, [FhemBridge, listEntry]);
@@ -8,8 +7,7 @@ function contact(FhemBridge, listEntry) {
 	return this;
 }
 
-contact.prototype = new BrickFhem();
-	contact.prototype.unreference();
+contact.prototype = Object.create(BrickFhem.prototype ); //new BrickFhem(); contact.prototype.unreference();
 contact.prototype.constructor		= contact;
 contact.prototype.getTypeName		= function() {return "contact";}
 contact.prototype.getTypes		= function() {var L=BrickFhem.prototype.getTypes(); L.push(contact.prototype.getTypeName()); return L;}
@@ -29,5 +27,4 @@ contact.prototype.update			= function(data) {
 		}
 
 
-return contact;
-});
+module.exports = contact;

@@ -1,6 +1,5 @@
-define( [ './Pnode.js'
-	    ]
-	  , function(Pnode) {
+var Pnode = require( './Pnode.js' );
+
 // console.log('Pnode is a ', Pnode);
 // Definition of a node for programs
 var SequenceNode = function() {
@@ -9,7 +8,8 @@ var SequenceNode = function() {
 	}
 
 // API for starting, stopping the instruction
-SequenceNode.prototype = new Pnode();
+SequenceNode.prototype = Object.create(Pnode.prototype); //new Pnode();
+SequenceNode.prototype.constructor = SequenceNode;
 SequenceNode.prototype.className	= 'SequenceNode';
 Pnode.prototype.appendClass(SequenceNode);
 
@@ -41,7 +41,7 @@ SequenceNode.prototype.Stop = function() {
 }
 
 SequenceNode.prototype.childStateChanged = function(child, prevState, newState) {
-	if(this.currentChildIndex === -1) return;
+	if(this.currentChildIndex === -1) {return;}
 	if(child === this.children[this.currentChildIndex]) {
 		 if(newState === 0){
 			 this.currentChildIndex++;
@@ -49,7 +49,7 @@ SequenceNode.prototype.childStateChanged = function(child, prevState, newState) 
 				 this.Stop();
 				} else	{this.children[this.currentChildIndex].Start();}
 			}
-		} else {error('SequenceNode::childStateChanged : a child state changed but this was not the expected child !');}
+		} else {throw new Error('SequenceNode::childStateChanged : a child state changed but this was not the expected child !');}
 }
-return SequenceNode;
-});
+
+module.exports = SequenceNode;

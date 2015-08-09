@@ -1,8 +1,7 @@
-define( [ './Pnode.js'
-		, './PvariableDeclaration.js'
-		, './program.js'
-	    ]
-	  , function(Pnode, PvariableDeclaration, ProgramNode) {
+var Pnode					= require( './Pnode.js' )
+  , PvariableDeclaration	= require( './PvariableDeclaration.js' )
+  , ProgramNode				= require( './program.js' )
+  ;
 
 var PprogramDeclaration = function() {
 	PvariableDeclaration.apply(this, []);
@@ -10,8 +9,9 @@ var PprogramDeclaration = function() {
 }
 
 // API for starting, stopping the instruction
-PprogramDeclaration.prototype = new PvariableDeclaration();
-PprogramDeclaration.prototype.className	= 'PprogramDeclaration';
+PprogramDeclaration.prototype = Object.create( PvariableDeclaration.prototype ); // new PvariableDeclaration();
+PprogramDeclaration.prototype.constructor	= PprogramDeclaration;
+PprogramDeclaration.prototype.className		= 'PprogramDeclaration';
 Pnode.prototype.appendClass( PprogramDeclaration );
 
 PprogramDeclaration.prototype.init		= function(parent, children) {
@@ -89,5 +89,5 @@ PprogramDeclaration.prototype.unserialize	= function(json, Putils) {
 } 
 
 
-return PprogramDeclaration;
-});
+module.exports = PprogramDeclaration;
+

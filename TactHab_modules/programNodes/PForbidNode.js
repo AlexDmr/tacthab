@@ -1,12 +1,9 @@
-define( [ './program.js'
-		, './Pnode.js'
-		, '../../js/operators.js'
-		, 'underscore'
-	    ]
-	  , function( ProgramNode
-				, Pnode
-				, OP
-				, _ ) {
+var /*ProgramNode	= require( './program.js' )
+  , */Pnode		= require( './Pnode.js' )
+  , OP			= require( '../../js/operators.js' )
+  , _			= require( 'underscore' )
+  ;
+  
 // Definition of a node for programs
 var PForbidNode = function() {
 	Pnode.prototype.constructor.apply(this, []);
@@ -14,7 +11,8 @@ var PForbidNode = function() {
 }
 
 // API for starting, stopping the instruction
-PForbidNode.prototype = new Pnode();
+PForbidNode.prototype = Object.create( Pnode.prototype ); //new Pnode();
+PForbidNode.prototype.constructor = PForbidNode;
 PForbidNode.prototype.className	= 'PForbidNode';
 Pnode.prototype.appendClass(PForbidNode);
 
@@ -90,7 +88,7 @@ PForbidNode.prototype.doesFilterApplyOnPrameters	= function(call) {
 PForbidNode.prototype.applyFilterOn					= function(originalCall, currentCall) {
 	if(this.forbid.objects && originalCall.mtdName === this.forbid.action) {
 		var objects = this.forbid.objects.evalSelector()
-		  , filteredObject, i;
+		  , filteredObject;
 		 if(this.forbid.forbidden) {														// Do we have to remove some targets?
 			 // filteredObject = _.intersection(objects, currentCall.targets);
 			 if(this.doesFilterApplyOnPrameters(currentCall)) {
@@ -132,5 +130,4 @@ PForbidNode.prototype.unserialize	= function(json, Putils) {
 	return this;
 }
 
-return PForbidNode;
-});
+module.exports = PForbidNode;

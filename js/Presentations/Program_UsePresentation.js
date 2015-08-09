@@ -1,7 +1,7 @@
-define	( [ './PnodePresentation.js'
-		  , '../DragDrop.js'
-		  ]
-		, function(PnodePresentation, DragDrop) {
+var PnodePresentation	= require( './PnodePresentation.js' )
+  // , DragDrop			= require( '../DragDrop.js' )
+  ;
+  
 var css = document.createElement('link');
 	css.setAttribute('rel' , 'stylesheet');
 	css.setAttribute('href', 'css/Program_UsePresentation.css');
@@ -13,7 +13,7 @@ var Program_UsePresentation = function() {
 	return this;
 }
 
-Program_UsePresentation.prototype = new PnodePresentation();
+Program_UsePresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
 Program_UsePresentation.prototype.className		= 'Pselector_program';
 Program_UsePresentation.prototype.constructor	= Program_UsePresentation
 
@@ -72,5 +72,5 @@ Program_UsePresentation.prototype.Render	= function() {
 }
 
 // Return the constructor
-return Program_UsePresentation;
-});
+module.exports = Program_UsePresentation;
+

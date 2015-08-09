@@ -1,7 +1,6 @@
-define	( [ './PnodePresentation.js'
-		  , '../DragDrop.js'
-		  ]
-		, function(PnodePresentation, DragDrop) {
+var PnodePresentation	= require( './PnodePresentation.js' )
+  // , DragDrop			= require( '../DragDrop.js' )
+  ;
 
 var PcontrolBrickPresentation = function() {
 	// console.log(this);
@@ -9,8 +8,9 @@ var PcontrolBrickPresentation = function() {
 	return this;
 }
 
-PcontrolBrickPresentation.prototype = new PnodePresentation();
-PcontrolBrickPresentation.prototype.className = 'PcontrolBrick';
+PcontrolBrickPresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
+PcontrolBrickPresentation.prototype.constructor	= PcontrolBrickPresentation;
+PcontrolBrickPresentation.prototype.className	= 'PcontrolBrick';
 
 PcontrolBrickPresentation.prototype.init = function(PnodeID, parent, children) {
 	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
@@ -40,5 +40,5 @@ PcontrolBrickPresentation.prototype.Render	= function() {
 }
 
 // Return the constructor
-return PcontrolBrickPresentation;
-});
+module.exports = PcontrolBrickPresentation;
+

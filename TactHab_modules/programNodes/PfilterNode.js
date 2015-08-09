@@ -1,10 +1,8 @@
-define( [ './program.js'
-		, './Pnode.js'
-		, 'underscore'
-	    ]
-	  , function( ProgramNode
-				, Pnode
-				, _ ) {
+var Pnode		= require( './Pnode.js' )
+  // , ProgramNode	= require( './program.js' )
+  // , _			= require( 'underscore' )
+  ;
+
 // Definition of a node for programs
 var PfilterNode = function() {
 	Pnode.prototype.constructor.apply(this, []);
@@ -12,8 +10,9 @@ var PfilterNode = function() {
 }
 
 // API for starting, stopping the instruction
-PfilterNode.prototype = new Pnode();
-PfilterNode.prototype.className	= 'PfilterNode';
+PfilterNode.prototype = Object.create( Pnode.prototype ); //new Pnode();
+PfilterNode.prototype.constructor	= PfilterNode;
+PfilterNode.prototype.className		= 'PfilterNode';
 Pnode.prototype.appendClass(PfilterNode);
 
 var classes = Pnode.prototype.getClasses().slice();
@@ -104,5 +103,5 @@ PfilterNode.prototype.unserialize	= function(json, Putils) {
 	return this;
 }
 
-return PfilterNode;
-});
+module.exports = PfilterNode;
+

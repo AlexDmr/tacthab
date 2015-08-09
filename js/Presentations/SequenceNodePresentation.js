@@ -1,14 +1,13 @@
-define	( [ './PnodeNChildPresentation.js'
-		  ]
-		, function(PnodeNChildPresentation) {
+var PnodeNChildPresentation	= require( './PnodeNChildPresentation.js' );
 
 var SequenceNodePresentation = function() {
 	PnodeNChildPresentation.prototype.constructor.apply(this, []);
 	return this;
 }
 
-SequenceNodePresentation.prototype = new PnodeNChildPresentation();
-SequenceNodePresentation.prototype.className = 'SequenceNode';
+SequenceNodePresentation.prototype = Object.create( PnodeNChildPresentation.prototype ); // new PnodeNChildPresentation();
+SequenceNodePresentation.prototype.constructor	= SequenceNodePresentation;
+SequenceNodePresentation.prototype.className	= 'SequenceNode';
 
 SequenceNodePresentation.prototype.init = function(PnodeID, parent, children) {
 	PnodeNChildPresentation.prototype.init.apply(this, [PnodeID, parent, children]);
@@ -27,5 +26,5 @@ SequenceNodePresentation.prototype.Render	= function() {
 	return root;
 }
 // Return the constructor
-return SequenceNodePresentation;
-});
+module.exports = SequenceNodePresentation;
+
