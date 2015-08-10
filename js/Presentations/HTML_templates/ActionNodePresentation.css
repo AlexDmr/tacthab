@@ -34,3 +34,21 @@ div.Pnode.ActionNodePresentation > * {
 .ActionNodePresentation p.selector {
 	background		: #B9B9FF;
 }
+
+@keyframes ActionNodePresentation_droppable {
+	0%				 {background	: #B9B9FF;}
+	50%				   {transform		: scale(1.2);
+					   background	: lightgreen;
+					  }
+	100%			   {background: #B9B9FF;}
+}
+
+.ActionNodePresentation p.selector.possible2drop {
+	animation		: ActionNodePresentation_droppable 1s ease-in-out infinite;
+}
+
+.ActionNodePresentation p.selector.possible2drop.ready2drop {
+	transform		: scale(1.2);
+	background		: lightgreen;
+	animation		: initial;
+}

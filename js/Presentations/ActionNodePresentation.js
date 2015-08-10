@@ -66,8 +66,10 @@ ActionNodePresentation.prototype.Render	= function() {
 	root.classList.add('ActionNodePresentation');
 	if(typeof this.html.actionName === 'undefined') {
 		 this.copyHTML(htmlTemplate, root);
+		 this.html.img_symbol	= root.querySelector( "img.action_symbol" );
 		 this.html.actionName	= root.querySelector(".actionName");
 		 this.html.divSelector	= root.querySelector(".selector");
+		 this.html.img_symbol.setAttribute("src", "js/Presentations/HTML_templates/action_128x128.jpg");
 		 this.dropZoneSelectorId = DragDrop.newDropZone	( this.html.divSelector
 														, { acceptedClasse	: 'SelectorNode'
 														  , CSSwhenAccepted	: 'possible2drop'

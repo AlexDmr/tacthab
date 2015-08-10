@@ -251,7 +251,10 @@ webServer.app.post( '/Start'
 				  , function(req, res) {
 						 if(req.body.programId) {
 							 var obj = Pnode.prototype.getNode(req.body.programId);
-							 if(obj) {console.log("Start program", obj.id); obj.Start();console.log("\tstart done...");}
+							 if(obj) {console.log("Start program", obj.id);
+									  obj.Start();
+									  console.log("\tstart done...");
+									 } else {console.error("No program corresponding to id", req.body.programId);}
 							} else {console.log("Start : no program specified");}
 						 res.end();
 						}
@@ -304,7 +307,7 @@ webServer.app.post( '/call'
 					
 webServer.app.get( '/loadProgram'
 	, function(req, res) {
-			 console.log("loadProgram :", req.query.programId, 'with program root', pgRootId);
+			console.log("GET loadProgram :", req.query.programId, 'with program root', pgRootId);
 			var programId = req.query.programId;
 			if(programId === undefined) {programId = pgRootId || null;}
 			if(programId) {
@@ -328,7 +331,7 @@ webServer.app.get( '/loadProgram'
 webServer.app.post( '/loadProgram'
 	, function(req, res) {
 		 var parent = null, previousProgram = null;
-		 console.log("Saving program...");
+		 console.log("POST /loadProgram : Saving program...");
 		 console.log("\treq.body:", req.body);
 		 // console.log("\treq.headers:", req.headers);
 		 console.log("\treq.body.programId:", req.body.programId);
@@ -350,7 +353,9 @@ webServer.app.post( '/loadProgram'
 					 } catch(err) {console.trace("Error when disposing previous program", previousProgram.id, err);}
 				}
 			 pg.setParent(parent);
-			 if(pgRootId === '' && parent === null) {pgRootId = pg.id; console.log("\tNow pgRootId =", pgRootId);}
+			 if(pgRootId === '' && parent === null) {pgRootId = pg.id;
+													 console.log("\tNow pgRootId =", pgRootId);
+													}
 			 res.writeHead(200, {'Content-type': 'application/json; charset=utf-8'});
 			 var str_prg = JSON.stringify( pg.serialize() );
 			 // console.log("|n=======================> Sending:\n", str_prg, "\n");

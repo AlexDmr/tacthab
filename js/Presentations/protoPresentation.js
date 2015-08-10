@@ -126,6 +126,7 @@ Presentation.prototype.getUniqueId = function() {
 							   } else {primitiveParent = null;}
 				 var root = this.Render();
 				 if(primitiveParent) {primitiveParent.appendChild(root);}
+				 return root;
 				}
 /**
  * Plug the HTML root node of c under a HTML node used in the rendering.

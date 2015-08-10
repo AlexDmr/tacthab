@@ -4,6 +4,7 @@ var DragDrop				= require( './DragDrop.js' )
   , PnodePresentation		= require( './Presentations/PnodePresentation.js' )
   // , async					= require( './async.js' )
   // , BrickUPnP_MediaRenderer	= require(  )
+  , inputHidden				= null
   ;
 
 function createSubCateg(editor, subCateg, variable, api, t, i) {
@@ -228,7 +229,7 @@ var editor = {
 
 		 // Process variables and bricks
 		 var variables = {};
-		 var inputHidden = document.getElementById('programId');
+		 inputHidden = document.getElementById('programId');
 		 if(inputHidden) {variables.nodeId = inputHidden.value;}
 		 utils.XHR( 'POST', '/getContext'
 				  , { variables	: variables
@@ -435,7 +436,7 @@ var editor = {
 		 // console.log('Plug parsed program');
 		 this.rootProgram = prog;
 		 this.htmlNodeProgram.appendChild( prog.Render() );
-		 var inputHidden = document.getElementById('programId');
+		 // var inputHidden = document.getElementById('programId');
 		 if(inputHidden === null) {
 			 console.log("Create a new hidden input for program",  prog.PnodeID);
 			 inputHidden = document.createElement('input');

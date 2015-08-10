@@ -27,7 +27,6 @@ openHab_Action.prototype.Render = function() {
 	 // var self = this;
 	 var root = ActionNodePresentation.prototype.Render.apply(this, []);
 	 root.classList.add( "openHab_Action" );
-	 this.html.img_symbol = root.querySelector( "img.action_symbol" );
 	 this.html.img_symbol.setAttribute("src", "js/Presentations/openHab/templates/openhab-logo-square.png");
 	 return root;
 	}

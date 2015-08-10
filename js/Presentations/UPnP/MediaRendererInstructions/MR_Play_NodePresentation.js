@@ -1,5 +1,4 @@
 var ActionNodePresentation	= require( '../../ActionNodePresentation.js' )
-  // , utils					= require( '../../../utils.js' )
   , DragDrop				= require( '../../../DragDrop.js' )
   ;
   
@@ -9,7 +8,7 @@ var MR_Play_NodePresentation = function() {
 	 return this;
 	}
 
-MR_Play_NodePresentation.prototype = Object.create( ActionNodePresentation.prototype ); // new ActionNodePresentation();
+MR_Play_NodePresentation.prototype = Object.create( ActionNodePresentation.prototype );
 MR_Play_NodePresentation.prototype.constructor = MR_Play_NodePresentation;
 
 MR_Play_NodePresentation.prototype.init		= function(PnodeID, parent, children) {

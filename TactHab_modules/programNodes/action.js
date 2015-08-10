@@ -31,6 +31,7 @@ ActionNode.prototype.setCommand = function(mtd, params) {
 	this.params	= params;
 	return this;
 }
+
 ActionNode.prototype.Start = function() {
 	var self = this
 	  , result  = Pnode.prototype.Start.apply(this, []);
@@ -64,6 +65,7 @@ ActionNode.prototype.Start = function() {
 		}
 	return result;
 }
+
 ActionNode.prototype.serialize		= function() {
 	var json = Pnode.prototype.serialize.apply(this, []);
 	// Describe action here
@@ -73,6 +75,7 @@ ActionNode.prototype.serialize		= function() {
 	json.subType = this.subType;
 	return json;
 }
+
 ActionNode.prototype.unserialize	= function(json, Putils) {
 	Pnode.prototype.unserialize.apply(this, [json, Putils]);
 	// Describe action here

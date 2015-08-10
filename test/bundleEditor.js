@@ -7530,6 +7530,7 @@
 	  , PnodePresentation		= __webpack_require__( 59 )
 	  // , async					= require( './async.js' )
 	  // , BrickUPnP_MediaRenderer	= require(  )
+	  , inputHidden				= null
 	  ;
 
 	function createSubCateg(editor, subCateg, variable, api, t, i) {
@@ -7754,7 +7755,7 @@
 
 			 // Process variables and bricks
 			 var variables = {};
-			 var inputHidden = document.getElementById('programId');
+			 inputHidden = document.getElementById('programId');
 			 if(inputHidden) {variables.nodeId = inputHidden.value;}
 			 utils.XHR( 'POST', '/getContext'
 					  , { variables	: variables
@@ -7961,7 +7962,7 @@
 			 // console.log('Plug parsed program');
 			 this.rootProgram = prog;
 			 this.htmlNodeProgram.appendChild( prog.Render() );
-			 var inputHidden = document.getElementById('programId');
+			 // var inputHidden = document.getElementById('programId');
 			 if(inputHidden === null) {
 				 console.log("Create a new hidden input for program",  prog.PnodeID);
 				 inputHidden = document.createElement('input');
@@ -8645,6 +8646,7 @@
 								   } else {primitiveParent = null;}
 					 var root = this.Render();
 					 if(primitiveParent) {primitiveParent.appendChild(root);}
+					 return root;
 					}
 	/**
 	 * Plug the HTML root node of c under a HTML node used in the rendering.
@@ -8873,8 +8875,10 @@
 		root.classList.add('ActionNodePresentation');
 		if(typeof this.html.actionName === 'undefined') {
 			 this.copyHTML(htmlTemplate, root);
+			 this.html.img_symbol	= root.querySelector( "img.action_symbol" );
 			 this.html.actionName	= root.querySelector(".actionName");
 			 this.html.divSelector	= root.querySelector(".selector");
+			 this.html.img_symbol.setAttribute("src", "js/Presentations/HTML_templates/action_128x128.jpg");
 			 this.dropZoneSelectorId = DragDrop.newDropZone	( this.html.divSelector
 															, { acceptedClasse	: 'SelectorNode'
 															  , CSSwhenAccepted	: 'possible2drop'
@@ -10242,6 +10246,7 @@
 	// 
 	var openHab_Action_OnOff = function() {
 		 openHab_Action.apply(this, []);
+		 this.mustDoRender = true;
 		 return this;
 		}
 
@@ -10258,19 +10263,27 @@
 		 json.subType = 'openHab_Action_OnOff';
 		 return json;
 		}
-		
+
+	openHab_Action_OnOff.prototype.forceRender		= function() {
+		this.mustDoRender = true;
+		return openHab_Action.prototype.forceRender.apply(this, []);
+	}
+
 	openHab_Action_OnOff.prototype.Render = function() {
 		 var self = this;
 		 var root = openHab_Action.prototype.Render.apply(this,[]);
-		 root.classList.add( "openHab_Action_OnOff" );
-		 this.copyHTML(html_template, this.html.actionName);
-		 this.html.OnOff			= root.querySelector("select.OnOff");
-		 this.html.OnOff.value		= this.action.method = this.action.method || 'Do_On';
-		 this.html.OnOff.onchange	= function() {self.action.method = this.value;}
-		 DragDrop.updateConfig	( this.dropZoneSelectorId
-								, { acceptedClasse: [[openHabTypes.OnOff]]
-								  }
-								);
+		 if(this.mustDoRender) {
+			 this.mustDoRender = false;
+			 root.classList.add( "openHab_Action_OnOff" );
+			 this.copyHTML(html_template, this.html.actionName);
+			 this.html.OnOff			= root.querySelector("select.OnOff");
+			 this.html.OnOff.value		= this.action.method = this.action.method || 'Do_On';
+			 this.html.OnOff.onchange	= function() {self.action.method = this.value;}
+			 DragDrop.updateConfig	( this.dropZoneSelectorId
+									, { acceptedClasse: [[openHabTypes.OnOff]]
+									  }
+									);
+			}
 		 return root;
 		}
 
@@ -10310,7 +10323,6 @@
 		 // var self = this;
 		 var root = ActionNodePresentation.prototype.Render.apply(this, []);
 		 root.classList.add( "openHab_Action" );
-		 this.html.img_symbol = root.querySelector( "img.action_symbol" );
 		 this.html.img_symbol.setAttribute("src", "js/Presentations/openHab/templates/openhab-logo-square.png");
 		 return root;
 		}
@@ -11269,7 +11281,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var ActionNodePresentation	= __webpack_require__( 63 )
-	  // , utils					= require( '../../../utils.js' )
 	  , DragDrop				= __webpack_require__( 56 )
 	  ;
 	  
@@ -11279,7 +11290,7 @@
 		 return this;
 		}
 
-	MR_Play_NodePresentation.prototype = Object.create( ActionNodePresentation.prototype ); // new ActionNodePresentation();
+	MR_Play_NodePresentation.prototype = Object.create( ActionNodePresentation.prototype );
 	MR_Play_NodePresentation.prototype.constructor = MR_Play_NodePresentation;
 
 	MR_Play_NodePresentation.prototype.init		= function(PnodeID, parent, children) {

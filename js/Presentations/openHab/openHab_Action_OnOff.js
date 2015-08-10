@@ -11,6 +11,7 @@ html_template.innerHTML = str_template;
 // 
 var openHab_Action_OnOff = function() {
 	 openHab_Action.apply(this, []);
+	 this.mustDoRender = true;
 	 return this;
 	}
 
@@ -27,19 +28,27 @@ openHab_Action_OnOff.prototype.serialize = function() {
 	 json.subType = 'openHab_Action_OnOff';
 	 return json;
 	}
-	
+
+openHab_Action_OnOff.prototype.forceRender		= function() {
+	this.mustDoRender = true;
+	return openHab_Action.prototype.forceRender.apply(this, []);
+}
+
 openHab_Action_OnOff.prototype.Render = function() {
 	 var self = this;
 	 var root = openHab_Action.prototype.Render.apply(this,[]);
-	 root.classList.add( "openHab_Action_OnOff" );
-	 this.copyHTML(html_template, this.html.actionName);
-	 this.html.OnOff			= root.querySelector("select.OnOff");
-	 this.html.OnOff.value		= this.action.method = this.action.method || 'Do_On';
-	 this.html.OnOff.onchange	= function() {self.action.method = this.value;}
-	 DragDrop.updateConfig	( this.dropZoneSelectorId
-							, { acceptedClasse: [[openHabTypes.OnOff]]
-							  }
-							);
+	 if(this.mustDoRender) {
+		 this.mustDoRender = false;
+		 root.classList.add( "openHab_Action_OnOff" );
+		 this.copyHTML(html_template, this.html.actionName);
+		 this.html.OnOff			= root.querySelector("select.OnOff");
+		 this.html.OnOff.value		= this.action.method = this.action.method || 'Do_On';
+		 this.html.OnOff.onchange	= function() {self.action.method = this.value;}
+		 DragDrop.updateConfig	( this.dropZoneSelectorId
+								, { acceptedClasse: [[openHabTypes.OnOff]]
+								  }
+								);
+		}
 	 return root;
 	}
 
