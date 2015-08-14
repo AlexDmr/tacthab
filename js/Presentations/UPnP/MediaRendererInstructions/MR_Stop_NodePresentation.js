@@ -25,7 +25,8 @@ MR_Stop_NodePresentation.prototype.serialize = function() {
 MR_Stop_NodePresentation.prototype.Render = function() {
 	 // var self = this;
 	 var root = MR_Play_NodePresentation.prototype.Render.apply(this,[]);
-	 this.html.actionName.innerHTML = "Stop";
+	 this.html.img_symbol.setAttribute('src', 'js/Presentations/UPnP/images/icon_STOP.png');
+	 this.html.actionName.innerHTML = "STOP"
 	 return root;
 	}
 

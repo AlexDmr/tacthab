@@ -7527,7 +7527,7 @@
 	var DragDrop				= __webpack_require__( 56 )
 	  , utils					= __webpack_require__( 1 )
 	  , PresoUtils				= __webpack_require__( 57 )
-	  , PnodePresentation		= __webpack_require__( 59 )
+	  , PnodePresentation		= __webpack_require__( 61 )
 	  // , async					= require( './async.js' )
 	  // , BrickUPnP_MediaRenderer	= require(  )
 	  , inputHidden				= null
@@ -7707,9 +7707,14 @@
 			 // Create new draggable for BrickFhem
 			 this.openHAB_categ = 
 			 this.createCateg("openHAB"		).appendChild(	(this.openHab_instructions	= 
-															 this.createCateg("Instructions").appendChild( this.createDragNode( 'Do On/Off'
+															 this.createCateg("Instructions").appendChild( this.createDragNode( 'Do action On/Off'
 																										 , { constructor	: PresoUtils.get('openHab_Action_OnOff')
 																										   , nodeType		: ['ActionNode', 'instruction']
+																										   , objectsType	: 'openHab_Action_OnOff'
+																										   } )
+																							).appendChild( this.createDragNode( 'on event On/Off'
+																										 , { constructor	: PresoUtils.get('openHab_Event_OnOff')
+																										   , nodeType		: ['EventNode']
 																										   , objectsType	: 'openHab_Action_OnOff'
 																										   } )
 																										 )
@@ -8143,41 +8148,43 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var PresoUtils = {
-		  mapping		: { 'ProgramNode'							: __webpack_require__( 58 )
-						  , 'ParalleNode'							: __webpack_require__( 62 )
-						  , 'ActionNode'							: __webpack_require__( 63 )
-						  , 'SequenceNode'							: __webpack_require__( 65 )	, 'SequenceNodePresentation'	: __webpack_require__( 65 )
-						  , 'EventNode'								: __webpack_require__( 66 )		, 'EventNodePresentation'		: __webpack_require__( 66 )
-						  , 'PeventFromSocketIOPresentation'		: __webpack_require__( 67 )
-						  , 'WhenNode'								: __webpack_require__( 68 )		, 'WhenNodePresentation'		: __webpack_require__( 68 )
-						  , 'PcontrolBrick'							: __webpack_require__( 70 )
-						  , 'PfilterPresentation'					: __webpack_require__( 71 )
-						  , 'PForbidPresentation'					: __webpack_require__( 72 )
-						  , 'PeventBrickPresentation'				: __webpack_require__( 73 )
-						  , 'PeventBrickAppear'						: __webpack_require__( 74 )
-						  , 'basicBrickPresentation'				: __webpack_require__( 75 )
-						  , 'Pselector_ObjTypePresentation'			: __webpack_require__( 77 )
-						  , 'openHab_Action_OnOff'					: __webpack_require__( 78 )
+		  mapping		: { 'ProgramNode'							: __webpack_require__( 66 )
+						  , 'ParalleNode'							: __webpack_require__( 68 )
+						  , 'ActionNode'							: __webpack_require__( 60 )
+						  , 'SequenceNode'							: __webpack_require__( 69 )	, 'SequenceNodePresentation'	: __webpack_require__( 69 )
+						  , 'EventNode'								: __webpack_require__( 70 )		, 'EventNodePresentation'		: __webpack_require__( 70 )
+						  , 'PeventFromSocketIOPresentation'		: __webpack_require__( 72 )
+						  , 'WhenNode'								: __webpack_require__( 73 )		, 'WhenNodePresentation'		: __webpack_require__( 73 )
+						  , 'PcontrolBrick'							: __webpack_require__( 75 )
+						  , 'PfilterPresentation'					: __webpack_require__( 76 )
+						  , 'PForbidPresentation'					: __webpack_require__( 77 )
+						  , 'PeventBrickPresentation'				: __webpack_require__( 78 )
+						  , 'PeventBrickAppear'						: __webpack_require__( 79 )
+						  , 'basicBrickPresentation'				: __webpack_require__( 80 )
+						  , 'Pselector_ObjTypePresentation'			: __webpack_require__( 82 )
+						  // OpenHab
+						  , 'openHab_Action_OnOff'					: __webpack_require__( 58 )
+						  , 'openHab_Event_OnOff'					: __webpack_require__( 83 )
 						  // Variables
-						  , 'Program_UsePresentation'				: __webpack_require__( 82 )
-						  , 'Program_DefinitionPresentation'		: __webpack_require__( 83 )
-						  , 'Var_DefinitionPresentation'			: __webpack_require__( 84 )
-						  , 'SelectorNodePresentation'				: __webpack_require__( 76 )
-						  , 'MR_Instance_SelectorNodePresentation'	: __webpack_require__( 85 )
-						  , 'Var_UsePresentation'					: __webpack_require__( 69 )
-						  , 'PprogramActionPresentation'			: __webpack_require__( 88 )
-						  , 'Program_ExposedAPI_elementPresentation': __webpack_require__( 89 )
+						  , 'Program_UsePresentation'				: __webpack_require__( 86 )
+						  , 'Program_DefinitionPresentation'		: __webpack_require__( 87 )
+						  , 'Var_DefinitionPresentation'			: __webpack_require__( 88 )
+						  , 'SelectorNodePresentation'				: __webpack_require__( 81 )
+						  , 'MR_Instance_SelectorNodePresentation'	: __webpack_require__( 89 )
+						  , 'Var_UsePresentation'					: __webpack_require__( 74 )
+						  , 'PprogramActionPresentation'			: __webpack_require__( 92 )
+						  , 'Program_ExposedAPI_elementPresentation': __webpack_require__( 93 )
 						  // General type variables
-						  , 'Pselector_TextPresentation'			: __webpack_require__( 90 )
+						  , 'Pselector_TextPresentation'			: __webpack_require__( 94 )
 						  // MediaRenderer
-						  , 'MR_Play_NodePresentation'				: __webpack_require__( 92 )
-						  , 'MR_load_NodePresentation'				: __webpack_require__( 93 )
-						  , 'MR_Pause_NodePresentation'				: __webpack_require__( 94 )
-						  , 'MR_Stop_NodePresentation'				: __webpack_require__( 95 )
+						  , 'MR_Play_NodePresentation'				: __webpack_require__( 96 )
+						  , 'MR_load_NodePresentation'				: __webpack_require__( 97 )
+						  , 'MR_Pause_NodePresentation'				: __webpack_require__( 98 )
+						  , 'MR_Stop_NodePresentation'				: __webpack_require__( 99 )
 						  // Hue
-						  , 'PeventBrickPresentation_Hue'			: __webpack_require__( 96 )
+						  , 'PeventBrickPresentation_Hue'			: __webpack_require__( 100 )
 						  // HTTP
-						  , 'PactionHTTP'							: __webpack_require__( 97 )
+						  , 'PactionHTTP'							: __webpack_require__( 101 )
 						  }
 		, get			: function(className) {
 			 var classe	= this.mapping[ className ];
@@ -8212,159 +8219,207 @@
 /* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation			= __webpack_require__( 59 )
-	  , PnodeNChildPresentation		= __webpack_require__( 61 )
-	  // , SequenceNodePresentation	= require( './SequenceNodePresentation.js' )
-	  // , ParallelNodePresentation	= require( './ParallelNodePresentation.js' )
-	  , DragDrop					= __webpack_require__( 56 )
+	var openHab_Action	= __webpack_require__( 59 )
+	  // , utils		= require( '../../../utils.js' )
+	  , DragDrop		= __webpack_require__( 56 )
+	  , openHabTypes	= __webpack_require__( 64 )
+	  , str_template	= __webpack_require__( 65 )
+	  , html_template	= document.createElement( "div" )
+	  ;
+	  
+	html_template.innerHTML = str_template;
 
-	var ProgramNodePresentation = function() {
+	// 
+	var openHab_Action_OnOff = function() {
+		 openHab_Action.apply(this, []);
+		 this.mustDoRender = true;
+		 return this;
+		}
+
+	openHab_Action_OnOff.prototype = Object.create( openHab_Action.prototype );
+	openHab_Action_OnOff.prototype.constructor = openHab_Action_OnOff;
+
+	openHab_Action_OnOff.prototype.init		= function(PnodeID, parent, children) {
+		 openHab_Action.prototype.init.apply(this, [PnodeID, parent, children]);
+		 return this;
+		}
+
+	openHab_Action_OnOff.prototype.serialize = function() {
+		 var json = openHab_Action.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Action_OnOff';
+		 return json;
+		}
+
+	openHab_Action_OnOff.prototype.forceRender		= function() {
+		this.mustDoRender = true;
+		return openHab_Action.prototype.forceRender.apply(this, []);
+	}
+
+	openHab_Action_OnOff.prototype.Render = function() {
+		 var self = this;
+		 var root = openHab_Action.prototype.Render.apply(this,[]);
+		 if(this.mustDoRender) {
+			 this.mustDoRender = false;
+			 root.classList.add( "openHab_Action_OnOff" );
+			 this.copyHTML(html_template, this.html.actionName);
+			 this.html.OnOff			= root.querySelector("select.OnOff");
+			 this.html.OnOff.value		= this.action.method = this.action.method || 'Do_On';
+			 this.html.OnOff.onchange	= function() {self.action.method = this.value;}
+			 DragDrop.updateConfig	( this.dropZoneSelectorId
+									, { acceptedClasse: [[openHabTypes.OnOff]]
+									  }
+									);
+			}
+		 return root;
+		}
+
+	module.exports = openHab_Action_OnOff;
+
+
+/***/ },
+/* 59 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ActionNodePresentation	= __webpack_require__( 60 )
+	  // , utils					= require( '../../../utils.js' )
+	  // , DragDrop				= require( '../../../DragDrop.js' )
+	  ;
+	  
+	// 
+	var openHab_Action = function() {
+		 ActionNodePresentation.apply(this, []);
+		 return this;
+		}
+
+	openHab_Action.prototype = Object.create( ActionNodePresentation.prototype ); // new ActionNodePresentation();
+	openHab_Action.prototype.constructor = openHab_Action;
+
+	openHab_Action.prototype.init		= function(PnodeID, parent, children) {
+		 ActionNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+		 return this;
+		}
+
+	openHab_Action.prototype.serialize = function() {
+		 var json = ActionNodePresentation.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Action';
+		 return json;
+		}
+		
+	openHab_Action.prototype.Render = function() {
+		 // var self = this;
+		 var root = ActionNodePresentation.prototype.Render.apply(this, []);
+		 root.classList.add( "openHab_Action" );
+		 this.html.img_symbol.setAttribute("src", "js/Presentations/openHab/templates/openhab-logo-square.png");
+		 return root;
+		}
+
+	module.exports = openHab_Action;
+
+
+
+
+/***/ },
+/* 60 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var PnodePresentation	= __webpack_require__( 61 )
+	  , DragDrop			= __webpack_require__( 56 )
+	  , htmlTemplateText	= __webpack_require__( 63 )
+	  ;
+
+	var css = document.createElement('link');
+	css.setAttribute('rel' , 'stylesheet');
+	css.setAttribute('href', 'js/Presentations/HTML_templates/ActionNodePresentation.css');
+	document.head.appendChild(css);
+
+	var htmlTemplate = document.createElement('div');
+	htmlTemplate.innerHTML = htmlTemplateText;
+
+	var ActionNodePresentation = function() {
 		// console.log(this);
 		PnodePresentation.prototype.constructor.apply(this, []);
 		return this;
 	}
 
-	ProgramNodePresentation.prototype = Object.create( PnodeNChildPresentation.prototype ); //new PnodeNChildPresentation();
-	ProgramNodePresentation.prototype.constructor	= ProgramNodePresentation;
-	ProgramNodePresentation.prototype.className		= 'ProgramNode';
+	ActionNodePresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
+	ActionNodePresentation.prototype.className = ActionNodePresentation;
+	ActionNodePresentation.prototype.className = 'ActionNode';
 
-	ProgramNodePresentation.prototype.init = function(PnodeID, parent, children) {
+	ActionNodePresentation.prototype.init = function(PnodeID, parent, children) {
 		PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
-		this.html.instructions	= null;
-		this.html.definitions	= null;
-		this.Pnodes = { instructions	: []
-					  , definitions		: []
-					  };
+		this.action			= { method		: ''
+							  , params		: []
+							  };
+		this.html			= {};
 		return this;
 	}
 
-	ProgramNodePresentation.prototype.reset = function() {
-		this.Pnodes.definitions		= [];
-		this.Pnodes.instructions	= [];
-	}
-
-	ProgramNodePresentation.prototype.serialize	= function() {
-		var json = PnodePresentation.prototype.serialize.apply(this, [])
-		  , i, node;
-		json.pg = { definitions : []
-				  , instructions: [] };
-		for(i=0; i<this.Pnodes.definitions.length; i++) {
-			 node = this.Pnodes.definitions[i];
-			 json.pg.definitions.push( node.serialize() );
-			}
-		for(i=0; i<this.Pnodes.instructions.length; i++) {
-			 node = this.Pnodes.instructions[i];
-			 json.pg.instructions.push( node.serialize() );
-			}
+	ActionNodePresentation.prototype.serialize	= function() {
+		var json = PnodePresentation.prototype.serialize.apply(this, []);
+		// Describe action here
+		json.subType	= 'ActionNode';
+		json.ActionNode = { method		: this.action.method
+						  , params		: this.action.params
+						  };
 		return json;
 	}
-
-	ProgramNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
-		var i, jsonNode;
+	ActionNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
+		// Describe action here
 		PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
-		this.reset();
-		for(i=0; i<json.pg.definitions.length; i++) {
-			 jsonNode = json.pg.definitions[i];
-			 this.appendDefinitionNode ( PresoUtils.unserialize(jsonNode) );
-			}
-		for(i=0; i<json.pg.instructions.length; i++) {
-			 jsonNode = json.pg.instructions[i];
-			 this.appendInstructionNode( PresoUtils.unserialize(jsonNode) );
-			}
+		this.action.method		= json.ActionNode.method;
+		this.action.params		= json.ActionNode.params;
 		return this;
 	}
 
+	ActionNodePresentation.prototype.primitivePlug	= function(c) {
+		 // console.log("Primitive plug ", this.root, " ->", c.root);
+		 this.Render();
+		 var P = this.html.divSelector
+			, N = c.Render();
+		 if(N.parentElement === null) {
+			 P.innerHTML = '';
+			 P.appendChild( N );
+			}
+		 return this;
+		}
 
-	ProgramNodePresentation.prototype.appendDefinitionNode = function(node) {
-		var nodeRoot = node.Render();
-		this.html.definitions.insertBefore(nodeRoot, this.divChildrenDefTxt);
-		this.Pnodes.definitions.push( node );
-	}
-
-	ProgramNodePresentation.prototype.appendInstructionNode = function(node) {
-		var nodeRoot = node.Render();
-		this.html.instructions.insertBefore(nodeRoot, this.divChildrenInstTxt);
-		this.Pnodes.instructions.push( node );
-	}
-
-	ProgramNodePresentation.prototype.Render	= function() {
-		var self = this;
-		var root = PnodePresentation.prototype.Render.apply(this, []);
-		root.classList.add('ProgramNode');
-		this.divDescription.innerText = 'ProgramNode ' + this.PnodeID + ' (presentation ' + this.uid + ')' ;
-		// Render blocks for declarations and instructions
-		if(this.html.instructions === null) {
-			 // Déclarations
-			 this.html.definitions = document.createElement('details');
-				this.html.definitions.setAttribute('open', 'open');
-				this.html.definitionsSummary	= document.createElement('summary');
-				this.html.definitionsSummary.innerHTML = "Definitions";
-				// Drop zone
-				this.divChildrenDefTxt = document.createElement('div');
-				this.divChildrenDefTxt.innerText = 'Insert a Definition here';
-				this.html.definitions.appendChild( this.divChildrenDefTxt );
-				this.dropZoneDefId = DragDrop.newDropZone( this.divChildrenDefTxt
-									, { acceptedClasse	: 'DefinitionNode'
-									  , CSSwhenAccepted	: 'possible2drop'
-									  , CSSwhenOver		: 'ready2drop'
-									  , ondrop			: function(evt, draggedNode, infoObj) {
-											 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
-																						, undefined	// parent
-																						, undefined	// children
-																						, infoObj
-																						);
-											 self.appendDefinitionNode( Pnode );
-											}
-									  }
-									);
-			 this.html.definitions.appendChild(this.html.definitionsSummary);
-			 // Instructions
-			 this.html.instructions = document.createElement('details');
-				this.html.instructions.setAttribute('open', 'open');
-				this.html.instructionsSummary	= document.createElement('summary');
-				this.html.instructionsSummary.innerHTML = "Instructions";
-				// Drop zone
-				this.divChildrenInstTxt = document.createElement('div');
-				this.divChildrenInstTxt.innerText = 'Insert a Definition here';
-				this.html.instructions.appendChild( this.divChildrenInstTxt );
-				this.dropZoneInstId = DragDrop.newDropZone( this.divChildrenInstTxt
-									, { acceptedClasse	: [['Pnode', 'instruction']]
-									  , CSSwhenAccepted	: 'possible2drop'
-									  , CSSwhenOver		: 'ready2drop'
-									  , ondrop			: function(evt, draggedNode, infoObj) {
-											 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
-																						, undefined	// parent
-																						, undefined	// children
-																						, infoObj
-																						);
-											 self.appendInstructionNode( Pnode );
-											}
-									  }
-									);
-			 this.html.instructions.appendChild(this.html.instructionsSummary);
-			 // Plug under the root
-			 this.root.appendChild( this.html.definitions );
-			 this.root.appendChild( this.html.instructions );
+	ActionNodePresentation.prototype.Render	= function() {
+		var self = this
+		  , root = PnodePresentation.prototype.Render.apply(this, []);
+		root.classList.add('ActionNode');
+		root.classList.add('ActionNodePresentation');
+		if(typeof this.html.actionName === 'undefined') {
+			 this.copyHTML(htmlTemplate, root);
+			 this.html.img_symbol	= root.querySelector( "img.action_symbol" );
+			 this.html.actionName	= root.querySelector(".actionName");
+			 this.html.divSelector	= root.querySelector(".selector");
+			 this.html.actionDescr	= root.querySelector(".action_description");
+			 this.html.img_symbol.setAttribute("src", "js/Presentations/HTML_templates/action_128x128.jpg");
+			 this.dropZoneSelectorId = DragDrop.newDropZone	( this.html.divSelector
+															, { acceptedClasse	: 'SelectorNode'
+															  , CSSwhenAccepted	: 'possible2drop'
+															  , CSSwhenOver		: 'ready2drop'
+															  , ondrop			: function(evt, draggedNode, infoObj) {
+																	 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																												, undefined	// parent
+																												, undefined	// children
+																												, infoObj
+																												);
+																	 self.appendChild( Pnode );
+																	}
+															  }
+															);
 			}
 		return root;
 	}
 
-	ProgramNodePresentation.prototype.deletePrimitives = function() {
-		PnodePresentation.prototype.deletePrimitives.apply(this, []);
-		if(this.html.instructions !== null) {
-			 this.html = { instructions	: null
-						 , definitions	: null};
-			}
-		return this;
-	}
-
 	// Return the constructor
-	module.exports = ProgramNodePresentation;
+	module.exports = ActionNodePresentation;
 
 
 
 /***/ },
-/* 59 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** 
@@ -8372,7 +8427,7 @@
 	 * @module PnodePresentation_module
 	 * @see module:protoPresentation
 	 */
-	var protoPresentation	= __webpack_require__( 60 )
+	var protoPresentation	= __webpack_require__( 62 )
 	  // , DragDrop			= require( '../DragDrop.js' )
 	  ;
 	var L_Pnodes = {};
@@ -8515,7 +8570,7 @@
 
 
 /***/ },
-/* 60 */
+/* 62 */
 /***/ function(module, exports) {
 
 	/** 
@@ -8689,10 +8744,191 @@
 
 
 /***/ },
-/* 61 */
+/* 63 */
+/***/ function(module, exports) {
+
+	module.exports = "<img class=\"action_symbol\"></img>\r\n<div class=\"action_description\">\r\n\t<p class=\"actionName\">Action name</p>\r\n\t<p class=\"selector\">Drop targets here</p>\r\n</div>"
+
+/***/ },
+/* 64 */
+/***/ function(module, exports) {
+
+	module.exports =	{ OnOff				: "openHab_op_OnOff"
+						, IncreaseDecrease	: "openHab_op_IncreaseDecrease"
+						, Percent			: "openHab_op_Percent"
+						, OpenClosed		: "openHab_op_OpenClosed"
+						, Decimal			: "openHab_op_Decimal"
+						, UpDown			: "openHab_op_UpDown"
+						, StopMove			: "openHab_op_StopMove"
+						, String			: "openHab_op_String"
+						};
+
+/***/ },
+/* 65 */
+/***/ function(module, exports) {
+
+	module.exports = "<label class=\"turn\">Turn </label>\r\n<select class=\"OnOff\">\r\n\t<option value=\"Do_On\" >On </option>\r\n\t<option value=\"Do_Off\">Off</option>\r\n</select>"
+
+/***/ },
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation	= __webpack_require__( 59 )
+	var PnodePresentation			= __webpack_require__( 61 )
+	  , PnodeNChildPresentation		= __webpack_require__( 67 )
+	  // , SequenceNodePresentation	= require( './SequenceNodePresentation.js' )
+	  // , ParallelNodePresentation	= require( './ParallelNodePresentation.js' )
+	  , DragDrop					= __webpack_require__( 56 )
+
+	var ProgramNodePresentation = function() {
+		// console.log(this);
+		PnodePresentation.prototype.constructor.apply(this, []);
+		return this;
+	}
+
+	ProgramNodePresentation.prototype = Object.create( PnodeNChildPresentation.prototype ); //new PnodeNChildPresentation();
+	ProgramNodePresentation.prototype.constructor	= ProgramNodePresentation;
+	ProgramNodePresentation.prototype.className		= 'ProgramNode';
+
+	ProgramNodePresentation.prototype.init = function(PnodeID, parent, children) {
+		PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+		this.html.instructions	= null;
+		this.html.definitions	= null;
+		this.Pnodes = { instructions	: []
+					  , definitions		: []
+					  };
+		return this;
+	}
+
+	ProgramNodePresentation.prototype.reset = function() {
+		this.Pnodes.definitions		= [];
+		this.Pnodes.instructions	= [];
+	}
+
+	ProgramNodePresentation.prototype.serialize	= function() {
+		var json = PnodePresentation.prototype.serialize.apply(this, [])
+		  , i, node;
+		json.pg = { definitions : []
+				  , instructions: [] };
+		for(i=0; i<this.Pnodes.definitions.length; i++) {
+			 node = this.Pnodes.definitions[i];
+			 json.pg.definitions.push( node.serialize() );
+			}
+		for(i=0; i<this.Pnodes.instructions.length; i++) {
+			 node = this.Pnodes.instructions[i];
+			 json.pg.instructions.push( node.serialize() );
+			}
+		return json;
+	}
+
+	ProgramNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
+		var i, jsonNode;
+		PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
+		this.reset();
+		for(i=0; i<json.pg.definitions.length; i++) {
+			 jsonNode = json.pg.definitions[i];
+			 this.appendDefinitionNode ( PresoUtils.unserialize(jsonNode) );
+			}
+		for(i=0; i<json.pg.instructions.length; i++) {
+			 jsonNode = json.pg.instructions[i];
+			 this.appendInstructionNode( PresoUtils.unserialize(jsonNode) );
+			}
+		return this;
+	}
+
+
+	ProgramNodePresentation.prototype.appendDefinitionNode = function(node) {
+		var nodeRoot = node.Render();
+		this.html.definitions.insertBefore(nodeRoot, this.divChildrenDefTxt);
+		this.Pnodes.definitions.push( node );
+	}
+
+	ProgramNodePresentation.prototype.appendInstructionNode = function(node) {
+		var nodeRoot = node.Render();
+		this.html.instructions.insertBefore(nodeRoot, this.divChildrenInstTxt);
+		this.Pnodes.instructions.push( node );
+	}
+
+	ProgramNodePresentation.prototype.Render	= function() {
+		var self = this;
+		var root = PnodePresentation.prototype.Render.apply(this, []);
+		root.classList.add('ProgramNode');
+		this.divDescription.innerText = 'ProgramNode ' + this.PnodeID + ' (presentation ' + this.uid + ')' ;
+		// Render blocks for declarations and instructions
+		if(this.html.instructions === null) {
+			 // Déclarations
+			 this.html.definitions = document.createElement('details');
+				this.html.definitions.setAttribute('open', 'open');
+				this.html.definitionsSummary	= document.createElement('summary');
+				this.html.definitionsSummary.innerHTML = "Definitions";
+				// Drop zone
+				this.divChildrenDefTxt = document.createElement('div');
+				this.divChildrenDefTxt.innerText = 'Insert a Definition here';
+				this.html.definitions.appendChild( this.divChildrenDefTxt );
+				this.dropZoneDefId = DragDrop.newDropZone( this.divChildrenDefTxt
+									, { acceptedClasse	: 'DefinitionNode'
+									  , CSSwhenAccepted	: 'possible2drop'
+									  , CSSwhenOver		: 'ready2drop'
+									  , ondrop			: function(evt, draggedNode, infoObj) {
+											 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																						, undefined	// parent
+																						, undefined	// children
+																						, infoObj
+																						);
+											 self.appendDefinitionNode( Pnode );
+											}
+									  }
+									);
+			 this.html.definitions.appendChild(this.html.definitionsSummary);
+			 // Instructions
+			 this.html.instructions = document.createElement('details');
+				this.html.instructions.setAttribute('open', 'open');
+				this.html.instructionsSummary	= document.createElement('summary');
+				this.html.instructionsSummary.innerHTML = "Instructions";
+				// Drop zone
+				this.divChildrenInstTxt = document.createElement('div');
+				this.divChildrenInstTxt.innerText = 'Insert a Definition here';
+				this.html.instructions.appendChild( this.divChildrenInstTxt );
+				this.dropZoneInstId = DragDrop.newDropZone( this.divChildrenInstTxt
+									, { acceptedClasse	: [['Pnode', 'instruction']]
+									  , CSSwhenAccepted	: 'possible2drop'
+									  , CSSwhenOver		: 'ready2drop'
+									  , ondrop			: function(evt, draggedNode, infoObj) {
+											 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																						, undefined	// parent
+																						, undefined	// children
+																						, infoObj
+																						);
+											 self.appendInstructionNode( Pnode );
+											}
+									  }
+									);
+			 this.html.instructions.appendChild(this.html.instructionsSummary);
+			 // Plug under the root
+			 this.root.appendChild( this.html.definitions );
+			 this.root.appendChild( this.html.instructions );
+			}
+		return root;
+	}
+
+	ProgramNodePresentation.prototype.deletePrimitives = function() {
+		PnodePresentation.prototype.deletePrimitives.apply(this, []);
+		if(this.html.instructions !== null) {
+			 this.html = { instructions	: null
+						 , definitions	: null};
+			}
+		return this;
+	}
+
+	// Return the constructor
+	module.exports = ProgramNodePresentation;
+
+
+
+/***/ },
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var PnodePresentation	= __webpack_require__( 61 )
 	  , DragDrop			= __webpack_require__( 56 )
 	  ;
 
@@ -8766,10 +9002,10 @@
 
 
 /***/ },
-/* 62 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodeNChildPresentation = __webpack_require__( 61 );
+	var PnodeNChildPresentation = __webpack_require__( 67 );
 
 	var ParallelNodePresentation = function() {
 		PnodeNChildPresentation.prototype.constructor.apply(this, []);
@@ -8804,115 +9040,10 @@
 
 
 /***/ },
-/* 63 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation	= __webpack_require__( 59 )
-	  , DragDrop			= __webpack_require__( 56 )
-	  , htmlTemplateText	= __webpack_require__( 64 )
-	  ;
-
-	var css = document.createElement('link');
-	css.setAttribute('rel' , 'stylesheet');
-	css.setAttribute('href', 'js/Presentations/HTML_templates/ActionNodePresentation.css');
-	document.head.appendChild(css);
-
-	var htmlTemplate = document.createElement('div');
-	htmlTemplate.innerHTML = htmlTemplateText;
-
-	var ActionNodePresentation = function() {
-		// console.log(this);
-		PnodePresentation.prototype.constructor.apply(this, []);
-		return this;
-	}
-
-	ActionNodePresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
-	ActionNodePresentation.prototype.className = ActionNodePresentation;
-	ActionNodePresentation.prototype.className = 'ActionNode';
-
-	ActionNodePresentation.prototype.init = function(PnodeID, parent, children) {
-		PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
-		this.action			= { method		: ''
-							  , params		: []
-							  };
-		this.html			= {};
-		return this;
-	}
-
-	ActionNodePresentation.prototype.serialize	= function() {
-		var json = PnodePresentation.prototype.serialize.apply(this, []);
-		// Describe action here
-		json.subType	= 'ActionNode';
-		json.ActionNode = { method		: this.action.method
-						  , params		: this.action.params
-						  };
-		return json;
-	}
-	ActionNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
-		// Describe action here
-		PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
-		this.action.method		= json.ActionNode.method;
-		this.action.params		= json.ActionNode.params;
-		return this;
-	}
-
-	ActionNodePresentation.prototype.primitivePlug	= function(c) {
-		 // console.log("Primitive plug ", this.root, " ->", c.root);
-		 this.Render();
-		 var P = this.html.divSelector
-			, N = c.Render();
-		 if(N.parentElement === null) {
-			 P.innerHTML = '';
-			 P.appendChild( N );
-			}
-		 return this;
-		}
-
-	ActionNodePresentation.prototype.Render	= function() {
-		var self = this
-		  , root = PnodePresentation.prototype.Render.apply(this, []);
-		root.classList.add('ActionNode');
-		root.classList.add('ActionNodePresentation');
-		if(typeof this.html.actionName === 'undefined') {
-			 this.copyHTML(htmlTemplate, root);
-			 this.html.img_symbol	= root.querySelector( "img.action_symbol" );
-			 this.html.actionName	= root.querySelector(".actionName");
-			 this.html.divSelector	= root.querySelector(".selector");
-			 this.html.img_symbol.setAttribute("src", "js/Presentations/HTML_templates/action_128x128.jpg");
-			 this.dropZoneSelectorId = DragDrop.newDropZone	( this.html.divSelector
-															, { acceptedClasse	: 'SelectorNode'
-															  , CSSwhenAccepted	: 'possible2drop'
-															  , CSSwhenOver		: 'ready2drop'
-															  , ondrop			: function(evt, draggedNode, infoObj) {
-																	 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
-																												, undefined	// parent
-																												, undefined	// children
-																												, infoObj
-																												);
-																	 self.appendChild( Pnode );
-																	}
-															  }
-															);
-			}
-		return root;
-	}
-
-	// Return the constructor
-	module.exports = ActionNodePresentation;
-
-
-
-/***/ },
-/* 64 */
-/***/ function(module, exports) {
-
-	module.exports = "<img class=\"action_symbol\"></img>\r\n<div class=\"action_description\">\r\n\t<p class=\"actionName\">Action name</p>\r\n\t<p class=\"selector\">Drop targets here</p>\r\n</div>"
-
-/***/ },
-/* 65 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var PnodeNChildPresentation	= __webpack_require__( 61 );
+	var PnodeNChildPresentation	= __webpack_require__( 67 );
 
 	var SequenceNodePresentation = function() {
 		PnodeNChildPresentation.prototype.constructor.apply(this, []);
@@ -8945,13 +9076,23 @@
 
 
 /***/ },
-/* 66 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation	= __webpack_require__( 59 )
-	  // , DragDrop			= require( '../DragDrop.js' )
-	  , utils				= __webpack_require__( 1 )
+	var PnodePresentation	= __webpack_require__( 61 )
+	  , DragDrop			= __webpack_require__( 56 )
+	  // , utils				= require( '../utils.js' )
+	  , htmlTemplateText	= __webpack_require__( 71 )
 	  ;
+
+	var css = document.createElement('link');
+	css.setAttribute('rel' , 'stylesheet');
+	css.setAttribute('href', 'js/Presentations/HTML_templates/EventNodePresentation.css');
+	document.head.appendChild(css);
+
+	var htmlTemplate = document.createElement('div');
+	htmlTemplate.innerHTML = htmlTemplateText;
+
 	  
 	// Desfining EventNodePresentation
 	var EventNodePresentation = function() {
@@ -8987,21 +9128,29 @@
 		var self = this;
 		var root = PnodePresentation.prototype.Render.apply(this, []);
 		root.classList.add('EventNode');
+		root.classList.add("EventNodePresentation");
 		root.classList.remove('Pnode');
-		if(typeof this.html.bt === 'undefined') {
-			this.divDescription.innerHTML = ''; //'EventNode:' + this.PnodeID ;
-			this.html.bt = document.createElement('button');
-				this.html.bt.addEventListener	( 'click'
-									, function() {
-										 console.log('trigger', self);
-										 utils.io.emit( 'call', { objectId	: self.PnodeID
-																, method	: 'triggerEvent'
-																, params	: JSON.stringify([])
-																} );
-										}
-									, false );
-				this.html.bt.innerText = 'TRIGGER';
-				this.divDescription.appendChild( this.html.bt );
+		if(typeof this.html.eventName === 'undefined') {
+			 this.copyHTML(htmlTemplate, root);
+			 this.html.img_symbol	= root.querySelector( "img.event_symbol" );
+			 this.html.eventName	= root.querySelector(".eventName");
+			 this.html.divSelector	= root.querySelector(".selector");
+			 this.html.eventDescr	= root.querySelector(".event_description");
+			 this.html.img_symbol.setAttribute("src", "js/Presentations/HTML_templates/event-icon.png");
+			 this.dropZoneSelectorId = DragDrop.newDropZone	( this.html.divSelector
+															, { acceptedClasse	: 'SelectorNode'
+															  , CSSwhenAccepted	: 'possible2drop'
+															  , CSSwhenOver		: 'ready2drop'
+															  , ondrop			: function(evt, draggedNode, infoObj) {
+																	 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																												, undefined	// parent
+																												, undefined	// children
+																												, infoObj
+																												);
+																	 self.appendChild( Pnode );
+																	}
+															  }
+															);
 			}
 		return root;
 	}
@@ -9012,10 +9161,16 @@
 
 
 /***/ },
-/* 67 */
+/* 71 */
+/***/ function(module, exports) {
+
+	module.exports = "<img class=\"event_symbol\"></img>\r\n<div class=\"event_description\">\r\n\t<p class=\"eventName\">Event name</p>\r\n\t<p class=\"selector\">Drop sources here</p>\r\n</div>"
+
+/***/ },
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var EventNodePresentation	= __webpack_require__( 66 )
+	var EventNodePresentation	= __webpack_require__( 70 )
 	  // , DragDrop				= require( '../DragDrop.js' )
 	  , utils					= __webpack_require__( 1 )
 	  ;
@@ -9133,13 +9288,13 @@
 
 
 /***/ },
-/* 68 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation	= __webpack_require__( 59 )
+	var PnodePresentation	= __webpack_require__( 61 )
 	  , utils				= __webpack_require__( 1 )
 	  , DragDrop			= __webpack_require__( 56 )
-	  , Var_UsePresentation	= __webpack_require__( 69 )
+	  , Var_UsePresentation	= __webpack_require__( 74 )
 	  ;
 
 	var css = document.createElement('link');
@@ -9319,10 +9474,10 @@
 
 
 /***/ },
-/* 69 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation	= __webpack_require__( 59 )
+	var PnodePresentation	= __webpack_require__( 61 )
 	  // , DragDrop			= require( '../DragDrop.js' )
 	  ;
 	  
@@ -9401,10 +9556,10 @@
 
 
 /***/ },
-/* 70 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation	= __webpack_require__( 59 )
+	var PnodePresentation	= __webpack_require__( 61 )
 	  // , DragDrop			= require( '../DragDrop.js' )
 	  ;
 
@@ -9451,10 +9606,10 @@
 
 
 /***/ },
-/* 71 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation	= __webpack_require__( 59 )
+	var PnodePresentation	= __webpack_require__( 61 )
 	  , DragDrop			= __webpack_require__( 56 )
 	  ;
 
@@ -9588,10 +9743,10 @@
 
 
 /***/ },
-/* 72 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation	= __webpack_require__( 59 )
+	var PnodePresentation	= __webpack_require__( 61 )
 	  , DragDrop			= __webpack_require__( 56 )
 	  , utils				= __webpack_require__( 1 )
 	  ;
@@ -9760,10 +9915,10 @@
 
 
 /***/ },
-/* 73 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var EventNodePresentation	= __webpack_require__( 66 )
+	var EventNodePresentation	= __webpack_require__( 70 )
 	  , DragDrop				= __webpack_require__( 56 )
 	  , utils					= __webpack_require__( 1 )
 	  ;
@@ -9932,10 +10087,10 @@
 
 
 /***/ },
-/* 74 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var EventNodePresentation	= __webpack_require__( 66 )
+	var EventNodePresentation	= __webpack_require__( 70 )
 	  , DragDrop				= __webpack_require__( 56 )
 	  , utils					= __webpack_require__( 1 )
 	  ;
@@ -10040,11 +10195,11 @@
 
 
 /***/ },
-/* 75 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var /*PnodePresentation			= require( './PnodePresentation.js' )
-	  , */SelectorNodePresentation	= __webpack_require__( 76 )
+	  , */SelectorNodePresentation	= __webpack_require__( 81 )
 	  ;
 
 	function basicBrickPresentation() {
@@ -10089,10 +10244,10 @@
 
 
 /***/ },
-/* 76 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation = __webpack_require__( 59 );
+	var PnodePresentation = __webpack_require__( 61 );
 
 	function SelectorNodePresentation() {
 		PnodePresentation.apply(this, []);
@@ -10144,10 +10299,10 @@
 
 
 /***/ },
-/* 77 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation	= __webpack_require__( 59 )
+	var PnodePresentation	= __webpack_require__( 61 )
 	  // , DragDrop			= require( '../DragDrop.js' )
 	  ;
 			
@@ -10230,133 +10385,136 @@
 
 
 /***/ },
-/* 78 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var openHab_Action	= __webpack_require__( 79 )
+	var openHab_Event	= __webpack_require__( 84 )
 	  // , utils		= require( '../../../utils.js' )
 	  , DragDrop		= __webpack_require__( 56 )
-	  , openHabTypes	= __webpack_require__( 80 )
-	  , str_template	= __webpack_require__( 81 )
+	  , openHabTypes	= __webpack_require__( 64 )
+	  , str_template	= __webpack_require__( 85 )
 	  , html_template	= document.createElement( "div" )
 	  ;
 	  
 	html_template.innerHTML = str_template;
-
+	  
 	// 
-	var openHab_Action_OnOff = function() {
-		 openHab_Action.apply(this, []);
-		 this.mustDoRender = true;
+	var openHab_Event_OnOff = function() {
+		 openHab_Event.apply(this, []);
+		 this.eventFilter.val = "ON"
 		 return this;
 		}
 
-	openHab_Action_OnOff.prototype = Object.create( openHab_Action.prototype );
-	openHab_Action_OnOff.prototype.constructor = openHab_Action_OnOff;
+	openHab_Event_OnOff.prototype = Object.create( openHab_Event.prototype );
+	openHab_Event_OnOff.prototype.constructor = openHab_Event_OnOff;
 
-	openHab_Action_OnOff.prototype.init		= function(PnodeID, parent, children) {
-		 openHab_Action.prototype.init.apply(this, [PnodeID, parent, children]);
+	openHab_Event_OnOff.prototype.init		= function(PnodeID, parent, children) {
+		 openHab_Event.prototype.init.apply(this, [PnodeID, parent, children]);
 		 return this;
 		}
 
-	openHab_Action_OnOff.prototype.serialize = function() {
-		 var json = openHab_Action.prototype.serialize.apply(this, []);
-		 json.subType = 'openHab_Action_OnOff';
+	openHab_Event_OnOff.prototype.serialize = function() {
+		 var json = openHab_Event.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Event_OnOff';
 		 return json;
 		}
+	/*
+	openHab_Event_OnOff.prototype.unserialize = function(json) {
+		 openHab_Event.prototype.unserialize.apply(this, [json]);
+		 return json;
+		}*/
 
-	openHab_Action_OnOff.prototype.forceRender		= function() {
-		this.mustDoRender = true;
-		return openHab_Action.prototype.forceRender.apply(this, []);
-	}
-
-	openHab_Action_OnOff.prototype.Render = function() {
+	openHab_Event_OnOff.prototype.Render = function() {
 		 var self = this;
-		 var root = openHab_Action.prototype.Render.apply(this,[]);
-		 if(this.mustDoRender) {
-			 this.mustDoRender = false;
-			 root.classList.add( "openHab_Action_OnOff" );
-			 this.copyHTML(html_template, this.html.actionName);
-			 this.html.OnOff			= root.querySelector("select.OnOff");
-			 this.html.OnOff.value		= this.action.method = this.action.method || 'Do_On';
-			 this.html.OnOff.onchange	= function() {self.action.method = this.value;}
-			 DragDrop.updateConfig	( this.dropZoneSelectorId
-									, { acceptedClasse: [[openHabTypes.OnOff]]
-									  }
-									);
-			}
+		 var root = openHab_Event.prototype.Render.apply(this, []);
+		 root.classList.add( "openHab_Event_OnOff" );
+		 // template
+		 this.copyHTML(html_template, this.html.eventName);
+		 this.html.OnOff			= root.querySelector("select.OnOff");
+		 this.html.OnOff.value		= this.eventFilter.val = this.eventFilter.val || 'ON';
+		 this.html.OnOff.onchange	= function() {self.eventFilter.val = this.value;}
+		 // DragDrop
+		 DragDrop.updateConfig	( this.dropZoneSelectorId
+								, { acceptedClasse: [[openHabTypes.OnOff]]
+								  }
+								);
 		 return root;
 		}
 
-	module.exports = openHab_Action_OnOff;
+	module.exports = openHab_Event_OnOff;
+
+
 
 
 /***/ },
-/* 79 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ActionNodePresentation	= __webpack_require__( 63 )
+	var EventNodePresentation	= __webpack_require__( 70 )
 	  // , utils					= require( '../../../utils.js' )
 	  // , DragDrop				= require( '../../../DragDrop.js' )
 	  ;
 	  
 	// 
-	var openHab_Action = function() {
-		 ActionNodePresentation.apply(this, []);
+	var openHab_Event = function() {
+		 EventNodePresentation.apply(this, []);
+		 this.eventFilter = { att	: "value"
+							, op	: "equal"
+							, val	: ""
+							}
+		 this.eventNode =	{ eventName	: 'state'
+							, filters	: [this.eventFilter]
+							};
 		 return this;
 		}
 
-	openHab_Action.prototype = Object.create( ActionNodePresentation.prototype ); // new ActionNodePresentation();
-	openHab_Action.prototype.constructor = openHab_Action;
+	openHab_Event.prototype = Object.create( EventNodePresentation.prototype );
+	openHab_Event.prototype.constructor			= openHab_Event;
+	EventNodePresentation.prototype.className	= 'PeventBrick';
 
-	openHab_Action.prototype.init		= function(PnodeID, parent, children) {
-		 ActionNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	openHab_Event.prototype.init		= function(PnodeID, parent, children) {
+		 EventNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
 		 return this;
 		}
 
-	openHab_Action.prototype.serialize = function() {
-		 var json = ActionNodePresentation.prototype.serialize.apply(this, []);
-		 json.subType = 'openHab_Action';
+	openHab_Event.prototype.serialize = function() {
+		 var json = EventNodePresentation.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Event';
+		 json.eventNode = this.eventNode;
+		 return json;
+		}
+
+	openHab_Event.prototype.unserialize = function(json) {
+		 EventNodePresentation.prototype.unserialize.apply(this, [json]);
+		 this.eventNode		= json.eventNode;
+		 this.eventFilter	= json.eventNode.filters[0];
 		 return json;
 		}
 		
-	openHab_Action.prototype.Render = function() {
+	openHab_Event.prototype.Render = function() {
 		 // var self = this;
-		 var root = ActionNodePresentation.prototype.Render.apply(this, []);
-		 root.classList.add( "openHab_Action" );
-		 this.html.img_symbol.setAttribute("src", "js/Presentations/openHab/templates/openhab-logo-square.png");
+		 var root = EventNodePresentation.prototype.Render.apply(this, []);
+		 root.classList.add( "openHab_Event" );
+		 this.html.img_symbol.setAttribute("src", "js/Presentations/openHab/templates/Event_openhab-logo-square.png");
 		 return root;
 		}
 
-	module.exports = openHab_Action;
+	module.exports = openHab_Event;
 
 
 
 
 /***/ },
-/* 80 */
+/* 85 */
 /***/ function(module, exports) {
 
-	module.exports =	{ OnOff				: "openHab_op_OnOff"
-						, IncreaseDecrease	: "openHab_op_IncreaseDecrease"
-						, Percent			: "openHab_op_Percent"
-						, OpenClosed		: "openHab_op_OpenClosed"
-						, Decimal			: "openHab_op_Decimal"
-						, UpDown			: "openHab_op_UpDown"
-						, StopMove			: "openHab_op_StopMove"
-						, String			: "openHab_op_String"
-						};
+	module.exports = "<label class=\"turn\">Turn </label>\r\n<select class=\"OnOff\">\r\n\t<option value=\"ON\" >ON </option>\r\n\t<option value=\"OFF\">OFF</option>\r\n</select>"
 
 /***/ },
-/* 81 */
-/***/ function(module, exports) {
-
-	module.exports = "<label class=\"turn\">Turn </label>\r\n<select class=\"OnOff\">\r\n\t<option value=\"Do_On\" >On </option>\r\n\t<option value=\"Do_Off\">Off</option>\r\n</select>"
-
-/***/ },
-/* 82 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation	= __webpack_require__( 59 )
+	var PnodePresentation	= __webpack_require__( 61 )
 	  // , DragDrop			= require( '../DragDrop.js' )
 	  ;
 	  
@@ -10435,10 +10593,10 @@
 
 
 /***/ },
-/* 83 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation	= __webpack_require__( 59 )
+	var PnodePresentation	= __webpack_require__( 61 )
 	  // , DragDrop			= require( '../DragDrop.js' )
 	  ;
 
@@ -10524,10 +10682,10 @@
 
 
 /***/ },
-/* 84 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation	= __webpack_require__( 59 )
+	var PnodePresentation	= __webpack_require__( 61 )
 	  , DragDrop			= __webpack_require__( 56 )
 	  ;
 
@@ -10645,12 +10803,12 @@
 
 
 /***/ },
-/* 85 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var /*PnodePresentation			= require( './PnodePresentation.js' )
-	  , */SelectorNodePresentation	= __webpack_require__( 76 )
-	  , MediaBrowser				= __webpack_require__( 86 )
+	  , */SelectorNodePresentation	= __webpack_require__( 81 )
+	  , MediaBrowser				= __webpack_require__( 90 )
 	  , utils						= __webpack_require__( 1 )
 	  ;
 
@@ -10721,12 +10879,12 @@
 
 
 /***/ },
-/* 86 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var protoPresentation	= __webpack_require__( 60 )
+	var protoPresentation	= __webpack_require__( 62 )
 	  , utils				= __webpack_require__( 1 )
-	  , AlxEvents			= __webpack_require__( 87 )
+	  , AlxEvents			= __webpack_require__( 91 )
 	  ;
 	  
 	var XMLparser = new DOMParser();
@@ -10974,7 +11132,7 @@
 
 
 /***/ },
-/* 87 */
+/* 91 */
 /***/ function(module, exports) {
 
 	
@@ -11030,11 +11188,11 @@
 
 
 /***/ },
-/* 88 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var /*PnodePresentation		= require( './PnodePresentation.js' )
-	  ,*/ ActionNodePresentation	= __webpack_require__( 63 )
+	  ,*/ ActionNodePresentation	= __webpack_require__( 60 )
 	  // , DragDrop				= require( '../DragDrop.js' )
 	  ;
 
@@ -11088,10 +11246,10 @@
 
 
 /***/ },
-/* 89 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Program_UsePresentation	= __webpack_require__( 82 )
+	var Program_UsePresentation	= __webpack_require__( 86 )
 	  // , DragDrop				= require( '../DragDrop.js' )
 	  ;
 
@@ -11172,13 +11330,13 @@
 
 
 /***/ },
-/* 90 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation	= __webpack_require__( 59 )
+	var PnodePresentation	= __webpack_require__( 61 )
 	  // , DragDrop			= require( '../DragDrop.js' )
 	  , utils				= __webpack_require__( 1 )
-	  , AlxTextEditor		= __webpack_require__( 91 )
+	  , AlxTextEditor		= __webpack_require__( 95 )
 	  ;
 
 	// XXX Try direct loading
@@ -11247,7 +11405,7 @@
 
 
 /***/ },
-/* 91 */
+/* 95 */
 /***/ function(module, exports) {
 
 	// var DragDrop	= require( '../../DragDrop.js' )
@@ -11277,10 +11435,10 @@
 
 
 /***/ },
-/* 92 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ActionNodePresentation	= __webpack_require__( 63 )
+	var ActionNodePresentation	= __webpack_require__( 60 )
 	  , DragDrop				= __webpack_require__( 56 )
 	  ;
 	  
@@ -11309,6 +11467,8 @@
 		 // var self = this;
 		 var root = ActionNodePresentation.prototype.Render.apply(this,[]);
 		 this.html.actionName.innerHTML = "Play";
+		 this.html.img_symbol.setAttribute('src', 'js/Presentations/UPnP/images/icon_PLAY.png');
+		 this.html.actionName.innerHTML = "PLAY"
 		 DragDrop.updateConfig(this.dropZoneSelectorId, {acceptedClasse: [['BrickUPnP_MediaRenderer']]});
 		 return root;
 		}
@@ -11318,12 +11478,12 @@
 
 
 /***/ },
-/* 93 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var MR_Play_NodePresentation	= __webpack_require__( 92 )
+	var MR_Play_NodePresentation	= __webpack_require__( 96 )
 	  // , utils						= require( '../../../utils.js' )
-	  , MediaBrowser				= __webpack_require__( 86 )
+	  , MediaBrowser				= __webpack_require__( 90 )
 	  ;
 
 	var MB = new MediaBrowser( 'Select Media to be loaded' );
@@ -11396,7 +11556,8 @@
 	MR_load_NodePresentation.prototype.Render = function() {
 		 var self = this;
 		 var root = MR_Play_NodePresentation.prototype.Render.apply(this,[]);
-		 this.html.actionName.innerHTML = "loadMedia";
+		 this.html.img_symbol.setAttribute('src', 'js/Presentations/UPnP/images/icon_LOAD.png');
+		 this.html.actionName.innerHTML = "LOAD MEDIA"
 		 // Create elements for selecting the media
 		 if((typeof this.html.mediaBrowser === 'undefined') || this.forceRendering) {
 			 // console.log( "MR_load_NodePresentation::Render" );
@@ -11415,7 +11576,7 @@
 							  MB.on('selected', self.cbSelected);
 							 }
 				, true );
-			 this.divDescription.appendChild( this.html.mediaBrowser );
+			 this.html.actionDescr.appendChild( this.html.mediaBrowser );
 			} // else {console.log("MR_load_NodePresentation: no render");}
 		 return root;
 		}
@@ -11425,10 +11586,10 @@
 
 
 /***/ },
-/* 94 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var MR_Play_NodePresentation	= __webpack_require__( 92 )
+	var MR_Play_NodePresentation	= __webpack_require__( 96 )
 	  // , utils						= require( '../../../utils.js' )
 	  ;
 
@@ -11456,7 +11617,8 @@
 	MR_Pause_NodePresentation.prototype.Render		= function() {
 		 // var self = this;
 		 var root = MR_Play_NodePresentation.prototype.Render.apply(this,[]);
-		 this.html.actionName.innerHTML = "Pause";
+		 this.html.img_symbol.setAttribute('src', 'js/Presentations/UPnP/images/icon_PAUSE.png');
+		 this.html.actionName.innerHTML = "PAUSE"
 		 return root;
 		}
 
@@ -11464,10 +11626,10 @@
 
 
 /***/ },
-/* 95 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var MR_Play_NodePresentation	= __webpack_require__( 92 )
+	var MR_Play_NodePresentation	= __webpack_require__( 96 )
 	  // , utils						= require( '../../../utils.js' )
 	  ;
 	  
@@ -11494,7 +11656,8 @@
 	MR_Stop_NodePresentation.prototype.Render = function() {
 		 // var self = this;
 		 var root = MR_Play_NodePresentation.prototype.Render.apply(this,[]);
-		 this.html.actionName.innerHTML = "Stop";
+		 this.html.img_symbol.setAttribute('src', 'js/Presentations/UPnP/images/icon_STOP.png');
+		 this.html.actionName.innerHTML = "STOP"
 		 return root;
 		}
 
@@ -11503,10 +11666,10 @@
 
 
 /***/ },
-/* 96 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PeventBrickPresentation	= __webpack_require__( 73 )
+	var PeventBrickPresentation	= __webpack_require__( 78 )
 	  // , DragDrop				= require( '../DragDrop.js' )
 	  // , utils					= require( '../utils.js' )
 	  ;
@@ -11550,10 +11713,10 @@
 
 
 /***/ },
-/* 97 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PnodePresentation	= __webpack_require__( 59 )
+	var PnodePresentation	= __webpack_require__( 61 )
 	  , utils				= __webpack_require__( 1 )
 	  ;
 	  

@@ -1,43 +1,43 @@
-div.Pnode.ActionNodePresentation {
+div.EventNodePresentation {
 	border			: solid black 1px;
 	border-radius	: 1em;
 	padding			: 0.4em;
-	background		: lightblue;
+	background		: lightyellow;
 	display			: inline-block;
 	vertical-align	: top;
 	/*flex-flow		: row;*/
 }
 
-.ActionNodePresentation > .action_symbol {
+.EventNodePresentation > .event_symbol {
 	/*flex			: 0 32px;*/
 	width			: 32px;
 	height			: 32px;
 	vertical-align	: top;
 }
 
-div.Pnode.ActionNodePresentation > * {
+div.EventNodePresentation > * {
 	display			: inline-block;
 }
 
-.ActionNodePresentation > .action_description {
+.EventNodePresentation > .event_description {
 	/*flex			: 1;*/
 }
 
-.ActionNodePresentation  p {
+.EventNodePresentation  p {
 	margin			: 0px;
 	padding			: 0px;
 }
 
-.ActionNodePresentation p.actionName {
+.EventNodePresentation p.eventName {
 	border-bottom	: dashed black 1px;
-	background		: lightblue;
+	background		: lightyellow;
 }
 
-.ActionNodePresentation p.selector {
+.EventNodePresentation p.selector {
 	background		: #B9B9FF;
 }
 
-@keyframes ActionNodePresentation_droppable {
+@keyframes EventNodePresentation_droppable {
 	0%				 {background	: #B9B9FF;}
 	50%				   {transform		: scale(1.2);
 					   background	: lightgreen;
@@ -45,11 +45,11 @@ div.Pnode.ActionNodePresentation > * {
 	100%			   {background: #B9B9FF;}
 }
 
-.ActionNodePresentation p.selector.possible2drop {
-	animation		: ActionNodePresentation_droppable 1s ease-in-out infinite;
+.EventNodePresentation p.selector.possible2drop {
+	animation		: EventNodePresentation_droppable 1s ease-in-out infinite;
 }
 
-.ActionNodePresentation p.selector.possible2drop.ready2drop {
+.EventNodePresentation p.selector.possible2drop.ready2drop {
 	transform		: scale(1.2);
 	background		: lightgreen;
 	animation		: initial;

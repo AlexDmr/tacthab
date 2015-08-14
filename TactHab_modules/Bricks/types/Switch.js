@@ -24,7 +24,7 @@ BrickOpenHAB_Switch.prototype.update	= function(topic, operation, message) {
 		 case 'ON' :
 		 case 'OFF':
 			this.state = message;
-			this.emit("state", this.state);
+			this.emit("state", {value: this.state});
 		 break;
 		 default: console.error("BrickOpenHAB_Switch::update Unknown message", message);
 		}

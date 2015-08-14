@@ -181,9 +181,14 @@ var editor = {
 		 // Create new draggable for BrickFhem
 		 this.openHAB_categ = 
 		 this.createCateg("openHAB"		).appendChild(	(this.openHab_instructions	= 
-														 this.createCateg("Instructions").appendChild( this.createDragNode( 'Do On/Off'
+														 this.createCateg("Instructions").appendChild( this.createDragNode( 'Do action On/Off'
 																									 , { constructor	: PresoUtils.get('openHab_Action_OnOff')
 																									   , nodeType		: ['ActionNode', 'instruction']
+																									   , objectsType	: 'openHab_Action_OnOff'
+																									   } )
+																						).appendChild( this.createDragNode( 'on event On/Off'
+																									 , { constructor	: PresoUtils.get('openHab_Event_OnOff')
+																									   , nodeType		: ['EventNode']
 																									   , objectsType	: 'openHab_Action_OnOff'
 																									   } )
 																									 )

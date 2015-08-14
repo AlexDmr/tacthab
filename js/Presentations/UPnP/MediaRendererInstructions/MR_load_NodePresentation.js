@@ -73,7 +73,8 @@ MR_load_NodePresentation.prototype.primitivePlug	= function(c) {
 MR_load_NodePresentation.prototype.Render = function() {
 	 var self = this;
 	 var root = MR_Play_NodePresentation.prototype.Render.apply(this,[]);
-	 this.html.actionName.innerHTML = "loadMedia";
+	 this.html.img_symbol.setAttribute('src', 'js/Presentations/UPnP/images/icon_LOAD.png');
+	 this.html.actionName.innerHTML = "LOAD MEDIA"
 	 // Create elements for selecting the media
 	 if((typeof this.html.mediaBrowser === 'undefined') || this.forceRendering) {
 		 // console.log( "MR_load_NodePresentation::Render" );
@@ -92,7 +93,7 @@ MR_load_NodePresentation.prototype.Render = function() {
 						  MB.on('selected', self.cbSelected);
 						 }
 			, true );
-		 this.divDescription.appendChild( this.html.mediaBrowser );
+		 this.html.actionDescr.appendChild( this.html.mediaBrowser );
 		} // else {console.log("MR_load_NodePresentation: no render");}
 	 return root;
 	}

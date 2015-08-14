@@ -27,6 +27,8 @@ MR_Play_NodePresentation.prototype.Render = function() {
 	 // var self = this;
 	 var root = ActionNodePresentation.prototype.Render.apply(this,[]);
 	 this.html.actionName.innerHTML = "Play";
+	 this.html.img_symbol.setAttribute('src', 'js/Presentations/UPnP/images/icon_PLAY.png');
+	 this.html.actionName.innerHTML = "PLAY"
 	 DragDrop.updateConfig(this.dropZoneSelectorId, {acceptedClasse: [['BrickUPnP_MediaRenderer']]});
 	 return root;
 	}

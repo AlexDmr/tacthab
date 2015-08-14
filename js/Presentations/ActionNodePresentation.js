@@ -69,6 +69,7 @@ ActionNodePresentation.prototype.Render	= function() {
 		 this.html.img_symbol	= root.querySelector( "img.action_symbol" );
 		 this.html.actionName	= root.querySelector(".actionName");
 		 this.html.divSelector	= root.querySelector(".selector");
+		 this.html.actionDescr	= root.querySelector(".action_description");
 		 this.html.img_symbol.setAttribute("src", "js/Presentations/HTML_templates/action_128x128.jpg");
 		 this.dropZoneSelectorId = DragDrop.newDropZone	( this.html.divSelector
 														, { acceptedClasse	: 'SelectorNode'

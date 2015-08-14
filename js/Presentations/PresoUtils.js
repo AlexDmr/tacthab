@@ -13,7 +13,9 @@ var PresoUtils = {
 					  , 'PeventBrickAppear'						: require( './PeventBrickAppear.js' )
 					  , 'basicBrickPresentation'				: require( './basicBrickPresentation.js' )
 					  , 'Pselector_ObjTypePresentation'			: require( './Pselector_ObjTypePresentation' )
+					  // OpenHab
 					  , 'openHab_Action_OnOff'					: require( './openHab/openHab_Action_OnOff.js' )
+					  , 'openHab_Event_OnOff'					: require( './openHab/openHab_Event_OnOff.js' )
 					  // Variables
 					  , 'Program_UsePresentation'				: require( './Program_UsePresentation.js' )
 					  , 'Program_DefinitionPresentation'		: require( './Program_DefinitionPresentation.js' )
