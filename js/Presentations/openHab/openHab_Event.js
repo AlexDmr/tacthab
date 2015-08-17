@@ -32,8 +32,8 @@ openHab_Event.prototype.serialize = function() {
 	 return json;
 	}
 
-openHab_Event.prototype.unserialize = function(json) {
-	 EventNodePresentation.prototype.unserialize.apply(this, [json]);
+openHab_Event.prototype.unserialize = function(json, PresoUtils) {
+	 EventNodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
 	 this.eventNode		= json.eventNode;
 	 this.eventFilter	= json.eventNode.filters[0];
 	 return json;

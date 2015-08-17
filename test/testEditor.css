@@ -24,10 +24,12 @@ div.instructionType.Implemented {
 
 div.Pnode {
 	background	: grey;
+	transition	: background 1s;
 }
 
 div.Pnode.state_1 {
 	background	: green;
+	transition	: background 0s;
 }
 
 html, body {

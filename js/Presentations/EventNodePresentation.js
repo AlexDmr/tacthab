@@ -43,6 +43,19 @@ EventNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
 	return this;
 }
 
+EventNodePresentation.prototype.primitivePlug	= function(c) {
+	 // console.log("Primitive plug ", this.root, " ->", c.root);
+	 this.Render();
+	 var P = this.html.divSelector
+		, N = c.Render();
+	 if(N.parentElement === null) {
+		 P.innerHTML = '';
+		 P.appendChild( N );
+		}
+	 return this;
+	 
+	}
+
 EventNodePresentation.prototype.Render	= function() {
 	var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);

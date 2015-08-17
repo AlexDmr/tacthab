@@ -44,6 +44,7 @@ ActionNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
 	PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
 	this.action.method		= json.ActionNode.method;
 	this.action.params		= json.ActionNode.params;
+	console.log("ActionNodePresentation::", this.action);
 	return this;
 }
 

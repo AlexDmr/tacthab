@@ -6,4 +6,5 @@ module.exports =	{ OnOff				: "openHab_op_OnOff"
 					, UpDown			: "openHab_op_UpDown"
 					, StopMove			: "openHab_op_StopMove"
 					, String			: "openHab_op_String"
+					, HSB				: "openHab_op_HSB"
 					};

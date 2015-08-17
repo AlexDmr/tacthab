@@ -18,7 +18,11 @@ BrickOpenHAB_Number.prototype.registerType(BrickOpenHAB_Number.prototype.getType
 
 BrickOpenHAB_Number.prototype.update	= function(topic, operation, message) {
 	BrickOpenHAB_item.prototype.update.apply(this, [topic, operation, message]);
+	this.state = parseFloat( message );
+	this.emit("state", {value: this.state});
 	return this;
 }
+
+BrickOpenHAB_Number.prototype.setNumber	= function(num) {this.sendCommand(num); return true;}
 
 module.exports = BrickOpenHAB_Number;

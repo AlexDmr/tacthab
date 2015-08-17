@@ -36,7 +36,7 @@ BrickOpenHAB_item.prototype.getESA	= function() {
 
 BrickOpenHAB_item.prototype.setFactory	= function(factory) {this.factory = factory;}
 
-BrickOpenHAB_item.prototype.sendCommand	= function(topic, message) {
+BrickOpenHAB_item.prototype.sendCommand	= function(message) {
 	 if(this.factory) {
 		 this.factory.sendCommand(this, message);
 		}

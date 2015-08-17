@@ -2,6 +2,7 @@ var BrickOpenHAB_item = require( './BrickOpenHAB_item.js' )
 
 var BrickOpenHAB_String = function() {
 	BrickOpenHAB_item.apply(this, []);
+	this.state = "";
 	return this;
 }
 
@@ -18,7 +19,12 @@ BrickOpenHAB_String.prototype.registerType(BrickOpenHAB_String.prototype.getType
 
 BrickOpenHAB_String.prototype.update	= function(topic, operation, message) {
 	BrickOpenHAB_item.prototype.update.apply(this, [topic, operation, message]);
+	this.state = message;
+	this.emit("state", {value: this.state});
+	console.log("BrickOpenHAB_String::update with", message);
 	return this;
 }
+
+BrickOpenHAB_String.prototype.setString	= function(str) {this.sendCommand(str); return true;}
 
 module.exports = BrickOpenHAB_String;

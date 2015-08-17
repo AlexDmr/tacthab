@@ -7715,7 +7715,57 @@
 																							).appendChild( this.createDragNode( 'on event On/Off'
 																										 , { constructor	: PresoUtils.get('openHab_Event_OnOff')
 																										   , nodeType		: ['EventNode']
-																										   , objectsType	: 'openHab_Action_OnOff'
+																										   , objectsType	: 'openHab_Event_OnOff'
+																										   } )
+																							).appendChild( this.createDragNode( 'Do action Open/Close'
+																										 , { constructor	: PresoUtils.get('openHab_Action_Contact')
+																										   , nodeType		: ['ActionNode', 'instruction']
+																										   , objectsType	: 'openHab_Action_Contact'
+																										   } )
+																							).appendChild( this.createDragNode( 'on event Open/Close'
+																										 , { constructor	: PresoUtils.get('openHab_Event_Contact')
+																										   , nodeType		: ['EventNode']
+																										   , objectsType	: 'openHab_Event_Contact'
+																										   } )
+																							).appendChild( this.createDragNode( 'Do action RollerShutter'
+																										 , { constructor	: PresoUtils.get('openHab_Action_RollerShutter')
+																										   , nodeType		: ['ActionNode', 'instruction']
+																										   , objectsType	: 'openHab_Action_RollerShutter'
+																										   } )
+																							).appendChild( this.createDragNode( 'on event RollerShutter'
+																										 , { constructor	: PresoUtils.get('openHab_Event_RollerShutter')
+																										   , nodeType		: ['EventNode']
+																										   , objectsType	: 'openHab_Event_RollerShutter'
+																										   } )
+																							).appendChild( this.createDragNode( 'Change Color'
+																										 , { constructor	: PresoUtils.get('openHab_Action_Color')
+																										   , nodeType		: ['ActionNode', 'instruction']
+																										   , objectsType	: 'openHab_Action_Color'
+																										   } )
+																							).appendChild( this.createDragNode( 'Color changed'
+																										 , { constructor	: PresoUtils.get('openHab_Event_Color')
+																										   , nodeType		: ['EventNode']
+																										   , objectsType	: 'openHab_Event_Color'
+																										   } )
+																							).appendChild( this.createDragNode( 'Change String'
+																										 , { constructor	: PresoUtils.get('openHab_Action_String')
+																										   , nodeType		: ['ActionNode', 'instruction']
+																										   , objectsType	: 'openHab_Action_String'
+																										   } )
+																							).appendChild( this.createDragNode( 'String changed'
+																										 , { constructor	: PresoUtils.get('openHab_Event_String')
+																										   , nodeType		: ['EventNode']
+																										   , objectsType	: 'openHab_Event_String'
+																										   } )
+																							).appendChild( this.createDragNode( 'Change Number'
+																										 , { constructor	: PresoUtils.get('openHab_Action_Number')
+																										   , nodeType		: ['ActionNode', 'instruction']
+																										   , objectsType	: 'openHab_Action_Number'
+																										   } )
+																							).appendChild( this.createDragNode( 'Number changed'
+																										 , { constructor	: PresoUtils.get('openHab_Event_Number')
+																										   , nodeType		: ['EventNode']
+																										   , objectsType	: 'openHab_Event_Number'
 																										   } )
 																										 )
 															).root
@@ -8150,9 +8200,9 @@
 	var PresoUtils = {
 		  mapping		: { 'ProgramNode'							: __webpack_require__( 66 )
 						  , 'ParalleNode'							: __webpack_require__( 68 )
-						  , 'ActionNode'							: __webpack_require__( 60 )
-						  , 'SequenceNode'							: __webpack_require__( 69 )	, 'SequenceNodePresentation'	: __webpack_require__( 69 )
-						  , 'EventNode'								: __webpack_require__( 70 )		, 'EventNodePresentation'		: __webpack_require__( 70 )
+						  , 'ActionNode'							: __webpack_require__( 69 )
+						  , 'SequenceNode'							: __webpack_require__( 71 )	, 'SequenceNodePresentation'	: __webpack_require__( 71 )
+						  , 'EventNode'								: __webpack_require__( 60 )		, 'EventNodePresentation'		: __webpack_require__( 60 )
 						  , 'PeventFromSocketIOPresentation'		: __webpack_require__( 72 )
 						  , 'WhenNode'								: __webpack_require__( 73 )		, 'WhenNodePresentation'		: __webpack_require__( 73 )
 						  , 'PcontrolBrick'							: __webpack_require__( 75 )
@@ -8163,28 +8213,39 @@
 						  , 'basicBrickPresentation'				: __webpack_require__( 80 )
 						  , 'Pselector_ObjTypePresentation'			: __webpack_require__( 82 )
 						  // OpenHab
-						  , 'openHab_Action_OnOff'					: __webpack_require__( 58 )
-						  , 'openHab_Event_OnOff'					: __webpack_require__( 83 )
+						  , 'openHab_Action_OnOff'					: __webpack_require__( 83 )
+						  , 'openHab_Event_OnOff'					: __webpack_require__( 86 )
+						  , 'openHab_Action_Contact'				: __webpack_require__( 88 )
+						  , 'openHab_Event_Contact'					: __webpack_require__( 90 )
+						  , 'openHab_Action_Color'					: __webpack_require__( 92 )
+						  , 'openHab_Event_Color'					: __webpack_require__( 58 )
+						  , 'openHab_Action_String'					: __webpack_require__( 94 )
+						  , 'openHab_Event_String'					: __webpack_require__( 96 )
+						  , 'openHab_Action_Number'					: __webpack_require__( 98 )
+						  , 'openHab_Event_Number'					: __webpack_require__( 100 )
+						  , 'openHab_Action_RollerShutter'			: __webpack_require__( 102 )
+						  , 'openHab_Event_RollerShutter'			: __webpack_require__( 104 )
+						  
 						  // Variables
-						  , 'Program_UsePresentation'				: __webpack_require__( 86 )
-						  , 'Program_DefinitionPresentation'		: __webpack_require__( 87 )
-						  , 'Var_DefinitionPresentation'			: __webpack_require__( 88 )
+						  , 'Program_UsePresentation'				: __webpack_require__( 106 )
+						  , 'Program_DefinitionPresentation'		: __webpack_require__( 107 )
+						  , 'Var_DefinitionPresentation'			: __webpack_require__( 108 )
 						  , 'SelectorNodePresentation'				: __webpack_require__( 81 )
-						  , 'MR_Instance_SelectorNodePresentation'	: __webpack_require__( 89 )
+						  , 'MR_Instance_SelectorNodePresentation'	: __webpack_require__( 109 )
 						  , 'Var_UsePresentation'					: __webpack_require__( 74 )
-						  , 'PprogramActionPresentation'			: __webpack_require__( 92 )
-						  , 'Program_ExposedAPI_elementPresentation': __webpack_require__( 93 )
+						  , 'PprogramActionPresentation'			: __webpack_require__( 112 )
+						  , 'Program_ExposedAPI_elementPresentation': __webpack_require__( 113 )
 						  // General type variables
-						  , 'Pselector_TextPresentation'			: __webpack_require__( 94 )
+						  , 'Pselector_TextPresentation'			: __webpack_require__( 114 )
 						  // MediaRenderer
-						  , 'MR_Play_NodePresentation'				: __webpack_require__( 96 )
-						  , 'MR_load_NodePresentation'				: __webpack_require__( 97 )
-						  , 'MR_Pause_NodePresentation'				: __webpack_require__( 98 )
-						  , 'MR_Stop_NodePresentation'				: __webpack_require__( 99 )
+						  , 'MR_Play_NodePresentation'				: __webpack_require__( 116 )
+						  , 'MR_load_NodePresentation'				: __webpack_require__( 117 )
+						  , 'MR_Pause_NodePresentation'				: __webpack_require__( 118 )
+						  , 'MR_Stop_NodePresentation'				: __webpack_require__( 119 )
 						  // Hue
-						  , 'PeventBrickPresentation_Hue'			: __webpack_require__( 100 )
+						  , 'PeventBrickPresentation_Hue'			: __webpack_require__( 120 )
 						  // HTTP
-						  , 'PactionHTTP'							: __webpack_require__( 101 )
+						  , 'PactionHTTP'							: __webpack_require__( 121 )
 						  }
 		, get			: function(className) {
 			 var classe	= this.mapping[ className ];
@@ -8219,7 +8280,7 @@
 /* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var openHab_Action	= __webpack_require__( 59 )
+	var openHab_Event	= __webpack_require__( 59 )
 	  // , utils		= require( '../../../utils.js' )
 	  , DragDrop		= __webpack_require__( 56 )
 	  , openHabTypes	= __webpack_require__( 64 )
@@ -8228,92 +8289,101 @@
 	  ;
 	  
 	html_template.innerHTML = str_template;
-
+	  
 	// 
-	var openHab_Action_OnOff = function() {
-		 openHab_Action.apply(this, []);
-		 this.mustDoRender = true;
+	var openHab_Event_Color = function() {
+		 openHab_Event.apply(this, []);
+		 this.eventNode.filters = [];
 		 return this;
 		}
 
-	openHab_Action_OnOff.prototype = Object.create( openHab_Action.prototype );
-	openHab_Action_OnOff.prototype.constructor = openHab_Action_OnOff;
+	openHab_Event_Color.prototype = Object.create( openHab_Event.prototype );
+	openHab_Event_Color.prototype.constructor = openHab_Event_Color;
 
-	openHab_Action_OnOff.prototype.init		= function(PnodeID, parent, children) {
-		 openHab_Action.prototype.init.apply(this, [PnodeID, parent, children]);
+	openHab_Event_Color.prototype.init		= function(PnodeID, parent, children) {
+		 openHab_Event.prototype.init.apply(this, [PnodeID, parent, children]);
 		 return this;
 		}
 
-	openHab_Action_OnOff.prototype.serialize = function() {
-		 var json = openHab_Action.prototype.serialize.apply(this, []);
-		 json.subType = 'openHab_Action_OnOff';
+	openHab_Event_Color.prototype.serialize = function() {
+		 var json = openHab_Event.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Event_Color';
 		 return json;
 		}
 
-	openHab_Action_OnOff.prototype.forceRender		= function() {
-		this.mustDoRender = true;
-		return openHab_Action.prototype.forceRender.apply(this, []);
-	}
-
-	openHab_Action_OnOff.prototype.Render = function() {
-		 var self = this;
-		 var root = openHab_Action.prototype.Render.apply(this,[]);
-		 if(this.mustDoRender) {
-			 this.mustDoRender = false;
-			 root.classList.add( "openHab_Action_OnOff" );
-			 this.copyHTML(html_template, this.html.actionName);
-			 this.html.OnOff			= root.querySelector("select.OnOff");
-			 this.html.OnOff.value		= this.action.method = this.action.method || 'Do_On';
-			 this.html.OnOff.onchange	= function() {self.action.method = this.value;}
-			 DragDrop.updateConfig	( this.dropZoneSelectorId
-									, { acceptedClasse: [[openHabTypes.OnOff]]
-									  }
-									);
-			}
+	openHab_Event_Color.prototype.Render = function() {
+		 // var self = this;
+		 var root = openHab_Event.prototype.Render.apply(this, []);
+		 root.classList.add( "openHab_Event_Color" );
+		 // template
+		 this.copyHTML(html_template, this.html.eventName);
+		 // DragDrop
+		 DragDrop.updateConfig	( this.dropZoneSelectorId
+								, { acceptedClasse: [[openHabTypes.HSB]]
+								  }
+								);
 		 return root;
 		}
 
-	module.exports = openHab_Action_OnOff;
+	module.exports = openHab_Event_Color;
+
+
 
 
 /***/ },
 /* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ActionNodePresentation	= __webpack_require__( 60 )
+	var EventNodePresentation	= __webpack_require__( 60 )
 	  // , utils					= require( '../../../utils.js' )
 	  // , DragDrop				= require( '../../../DragDrop.js' )
 	  ;
 	  
 	// 
-	var openHab_Action = function() {
-		 ActionNodePresentation.apply(this, []);
+	var openHab_Event = function() {
+		 EventNodePresentation.apply(this, []);
+		 this.eventFilter = { att	: "value"
+							, op	: "equal"
+							, val	: ""
+							}
+		 this.eventNode =	{ eventName	: 'state'
+							, filters	: [this.eventFilter]
+							};
 		 return this;
 		}
 
-	openHab_Action.prototype = Object.create( ActionNodePresentation.prototype ); // new ActionNodePresentation();
-	openHab_Action.prototype.constructor = openHab_Action;
+	openHab_Event.prototype = Object.create( EventNodePresentation.prototype );
+	openHab_Event.prototype.constructor			= openHab_Event;
+	EventNodePresentation.prototype.className	= 'PeventBrick';
 
-	openHab_Action.prototype.init		= function(PnodeID, parent, children) {
-		 ActionNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	openHab_Event.prototype.init		= function(PnodeID, parent, children) {
+		 EventNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
 		 return this;
 		}
 
-	openHab_Action.prototype.serialize = function() {
-		 var json = ActionNodePresentation.prototype.serialize.apply(this, []);
-		 json.subType = 'openHab_Action';
+	openHab_Event.prototype.serialize = function() {
+		 var json = EventNodePresentation.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Event';
+		 json.eventNode = this.eventNode;
+		 return json;
+		}
+
+	openHab_Event.prototype.unserialize = function(json, PresoUtils) {
+		 EventNodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
+		 this.eventNode		= json.eventNode;
+		 this.eventFilter	= json.eventNode.filters[0];
 		 return json;
 		}
 		
-	openHab_Action.prototype.Render = function() {
+	openHab_Event.prototype.Render = function() {
 		 // var self = this;
-		 var root = ActionNodePresentation.prototype.Render.apply(this, []);
-		 root.classList.add( "openHab_Action" );
-		 this.html.img_symbol.setAttribute("src", "js/Presentations/openHab/templates/openhab-logo-square.png");
+		 var root = EventNodePresentation.prototype.Render.apply(this, []);
+		 root.classList.add( "openHab_Event" );
+		 this.html.img_symbol.setAttribute("src", "js/Presentations/openHab/templates/Event_openhab-logo-square.png");
 		 return root;
 		}
 
-	module.exports = openHab_Action;
+	module.exports = openHab_Event;
 
 
 
@@ -8324,54 +8394,50 @@
 
 	var PnodePresentation	= __webpack_require__( 61 )
 	  , DragDrop			= __webpack_require__( 56 )
+	  // , utils				= require( '../utils.js' )
 	  , htmlTemplateText	= __webpack_require__( 63 )
 	  ;
 
 	var css = document.createElement('link');
 	css.setAttribute('rel' , 'stylesheet');
-	css.setAttribute('href', 'js/Presentations/HTML_templates/ActionNodePresentation.css');
+	css.setAttribute('href', 'js/Presentations/HTML_templates/EventNodePresentation.css');
 	document.head.appendChild(css);
 
 	var htmlTemplate = document.createElement('div');
 	htmlTemplate.innerHTML = htmlTemplateText;
 
-	var ActionNodePresentation = function() {
-		// console.log(this);
-		PnodePresentation.prototype.constructor.apply(this, []);
+	  
+	// Desfining EventNodePresentation
+	var EventNodePresentation = function() {
+		PnodePresentation.apply(this, []);
 		return this;
 	}
 
-	ActionNodePresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
-	ActionNodePresentation.prototype.className = ActionNodePresentation;
-	ActionNodePresentation.prototype.className = 'ActionNode';
+	EventNodePresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
+	EventNodePresentation.prototype.constructor	= EventNodePresentation;
+	EventNodePresentation.prototype.className	= 'EventNode';
 
-	ActionNodePresentation.prototype.init = function(PnodeID, parent, children) {
+	EventNodePresentation.prototype.init = function(PnodeID, parent, children) {
 		PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
-		this.action			= { method		: ''
-							  , params		: []
-							  };
-		this.html			= {};
+		this.event = {};
 		return this;
 	}
 
-	ActionNodePresentation.prototype.serialize	= function() {
+	EventNodePresentation.prototype.serialize = function() {
 		var json = PnodePresentation.prototype.serialize.apply(this, []);
-		// Describe action here
-		json.subType	= 'ActionNode';
-		json.ActionNode = { method		: this.action.method
-						  , params		: this.action.params
-						  };
+		json.subType = 'EventNodePresentation';
+		if(this.implicitVariableId) {json.implicitVariableId = this.implicitVariableId;}
 		return json;
 	}
-	ActionNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
-		// Describe action here
+
+	EventNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
+		// var self = this;
 		PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
-		this.action.method		= json.ActionNode.method;
-		this.action.params		= json.ActionNode.params;
+		if(json.implicitVariableId) {this.implicitVariableId = json.implicitVariableId;}
 		return this;
 	}
 
-	ActionNodePresentation.prototype.primitivePlug	= function(c) {
+	EventNodePresentation.prototype.primitivePlug	= function(c) {
 		 // console.log("Primitive plug ", this.root, " ->", c.root);
 		 this.Render();
 		 var P = this.html.divSelector
@@ -8381,20 +8447,22 @@
 			 P.appendChild( N );
 			}
 		 return this;
+		 
 		}
 
-	ActionNodePresentation.prototype.Render	= function() {
-		var self = this
-		  , root = PnodePresentation.prototype.Render.apply(this, []);
-		root.classList.add('ActionNode');
-		root.classList.add('ActionNodePresentation');
-		if(typeof this.html.actionName === 'undefined') {
+	EventNodePresentation.prototype.Render	= function() {
+		var self = this;
+		var root = PnodePresentation.prototype.Render.apply(this, []);
+		root.classList.add('EventNode');
+		root.classList.add("EventNodePresentation");
+		root.classList.remove('Pnode');
+		if(typeof this.html.eventName === 'undefined') {
 			 this.copyHTML(htmlTemplate, root);
-			 this.html.img_symbol	= root.querySelector( "img.action_symbol" );
-			 this.html.actionName	= root.querySelector(".actionName");
+			 this.html.img_symbol	= root.querySelector( "img.event_symbol" );
+			 this.html.eventName	= root.querySelector(".eventName");
 			 this.html.divSelector	= root.querySelector(".selector");
-			 this.html.actionDescr	= root.querySelector(".action_description");
-			 this.html.img_symbol.setAttribute("src", "js/Presentations/HTML_templates/action_128x128.jpg");
+			 this.html.eventDescr	= root.querySelector(".event_description");
+			 this.html.img_symbol.setAttribute("src", "js/Presentations/HTML_templates/event-icon.png");
 			 this.dropZoneSelectorId = DragDrop.newDropZone	( this.html.divSelector
 															, { acceptedClasse	: 'SelectorNode'
 															  , CSSwhenAccepted	: 'possible2drop'
@@ -8414,7 +8482,7 @@
 	}
 
 	// Return the constructor
-	module.exports = ActionNodePresentation;
+	module.exports = EventNodePresentation;
 
 
 
@@ -8747,7 +8815,7 @@
 /* 63 */
 /***/ function(module, exports) {
 
-	module.exports = "<img class=\"action_symbol\"></img>\r\n<div class=\"action_description\">\r\n\t<p class=\"actionName\">Action name</p>\r\n\t<p class=\"selector\">Drop targets here</p>\r\n</div>"
+	module.exports = "<img class=\"event_symbol\"></img>\r\n<div class=\"event_description\">\r\n\t<p class=\"eventName\">Event name</p>\r\n\t<p class=\"selector\">Drop sources here</p>\r\n</div>"
 
 /***/ },
 /* 64 */
@@ -8761,13 +8829,14 @@
 						, UpDown			: "openHab_op_UpDown"
 						, StopMove			: "openHab_op_StopMove"
 						, String			: "openHab_op_String"
+						, HSB				: "openHab_op_HSB"
 						};
 
 /***/ },
 /* 65 */
 /***/ function(module, exports) {
 
-	module.exports = "<label class=\"turn\">Turn </label>\r\n<select class=\"OnOff\">\r\n\t<option value=\"Do_On\" >On </option>\r\n\t<option value=\"Do_Off\">Off</option>\r\n</select>"
+	module.exports = "<label class=\"turn\">Color changed for  \r\n</label>\r\n"
 
 /***/ },
 /* 66 */
@@ -9043,6 +9112,113 @@
 /* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var PnodePresentation	= __webpack_require__( 61 )
+	  , DragDrop			= __webpack_require__( 56 )
+	  , htmlTemplateText	= __webpack_require__( 70 )
+	  ;
+
+	var css = document.createElement('link');
+	css.setAttribute('rel' , 'stylesheet');
+	css.setAttribute('href', 'js/Presentations/HTML_templates/ActionNodePresentation.css');
+	document.head.appendChild(css);
+
+	var htmlTemplate = document.createElement('div');
+	htmlTemplate.innerHTML = htmlTemplateText;
+
+	var ActionNodePresentation = function() {
+		// console.log(this);
+		PnodePresentation.prototype.constructor.apply(this, []);
+		return this;
+	}
+
+	ActionNodePresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
+	ActionNodePresentation.prototype.className = ActionNodePresentation;
+	ActionNodePresentation.prototype.className = 'ActionNode';
+
+	ActionNodePresentation.prototype.init = function(PnodeID, parent, children) {
+		PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+		this.action			= { method		: ''
+							  , params		: []
+							  };
+		this.html			= {};
+		return this;
+	}
+
+	ActionNodePresentation.prototype.serialize	= function() {
+		var json = PnodePresentation.prototype.serialize.apply(this, []);
+		// Describe action here
+		json.subType	= 'ActionNode';
+		json.ActionNode = { method		: this.action.method
+						  , params		: this.action.params
+						  };
+		return json;
+	}
+	ActionNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
+		// Describe action here
+		PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
+		this.action.method		= json.ActionNode.method;
+		this.action.params		= json.ActionNode.params;
+		console.log("ActionNodePresentation::", this.action);
+		return this;
+	}
+
+	ActionNodePresentation.prototype.primitivePlug	= function(c) {
+		 // console.log("Primitive plug ", this.root, " ->", c.root);
+		 this.Render();
+		 var P = this.html.divSelector
+			, N = c.Render();
+		 if(N.parentElement === null) {
+			 P.innerHTML = '';
+			 P.appendChild( N );
+			}
+		 return this;
+		}
+
+	ActionNodePresentation.prototype.Render	= function() {
+		var self = this
+		  , root = PnodePresentation.prototype.Render.apply(this, []);
+		root.classList.add('ActionNode');
+		root.classList.add('ActionNodePresentation');
+		if(typeof this.html.actionName === 'undefined') {
+			 this.copyHTML(htmlTemplate, root);
+			 this.html.img_symbol	= root.querySelector( "img.action_symbol" );
+			 this.html.actionName	= root.querySelector(".actionName");
+			 this.html.divSelector	= root.querySelector(".selector");
+			 this.html.actionDescr	= root.querySelector(".action_description");
+			 this.html.img_symbol.setAttribute("src", "js/Presentations/HTML_templates/action_128x128.jpg");
+			 this.dropZoneSelectorId = DragDrop.newDropZone	( this.html.divSelector
+															, { acceptedClasse	: 'SelectorNode'
+															  , CSSwhenAccepted	: 'possible2drop'
+															  , CSSwhenOver		: 'ready2drop'
+															  , ondrop			: function(evt, draggedNode, infoObj) {
+																	 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																												, undefined	// parent
+																												, undefined	// children
+																												, infoObj
+																												);
+																	 self.appendChild( Pnode );
+																	}
+															  }
+															);
+			}
+		return root;
+	}
+
+	// Return the constructor
+	module.exports = ActionNodePresentation;
+
+
+
+/***/ },
+/* 70 */
+/***/ function(module, exports) {
+
+	module.exports = "<img class=\"action_symbol\"></img>\r\n<div class=\"action_description\">\r\n\t<p class=\"actionName\">Action name</p>\r\n\t<p class=\"selector\">Drop targets here</p>\r\n</div>"
+
+/***/ },
+/* 71 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var PnodeNChildPresentation	= __webpack_require__( 67 );
 
 	var SequenceNodePresentation = function() {
@@ -9076,101 +9252,10 @@
 
 
 /***/ },
-/* 70 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var PnodePresentation	= __webpack_require__( 61 )
-	  , DragDrop			= __webpack_require__( 56 )
-	  // , utils				= require( '../utils.js' )
-	  , htmlTemplateText	= __webpack_require__( 71 )
-	  ;
-
-	var css = document.createElement('link');
-	css.setAttribute('rel' , 'stylesheet');
-	css.setAttribute('href', 'js/Presentations/HTML_templates/EventNodePresentation.css');
-	document.head.appendChild(css);
-
-	var htmlTemplate = document.createElement('div');
-	htmlTemplate.innerHTML = htmlTemplateText;
-
-	  
-	// Desfining EventNodePresentation
-	var EventNodePresentation = function() {
-		PnodePresentation.apply(this, []);
-		return this;
-	}
-
-	EventNodePresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
-	EventNodePresentation.prototype.constructor	= EventNodePresentation;
-	EventNodePresentation.prototype.className	= 'EventNode';
-
-	EventNodePresentation.prototype.init = function(PnodeID, parent, children) {
-		PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
-		this.event = {};
-		return this;
-	}
-
-	EventNodePresentation.prototype.serialize = function() {
-		var json = PnodePresentation.prototype.serialize.apply(this, []);
-		json.subType = 'EventNodePresentation';
-		if(this.implicitVariableId) {json.implicitVariableId = this.implicitVariableId;}
-		return json;
-	}
-
-	EventNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
-		// var self = this;
-		PnodePresentation.prototype.unserialize.apply(this, [json, PresoUtils]);
-		if(json.implicitVariableId) {this.implicitVariableId = json.implicitVariableId;}
-		return this;
-	}
-
-	EventNodePresentation.prototype.Render	= function() {
-		var self = this;
-		var root = PnodePresentation.prototype.Render.apply(this, []);
-		root.classList.add('EventNode');
-		root.classList.add("EventNodePresentation");
-		root.classList.remove('Pnode');
-		if(typeof this.html.eventName === 'undefined') {
-			 this.copyHTML(htmlTemplate, root);
-			 this.html.img_symbol	= root.querySelector( "img.event_symbol" );
-			 this.html.eventName	= root.querySelector(".eventName");
-			 this.html.divSelector	= root.querySelector(".selector");
-			 this.html.eventDescr	= root.querySelector(".event_description");
-			 this.html.img_symbol.setAttribute("src", "js/Presentations/HTML_templates/event-icon.png");
-			 this.dropZoneSelectorId = DragDrop.newDropZone	( this.html.divSelector
-															, { acceptedClasse	: 'SelectorNode'
-															  , CSSwhenAccepted	: 'possible2drop'
-															  , CSSwhenOver		: 'ready2drop'
-															  , ondrop			: function(evt, draggedNode, infoObj) {
-																	 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
-																												, undefined	// parent
-																												, undefined	// children
-																												, infoObj
-																												);
-																	 self.appendChild( Pnode );
-																	}
-															  }
-															);
-			}
-		return root;
-	}
-
-	// Return the constructor
-	module.exports = EventNodePresentation;
-
-
-
-/***/ },
-/* 71 */
-/***/ function(module, exports) {
-
-	module.exports = "<img class=\"event_symbol\"></img>\r\n<div class=\"event_description\">\r\n\t<p class=\"eventName\">Event name</p>\r\n\t<p class=\"selector\">Drop sources here</p>\r\n</div>"
-
-/***/ },
 /* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var EventNodePresentation	= __webpack_require__( 70 )
+	var EventNodePresentation	= __webpack_require__( 60 )
 	  // , DragDrop				= require( '../DragDrop.js' )
 	  , utils					= __webpack_require__( 1 )
 	  ;
@@ -9918,7 +10003,7 @@
 /* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var EventNodePresentation	= __webpack_require__( 70 )
+	var EventNodePresentation	= __webpack_require__( 60 )
 	  , DragDrop				= __webpack_require__( 56 )
 	  , utils					= __webpack_require__( 1 )
 	  ;
@@ -10090,7 +10175,7 @@
 /* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var EventNodePresentation	= __webpack_require__( 70 )
+	var EventNodePresentation	= __webpack_require__( 60 )
 	  , DragDrop				= __webpack_require__( 56 )
 	  , utils					= __webpack_require__( 1 )
 	  ;
@@ -10388,11 +10473,120 @@
 /* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var openHab_Event	= __webpack_require__( 84 )
+	var openHab_Action	= __webpack_require__( 84 )
 	  // , utils		= require( '../../../utils.js' )
 	  , DragDrop		= __webpack_require__( 56 )
 	  , openHabTypes	= __webpack_require__( 64 )
 	  , str_template	= __webpack_require__( 85 )
+	  , html_template	= document.createElement( "div" )
+	  ;
+	  
+	html_template.innerHTML = str_template;
+
+	// 
+	var openHab_Action_OnOff = function() {
+		 openHab_Action.apply(this, []);
+		 this.mustDoRender = true;
+		 return this;
+		}
+
+	openHab_Action_OnOff.prototype = Object.create( openHab_Action.prototype );
+	openHab_Action_OnOff.prototype.constructor = openHab_Action_OnOff;
+
+	openHab_Action_OnOff.prototype.init		= function(PnodeID, parent, children) {
+		 openHab_Action.prototype.init.apply(this, [PnodeID, parent, children]);
+		 return this;
+		}
+
+	openHab_Action_OnOff.prototype.serialize = function() {
+		 var json = openHab_Action.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Action_OnOff';
+		 return json;
+		}
+
+	openHab_Action_OnOff.prototype.forceRender		= function() {
+		this.mustDoRender = true;
+		return openHab_Action.prototype.forceRender.apply(this, []);
+	}
+
+	openHab_Action_OnOff.prototype.Render = function() {
+		 var self = this;
+		 var root = openHab_Action.prototype.Render.apply(this,[]);
+		 if(this.mustDoRender) {
+			 this.mustDoRender = false;
+			 root.classList.add( "openHab_Action_OnOff" );
+			 this.copyHTML(html_template, this.html.actionName);
+			 this.html.OnOff			= root.querySelector("select.OnOff");
+			 this.html.OnOff.value		= this.action.method = this.action.method || 'Do_On';
+			 this.html.OnOff.onchange	= function() {self.action.method = this.value;}
+			 DragDrop.updateConfig	( this.dropZoneSelectorId
+									, { acceptedClasse: [[openHabTypes.OnOff]]
+									  }
+									);
+			}
+		 return root;
+		}
+
+	module.exports = openHab_Action_OnOff;
+
+
+/***/ },
+/* 84 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ActionNodePresentation	= __webpack_require__( 69 )
+	  // , utils					= require( '../../../utils.js' )
+	  // , DragDrop				= require( '../../../DragDrop.js' )
+	  ;
+	  
+	// 
+	var openHab_Action = function() {
+		 ActionNodePresentation.apply(this, []);
+		 return this;
+		}
+
+	openHab_Action.prototype = Object.create( ActionNodePresentation.prototype ); // new ActionNodePresentation();
+	openHab_Action.prototype.constructor = openHab_Action;
+
+	openHab_Action.prototype.init		= function(PnodeID, parent, children) {
+		 ActionNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+		 return this;
+		}
+
+	openHab_Action.prototype.serialize = function() {
+		 var json = ActionNodePresentation.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Action';
+		 return json;
+		}
+		
+	openHab_Action.prototype.Render = function() {
+		 // var self = this;
+		 var root = ActionNodePresentation.prototype.Render.apply(this, []);
+		 root.classList.add( "openHab_Action" );
+		 this.html.img_symbol.setAttribute("src", "js/Presentations/openHab/templates/openhab-logo-square.png");
+		 return root;
+		}
+
+	module.exports = openHab_Action;
+
+
+
+
+/***/ },
+/* 85 */
+/***/ function(module, exports) {
+
+	module.exports = "<label class=\"turn\">Turn </label>\r\n<select class=\"OnOff\">\r\n\t<option value=\"Do_On\" >On </option>\r\n\t<option value=\"Do_Off\">Off</option>\r\n</select>"
+
+/***/ },
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var openHab_Event	= __webpack_require__( 59 )
+	  // , utils		= require( '../../../utils.js' )
+	  , DragDrop		= __webpack_require__( 56 )
+	  , openHabTypes	= __webpack_require__( 64 )
+	  , str_template	= __webpack_require__( 87 )
 	  , html_template	= document.createElement( "div" )
 	  ;
 	  
@@ -10418,11 +10612,6 @@
 		 json.subType = 'openHab_Event_OnOff';
 		 return json;
 		}
-	/*
-	openHab_Event_OnOff.prototype.unserialize = function(json) {
-		 openHab_Event.prototype.unserialize.apply(this, [json]);
-		 return json;
-		}*/
 
 	openHab_Event_OnOff.prototype.Render = function() {
 		 var self = this;
@@ -10447,71 +10636,630 @@
 
 
 /***/ },
-/* 84 */
+/* 87 */
+/***/ function(module, exports) {
+
+	module.exports = "<label class=\"turn\">On turning </label>\r\n<select class=\"OnOff\">\r\n\t<option value=\"ON\" >On </option>\r\n\t<option value=\"OFF\">Off</option>\r\n</select>"
+
+/***/ },
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var EventNodePresentation	= __webpack_require__( 70 )
-	  // , utils					= require( '../../../utils.js' )
-	  // , DragDrop				= require( '../../../DragDrop.js' )
+	var openHab_Action	= __webpack_require__( 84 )
+	  // , utils		= require( '../../../utils.js' )
+	  , DragDrop		= __webpack_require__( 56 )
+	  , openHabTypes	= __webpack_require__( 64 )
+	  , str_template	= __webpack_require__( 89 )
+	  , html_template	= document.createElement( "div" )
 	  ;
 	  
+	html_template.innerHTML = str_template;
+
 	// 
-	var openHab_Event = function() {
-		 EventNodePresentation.apply(this, []);
-		 this.eventFilter = { att	: "value"
-							, op	: "equal"
-							, val	: ""
-							}
-		 this.eventNode =	{ eventName	: 'state'
-							, filters	: [this.eventFilter]
-							};
+	var openHab_Action_Contact = function() {
+		 openHab_Action.apply(this, []);
+		 this.mustDoRender = true;
 		 return this;
 		}
 
-	openHab_Event.prototype = Object.create( EventNodePresentation.prototype );
-	openHab_Event.prototype.constructor			= openHab_Event;
-	EventNodePresentation.prototype.className	= 'PeventBrick';
+	openHab_Action_Contact.prototype = Object.create( openHab_Action.prototype );
+	openHab_Action_Contact.prototype.constructor = openHab_Action_Contact;
 
-	openHab_Event.prototype.init		= function(PnodeID, parent, children) {
-		 EventNodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
+	openHab_Action_Contact.prototype.init		= function(PnodeID, parent, children) {
+		 openHab_Action.prototype.init.apply(this, [PnodeID, parent, children]);
 		 return this;
 		}
 
-	openHab_Event.prototype.serialize = function() {
-		 var json = EventNodePresentation.prototype.serialize.apply(this, []);
-		 json.subType = 'openHab_Event';
-		 json.eventNode = this.eventNode;
+	openHab_Action_Contact.prototype.serialize = function() {
+		 var json = openHab_Action.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Action_Contact';
 		 return json;
 		}
 
-	openHab_Event.prototype.unserialize = function(json) {
-		 EventNodePresentation.prototype.unserialize.apply(this, [json]);
-		 this.eventNode		= json.eventNode;
-		 this.eventFilter	= json.eventNode.filters[0];
-		 return json;
+	openHab_Action_Contact.prototype.forceRender		= function() {
+		this.mustDoRender = true;
+		return openHab_Action.prototype.forceRender.apply(this, []);
+	}
+
+	openHab_Action_Contact.prototype.Render = function() {
+		 var self = this;
+		 var root = openHab_Action.prototype.Render.apply(this,[]);
+		 if(this.mustDoRender) {
+			 this.mustDoRender = false;
+			 root.classList.add( "openHab_Action_Contact" );
+			 this.copyHTML(html_template, this.html.actionName);
+			 this.html.OpenClose			= root.querySelector("select.contact");
+			 this.html.OpenClose.value		= this.action.method = this.action.method || 'Do_Open';
+			 this.html.OpenClose.onchange	= function() {self.action.method = this.value;}
+			 DragDrop.updateConfig	( this.dropZoneSelectorId
+									, { acceptedClasse: [[openHabTypes.OpenClosed]]
+									  }
+									);
+			}
+		 return root;
 		}
 		
-	openHab_Event.prototype.Render = function() {
-		 // var self = this;
-		 var root = EventNodePresentation.prototype.Render.apply(this, []);
-		 root.classList.add( "openHab_Event" );
-		 this.html.img_symbol.setAttribute("src", "js/Presentations/openHab/templates/Event_openhab-logo-square.png");
+
+	module.exports = openHab_Action_Contact;
+
+
+/***/ },
+/* 89 */
+/***/ function(module, exports) {
+
+	module.exports = "<label class=\"turn\">\r\n\t<select class=\"contact\">\r\n\t\t<option value=\"Do_Open\" >Open </option>\r\n\t\t<option value=\"Do_Close\">Close</option>\r\n\t</select>\r\n</label>"
+
+/***/ },
+/* 90 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var openHab_Event	= __webpack_require__( 59 )
+	  // , utils		= require( '../../../utils.js' )
+	  , DragDrop		= __webpack_require__( 56 )
+	  , openHabTypes	= __webpack_require__( 64 )
+	  , str_template	= __webpack_require__( 91 )
+	  , html_template	= document.createElement( "div" )
+	  ;
+	  
+	html_template.innerHTML = str_template;
+	  
+	// 
+	var openHab_Event_Contact = function() {
+		 openHab_Event.apply(this, []);
+		 this.eventFilter.val = "OPEN"
+		 return this;
+		}
+
+	openHab_Event_Contact.prototype = Object.create( openHab_Event.prototype );
+	openHab_Event_Contact.prototype.constructor = openHab_Event_Contact;
+
+	openHab_Event_Contact.prototype.init		= function(PnodeID, parent, children) {
+		 openHab_Event.prototype.init.apply(this, [PnodeID, parent, children]);
+		 return this;
+		}
+
+	openHab_Event_Contact.prototype.serialize = function() {
+		 var json = openHab_Event.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Event_Contact';
+		 return json;
+		}
+
+	openHab_Event_Contact.prototype.Render = function() {
+		 var self = this;
+		 var root = openHab_Event.prototype.Render.apply(this, []);
+		 root.classList.add( "openHab_Event_Contact" );
+		 // template
+		 this.copyHTML(html_template, this.html.eventName);
+		 this.html.OpenClose			= root.querySelector("select.contact");
+		 this.html.OpenClose.value		= this.eventFilter.val = this.eventFilter.val || 'OPEN';
+		 this.html.OpenClose.onchange	= function() {self.eventFilter.val = this.value;}
+		 // DragDrop
+		 DragDrop.updateConfig	( this.dropZoneSelectorId
+								, { acceptedClasse: [[openHabTypes.OpenClosed]]
+								  }
+								);
 		 return root;
 		}
 
-	module.exports = openHab_Event;
+	module.exports = openHab_Event_Contact;
 
 
 
 
 /***/ },
-/* 85 */
+/* 91 */
 /***/ function(module, exports) {
 
-	module.exports = "<label class=\"turn\">Turn </label>\r\n<select class=\"OnOff\">\r\n\t<option value=\"ON\" >ON </option>\r\n\t<option value=\"OFF\">OFF</option>\r\n</select>"
+	module.exports = "<label class=\"turn\">Someone\r\n\t<select class=\"contact\">\r\n\t\t<option value=\"OPEN\"  >Opened</option>\r\n\t\t<option value=\"CLOSED\">Closed</option>\r\n\t</select>\r\n</label>"
 
 /***/ },
-/* 86 */
+/* 92 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var openHab_Action	= __webpack_require__( 84 )
+	  // , utils		= require( '../../../utils.js' )
+	  , DragDrop		= __webpack_require__( 56 )
+	  , openHabTypes	= __webpack_require__( 64 )
+	  , str_template	= __webpack_require__( 93 )
+	  , html_template	= document.createElement( "div" )
+	  ;
+	  
+	html_template.innerHTML = str_template;
+
+	// 
+	var openHab_Action_Color = function() {
+		 openHab_Action.apply(this, []);
+		 this.mustDoRender = true;
+		 return this;
+		}
+
+	openHab_Action_Color.prototype = Object.create( openHab_Action.prototype );
+	openHab_Action_Color.prototype.constructor = openHab_Action_Color;
+
+	openHab_Action_Color.prototype.init		= function(PnodeID, parent, children) {
+		 openHab_Action.prototype.init.apply(this, [PnodeID, parent, children]);
+		 return this;
+		}
+
+	openHab_Action_Color.prototype.serialize = function() {
+		 this.action.method = "setColor_RGB";
+		 var json = openHab_Action.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Action_Color';
+		 return json;
+		}
+
+	openHab_Action_Color.prototype.forceRender		= function() {
+		this.mustDoRender = true;
+		return openHab_Action.prototype.forceRender.apply(this, []);
+	}
+
+	openHab_Action_Color.prototype.Render = function() {
+		 var self = this;
+		 var root = openHab_Action.prototype.Render.apply(this,[]);
+		 if(this.mustDoRender) {
+			 this.mustDoRender = false;
+			 root.classList.add( "openHab_Action_Color" );
+			 this.copyHTML(html_template, this.html.actionName);
+			 this.html.color			= root.querySelector("input.color");
+			 if(this.action.params.length === 0) {
+				 this.action.params = [255, 0, 0];
+				}
+			 this.html.color.onchange	= function() {
+				 // console.log(this.value);
+				 var R = parseInt( this.value.substring(1,3), 16)
+				   , G = parseInt( this.value.substring(3,5), 16)
+				   , B = parseInt( this.value.substring(5,7), 16)
+				   ;
+				 self.action.params = [R, G, B];
+				 // console.log("Color", self.action.params);
+				}
+			 DragDrop.updateConfig	( this.dropZoneSelectorId
+									, { acceptedClasse: [[openHabTypes.HSB]]
+									  }
+									);
+			}
+		 // console.log("Render color", this.action.params);
+		 this.html.color.value	= "#" 
+								+ ("0" + this.action.params[0].toString(16) ).slice(-2)
+								+ ("0" + this.action.params[1].toString(16) ).slice(-2)
+								+ ("0" + this.action.params[2].toString(16) ).slice(-2)
+								;
+		 return root;
+		}
+
+	module.exports = openHab_Action_Color;
+
+
+/***/ },
+/* 93 */
+/***/ function(module, exports) {
+
+	module.exports = "<label class=\"turn\">Color in  \r\n\t<input type=\"color\" class=\"color\"></input>\r\n</label>\r\n"
+
+/***/ },
+/* 94 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var openHab_Action	= __webpack_require__( 84 )
+	  // , utils		= require( '../../../utils.js' )
+	  , DragDrop		= __webpack_require__( 56 )
+	  , openHabTypes	= __webpack_require__( 64 )
+	  , str_template	= __webpack_require__( 95 )
+	  , html_template	= document.createElement( "div" )
+	  ;
+	  
+	html_template.innerHTML = str_template;
+
+	// 
+	var openHab_Action_String = function() {
+		 openHab_Action.apply(this, []);
+		 this.mustDoRender = true;
+		 return this;
+		}
+
+	openHab_Action_String.prototype = Object.create( openHab_Action.prototype );
+	openHab_Action_String.prototype.constructor = openHab_Action_String;
+
+	openHab_Action_String.prototype.init		= function(PnodeID, parent, children) {
+		 openHab_Action.prototype.init.apply(this, [PnodeID, parent, children]);
+		 return this;
+		}
+
+	openHab_Action_String.prototype.serialize = function() {
+		 this.action.method = "setString";
+		 var json = openHab_Action.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Action_String';
+		 return json;
+		}
+
+	openHab_Action_String.prototype.forceRender		= function() {
+		this.mustDoRender = true;
+		return openHab_Action.prototype.forceRender.apply(this, []);
+	}
+
+	openHab_Action_String.prototype.Render = function() {
+		 var self = this;
+		 var root = openHab_Action.prototype.Render.apply(this,[]);
+		 if(this.mustDoRender) {
+			 this.mustDoRender = false;
+			 root.classList.add( "openHab_Action_String" );
+			 this.copyHTML(html_template, this.html.actionName);
+			 this.html.string			= root.querySelector("input.string");
+			 if(this.action.params.length === 0) {
+				 this.action.params = [""];
+				}
+			 this.html.string.onchange	= function() {
+				 self.action.params[0] = this.value;
+				}
+			 DragDrop.updateConfig	( this.dropZoneSelectorId
+									, { acceptedClasse: [[openHabTypes.String]]
+									  }
+									);
+			}
+		 this.html.string.value	= this.action.params[0];
+		 return root;
+		}
+
+	module.exports = openHab_Action_String;
+
+
+/***/ },
+/* 95 */
+/***/ function(module, exports) {
+
+	module.exports = "<label class=\"turn\">Change value to \r\n\t<input type=\"text\" class=\"string\"></input>\r\n</label>\r\n"
+
+/***/ },
+/* 96 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var openHab_Event	= __webpack_require__( 59 )
+	  // , utils		= require( '../../../utils.js' )
+	  , DragDrop		= __webpack_require__( 56 )
+	  , openHabTypes	= __webpack_require__( 64 )
+	  , str_template	= __webpack_require__( 97 )
+	  , html_template	= document.createElement( "div" )
+	  ;
+	  
+	html_template.innerHTML = str_template;
+	  
+	// 
+	var openHab_Event_String = function() {
+		 openHab_Event.apply(this, []);
+		 this.eventNode.filters = [];
+		 return this;
+		}
+
+	openHab_Event_String.prototype = Object.create( openHab_Event.prototype );
+	openHab_Event_String.prototype.constructor = openHab_Event_String;
+
+	openHab_Event_String.prototype.init		= function(PnodeID, parent, children) {
+		 openHab_Event.prototype.init.apply(this, [PnodeID, parent, children]);
+		 return this;
+		}
+
+	openHab_Event_String.prototype.serialize = function() {
+		 var json = openHab_Event.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Event_String';
+		 return json;
+		}
+
+	openHab_Event_String.prototype.Render = function() {
+		 // var self = this;
+		 var root = openHab_Event.prototype.Render.apply(this, []);
+		 root.classList.add( "openHab_Event_String" );
+		 // template
+		 this.copyHTML(html_template, this.html.eventName);
+		 // DragDrop
+		 DragDrop.updateConfig	( this.dropZoneSelectorId
+								, { acceptedClasse: [[openHabTypes.String]]
+								  }
+								);
+		 return root;
+		}
+
+	module.exports = openHab_Event_String;
+
+
+
+
+/***/ },
+/* 97 */
+/***/ function(module, exports) {
+
+	module.exports = "<label class=\"turn\">Value has changed for  \r\n</label>\r\n"
+
+/***/ },
+/* 98 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var openHab_Action	= __webpack_require__( 84 )
+	  // , utils		= require( '../../../utils.js' )
+	  , DragDrop		= __webpack_require__( 56 )
+	  , openHabTypes	= __webpack_require__( 64 )
+	  , str_template	= __webpack_require__( 99 )
+	  , html_template	= document.createElement( "div" )
+	  ;
+	  
+	html_template.innerHTML = str_template;
+
+	// 
+	var openHab_Action_Number = function() {
+		 openHab_Action.apply(this, []);
+		 this.mustDoRender = true;
+		 return this;
+		}
+
+	openHab_Action_Number.prototype = Object.create( openHab_Action.prototype );
+	openHab_Action_Number.prototype.constructor = openHab_Action_Number;
+
+	openHab_Action_Number.prototype.init		= function(PnodeID, parent, children) {
+		 openHab_Action.prototype.init.apply(this, [PnodeID, parent, children]);
+		 return this;
+		}
+
+	openHab_Action_Number.prototype.serialize = function() {
+		 this.action.method = "setNumber";
+		 var json = openHab_Action.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Action_Number';
+		 return json;
+		}
+
+	openHab_Action_Number.prototype.forceRender		= function() {
+		this.mustDoRender = true;
+		return openHab_Action.prototype.forceRender.apply(this, []);
+	}
+
+	openHab_Action_Number.prototype.Render = function() {
+		 var self = this;
+		 var root = openHab_Action.prototype.Render.apply(this,[]);
+		 if(this.mustDoRender) {
+			 this.mustDoRender = false;
+			 root.classList.add( "openHab_Action_Number" );
+			 this.copyHTML(html_template, this.html.actionName);
+			 this.html.number			= root.querySelector("input.number");
+			 if(this.action.params.length === 0) {
+				 this.action.params = [""];
+				}
+			 this.html.number.onchange	= function() {
+				 self.action.params[0] = this.value;
+				}
+			 DragDrop.updateConfig	( this.dropZoneSelectorId
+									, { acceptedClasse: [[openHabTypes.Decimal]]
+									  }
+									);
+			}
+		 this.html.number.value	= this.action.params[0];
+		 return root;
+		}
+
+	module.exports = openHab_Action_Number;
+
+
+/***/ },
+/* 99 */
+/***/ function(module, exports) {
+
+	module.exports = "<label class=\"turn\">Change Number value to \r\n\t<input type=\"number\" class=\"number\"></input>\r\n</label>\r\n"
+
+/***/ },
+/* 100 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var openHab_Event	= __webpack_require__( 59 )
+	  // , utils		= require( '../../../utils.js' )
+	  , DragDrop		= __webpack_require__( 56 )
+	  , openHabTypes	= __webpack_require__( 64 )
+	  , str_template	= __webpack_require__( 101 )
+	  , html_template	= document.createElement( "div" )
+	  ;
+	  
+	html_template.innerHTML = str_template;
+	  
+	// 
+	var openHab_Event_Number = function() {
+		 openHab_Event.apply(this, []);
+		 this.eventNode.filters = [];
+		 return this;
+		}
+
+	openHab_Event_Number.prototype = Object.create( openHab_Event.prototype );
+	openHab_Event_Number.prototype.constructor = openHab_Event_Number;
+
+	openHab_Event_Number.prototype.init		= function(PnodeID, parent, children) {
+		 openHab_Event.prototype.init.apply(this, [PnodeID, parent, children]);
+		 return this;
+		}
+
+	openHab_Event_Number.prototype.serialize = function() {
+		 var json = openHab_Event.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Event_Number';
+		 return json;
+		}
+
+	openHab_Event_Number.prototype.Render = function() {
+		 // var self = this;
+		 var root = openHab_Event.prototype.Render.apply(this, []);
+		 root.classList.add( "openHab_Event_Number" );
+		 // template
+		 this.copyHTML(html_template, this.html.eventName);
+		 // DragDrop
+		 DragDrop.updateConfig	( this.dropZoneSelectorId
+								, { acceptedClasse: [[openHabTypes.Decimal]]
+								  }
+								);
+		 return root;
+		}
+
+	module.exports = openHab_Event_Number;
+
+
+
+
+/***/ },
+/* 101 */
+/***/ function(module, exports) {
+
+	module.exports = "<label class=\"turn\">Value has changed for Number \r\n</label>\r\n"
+
+/***/ },
+/* 102 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var openHab_Action	= __webpack_require__( 84 )
+	  // , utils		= require( '../../../utils.js' )
+	  , DragDrop		= __webpack_require__( 56 )
+	  , openHabTypes	= __webpack_require__( 64 )
+	  , str_template	= __webpack_require__( 103 )
+	  , html_template	= document.createElement( "div" )
+	  ;
+	  
+	html_template.innerHTML = str_template;
+
+	// 
+	var openHab_Action_RollerShutter = function() {
+		 openHab_Action.apply(this, []);
+		 this.mustDoRender = true;
+		 return this;
+		}
+
+	openHab_Action_RollerShutter.prototype = Object.create( openHab_Action.prototype );
+	openHab_Action_RollerShutter.prototype.constructor = openHab_Action_RollerShutter;
+
+	openHab_Action_RollerShutter.prototype.init		= function(PnodeID, parent, children) {
+		 openHab_Action.prototype.init.apply(this, [PnodeID, parent, children]);
+		 return this;
+		}
+
+	openHab_Action_RollerShutter.prototype.serialize = function() {
+		 var json = openHab_Action.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Action_RollerShutter';
+		 return json;
+		}
+
+	openHab_Action_RollerShutter.prototype.forceRender		= function() {
+		this.mustDoRender = true;
+		return openHab_Action.prototype.forceRender.apply(this, []);
+	}
+
+	openHab_Action_RollerShutter.prototype.Render = function() {
+		 var self = this;
+		 var root = openHab_Action.prototype.Render.apply(this,[]);
+		 if(this.mustDoRender) {
+			 this.mustDoRender = false;
+			 root.classList.add( "openHab_Action_RollerShutter" );
+			 this.copyHTML(html_template, this.html.actionName);
+			 this.html.RollerShutter			= root.querySelector("select.RollerShutter");
+			 this.html.RollerShutter.onchange	= function() {self.action.method = this.value;}
+			 DragDrop.updateConfig	( this.dropZoneSelectorId
+									, { acceptedClasse: [ [openHabTypes.UpDown  ]
+														, [openHabTypes.StopMove]
+														, [openHabTypes.Percent ]
+														]
+									  }
+									);
+			}
+		 this.html.RollerShutter.value		= this.action.method = this.action.method || 'Do_UP';
+		 return root;
+		}
+
+	module.exports = openHab_Action_RollerShutter;
+
+
+/***/ },
+/* 103 */
+/***/ function(module, exports) {
+
+	module.exports = "<label class=\"turn\">\r\n\tRollerShutter action\r\n\t<select class=\"RollerShutter\">\r\n\t\t<option value= \"Do_UP\" >Up  </option>\r\n\t\t<option value=\"Do_DOWN\">Down</option>\r\n\t\t<option value=\"Do_MOVE\">Move</option>\r\n\t\t<option value=\"Do_STOP\">Stop</option>\r\n\t\t<!--<option value=\"Do_PERCENT\">\r\n\t\t\t<input type=\"range\" min=\"0\" max=\"1\" step=\"1\" value=\"50\"></input>\r\n\t\t</option>-->\r\n\t</select>\r\n</label>"
+
+/***/ },
+/* 104 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var openHab_Event	= __webpack_require__( 59 )
+	  // , utils		= require( '../../../utils.js' )
+	  , DragDrop		= __webpack_require__( 56 )
+	  , openHabTypes	= __webpack_require__( 64 )
+	  , str_template	= __webpack_require__( 105 )
+	  , html_template	= document.createElement( "div" )
+	  ;
+	  
+	html_template.innerHTML = str_template;
+	  
+	// 
+	var openHab_Event_RollerShutter = function() {
+		 openHab_Event.apply(this, []);
+		 this.eventFilter.val = "UP"
+		 return this;
+		}
+
+	openHab_Event_RollerShutter.prototype = Object.create( openHab_Event.prototype );
+	openHab_Event_RollerShutter.prototype.constructor = openHab_Event_RollerShutter;
+
+	openHab_Event_RollerShutter.prototype.init		= function(PnodeID, parent, children) {
+		 openHab_Event.prototype.init.apply(this, [PnodeID, parent, children]);
+		 return this;
+		}
+
+	openHab_Event_RollerShutter.prototype.serialize = function() {
+		 var json = openHab_Event.prototype.serialize.apply(this, []);
+		 json.subType = 'openHab_Event_RollerShutter';
+		 return json;
+		}
+
+	openHab_Event_RollerShutter.prototype.Render = function() {
+		 var self = this;
+		 var root = openHab_Event.prototype.Render.apply(this, []);
+		 root.classList.add( "openHab_Event_RollerShutter" );
+		 // template
+		 this.copyHTML(html_template, this.html.eventName);
+		 this.html.OnOff			= root.querySelector("select.RollerShutter");
+		 this.html.OnOff.value		= this.eventFilter.val = this.eventFilter.val || 'UP';
+		 this.html.OnOff.onchange	= function() {self.eventFilter.val = this.value;}
+		 // DragDrop
+		 DragDrop.updateConfig	( this.dropZoneSelectorId
+								, { acceptedClasse: [ [openHabTypes.UpDown  ]
+													, [openHabTypes.StopMove]
+													, [openHabTypes.Percent ]
+													]
+								  }
+								);
+		 return root;
+		}
+
+	module.exports = openHab_Event_RollerShutter;
+
+
+
+
+/***/ },
+/* 105 */
+/***/ function(module, exports) {
+
+	module.exports = "<label class=\"turn\">\r\n\tRollerShutter event\r\n\t<select class=\"RollerShutter\">\r\n\t\t<option value= \"UP\" >Up  </option>\r\n\t\t<option value=\"DOWN\">Down</option>\r\n\t\t<option value=\"MOVE\">Move</option>\r\n\t\t<option value=\"STOP\">Stop</option>\r\n\t</select>\r\n</label>"
+
+/***/ },
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation	= __webpack_require__( 61 )
@@ -10593,7 +11341,7 @@
 
 
 /***/ },
-/* 87 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation	= __webpack_require__( 61 )
@@ -10682,7 +11430,7 @@
 
 
 /***/ },
-/* 88 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation	= __webpack_require__( 61 )
@@ -10803,12 +11551,12 @@
 
 
 /***/ },
-/* 89 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var /*PnodePresentation			= require( './PnodePresentation.js' )
 	  , */SelectorNodePresentation	= __webpack_require__( 81 )
-	  , MediaBrowser				= __webpack_require__( 90 )
+	  , MediaBrowser				= __webpack_require__( 110 )
 	  , utils						= __webpack_require__( 1 )
 	  ;
 
@@ -10879,12 +11627,12 @@
 
 
 /***/ },
-/* 90 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var protoPresentation	= __webpack_require__( 62 )
 	  , utils				= __webpack_require__( 1 )
-	  , AlxEvents			= __webpack_require__( 91 )
+	  , AlxEvents			= __webpack_require__( 111 )
 	  ;
 	  
 	var XMLparser = new DOMParser();
@@ -11132,7 +11880,7 @@
 
 
 /***/ },
-/* 91 */
+/* 111 */
 /***/ function(module, exports) {
 
 	
@@ -11188,11 +11936,11 @@
 
 
 /***/ },
-/* 92 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var /*PnodePresentation		= require( './PnodePresentation.js' )
-	  ,*/ ActionNodePresentation	= __webpack_require__( 60 )
+	  ,*/ ActionNodePresentation	= __webpack_require__( 69 )
 	  // , DragDrop				= require( '../DragDrop.js' )
 	  ;
 
@@ -11246,10 +11994,10 @@
 
 
 /***/ },
-/* 93 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Program_UsePresentation	= __webpack_require__( 86 )
+	var Program_UsePresentation	= __webpack_require__( 106 )
 	  // , DragDrop				= require( '../DragDrop.js' )
 	  ;
 
@@ -11330,13 +12078,13 @@
 
 
 /***/ },
-/* 94 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation	= __webpack_require__( 61 )
 	  // , DragDrop			= require( '../DragDrop.js' )
 	  , utils				= __webpack_require__( 1 )
-	  , AlxTextEditor		= __webpack_require__( 95 )
+	  , AlxTextEditor		= __webpack_require__( 115 )
 	  ;
 
 	// XXX Try direct loading
@@ -11405,7 +12153,7 @@
 
 
 /***/ },
-/* 95 */
+/* 115 */
 /***/ function(module, exports) {
 
 	// var DragDrop	= require( '../../DragDrop.js' )
@@ -11435,10 +12183,10 @@
 
 
 /***/ },
-/* 96 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ActionNodePresentation	= __webpack_require__( 60 )
+	var ActionNodePresentation	= __webpack_require__( 69 )
 	  , DragDrop				= __webpack_require__( 56 )
 	  ;
 	  
@@ -11478,12 +12226,12 @@
 
 
 /***/ },
-/* 97 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var MR_Play_NodePresentation	= __webpack_require__( 96 )
+	var MR_Play_NodePresentation	= __webpack_require__( 116 )
 	  // , utils						= require( '../../../utils.js' )
-	  , MediaBrowser				= __webpack_require__( 90 )
+	  , MediaBrowser				= __webpack_require__( 110 )
 	  ;
 
 	var MB = new MediaBrowser( 'Select Media to be loaded' );
@@ -11586,10 +12334,10 @@
 
 
 /***/ },
-/* 98 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var MR_Play_NodePresentation	= __webpack_require__( 96 )
+	var MR_Play_NodePresentation	= __webpack_require__( 116 )
 	  // , utils						= require( '../../../utils.js' )
 	  ;
 
@@ -11626,10 +12374,10 @@
 
 
 /***/ },
-/* 99 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var MR_Play_NodePresentation	= __webpack_require__( 96 )
+	var MR_Play_NodePresentation	= __webpack_require__( 116 )
 	  // , utils						= require( '../../../utils.js' )
 	  ;
 	  
@@ -11666,7 +12414,7 @@
 
 
 /***/ },
-/* 100 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PeventBrickPresentation	= __webpack_require__( 78 )
@@ -11713,7 +12461,7 @@
 
 
 /***/ },
-/* 101 */
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation	= __webpack_require__( 61 )

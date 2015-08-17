@@ -53,11 +53,12 @@ BrickOpenHAB.prototype.constructor = BrickOpenHAB;
 BrickOpenHAB.prototype.getTypeName = function() {return "BrickOpenHAB";}
 BrickOpenHAB.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickOpenHAB.prototype.getTypeName()); return L;}
 
-BrickOpenHAB.prototype.sendCommand	= function(brick, command) {
+BrickOpenHAB.prototype.sendCommand	= function(brick, message) {
 	var topic;
 	if(this.config) {
-		 topic = "/" + this.config.mqtt + "/in/" + brick.name + "/command";
-		 this.publish(topic, command);
+		 topic = "/" + this.config.mqtt.prefix + "/in/" + brick.name + "/command";
+		 console.log("MQTT send", topic, message);
+		 this.publish(topic, message);
 		}
 	return this;
 }

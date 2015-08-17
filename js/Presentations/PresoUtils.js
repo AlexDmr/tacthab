@@ -16,6 +16,17 @@ var PresoUtils = {
 					  // OpenHab
 					  , 'openHab_Action_OnOff'					: require( './openHab/openHab_Action_OnOff.js' )
 					  , 'openHab_Event_OnOff'					: require( './openHab/openHab_Event_OnOff.js' )
+					  , 'openHab_Action_Contact'				: require( './openHab/openHab_Action_Contact.js' )
+					  , 'openHab_Event_Contact'					: require( './openHab/openHab_Event_Contact.js' )
+					  , 'openHab_Action_Color'					: require( './openHab/openHab_Action_Color.js' )
+					  , 'openHab_Event_Color'					: require( './openHab/openHab_Event_Color.js' )
+					  , 'openHab_Action_String'					: require( './openHab/openHab_Action_String.js' )
+					  , 'openHab_Event_String'					: require( './openHab/openHab_Event_String.js' )
+					  , 'openHab_Action_Number'					: require( './openHab/openHab_Action_Number.js' )
+					  , 'openHab_Event_Number'					: require( './openHab/openHab_Event_Number.js' )
+					  , 'openHab_Action_RollerShutter'			: require( './openHab/openHab_Action_RollerShutter.js' )
+					  , 'openHab_Event_RollerShutter'			: require( './openHab/openHab_Event_RollerShutter.js' )
+					  
 					  // Variables
 					  , 'Program_UsePresentation'				: require( './Program_UsePresentation.js' )
 					  , 'Program_DefinitionPresentation'		: require( './Program_DefinitionPresentation.js' )

@@ -28,11 +28,6 @@ openHab_Event_OnOff.prototype.serialize = function() {
 	 json.subType = 'openHab_Event_OnOff';
 	 return json;
 	}
-/*
-openHab_Event_OnOff.prototype.unserialize = function(json) {
-	 openHab_Event.prototype.unserialize.apply(this, [json]);
-	 return json;
-	}*/
 
 openHab_Event_OnOff.prototype.Render = function() {
 	 var self = this;

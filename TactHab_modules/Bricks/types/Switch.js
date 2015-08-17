@@ -31,8 +31,8 @@ BrickOpenHAB_Switch.prototype.update	= function(topic, operation, message) {
 	return this;
 }
 
-BrickOpenHAB_Switch.prototype.Do_On			= function() {this.sendCommand("ON");}
-BrickOpenHAB_Switch.prototype.Do_Off		= function() {this.sendCommand("OFF");}
+BrickOpenHAB_Switch.prototype.Do_On			= function() {this.sendCommand("ON" ); return true;}
+BrickOpenHAB_Switch.prototype.Do_Off		= function() {this.sendCommand("OFF"); return true;}
 
 
 module.exports = BrickOpenHAB_Switch;

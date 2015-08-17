@@ -189,7 +189,57 @@ var editor = {
 																						).appendChild( this.createDragNode( 'on event On/Off'
 																									 , { constructor	: PresoUtils.get('openHab_Event_OnOff')
 																									   , nodeType		: ['EventNode']
-																									   , objectsType	: 'openHab_Action_OnOff'
+																									   , objectsType	: 'openHab_Event_OnOff'
+																									   } )
+																						).appendChild( this.createDragNode( 'Do action Open/Close'
+																									 , { constructor	: PresoUtils.get('openHab_Action_Contact')
+																									   , nodeType		: ['ActionNode', 'instruction']
+																									   , objectsType	: 'openHab_Action_Contact'
+																									   } )
+																						).appendChild( this.createDragNode( 'on event Open/Close'
+																									 , { constructor	: PresoUtils.get('openHab_Event_Contact')
+																									   , nodeType		: ['EventNode']
+																									   , objectsType	: 'openHab_Event_Contact'
+																									   } )
+																						).appendChild( this.createDragNode( 'Do action RollerShutter'
+																									 , { constructor	: PresoUtils.get('openHab_Action_RollerShutter')
+																									   , nodeType		: ['ActionNode', 'instruction']
+																									   , objectsType	: 'openHab_Action_RollerShutter'
+																									   } )
+																						).appendChild( this.createDragNode( 'on event RollerShutter'
+																									 , { constructor	: PresoUtils.get('openHab_Event_RollerShutter')
+																									   , nodeType		: ['EventNode']
+																									   , objectsType	: 'openHab_Event_RollerShutter'
+																									   } )
+																						).appendChild( this.createDragNode( 'Change Color'
+																									 , { constructor	: PresoUtils.get('openHab_Action_Color')
+																									   , nodeType		: ['ActionNode', 'instruction']
+																									   , objectsType	: 'openHab_Action_Color'
+																									   } )
+																						).appendChild( this.createDragNode( 'Color changed'
+																									 , { constructor	: PresoUtils.get('openHab_Event_Color')
+																									   , nodeType		: ['EventNode']
+																									   , objectsType	: 'openHab_Event_Color'
+																									   } )
+																						).appendChild( this.createDragNode( 'Change String'
+																									 , { constructor	: PresoUtils.get('openHab_Action_String')
+																									   , nodeType		: ['ActionNode', 'instruction']
+																									   , objectsType	: 'openHab_Action_String'
+																									   } )
+																						).appendChild( this.createDragNode( 'String changed'
+																									 , { constructor	: PresoUtils.get('openHab_Event_String')
+																									   , nodeType		: ['EventNode']
+																									   , objectsType	: 'openHab_Event_String'
+																									   } )
+																						).appendChild( this.createDragNode( 'Change Number'
+																									 , { constructor	: PresoUtils.get('openHab_Action_Number')
+																									   , nodeType		: ['ActionNode', 'instruction']
+																									   , objectsType	: 'openHab_Action_Number'
+																									   } )
+																						).appendChild( this.createDragNode( 'Number changed'
+																									 , { constructor	: PresoUtils.get('openHab_Event_Number')
+																									   , nodeType		: ['EventNode']
+																									   , objectsType	: 'openHab_Event_Number'
 																									   } )
 																									 )
 														).root
