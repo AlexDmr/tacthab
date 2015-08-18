@@ -1,7 +1,54 @@
-.WhenNodePresentation > .children > .ImplicitVariable {
-	display		: none;
+.WhenNodePresentation > .arrow > .defwhen > .eventDrop > .ImplicitVariable {
+	display						: none;
 }
 
-.WhenNodePresentation > .children > .ImplicitVariable.display {
-	display		: block;
+.WhenNodePresentation > .arrow > .defwhen > .eventDrop > .ImplicitVariable.display {
+	display						: block;
+}
+
+.WhenNodePresentation > .arrow {
+	display						: inline-flex;
+	flex-flow					: row;
+}
+
+.WhenNodePresentation > .arrow > .defwhen {
+	flex						: 1;
+	border						: solid black 3px;
+	border-bottom-right-radius	: 2em;
+	border-top-right-radius		: 2em;
+	margin-left					: 0px;
+	padding						: 0.5em;
+	display						: flex;
+	flex-flow					: row;
+	background					: linear-gradient(to bottom, #7db9e8 0%,#393b7c 0.5em,#393b7c 95%,#207cca 100%);
+}
+
+.WhenNodePresentation > .arrow > .eventSymbol {
+	flex						: 0 30px;
+	background					: url("TriangleArrow-Left.svg");
+	background-size				: 100%;
+	background-repeat			: repeat;
+	margin						: 0px;
+	padding						: 0px;
+}
+
+.WhenNodePresentation > .arrow > .defwhen > .eventDrop, .WhenNodePresentation > .arrow > .defwhen > .instructions {
+	border-radius				: 1em;
+	padding						: 0.25em;
+	padding-left				: 0.3em;
+	padding-top					: 0.3em;
+	border						: solid black 1px;
+	box-shadow					: 0.2em 0.2em 0.2em 0.05em black inset;
+}
+
+.WhenNodePresentation > .arrow > .defwhen > .eventDrop {
+	background					: yellow;
+}
+
+.WhenNodePresentation > .arrow > .defwhen > .instructions {
+	background					: darkcyan;
+}
+
+.WhenNodePresentation > .arrow > .defwhen > img {
+	width						: 50px;
 }

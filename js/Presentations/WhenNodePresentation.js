@@ -2,8 +2,11 @@ var PnodePresentation	= require( './PnodePresentation.js' )
   , utils				= require( '../utils.js' )
   , DragDrop			= require( '../DragDrop.js' )
   , Var_UsePresentation	= require( './Var_UsePresentation.js' )
+  , str_template		= require( 'raw!./HTML_templates/WhenNodePresentation.html' )
+  , htmlTemplate		= document.createElement("div")
   ;
 
+htmlTemplate.innerHTML = str_template;
 var css = document.createElement('link');
 	css.setAttribute('rel' , 'stylesheet');
 	css.setAttribute('href', 'js/Presentations/HTML_templates/WhenNodePresentation.css');
@@ -60,8 +63,8 @@ WhenNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
 			 this.html.variableName.classList.add( this.when.varType[i] );
 			}
 		 if( this.when.varType.indexOf('Brick') === 0) {
-			 this.divImplicitVariable.classList.add('display'); 
-			} else {this.divImplicitVariable.classList.remove('display');}
+			 this.html.divImplicitVariable.classList.add('display'); 
+			} else {this.html.divImplicitVariable.classList.remove('display');}
 		}
 
 	this.configDragVar.nodeType	= this.when.varType;
@@ -74,6 +77,93 @@ WhenNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
 }
 
 WhenNodePresentation.prototype.Render	= function() {
+	var self = this;
+	var root = PnodePresentation.prototype.Render.apply(this, []);
+	root.classList.add("WhenNodePresentation");
+	if(typeof this.html.event === "undefined") {
+		 this.copyHTML(htmlTemplate, root);
+		 this.html.eventDrop			= root.querySelector(".defwhen > .eventDrop");
+		 this.html.event				= root.querySelector(".defwhen > .eventDrop > .event");
+		 this.html.instructions			= root.querySelector(".defwhen > .instructions");
+		 this.html.divImplicitVariable	= root.querySelector(".defwhen > .eventDrop > .ImplicitVariable");
+		// Implicit variable
+			 if( this.when && this.when.varType && this.when.varType.indexOf('Brick') === 0) {
+				 this.html.divImplicitVariable.classList.add('display'); 
+				} else {this.html.divImplicitVariable.classList.remove('display');}
+			 // Configure variableName
+			 this.html.variableName = this.html.divImplicitVariable.querySelector('.defwhen > .eventDrop > .ImplicitVariable > .variableName');
+			// Draggable property
+			 this.configDragVar.htmlNode = this.html.variableName;
+			 DragDrop.newDraggable ( this.html.variableName
+								   , this.configDragVar
+								   );
+		// Drag&Drop event
+		this.dropZoneEventId = DragDrop.newDropZone( self.html.eventDrop
+							, { acceptedClasse	: 'EventNode'
+							  , CSSwhenAccepted	: 'possible2drop'
+							  , CSSwhenOver		: 'ready2drop'
+							  , ondrop			: function(evt, draggedNode, infoObj) {
+									 self.removeChild( self.when.childEvent );
+									 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																				, undefined	// parent
+																				, undefined	// children
+																				, infoObj
+																				);
+									 self.when.childEvent = Pnode;
+									 self.html.event.innerHTML = '';
+									 self.appendChild(  self.when.childEvent );
+									}
+							  }
+							);
+		// Drag&Drop instructions
+			this.dropZoneReactionId = DragDrop.newDropZone( this.html.instructions
+								, { acceptedClasse	: [['Pnode', 'instruction']]
+								  , CSSwhenAccepted	: 'possible2drop'
+								  , CSSwhenOver		: 'ready2drop'
+								  , ondrop			: function(evt, draggedNode, infoObj) {
+										 self.removeChild( self.when.childReaction );
+										 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																					, undefined	// parent
+																					, undefined	// children
+																					, infoObj
+																					);
+										 self.when.childReaction = Pnode;
+										 self.html.instructions.innerHTML = '';
+										 self.appendChild( self.when.childReaction );
+										}
+								  }
+								);
+		}
+	return root;
+}
+
+WhenNodePresentation.prototype.primitivePlug	= function(c) {
+	if(c && c === this.when.childEvent   ) {this.html.event.innerHTML	  = '';
+										    this.html.event.appendChild( c.Render() );
+										   }
+	if(c && c === this.when.childReaction) {this.html.instructions.innerHTML = '';
+										    this.html.instructions.appendChild( c.Render() );
+										   }
+}
+
+WhenNodePresentation.prototype.deletePrimitives = function() {
+	var self = this;
+	PnodePresentation.prototype.deletePrimitives.apply(this, []);
+	if(this.html.event) {
+		 this.html.event = this.html.instructions = null;
+		 DragDrop.deleteDropZone( self.dropZoneEventId    );
+		 DragDrop.deleteDropZone( self.dropZoneReactionId );
+		}
+	return this;
+}
+
+
+
+
+
+//______________________________________________________________
+/* OLD */
+WhenNodePresentation.prototype.RenderOLD	= function() {
 	var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);
 	root.classList.add('WhenNodePresentation');
@@ -153,7 +243,7 @@ WhenNodePresentation.prototype.Render	= function() {
 		}
 	return root;
 }
-WhenNodePresentation.prototype.deletePrimitives = function() {
+WhenNodePresentation.prototype.deletePrimitivesOLD = function() {
 	var self = this;
 	PnodePresentation.prototype.deletePrimitives.apply(this, []);
 	if(this.divChildren) {
@@ -166,7 +256,7 @@ WhenNodePresentation.prototype.deletePrimitives = function() {
 	return this;
 }
 
-WhenNodePresentation.prototype.primitivePlug	= function(c) {
+WhenNodePresentation.prototype.primitivePlugOLD	= function(c) {
 	if(c && c === this.when.childEvent   ) {this.divEvent.innerText	  = '';
 										    this.divEvent.appendChild( c.Render() );
 										   }

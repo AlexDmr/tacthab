@@ -8205,47 +8205,47 @@
 						  , 'EventNode'								: __webpack_require__( 60 )		, 'EventNodePresentation'		: __webpack_require__( 60 )
 						  , 'PeventFromSocketIOPresentation'		: __webpack_require__( 72 )
 						  , 'WhenNode'								: __webpack_require__( 73 )		, 'WhenNodePresentation'		: __webpack_require__( 73 )
-						  , 'PcontrolBrick'							: __webpack_require__( 75 )
-						  , 'PfilterPresentation'					: __webpack_require__( 76 )
-						  , 'PForbidPresentation'					: __webpack_require__( 77 )
-						  , 'PeventBrickPresentation'				: __webpack_require__( 78 )
-						  , 'PeventBrickAppear'						: __webpack_require__( 79 )
-						  , 'basicBrickPresentation'				: __webpack_require__( 80 )
-						  , 'Pselector_ObjTypePresentation'			: __webpack_require__( 82 )
+						  , 'PcontrolBrick'							: __webpack_require__( 76 )
+						  , 'PfilterPresentation'					: __webpack_require__( 77 )
+						  , 'PForbidPresentation'					: __webpack_require__( 78 )
+						  , 'PeventBrickPresentation'				: __webpack_require__( 79 )
+						  , 'PeventBrickAppear'						: __webpack_require__( 80 )
+						  , 'basicBrickPresentation'				: __webpack_require__( 81 )
+						  , 'Pselector_ObjTypePresentation'			: __webpack_require__( 83 )
 						  // OpenHab
-						  , 'openHab_Action_OnOff'					: __webpack_require__( 83 )
-						  , 'openHab_Event_OnOff'					: __webpack_require__( 86 )
-						  , 'openHab_Action_Contact'				: __webpack_require__( 88 )
-						  , 'openHab_Event_Contact'					: __webpack_require__( 90 )
-						  , 'openHab_Action_Color'					: __webpack_require__( 92 )
+						  , 'openHab_Action_OnOff'					: __webpack_require__( 84 )
+						  , 'openHab_Event_OnOff'					: __webpack_require__( 87 )
+						  , 'openHab_Action_Contact'				: __webpack_require__( 89 )
+						  , 'openHab_Event_Contact'					: __webpack_require__( 91 )
+						  , 'openHab_Action_Color'					: __webpack_require__( 93 )
 						  , 'openHab_Event_Color'					: __webpack_require__( 58 )
-						  , 'openHab_Action_String'					: __webpack_require__( 94 )
-						  , 'openHab_Event_String'					: __webpack_require__( 96 )
-						  , 'openHab_Action_Number'					: __webpack_require__( 98 )
-						  , 'openHab_Event_Number'					: __webpack_require__( 100 )
-						  , 'openHab_Action_RollerShutter'			: __webpack_require__( 102 )
-						  , 'openHab_Event_RollerShutter'			: __webpack_require__( 104 )
+						  , 'openHab_Action_String'					: __webpack_require__( 95 )
+						  , 'openHab_Event_String'					: __webpack_require__( 97 )
+						  , 'openHab_Action_Number'					: __webpack_require__( 99 )
+						  , 'openHab_Event_Number'					: __webpack_require__( 101 )
+						  , 'openHab_Action_RollerShutter'			: __webpack_require__( 103 )
+						  , 'openHab_Event_RollerShutter'			: __webpack_require__( 105 )
 						  
 						  // Variables
-						  , 'Program_UsePresentation'				: __webpack_require__( 106 )
-						  , 'Program_DefinitionPresentation'		: __webpack_require__( 107 )
-						  , 'Var_DefinitionPresentation'			: __webpack_require__( 108 )
-						  , 'SelectorNodePresentation'				: __webpack_require__( 81 )
-						  , 'MR_Instance_SelectorNodePresentation'	: __webpack_require__( 109 )
+						  , 'Program_UsePresentation'				: __webpack_require__( 107 )
+						  , 'Program_DefinitionPresentation'		: __webpack_require__( 108 )
+						  , 'Var_DefinitionPresentation'			: __webpack_require__( 109 )
+						  , 'SelectorNodePresentation'				: __webpack_require__( 82 )
+						  , 'MR_Instance_SelectorNodePresentation'	: __webpack_require__( 110 )
 						  , 'Var_UsePresentation'					: __webpack_require__( 74 )
-						  , 'PprogramActionPresentation'			: __webpack_require__( 112 )
-						  , 'Program_ExposedAPI_elementPresentation': __webpack_require__( 113 )
+						  , 'PprogramActionPresentation'			: __webpack_require__( 113 )
+						  , 'Program_ExposedAPI_elementPresentation': __webpack_require__( 114 )
 						  // General type variables
-						  , 'Pselector_TextPresentation'			: __webpack_require__( 114 )
+						  , 'Pselector_TextPresentation'			: __webpack_require__( 115 )
 						  // MediaRenderer
-						  , 'MR_Play_NodePresentation'				: __webpack_require__( 116 )
-						  , 'MR_load_NodePresentation'				: __webpack_require__( 117 )
-						  , 'MR_Pause_NodePresentation'				: __webpack_require__( 118 )
-						  , 'MR_Stop_NodePresentation'				: __webpack_require__( 119 )
+						  , 'MR_Play_NodePresentation'				: __webpack_require__( 117 )
+						  , 'MR_load_NodePresentation'				: __webpack_require__( 118 )
+						  , 'MR_Pause_NodePresentation'				: __webpack_require__( 119 )
+						  , 'MR_Stop_NodePresentation'				: __webpack_require__( 120 )
 						  // Hue
-						  , 'PeventBrickPresentation_Hue'			: __webpack_require__( 120 )
+						  , 'PeventBrickPresentation_Hue'			: __webpack_require__( 121 )
 						  // HTTP
-						  , 'PactionHTTP'							: __webpack_require__( 121 )
+						  , 'PactionHTTP'							: __webpack_require__( 122 )
 						  }
 		, get			: function(className) {
 			 var classe	= this.mapping[ className ];
@@ -8815,7 +8815,7 @@
 /* 63 */
 /***/ function(module, exports) {
 
-	module.exports = "<img class=\"event_symbol\"></img>\r\n<div class=\"event_description\">\r\n\t<p class=\"eventName\">Event name</p>\r\n\t<p class=\"selector\">Drop sources here</p>\r\n</div>"
+	module.exports = "<img class=\"event_symbol\"></img>\r\n<div class=\"event_description event\">\r\n\t<p class=\"eventName\">Event name</p>\r\n\t<p class=\"selector\">Drop sources here</p>\r\n</div>"
 
 /***/ },
 /* 64 */
@@ -8847,6 +8847,12 @@
 	  // , SequenceNodePresentation	= require( './SequenceNodePresentation.js' )
 	  // , ParallelNodePresentation	= require( './ParallelNodePresentation.js' )
 	  , DragDrop					= __webpack_require__( 56 )
+
+	var css = document.createElement('link');
+		css.setAttribute('rel' , 'stylesheet');
+		css.setAttribute('href', 'js/Presentations/HTML_templates/ProgramNodePresentation.css');
+		document.head.appendChild( css );
+
 
 	var ProgramNodePresentation = function() {
 		// console.log(this);
@@ -9380,8 +9386,11 @@
 	  , utils				= __webpack_require__( 1 )
 	  , DragDrop			= __webpack_require__( 56 )
 	  , Var_UsePresentation	= __webpack_require__( 74 )
+	  , str_template		= __webpack_require__( 75 )
+	  , htmlTemplate		= document.createElement("div")
 	  ;
 
+	htmlTemplate.innerHTML = str_template;
 	var css = document.createElement('link');
 		css.setAttribute('rel' , 'stylesheet');
 		css.setAttribute('href', 'js/Presentations/HTML_templates/WhenNodePresentation.css');
@@ -9438,8 +9447,8 @@
 				 this.html.variableName.classList.add( this.when.varType[i] );
 				}
 			 if( this.when.varType.indexOf('Brick') === 0) {
-				 this.divImplicitVariable.classList.add('display'); 
-				} else {this.divImplicitVariable.classList.remove('display');}
+				 this.html.divImplicitVariable.classList.add('display'); 
+				} else {this.html.divImplicitVariable.classList.remove('display');}
 			}
 
 		this.configDragVar.nodeType	= this.when.varType;
@@ -9452,6 +9461,93 @@
 	}
 
 	WhenNodePresentation.prototype.Render	= function() {
+		var self = this;
+		var root = PnodePresentation.prototype.Render.apply(this, []);
+		root.classList.add("WhenNodePresentation");
+		if(typeof this.html.event === "undefined") {
+			 this.copyHTML(htmlTemplate, root);
+			 this.html.eventDrop			= root.querySelector(".defwhen > .eventDrop");
+			 this.html.event				= root.querySelector(".defwhen > .eventDrop > .event");
+			 this.html.instructions			= root.querySelector(".defwhen > .instructions");
+			 this.html.divImplicitVariable	= root.querySelector(".defwhen > .eventDrop > .ImplicitVariable");
+			// Implicit variable
+				 if( this.when && this.when.varType && this.when.varType.indexOf('Brick') === 0) {
+					 this.html.divImplicitVariable.classList.add('display'); 
+					} else {this.html.divImplicitVariable.classList.remove('display');}
+				 // Configure variableName
+				 this.html.variableName = this.html.divImplicitVariable.querySelector('.defwhen > .eventDrop > .ImplicitVariable > .variableName');
+				// Draggable property
+				 this.configDragVar.htmlNode = this.html.variableName;
+				 DragDrop.newDraggable ( this.html.variableName
+									   , this.configDragVar
+									   );
+			// Drag&Drop event
+			this.dropZoneEventId = DragDrop.newDropZone( self.html.eventDrop
+								, { acceptedClasse	: 'EventNode'
+								  , CSSwhenAccepted	: 'possible2drop'
+								  , CSSwhenOver		: 'ready2drop'
+								  , ondrop			: function(evt, draggedNode, infoObj) {
+										 self.removeChild( self.when.childEvent );
+										 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																					, undefined	// parent
+																					, undefined	// children
+																					, infoObj
+																					);
+										 self.when.childEvent = Pnode;
+										 self.html.event.innerHTML = '';
+										 self.appendChild(  self.when.childEvent );
+										}
+								  }
+								);
+			// Drag&Drop instructions
+				this.dropZoneReactionId = DragDrop.newDropZone( this.html.instructions
+									, { acceptedClasse	: [['Pnode', 'instruction']]
+									  , CSSwhenAccepted	: 'possible2drop'
+									  , CSSwhenOver		: 'ready2drop'
+									  , ondrop			: function(evt, draggedNode, infoObj) {
+											 self.removeChild( self.when.childReaction );
+											 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
+																						, undefined	// parent
+																						, undefined	// children
+																						, infoObj
+																						);
+											 self.when.childReaction = Pnode;
+											 self.html.instructions.innerHTML = '';
+											 self.appendChild( self.when.childReaction );
+											}
+									  }
+									);
+			}
+		return root;
+	}
+
+	WhenNodePresentation.prototype.primitivePlug	= function(c) {
+		if(c && c === this.when.childEvent   ) {this.html.event.innerHTML	  = '';
+											    this.html.event.appendChild( c.Render() );
+											   }
+		if(c && c === this.when.childReaction) {this.html.instructions.innerHTML = '';
+											    this.html.instructions.appendChild( c.Render() );
+											   }
+	}
+
+	WhenNodePresentation.prototype.deletePrimitives = function() {
+		var self = this;
+		PnodePresentation.prototype.deletePrimitives.apply(this, []);
+		if(this.html.event) {
+			 this.html.event = this.html.instructions = null;
+			 DragDrop.deleteDropZone( self.dropZoneEventId    );
+			 DragDrop.deleteDropZone( self.dropZoneReactionId );
+			}
+		return this;
+	}
+
+
+
+
+
+	//______________________________________________________________
+	/* OLD */
+	WhenNodePresentation.prototype.RenderOLD	= function() {
 		var self = this;
 		var root = PnodePresentation.prototype.Render.apply(this, []);
 		root.classList.add('WhenNodePresentation');
@@ -9531,7 +9627,7 @@
 			}
 		return root;
 	}
-	WhenNodePresentation.prototype.deletePrimitives = function() {
+	WhenNodePresentation.prototype.deletePrimitivesOLD = function() {
 		var self = this;
 		PnodePresentation.prototype.deletePrimitives.apply(this, []);
 		if(this.divChildren) {
@@ -9544,7 +9640,7 @@
 		return this;
 	}
 
-	WhenNodePresentation.prototype.primitivePlug	= function(c) {
+	WhenNodePresentation.prototype.primitivePlugOLD	= function(c) {
 		if(c && c === this.when.childEvent   ) {this.divEvent.innerText	  = '';
 											    this.divEvent.appendChild( c.Render() );
 											   }
@@ -9642,6 +9738,12 @@
 
 /***/ },
 /* 75 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"arrow\">\r\n\t<div class=\"eventSymbol\"></div>\r\n\t<div class=\"defwhen\">\r\n\t\t<div class=\"eventDrop\">\r\n\t\t\t<div class=\"ImplicitVariable\">\r\n\t\t\t\tLet's call the event source <div class=\"variableName Pnode Pselector_variable\">brick</div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"event\">Drop EVENT here</div>\r\n\t\t</div>\r\n\t\t<img src=\"js/Presentations/HTML_templates/implySymbol.svg\"></img>\r\n\t\t<div class=\"instructions\">Drop REACTION here</div>\r\n\t</div>\r\n</div>\r\n\r\n"
+
+/***/ },
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation	= __webpack_require__( 61 )
@@ -9691,7 +9793,7 @@
 
 
 /***/ },
-/* 76 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation	= __webpack_require__( 61 )
@@ -9828,7 +9930,7 @@
 
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation	= __webpack_require__( 61 )
@@ -10000,7 +10102,7 @@
 
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var EventNodePresentation	= __webpack_require__( 60 )
@@ -10172,7 +10274,7 @@
 
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var EventNodePresentation	= __webpack_require__( 60 )
@@ -10280,11 +10382,11 @@
 
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var /*PnodePresentation			= require( './PnodePresentation.js' )
-	  , */SelectorNodePresentation	= __webpack_require__( 81 )
+	  , */SelectorNodePresentation	= __webpack_require__( 82 )
 	  ;
 
 	function basicBrickPresentation() {
@@ -10329,7 +10431,7 @@
 
 
 /***/ },
-/* 81 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation = __webpack_require__( 61 );
@@ -10384,7 +10486,7 @@
 
 
 /***/ },
-/* 82 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation	= __webpack_require__( 61 )
@@ -10470,14 +10572,14 @@
 
 
 /***/ },
-/* 83 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var openHab_Action	= __webpack_require__( 84 )
+	var openHab_Action	= __webpack_require__( 85 )
 	  // , utils		= require( '../../../utils.js' )
 	  , DragDrop		= __webpack_require__( 56 )
 	  , openHabTypes	= __webpack_require__( 64 )
-	  , str_template	= __webpack_require__( 85 )
+	  , str_template	= __webpack_require__( 86 )
 	  , html_template	= document.createElement( "div" )
 	  ;
 	  
@@ -10531,7 +10633,7 @@
 
 
 /***/ },
-/* 84 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ActionNodePresentation	= __webpack_require__( 69 )
@@ -10573,20 +10675,20 @@
 
 
 /***/ },
-/* 85 */
+/* 86 */
 /***/ function(module, exports) {
 
 	module.exports = "<label class=\"turn\">Turn </label>\r\n<select class=\"OnOff\">\r\n\t<option value=\"Do_On\" >On </option>\r\n\t<option value=\"Do_Off\">Off</option>\r\n</select>"
 
 /***/ },
-/* 86 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var openHab_Event	= __webpack_require__( 59 )
 	  // , utils		= require( '../../../utils.js' )
 	  , DragDrop		= __webpack_require__( 56 )
 	  , openHabTypes	= __webpack_require__( 64 )
-	  , str_template	= __webpack_require__( 87 )
+	  , str_template	= __webpack_require__( 88 )
 	  , html_template	= document.createElement( "div" )
 	  ;
 	  
@@ -10636,20 +10738,20 @@
 
 
 /***/ },
-/* 87 */
+/* 88 */
 /***/ function(module, exports) {
 
 	module.exports = "<label class=\"turn\">On turning </label>\r\n<select class=\"OnOff\">\r\n\t<option value=\"ON\" >On </option>\r\n\t<option value=\"OFF\">Off</option>\r\n</select>"
 
 /***/ },
-/* 88 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var openHab_Action	= __webpack_require__( 84 )
+	var openHab_Action	= __webpack_require__( 85 )
 	  // , utils		= require( '../../../utils.js' )
 	  , DragDrop		= __webpack_require__( 56 )
 	  , openHabTypes	= __webpack_require__( 64 )
-	  , str_template	= __webpack_require__( 89 )
+	  , str_template	= __webpack_require__( 90 )
 	  , html_template	= document.createElement( "div" )
 	  ;
 	  
@@ -10704,20 +10806,20 @@
 
 
 /***/ },
-/* 89 */
+/* 90 */
 /***/ function(module, exports) {
 
 	module.exports = "<label class=\"turn\">\r\n\t<select class=\"contact\">\r\n\t\t<option value=\"Do_Open\" >Open </option>\r\n\t\t<option value=\"Do_Close\">Close</option>\r\n\t</select>\r\n</label>"
 
 /***/ },
-/* 90 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var openHab_Event	= __webpack_require__( 59 )
 	  // , utils		= require( '../../../utils.js' )
 	  , DragDrop		= __webpack_require__( 56 )
 	  , openHabTypes	= __webpack_require__( 64 )
-	  , str_template	= __webpack_require__( 91 )
+	  , str_template	= __webpack_require__( 92 )
 	  , html_template	= document.createElement( "div" )
 	  ;
 	  
@@ -10767,20 +10869,20 @@
 
 
 /***/ },
-/* 91 */
+/* 92 */
 /***/ function(module, exports) {
 
 	module.exports = "<label class=\"turn\">Someone\r\n\t<select class=\"contact\">\r\n\t\t<option value=\"OPEN\"  >Opened</option>\r\n\t\t<option value=\"CLOSED\">Closed</option>\r\n\t</select>\r\n</label>"
 
 /***/ },
-/* 92 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var openHab_Action	= __webpack_require__( 84 )
+	var openHab_Action	= __webpack_require__( 85 )
 	  // , utils		= require( '../../../utils.js' )
 	  , DragDrop		= __webpack_require__( 56 )
 	  , openHabTypes	= __webpack_require__( 64 )
-	  , str_template	= __webpack_require__( 93 )
+	  , str_template	= __webpack_require__( 94 )
 	  , html_template	= document.createElement( "div" )
 	  ;
 	  
@@ -10851,20 +10953,20 @@
 
 
 /***/ },
-/* 93 */
+/* 94 */
 /***/ function(module, exports) {
 
 	module.exports = "<label class=\"turn\">Color in  \r\n\t<input type=\"color\" class=\"color\"></input>\r\n</label>\r\n"
 
 /***/ },
-/* 94 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var openHab_Action	= __webpack_require__( 84 )
+	var openHab_Action	= __webpack_require__( 85 )
 	  // , utils		= require( '../../../utils.js' )
 	  , DragDrop		= __webpack_require__( 56 )
 	  , openHabTypes	= __webpack_require__( 64 )
-	  , str_template	= __webpack_require__( 95 )
+	  , str_template	= __webpack_require__( 96 )
 	  , html_template	= document.createElement( "div" )
 	  ;
 	  
@@ -10924,20 +11026,20 @@
 
 
 /***/ },
-/* 95 */
+/* 96 */
 /***/ function(module, exports) {
 
 	module.exports = "<label class=\"turn\">Change value to \r\n\t<input type=\"text\" class=\"string\"></input>\r\n</label>\r\n"
 
 /***/ },
-/* 96 */
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var openHab_Event	= __webpack_require__( 59 )
 	  // , utils		= require( '../../../utils.js' )
 	  , DragDrop		= __webpack_require__( 56 )
 	  , openHabTypes	= __webpack_require__( 64 )
-	  , str_template	= __webpack_require__( 97 )
+	  , str_template	= __webpack_require__( 98 )
 	  , html_template	= document.createElement( "div" )
 	  ;
 	  
@@ -10984,20 +11086,20 @@
 
 
 /***/ },
-/* 97 */
+/* 98 */
 /***/ function(module, exports) {
 
 	module.exports = "<label class=\"turn\">Value has changed for  \r\n</label>\r\n"
 
 /***/ },
-/* 98 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var openHab_Action	= __webpack_require__( 84 )
+	var openHab_Action	= __webpack_require__( 85 )
 	  // , utils		= require( '../../../utils.js' )
 	  , DragDrop		= __webpack_require__( 56 )
 	  , openHabTypes	= __webpack_require__( 64 )
-	  , str_template	= __webpack_require__( 99 )
+	  , str_template	= __webpack_require__( 100 )
 	  , html_template	= document.createElement( "div" )
 	  ;
 	  
@@ -11057,20 +11159,20 @@
 
 
 /***/ },
-/* 99 */
+/* 100 */
 /***/ function(module, exports) {
 
 	module.exports = "<label class=\"turn\">Change Number value to \r\n\t<input type=\"number\" class=\"number\"></input>\r\n</label>\r\n"
 
 /***/ },
-/* 100 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var openHab_Event	= __webpack_require__( 59 )
 	  // , utils		= require( '../../../utils.js' )
 	  , DragDrop		= __webpack_require__( 56 )
 	  , openHabTypes	= __webpack_require__( 64 )
-	  , str_template	= __webpack_require__( 101 )
+	  , str_template	= __webpack_require__( 102 )
 	  , html_template	= document.createElement( "div" )
 	  ;
 	  
@@ -11117,20 +11219,20 @@
 
 
 /***/ },
-/* 101 */
+/* 102 */
 /***/ function(module, exports) {
 
 	module.exports = "<label class=\"turn\">Value has changed for Number \r\n</label>\r\n"
 
 /***/ },
-/* 102 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var openHab_Action	= __webpack_require__( 84 )
+	var openHab_Action	= __webpack_require__( 85 )
 	  // , utils		= require( '../../../utils.js' )
 	  , DragDrop		= __webpack_require__( 56 )
 	  , openHabTypes	= __webpack_require__( 64 )
-	  , str_template	= __webpack_require__( 103 )
+	  , str_template	= __webpack_require__( 104 )
 	  , html_template	= document.createElement( "div" )
 	  ;
 	  
@@ -11187,20 +11289,20 @@
 
 
 /***/ },
-/* 103 */
+/* 104 */
 /***/ function(module, exports) {
 
 	module.exports = "<label class=\"turn\">\r\n\tRollerShutter action\r\n\t<select class=\"RollerShutter\">\r\n\t\t<option value= \"Do_UP\" >Up  </option>\r\n\t\t<option value=\"Do_DOWN\">Down</option>\r\n\t\t<option value=\"Do_MOVE\">Move</option>\r\n\t\t<option value=\"Do_STOP\">Stop</option>\r\n\t\t<!--<option value=\"Do_PERCENT\">\r\n\t\t\t<input type=\"range\" min=\"0\" max=\"1\" step=\"1\" value=\"50\"></input>\r\n\t\t</option>-->\r\n\t</select>\r\n</label>"
 
 /***/ },
-/* 104 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var openHab_Event	= __webpack_require__( 59 )
 	  // , utils		= require( '../../../utils.js' )
 	  , DragDrop		= __webpack_require__( 56 )
 	  , openHabTypes	= __webpack_require__( 64 )
-	  , str_template	= __webpack_require__( 105 )
+	  , str_template	= __webpack_require__( 106 )
 	  , html_template	= document.createElement( "div" )
 	  ;
 	  
@@ -11253,13 +11355,13 @@
 
 
 /***/ },
-/* 105 */
+/* 106 */
 /***/ function(module, exports) {
 
 	module.exports = "<label class=\"turn\">\r\n\tRollerShutter event\r\n\t<select class=\"RollerShutter\">\r\n\t\t<option value= \"UP\" >Up  </option>\r\n\t\t<option value=\"DOWN\">Down</option>\r\n\t\t<option value=\"MOVE\">Move</option>\r\n\t\t<option value=\"STOP\">Stop</option>\r\n\t</select>\r\n</label>"
 
 /***/ },
-/* 106 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation	= __webpack_require__( 61 )
@@ -11341,7 +11443,7 @@
 
 
 /***/ },
-/* 107 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation	= __webpack_require__( 61 )
@@ -11430,7 +11532,7 @@
 
 
 /***/ },
-/* 108 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation	= __webpack_require__( 61 )
@@ -11551,12 +11653,12 @@
 
 
 /***/ },
-/* 109 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var /*PnodePresentation			= require( './PnodePresentation.js' )
-	  , */SelectorNodePresentation	= __webpack_require__( 81 )
-	  , MediaBrowser				= __webpack_require__( 110 )
+	  , */SelectorNodePresentation	= __webpack_require__( 82 )
+	  , MediaBrowser				= __webpack_require__( 111 )
 	  , utils						= __webpack_require__( 1 )
 	  ;
 
@@ -11627,12 +11729,12 @@
 
 
 /***/ },
-/* 110 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var protoPresentation	= __webpack_require__( 62 )
 	  , utils				= __webpack_require__( 1 )
-	  , AlxEvents			= __webpack_require__( 111 )
+	  , AlxEvents			= __webpack_require__( 112 )
 	  ;
 	  
 	var XMLparser = new DOMParser();
@@ -11880,7 +11982,7 @@
 
 
 /***/ },
-/* 111 */
+/* 112 */
 /***/ function(module, exports) {
 
 	
@@ -11936,7 +12038,7 @@
 
 
 /***/ },
-/* 112 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var /*PnodePresentation		= require( './PnodePresentation.js' )
@@ -11994,10 +12096,10 @@
 
 
 /***/ },
-/* 113 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Program_UsePresentation	= __webpack_require__( 106 )
+	var Program_UsePresentation	= __webpack_require__( 107 )
 	  // , DragDrop				= require( '../DragDrop.js' )
 	  ;
 
@@ -12078,13 +12180,13 @@
 
 
 /***/ },
-/* 114 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation	= __webpack_require__( 61 )
 	  // , DragDrop			= require( '../DragDrop.js' )
 	  , utils				= __webpack_require__( 1 )
-	  , AlxTextEditor		= __webpack_require__( 115 )
+	  , AlxTextEditor		= __webpack_require__( 116 )
 	  ;
 
 	// XXX Try direct loading
@@ -12153,7 +12255,7 @@
 
 
 /***/ },
-/* 115 */
+/* 116 */
 /***/ function(module, exports) {
 
 	// var DragDrop	= require( '../../DragDrop.js' )
@@ -12183,7 +12285,7 @@
 
 
 /***/ },
-/* 116 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ActionNodePresentation	= __webpack_require__( 69 )
@@ -12226,12 +12328,12 @@
 
 
 /***/ },
-/* 117 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var MR_Play_NodePresentation	= __webpack_require__( 116 )
+	var MR_Play_NodePresentation	= __webpack_require__( 117 )
 	  // , utils						= require( '../../../utils.js' )
-	  , MediaBrowser				= __webpack_require__( 110 )
+	  , MediaBrowser				= __webpack_require__( 111 )
 	  ;
 
 	var MB = new MediaBrowser( 'Select Media to be loaded' );
@@ -12334,10 +12436,10 @@
 
 
 /***/ },
-/* 118 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var MR_Play_NodePresentation	= __webpack_require__( 116 )
+	var MR_Play_NodePresentation	= __webpack_require__( 117 )
 	  // , utils						= require( '../../../utils.js' )
 	  ;
 
@@ -12374,10 +12476,10 @@
 
 
 /***/ },
-/* 119 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var MR_Play_NodePresentation	= __webpack_require__( 116 )
+	var MR_Play_NodePresentation	= __webpack_require__( 117 )
 	  // , utils						= require( '../../../utils.js' )
 	  ;
 	  
@@ -12414,10 +12516,10 @@
 
 
 /***/ },
-/* 120 */
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var PeventBrickPresentation	= __webpack_require__( 78 )
+	var PeventBrickPresentation	= __webpack_require__( 79 )
 	  // , DragDrop				= require( '../DragDrop.js' )
 	  // , utils					= require( '../utils.js' )
 	  ;
@@ -12461,7 +12563,7 @@
 
 
 /***/ },
-/* 121 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var PnodePresentation	= __webpack_require__( 61 )

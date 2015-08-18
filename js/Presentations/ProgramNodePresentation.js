@@ -4,6 +4,12 @@ var PnodePresentation			= require( './PnodePresentation.js' )
   // , ParallelNodePresentation	= require( './ParallelNodePresentation.js' )
   , DragDrop					= require( '../DragDrop.js' )
 
+var css = document.createElement('link');
+	css.setAttribute('rel' , 'stylesheet');
+	css.setAttribute('href', 'js/Presentations/HTML_templates/ProgramNodePresentation.css');
+	document.head.appendChild( css );
+
+
 var ProgramNodePresentation = function() {
 	// console.log(this);
 	PnodePresentation.prototype.constructor.apply(this, []);

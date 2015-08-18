@@ -1,22 +1,22 @@
 div.MediaBrowser {
-	border		: solid black 5px;
-	position	: fixed;
-	top			: 5%;
-	left		: 5%;
-	width		: 90%;
-	height		: 90%;
-	background	: white;
+	border			: solid black 5px;
+	position		: fixed;
+	top				: 5%;
+	left			: 5%;
+	width			: 90%;
+	height			: 90%;
+	background		: white;
 }
 
 div.MediaBrowser  > div.background {
-	position	: fixed;
-	display		: block;
-	z-index		: -1;
-	top			: 0px;
-	left		: 0px;
-	width		: 100%;
-	height		: 100%;
-	background	: rgba(0,0,0,0.8);
+	position		: fixed;
+	display			: block;
+	z-index			: -1;
+	top				: 0px;
+	left			: 0px;
+	width			: 100%;
+	height			: 100%;
+	background		: rgba(0,0,0,0.8);
 }
 
 div.MediaBrowser > .foreground {
@@ -30,24 +30,24 @@ div.MediaBrowser > .foreground {
 }
 
 div.MediaBrowserFlow {
-	display: inline-block;
+	display			: inline-block;
 }
 
 div.MediaBrowser > .foreground > div.navigation .element {
-	font-weight	: bold;
-	cursor		: pointer;
+	font-weight		: bold;
+	cursor			: pointer;
 }
 
 div.MediaBrowser > .foreground > div.navigation .MediaServer {
-	color	: #5B55FF;
+	color			: #5B55FF;
 }
 
 div.MediaBrowser > .foreground > div.navigation .MediaFolder {
-	color	: #09AB20;
+	color			: #09AB20;
 }
 
 div.MediaBrowser > .foreground > div.navigation .MediaFile {
-	color	: #F70;
+	color			: #F70;
 }
 
 div.MediaBrowser > .foreground .Media.MediaServer, .MediaBrowserFlow > .Media.MediaServer {
@@ -77,14 +77,14 @@ div.MediaBrowser > .foreground > h1{
 	border-bottom	: solid black 1px;
 	margin			: 0px;
 	padding			: 0px;
-	background: #1e5799; /* Old browsers */
-	background: -moz-linear-gradient(top,  #1e5799 0%, #6da6d6 17%, #6da6d6 83%, #77bbff 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1e5799), color-stop(17%,#6da6d6), color-stop(83%,#6da6d6), color-stop(100%,#77bbff)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#77bbff',GradientType=0 ); /* IE6-9 */
+	background		: #1e5799; /* Old browsers */
+	background		: -moz-linear-gradient(top,  #1e5799 0%, #6da6d6 17%, #6da6d6 83%, #77bbff 100%); /* FF3.6+ */
+	background		: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1e5799), color-stop(17%,#6da6d6), color-stop(83%,#6da6d6), color-stop(100%,#77bbff)); /* Chrome,Safari4+ */
+	background		: -webkit-linear-gradient(top,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* Chrome10+,Safari5.1+ */
+	background		: -o-linear-gradient(top,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* Opera 11.10+ */
+	background		: -ms-linear-gradient(top,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* IE10+ */
+	background		: linear-gradient(to bottom,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* W3C */
+	filter			: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#77bbff',GradientType=0 ); /* IE6-9 */
 }
 
 div.MediaBrowser > .foreground > h1 > .cancel {
@@ -103,7 +103,7 @@ div.MediaBrowser > .foreground > div.navigation {
 }
 
 div.MediaBrowser > .foreground .Media.selected {
-	transform : scale(1.5, 1.5);
+	transform		: scale(1.5, 1.5);
 }
 
 div.MediaBrowser > .foreground .Media, .MediaBrowserFlow > .Media {
@@ -122,9 +122,9 @@ div.MediaBrowser > .foreground .Media, .MediaBrowserFlow > .Media {
 }
 
 div.MediaBrowser > .foreground .Media img.icon , .MediaBrowserFlow > .Media img.icon {
-	width	: 64px;
-	height	: 64px;
-	flex	: 0 96px;
-	object-fit: contain;
+	width			: 64px;
+	height			: 64px;
+	flex			: 0 96px;
+	object-fit		: contain;
 }
 
