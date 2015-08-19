@@ -21,7 +21,8 @@
 }
 
 .PnodeNChildPresentation > .content > .lastOne {
-	width				: 10em;
+	/*width				: 10em;
 	height				: 5em;
-	display				: inline-flex;
+	display				: inline-flex;*/
+	flex				: 1 0 0;
 }

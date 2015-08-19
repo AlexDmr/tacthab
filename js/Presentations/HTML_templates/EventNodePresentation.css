@@ -5,7 +5,7 @@ div.EventNodePresentation {
 	background		: lightyellow;
 	display			: inline-flex;
 	vertical-align	: top;
-	flex-flow		: row wrap;
+	flex-flow		: row nowrap;
 	box-shadow		: 0.2em 0.2em 0.2em 0.05em black inset
 }
 
