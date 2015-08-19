@@ -84,8 +84,8 @@ Presentation.prototype.getUniqueId = function() {
 			 Presentation.prototype.removeChild = function(c) {
 				 var pos = this.children.indexOf(c)
 				 if(pos !== -1) {
-					 this.children.splice(pos,1);
 					 this.primitiveUnPlug(c);
+					 this.children.splice(pos,1);
 					 c.setParent(null);
 					}
 				}
@@ -146,8 +146,9 @@ Presentation.prototype.getUniqueId = function() {
  * @param {Presentation} c {@link Presentation} which root has for parent a HTML node rendered by this Presentation.
  */
  Presentation.prototype.primitiveUnPlug	= function(c) {
-	 if(c.root && c.root.parentElement) {c.root.parentElement.removeChild(c.root);}
 	 if(c.root && c.root.parentNode   ) {c.root.parentNode.removeChild(c.root);}
+	 if(c.root && c.root.parentElement) {c.root.parentElement.removeChild(c.root);}
+	 return this;
 	}
  Presentation.prototype.setName			= function(name) {}
 /**

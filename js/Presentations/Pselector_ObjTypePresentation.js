@@ -1,6 +1,9 @@
 var PnodePresentation	= require( './PnodePresentation.js' )
-  // , DragDrop			= require( '../DragDrop.js' )
+  , str_template	= require( 'raw!./HTML_templates/Pselector_ObjTypePresentation.html' )
+  , html_template	= document.createElement( "div" )
   ;
+  
+html_template.innerHTML = str_template;
 		
 var css = document.createElement('link');
 	css.setAttribute('rel' , 'stylesheet');
@@ -46,32 +49,17 @@ Pselector_ObjTypePresentation.prototype.unserialize	= function(json, PresoUtils)
 	return this;
 }
 
-Pselector_ObjTypePresentation.prototype.updateType = function() {}
-
 Pselector_ObjTypePresentation.prototype.Render	= function() {
-	var self = this, i, option, L
+	var self = this
 	  , root = PnodePresentation.prototype.Render.apply(this, []);
 	root.classList.add('Pselector_ObjTypePresentation');
 	if(typeof this.html.select === 'undefined') {
-		 this.html.select = document.createElement('select');
-		 this.divDescription.innerHTML = "all the";
-		 this.divDescription.appendChild( this.html.select );
-		 L = ['BrickUPnP_MediaRenderer', 'BrickUPnP_MediaServer', 'BrickUPnP_HueLamp'];
-		 for(i=0; i<L.length; i++) {
-			 option = document.createElement('option' );
-			 option.setAttribute('value', L[i]);
-			 option.appendChild( document.createTextNode(L[i]) );
-			 this.html.select.appendChild( option );
-			}
-		 this.html.select.onchange = function(e) {
-										 self.selector.objectsType = self.html.select.value;
-										}
-		 if(this.selector.objectsType) {
-			 this.html.select.value = this.selector.objectsType;
-			} else {this.html.select.value = L[0];
-					this.html.select.onchange();
-				   }
+		 this.copyHTML(html_template, root);
+		 this.html.select = root.querySelector('select.brickType');
+		 this.html.select.onchange = function(e) {self.selector.objectsType = self.html.select.value;}
+		 this.selector.objectsType = this.selector.objectsType || this.html.select.querySelector("option");
 		}
+	this.html.select.value = this.selector.objectsType;
 	return root;
 }
 

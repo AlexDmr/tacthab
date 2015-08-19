@@ -22,15 +22,6 @@ div.instructionType.Implemented {
 	background	: #6F6;
 }
 
-div.Pnode {
-	background	: grey;
-	transition	: background 1s;
-}
-
-div.Pnode.state_1 {
-	background	: green;
-	transition	: background 0s;
-}
 
 html, body {
 	height		: 100%;
@@ -49,10 +40,3 @@ html, body {
 	border-left	: solid black 1px;
 }
 
-.possible2drop {
-	background	: #FFC;
-}
-
-.ready2drop {
-	background	: #FF5;
-}

@@ -8,7 +8,7 @@
 
 .WhenNodePresentation > .arrow {
 	display						: inline-flex;
-	flex-flow					: row;
+	flex-flow					: row wrap;
 }
 
 .WhenNodePresentation > .arrow > .defwhen {
@@ -18,13 +18,13 @@
 	border-top-right-radius		: 2em;
 	margin-left					: 0px;
 	padding						: 0.5em;
-	display						: flex;
-	flex-flow					: row;
-	background					: linear-gradient(to bottom, #7db9e8 0%,#393b7c 0.5em,#393b7c 95%,#207cca 100%);
+	display						: inline-flex;
+	flex-flow					: row nowrap;
+	background					: linear-gradient(to bottom, #FDFDFD 0%,#C0E8F9 0.7em,#393b7c 95%,#022848 100%);
 }
 
 .WhenNodePresentation > .arrow > .eventSymbol {
-	flex						: 0 30px;
+	flex						: 0 0 30px;
 	background					: url("TriangleArrow-Left.svg");
 	background-size				: 100%;
 	background-repeat			: repeat;
@@ -33,6 +33,7 @@
 }
 
 .WhenNodePresentation > .arrow > .defwhen > .eventDrop, .WhenNodePresentation > .arrow > .defwhen > .instructions {
+	/*flex						: 1 1 0;*/
 	border-radius				: 1em;
 	padding						: 0.25em;
 	padding-left				: 0.3em;

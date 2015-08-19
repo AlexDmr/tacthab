@@ -4,10 +4,13 @@
 	 id="Layer_1" 
 	 xmlns="http://www.w3.org/2000/svg" 
 	 xmlns:xlink="http://www.w3.org/1999/xlink" 
-	 width="100" 
+	 width="50" 
 	 height="100"
-	 viewBox="0 0 100 100" 
-	 overflow="visible" 
+	 viewBox="0 0 50 100" 
+	 overflow="visible"
 	 xml:space="preserve">
-<polygon stroke="#000000" points="100,0 0,50 100,100 "/>
+	 
+<polygon stroke="#000000" points="0,0 10,0 50,50 10,100 0,100 40,50"/>
+<polygon stroke="#000000" points="0,40 40,40 40, 60 0,60"/>
+
 </svg>

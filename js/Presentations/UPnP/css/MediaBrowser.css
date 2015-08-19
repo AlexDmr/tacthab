@@ -124,7 +124,10 @@ div.MediaBrowser > .foreground .Media, .MediaBrowserFlow > .Media {
 div.MediaBrowser > .foreground .Media img.icon , .MediaBrowserFlow > .Media img.icon {
 	width			: 64px;
 	height			: 64px;
-	flex			: 0 96px;
+	flex			: 0 0 96px;
 	object-fit		: contain;
 }
 
+div.MediaBrowser > .foreground .Media .title , .MediaBrowserFlow > .Media .title {
+	flex			: 1;
+}

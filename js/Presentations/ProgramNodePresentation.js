@@ -83,6 +83,7 @@ ProgramNodePresentation.prototype.Render	= function() {
 	var self = this;
 	var root = PnodePresentation.prototype.Render.apply(this, []);
 	root.classList.add('ProgramNode');
+	root.classList.add('ProgramNodePresentation');
 	this.divDescription.innerText = 'ProgramNode ' + this.PnodeID + ' (presentation ' + this.uid + ')' ;
 	// Render blocks for declarations and instructions
 	if(this.html.instructions === null) {

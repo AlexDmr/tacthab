@@ -99,12 +99,13 @@ MediaBrowser.prototype.RenderItem = function(name, iconURL, mediaServerId, direc
 	 htmlMS.setAttribute('class', classes);
 	 htmlMS.classList.add('Media');
 	 var img = document.createElement('img');
-		if(iconURL.indexOf('http') === 0) {
-			 img.setAttribute('src', 'proxy?url=' + encodeURIComponent(iconURL) + '&binary=1' ); // iconURL);
-			} else {img.setAttribute('src', iconURL);}
+		img.setAttribute('src', iconURL);
 		img.classList.add('icon');
 		htmlMS.appendChild( img );
-	 htmlMS.appendChild( document.createTextNode(name) );
+	 var title = document.createElement("div");
+		title.appendChild( document.createTextNode(name) );
+		title.classList.add('title');
+		htmlMS.appendChild( title );
 	 if(isItem) {
 		 htmlMS.onclick = function(e) {
 			 e.stopPropagation(); e.preventDefault();
@@ -166,11 +167,11 @@ MediaBrowser.prototype.getHtmlItemFrom = function(mediaServerId, itemId, cb) {
 						var Result = doc.getElementsByTagName('Result').item(0);
 						if(Result) {
 							 var ResultDoc	= XMLparser.parseFromString(Result.textContent, "text/xml");
-							 var title		= ResultDoc.getElementsByTagName('title').item(0).textContent;
-							 var icon	;
-								if(ResultDoc.getElementsByTagName('albumArtURI').length) {
-									 icon = ResultDoc.getElementsByTagName('albumArtURI').item(0).textContent;
-									} else {icon = null;}
+							 var title		= ResultDoc.querySelector("title").textContent; // ResultDoc.getElementsByTagName('title').item(0).textContent;
+							 var icon		= ResultDoc.querySelector("albumArtURI"); icon = icon?icon.textContent:null;
+								// if(ResultDoc.getElementsByTagName('albumArtURI').length) {
+									 // icon = ResultDoc.getElementsByTagName('albumArtURI').item(0).textContent;
+									// } else {icon = null;}
 							 var htmlMedia = self.RenderItem( title
 															, icon || 'js/Presentations/UPnP/images/media_icon.jpg'
 															, mediaServerId
@@ -201,16 +202,17 @@ MediaBrowser.prototype.Browse = function(PnodeID) {
 						 var Result = doc.getElementsByTagName('Result').item(0);
 						 if(Result) {
 							 var ResultDoc = XMLparser.parseFromString(Result.textContent, "text/xml");
-							 var L_containers = ResultDoc.getElementsByTagName('container')
+							 var L_containers = ResultDoc.querySelectorAll('container') //ResultDoc.getElementsByTagName('container')
 							   , i, title, icon;
 							 for(i=0; i<L_containers.length; i++) {
 								 var container	= L_containers.item(i);
 								 var contId		= container.getAttribute('id');
-								 title		= container.getElementsByTagName('title').item(0).textContent;
+								 title	= container.querySelector('title').textContent; //container.getElementsByTagName('title').item(0).textContent;
+								 icon	= container.querySelector('albumArtURI'); icon = icon?icon.textContent:null; 
 								 // console.log('title', container);
-									if(container.getElementsByTagName('albumArtURI').length) {
-										 icon = container.getElementsByTagName('albumArtURI').item(0).textContent;
-										} else {icon = null;}
+									// if(container.getElementsByTagName('albumArtURI').length) {
+										 // icon = container.getElementsByTagName('albumArtURI').item(0).textContent;
+										// } else {icon = null;}
 								 var htmlContainer = self.RenderItem( title
 																	, icon || 'js/Presentations/UPnP/images/folder_256.png'
 																	, element.mediaServerId
@@ -219,15 +221,16 @@ MediaBrowser.prototype.Browse = function(PnodeID) {
 																	, false );
 								 self.htmldivContent.appendChild( htmlContainer );
 								} // End of containers
-							 var L_items	= ResultDoc.getElementsByTagName('item');
+							 var L_items	= ResultDoc.querySelectorAll('item'); //ResultDoc.getElementsByTagName('item');
 							 // console.log("There is", L_items.length, "items");
 							 for(i=0; i<L_items.length; i++) {
 								 var item	= L_items.item(i);
 								 var itemId	= item.getAttribute('id');
-								 title	= item.getElementsByTagName('title').item(0).textContent;
-									if(item.getElementsByTagName('albumArtURI').length) {
-										 icon = item.getElementsByTagName('albumArtURI').item(0).textContent;
-										} else {icon = null;}
+								 title	= item.querySelector('title').textContent; //item.getElementsByTagName('title').item(0).textContent;
+								 icon	= item.querySelector('albumArtURI'); icon = icon?icon.textContent:null; 
+									 // if(item.getElementsByTagName('albumArtURI').length) {
+										 // icon = item.getElementsByTagName('albumArtURI').item(0).textContent;
+										// } else {icon = null;}
 								 // var uri	= item.getElementsByTagName('res').item(0).textContent;
 								 var htmlMedia = self.RenderItem( title
 																, icon || 'js/Presentations/UPnP/images/media_icon.jpg'

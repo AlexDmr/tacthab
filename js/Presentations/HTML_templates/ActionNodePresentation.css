@@ -3,24 +3,21 @@ div.Pnode.ActionNodePresentation {
 	border-radius	: 1em;
 	padding			: 0.4em;
 	background		: lightblue;
-	display			: inline-block;
+	display			: inline-flex;
 	vertical-align	: top;
-	/*flex-flow		: row;*/
+	flex-flow		: row wrap;
+	box-shadow		: 0.2em 0.2em 0.2em 0.05em black inset;
 }
 
 .ActionNodePresentation > .action_symbol {
-	/*flex			: 0 32px;*/
+	flex			: 0 0 32px;
 	width			: 32px;
 	height			: 32px;
 	vertical-align	: top;
 }
 
-div.Pnode.ActionNodePresentation > * {
-	display			: inline-block;
-}
-
 .ActionNodePresentation > .action_description {
-	/*flex			: 1;*/
+	flex			: 1 1 0;
 }
 
 .ActionNodePresentation  p {

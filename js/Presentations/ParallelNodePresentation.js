@@ -23,7 +23,7 @@ ParallelNodePresentation.prototype.Render	= function() {
 	// var self = this;
 	var root = PnodeNChildPresentation.prototype.Render.apply(this, []);
 	root.classList.add('ParallelNode')
-	this.divDescription.innerText = 'ParallelNode ' + this.PnodeID + ' (presentation ' + this.uid + ')' ;
+	// this.divDescription.innerText = 'ParallelNode ' + this.PnodeID + ' (presentation ' + this.uid + ')' ;
 	return root;
 }
 

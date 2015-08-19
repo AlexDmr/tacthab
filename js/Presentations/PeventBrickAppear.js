@@ -1,13 +1,11 @@
 var EventNodePresentation	= require( './EventNodePresentation.js' )
   , DragDrop				= require( '../DragDrop.js' )
-  , utils					= require( '../utils.js' )
+  // , utils					= require( '../utils.js' )
+  , strTemplate				= require( 'raw!./HTML_templates/PeventBrickAppear.html' )
+  , htmlTemplate			= document.createElement("div")
   ;
-
-// XXX Try direct loading
-var htmlTemplate = null;
-utils.XHR( 'GET', 'js/Presentations/HTML_templates/PeventBrickAppear.html'
-		 , function() {htmlTemplate = this.responseText;}
-		 );
+  
+htmlTemplate.innerHTML = strTemplate;
 
 var css = document.createElement('link');
 	css.setAttribute('rel' , 'stylesheet');
@@ -52,6 +50,7 @@ PeventBrickAppear.prototype.unserialize	= function(json, PresoUtils) {
 	return this;
 }
 
+/*
 PeventBrickAppear.prototype.primitivePlug	= function(c) {
 	 // console.log("Primitive plug ", this.root, " ->", c.root);
 	 this.Render();
@@ -63,38 +62,25 @@ PeventBrickAppear.prototype.primitivePlug	= function(c) {
 		}
 	 return this;
 	}
+*/
 
 PeventBrickAppear.prototype.Render	= function() {
 	var self = this;
 	var root = EventNodePresentation.prototype.Render.apply(this, []);
 	root.classList.add('PeventBrickAppear');
 	if(typeof this.html.select === 'undefined') {
-		 this.divDescription.innerHTML = htmlTemplate;
+		 this.copyHTML(htmlTemplate, this.html.eventName);
 		 // Select operation
-		 this.html.select = this.divDescription.querySelector( 'select.operation' );
+		 this.html.select = this.html.eventName.querySelector( 'select.operation' );
 			this.html.select.onchange = function() {self.event.eventName = this.value;}
-			if(self.event.eventName) {
-				 this.html.select.value = self.event.eventName;
-				} else {self.event.eventName = this.divDescription.querySelector( 'select.operation > option' ).value;
-					   }
+			this.event.eventName = this.event.eventName || this.html.select.querySelector( 'option' ).value;
 		// Configure drop zone
-		this.html.targets	= this.divDescription.querySelector(".targets");
-		this.dropZoneTargets = DragDrop.newDropZone( this.html.targets
-							, { acceptedClasse	: 'SelectorNode'
-							  , CSSwhenAccepted	: 'possible2drop'
-							  , CSSwhenOver		: 'ready2drop'
-							  , ondrop			: function(evt, draggedNode, infoObj) {
-									 var Pnode = new infoObj.constructor().init	( undefined	// PnodeID
-																				, undefined	// parent
-																				, undefined	// children
-																				, infoObj
-																				);
-									 self.appendChild( Pnode );
-									}
-							  }
-							);
-		} 
-	
+		DragDrop.updateConfig	( this.dropZoneSelectorId
+								, { acceptedClasse: [['SelectorNode']]
+								  }
+								);
+		}
+	this.html.select.value = this.event.eventName;
 	return root;
 }
 

@@ -1,0 +1,27 @@
+.PnodeNChildPresentation {
+	background			: none;
+}
+
+.PnodeNChildPresentation > .content {
+	display				: inline-flex;
+	flex-flow			: row wrap;
+}
+
+.PnodeNChildPresentation > .content > .child {
+	display				: inline-flex;
+	flex-flow			: row wrap;
+}
+
+.PnodeNChildPresentation > .content > .child > .separator  {
+	flex				: 0 0 50px;
+}
+
+.PnodeNChildPresentation > .content > .child > .container  {
+	flex				: 1 1 0;
+}
+
+.PnodeNChildPresentation > .content > .lastOne {
+	width				: 10em;
+	height				: 5em;
+	display				: inline-flex;
+}

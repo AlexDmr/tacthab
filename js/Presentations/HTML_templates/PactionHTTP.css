@@ -1,42 +1,42 @@
 div.PactionHTTP {
-	display		: inline-block;
-	border		: solid black 1px;
-	border-radius: 0.5em;
+	display			: inline-block;
+	border			: solid black 1px;
+	border-radius	: 0.5em;
 }
 
 div.PactionHTTP div.PactionHTTP_root {
-	background	: cyan;
-	padding		: 0.25em;
-	padding-right: 0.5em;
-	margin		: 0.25em;
-	border		: solid black 1px;
+	background		: cyan;
+	padding			: 0.25em;
+	padding-right	: 0.5em;
+	margin			: 0.25em;
+	border			: solid black 1px;
 }
 
 div.PactionHTTP div.PactionHTTP_root > div.url, div.PactionHTTP div.PactionHTTP_root > div.url > input {
-	width		: 100%;
+	width			: 100%;
 }
 
 div.PactionHTTP div.PactionHTTP_root > div.params > * {
-	display		: inline-block;
+	display			: inline-block;
 }
 
 div.PactionHTTP div.PactionHTTP_root > div.params > textarea {
-	display		: block;
-	width		: 100%;
+	display			: block;
+	width			: 100%;
 }
 
 .listKeyValue > .prototype {
-	display		: none;
+	display			: none;
 }
 
 .listKeyValue textarea.value {
-	height		: 1em;
+	height			: 1em;
 }
 
 div.PactionHTTP div.PactionHTTP_root > div.params  .listKeyValue, div.PactionHTTP div.PactionHTTP_root > div.params.keyValue > textarea.body {
-	display		: none;
+	display			: none;
 }
 
 div.PactionHTTP div.PactionHTTP_root > div.params.keyValue  .listKeyValue, div.PactionHTTP div.PactionHTTP_root > div.params > textarea.body {
-	display		: block;
+	display			: block;
 }

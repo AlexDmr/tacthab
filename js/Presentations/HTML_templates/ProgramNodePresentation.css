@@ -1,17 +1,30 @@
 @keyframes NodePresentation_droppable {
 	0%				 {background	: #B9B9FF;}
-	50%				   {transform		: scale(1.2);
+	50%				   {transform		: scale(1.05);
 					   background	: lightgreen;
 					 }
 	100%			   {background: #B9B9FF;}
 }
 
-.eventDrop.possible2drop {
+.ProgramNodePresentation {
+	background		: grey;
+}
+.ProgramNodePresentation .possible2drop {
 	animation		: NodePresentation_droppable 1s ease-in-out infinite;
 }
 
-.eventDrop.possible2drop.ready2drop {
-	transform		: scale(1.2);
+.ProgramNodePresentation .possible2drop.ready2drop {
+	transform		: scale(1.05);
 	background		: lightgreen;
 	animation		: initial;
+}
+
+.ProgramNodePresentation .Pnode {
+	/*background	: grey;*/
+	transition	: background 1s;
+}
+
+.ProgramNodePresentation .Pnode.state_1 {
+	background	: lightgreen;
+	transition	: background 0s;
 }

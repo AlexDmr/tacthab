@@ -82,7 +82,8 @@ MR_load_NodePresentation.prototype.Render = function() {
 		 if(this.html.mediaBrowser && this.html.mediaBrowser.parentNode) {
 			 this.html.mediaBrowser.parentNode.removeChild( this.html.mediaBrowser );
 			}
-		 this.html.mediaBrowser = document.createElement('button');
+		 this.html.mediaBrowser = document.createElement('div');
+		 this.html.mediaBrowser.classList.add('button');
 		 this.html.mediaBrowser.classList.add('MediaBrowserFlow');
 		 if(self.html.htmlItem) {
 			 this.html.mediaBrowser.appendChild( self.html.htmlItem );

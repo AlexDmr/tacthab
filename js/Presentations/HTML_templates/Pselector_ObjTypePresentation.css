@@ -1,3 +1,4 @@
 .Pselector_ObjTypePresentation {
-	display		: inline-block;
+	display		: block;
+	white-space	: nowrap;
 }
