@@ -90,8 +90,8 @@ var editor = {
 													   , nodeType		: ['ProgramNode', 'instruction']
 													   } )
 										).appendChild( this.createDragNode( 'Parrallel'
-													 , { constructor	: PresoUtils.get('ParalleNode')
-													   , nodeType		: ['ParalleNode', 'instruction']
+													 , { constructor	: PresoUtils.get('ParallelNode')
+													   , nodeType		: ['ParallelNode', 'instruction']
 													   } )
 										).appendChild( this.createDragNode( 'Sequence'
 													 , { constructor	: PresoUtils.get('SequenceNode')

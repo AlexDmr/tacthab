@@ -2,12 +2,13 @@ var PnodePresentation	= require( './PnodePresentation.js' )
   , DragDrop			= require( '../DragDrop.js' )
   , str_template		= require( 'raw!./HTML_templates/PnodeNChildPresentation.html' )
   , htmlTemplate		= document.createElement("div")
-  , htmlSeparator		= document.createElement("img")
+  , htmlSeparator		= document.createElement("div")
   ;
 
 htmlTemplate.innerHTML	= str_template;
 htmlSeparator.classList.add("separator");
-htmlSeparator.setAttribute("src", "js/Presentations/HTML_templates/separator.svg");
+htmlSeparator.innerHTML	= '<div class="top"></div><div class="middle"></div><div class="bottom"></div>';
+// htmlSeparator.setAttribute("src", "js/Presentations/HTML_templates/separator.svg");
 
 
 var css = document.createElement('link');
@@ -41,7 +42,7 @@ PnodeNChildPresentation.prototype.Render	= function() {
 		 this.copyHTML(htmlTemplate, root);
 		 this.html.content	= root.querySelector(".content");
 		 this.html.lastOne	= root.querySelector(".content .lastOne");
-		 this.html.children	= [this.html.lastOne];
+		 this.html.children	= [ this.encapsulate(this.html.lastOne) ];
 		 this.dropZoneId = DragDrop.newDropZone( this.html.lastOne
 							, { acceptedClasse	: [['Pnode', 'instruction']]
 							  , CSSwhenAccepted	: 'possible2drop'
@@ -61,15 +62,23 @@ PnodeNChildPresentation.prototype.Render	= function() {
 }
 
 PnodeNChildPresentation.prototype.encapsulate	= function(c) {
-	var c_root	= c.Render()
+	var c_root
+	  , parent
 	  , encaps	= document.createElement( "div" )
 	  , content	= document.createElement( "div" )
 	  ;
+	if(c.Render) {c_root = c.Render();} else {c_root = c;}
+	parent = c_root.parentNode;
+	if(parent) {parent.removeChild(c_root);}
+	
 	content.appendChild( c_root );
 	content.classList.add( "container" );
 	encaps.classList.add("child");
 	encaps.appendChild( htmlSeparator.cloneNode(true) );
 	encaps.appendChild( content );
+	
+	if(parent) {parent.appendChild(encaps);}
+	
 	return encaps;
 }
 

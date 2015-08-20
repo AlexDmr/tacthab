@@ -27,4 +27,3 @@ SequenceNodePresentation.prototype.Render	= function() {
 }
 // Return the constructor
 module.exports = SequenceNodePresentation;
-

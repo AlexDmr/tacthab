@@ -1,6 +1,6 @@
 var PresoUtils = {
 	  mapping		: { 'ProgramNode'							: require( './ProgramNodePresentation.js' )
-					  , 'ParalleNode'							: require( './ParallelNodePresentation.js' )
+					  , 'ParallelNode'							: require( './ParallelNodePresentation.js' )	, 'ParallelNodePresentation'	: require( './ParallelNodePresentation.js' )
 					  , 'ActionNode'							: require( './ActionNodePresentation.js' )
 					  , 'SequenceNode'							: require( './SequenceNodePresentation.js' )	, 'SequenceNodePresentation'	: require( './SequenceNodePresentation.js' )
 					  , 'EventNode'								: require( './EventNodePresentation.js' )		, 'EventNodePresentation'		: require( './EventNodePresentation.js' )

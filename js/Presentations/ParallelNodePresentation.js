@@ -16,13 +16,14 @@ ParallelNodePresentation.prototype.init = function(PnodeID, parent, children) {
 
 ParallelNodePresentation.prototype.serialize = function() {
 	 var json = PnodeNChildPresentation.prototype.serialize.apply(this, []);
-	 json.subType = './ParallelNodePresentation.js';
+	 json.subType = 'ParallelNodePresentation';
 	 return json;
 	}
 ParallelNodePresentation.prototype.Render	= function() {
 	// var self = this;
 	var root = PnodeNChildPresentation.prototype.Render.apply(this, []);
-	root.classList.add('ParallelNode')
+	root.classList.add('ParallelNode');
+	root.classList.add('ParallelNodePresentation');
 	// this.divDescription.innerText = 'ParallelNode ' + this.PnodeID + ' (presentation ' + this.uid + ')' ;
 	return root;
 }

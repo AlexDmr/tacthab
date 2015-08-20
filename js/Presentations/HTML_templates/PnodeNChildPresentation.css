@@ -1,5 +1,7 @@
 .PnodeNChildPresentation {
 	background			: none;
+	display				: inline-flex;
+	flex-flow			: row nowrap;
 }
 
 .PnodeNChildPresentation > .content {
@@ -9,20 +11,81 @@
 
 .PnodeNChildPresentation > .content > .child {
 	display				: inline-flex;
-	flex-flow			: row wrap;
+	flex-flow			: row nowrap;
+}
+
+.PnodeNChildPresentation > .content > .child:nth-last-child(1) {
+	flex				: 1 0;
 }
 
 .PnodeNChildPresentation > .content > .child > .separator  {
-	flex				: 0 0 50px;
+	position			: relative;
+	width				: 10px;
+	height				: 15px;
+	display				: inline-flex;
+	flex-flow			: column;
+	align-self			: center;
+	background			: lightblue;
+	border-top			: solid black 1px;
+	border-bottom		: solid black 1px;
+}
+
+.PnodeNChildPresentation > .content > .child > .separator .top {
+	border-top			: solid black 1px;
+	box-shadow			: 0 0.2em 0.2em 0.05em black inset;
+	width				: 12px;
+	height				: 0.25em;
+	/*transform			: scale(1.2,1) translate(1.5px);*/
+	background			: linear-gradient(to bottom, #000000 0%,lightblue 100%);
+	position			: absolute;
+	left				: -1px;
+}
+
+.PnodeNChildPresentation > .content > .child > .separator .middle {
+	flex				: 0 0 15px;
+	width				: 20px;
+	height				: 10px;
+	/*transform			: scale(1.4,1) translate(2.5px);*/
+	background			: lightblue;
+	position			: absolute;
+	left				: -2px;
+	top					: 5px;
+}
+
+.PnodeNChildPresentation > .content > .child > .separator .bottom2 {
+	flex				: 0 0 1px;
+	border-bottom		: solid black 1px;
+	width				: 25px;
+	height				: 1px;
 }
 
 .PnodeNChildPresentation > .content > .child > .container  {
 	flex				: 1 1 0;
+	display				: inline-flex;
 }
 
-.PnodeNChildPresentation > .content > .lastOne {
+.PnodeNChildPresentation > .content > .child  > .container > .lastOne.Pnode.ActionNodePresentation {
 	/*width				: 10em;
 	height				: 5em;
 	display				: inline-flex;*/
-	flex				: 1 0 0;
+	flex				: 1 0;
+	display				: inline-flex;
+	border-top-left-radius		: 0px;
+	border-bottom-left-radius	: 0px;
+	padding-left				: 1em;
+}
+
+
+.PnodeNChildPresentation.ParallelNodePresentation > .prefix {
+	background			: lightblue;
+	box-shadow			: 0.2em 0.2em 0.2em 0.05em black inset;
+    border				: solid black 1px;
+    margin-left			: 0.5em;
+    border-radius		: 10px;
+	width				: 20px;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content {
+	flex-flow			: column nowrap;
+	flex				: 1 1;
 }

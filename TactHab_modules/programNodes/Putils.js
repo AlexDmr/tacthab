@@ -44,7 +44,7 @@
 var Putils = {
 	  mapping		: { 'Pnode'					: require( './Pnode.js' )	// Pnode
 					  , 'ProgramNode'			: require( './program.js' )	// ProgramNode
-					  , 'ParalleNode'			: require( './parallel.js' )	// ParalleNode
+					  , 'ParallelNode'			: require( './parallel.js' )	// ParallelNode
 					  , 'ActionNode'			: require( './action.js' )	// ActionNode
 					  , 'SequenceNode'			: require( './sequence.js' )	// SequenceNode
 					  , 'EventNode'				: require( './Pevent.js' )	// EventNode
