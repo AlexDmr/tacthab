@@ -9,6 +9,10 @@ var css = document.createElement('link');
 	css.setAttribute('href', 'js/Presentations/HTML_templates/ProgramNodePresentation.css');
 	document.head.appendChild( css );
 
+require( "./HTML_templates/ProgramNodePresentation.css" );
+
+
+
 
 var ProgramNodePresentation = function() {
 	// console.log(this);

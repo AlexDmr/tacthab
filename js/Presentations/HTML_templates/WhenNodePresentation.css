@@ -12,7 +12,7 @@
 }
 
 .WhenNodePresentation > .arrow > .defwhen {
-	flex						: 1;
+	flex						: 0 1 auto;
 	border						: solid black 3px;
 	border-bottom-right-radius	: 2em;
 	border-top-right-radius		: 2em;
@@ -25,6 +25,7 @@
 
 .WhenNodePresentation > .arrow > .eventSymbol {
 	flex						: 0 0 30px;
+	width						: 30px;
 	background					: url("TriangleArrow-Left.svg");
 	background-size				: 100%;
 	background-repeat			: repeat;
@@ -42,7 +43,7 @@
 }
 
 .WhenNodePresentation > .arrow > .defwhen > .eventDrop {
-	flex						: 1 1 0;
+	flex						: 0 1 auto;
 	background					: yellow;
 }
 
@@ -52,4 +53,6 @@
 
 .WhenNodePresentation > .arrow > .defwhen > img {
 	width						: 50px;
+	height						: 50px;
+    align-self					: center;
 }

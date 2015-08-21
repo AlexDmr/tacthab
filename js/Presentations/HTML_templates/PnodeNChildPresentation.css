@@ -5,22 +5,28 @@
 }
 
 .PnodeNChildPresentation > .content {
+	flex				: 0 1 auto;
 	display				: inline-flex;
-	flex-flow			: row wrap;
+	flex-flow			: row  nowrap;
 }
 
 .PnodeNChildPresentation > .content > .child {
+	flex				: 0 0 auto;
 	display				: inline-flex;
 	flex-flow			: row nowrap;
 }
 
 .PnodeNChildPresentation > .content > .child:nth-last-child(1) {
-	flex				: 1 0;
+	flex				: 0 0 auto;
+}
+
+.PnodeNChildPresentation > .content > .child > .separator.suffix {
+	display				: none;
 }
 
 .PnodeNChildPresentation > .content > .child > .separator  {
 	position			: relative;
-	width				: 10px;
+	width				: 11px;
 	height				: 15px;
 	display				: inline-flex;
 	flex-flow			: column;
@@ -28,6 +34,7 @@
 	background			: lightblue;
 	border-top			: solid black 1px;
 	border-bottom		: solid black 1px;
+	flex				: 0 1 auto;
 }
 
 .PnodeNChildPresentation > .content > .child > .separator .top {
@@ -39,10 +46,11 @@
 	background			: linear-gradient(to bottom, #000000 0%,lightblue 100%);
 	position			: absolute;
 	left				: -1px;
+	flex				: 0 1 auto;
 }
 
 .PnodeNChildPresentation > .content > .child > .separator .middle {
-	flex				: 0 0 15px;
+	flex				: 0 1 15px;
 	width				: 21px;
 	height				: 10px;
 	/*transform			: scale(1.4,1) translate(2.5px);*/
@@ -52,40 +60,85 @@
 	top					: 5px;
 }
 
-.PnodeNChildPresentation > .content > .child > .separator .bottom2 {
-	flex				: 0 0 1px;
-	border-bottom		: solid black 1px;
-	width				: 25px;
-	height				: 1px;
+.PnodeNChildPresentation > .content > .child > .separator .bottom {
+	flex				: 0 0 auto;
 }
 
 .PnodeNChildPresentation > .content > .child > .container  {
-	flex				: 1 1 0;
+	flex				: 0 0 auto;
 	display				: inline-flex;
 }
 
 .PnodeNChildPresentation > .content > .child  > .container > .lastOne.Pnode.ActionNodePresentation {
-	/*width				: 10em;
-	height				: 5em;
-	display				: inline-flex;*/
-	flex				: 1 0;
+	flex				: 1 0 7em;
 	display				: inline-flex;
-	border-top-left-radius		: 0px;
-	border-bottom-left-radius	: 0px;
-	padding-left				: 1em;
+	border-radius		: 0px;
+	padding-left		: 1em;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content > .child {
+	margin-bottom		: 10px;
 }
 
 
-.PnodeNChildPresentation.ParallelNodePresentation > .prefix {
+.PnodeNChildPresentation.ParallelNodePresentation > .prefix, 
+.PnodeNChildPresentation.ParallelNodePresentation > .suffix {
 	background			: lightblue;
 	box-shadow			: 0.2em 0.2em 0.2em 0.05em black inset;
     border				: solid black 1px;
     margin-left			: 0.5em;
     border-radius		: 10px;
 	width				: 20px;
+	flex				: 0 1 auto;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .suffix {
+    margin-left			: 0;
 }
 
 .PnodeNChildPresentation.ParallelNodePresentation > .content {
 	flex-flow			: column nowrap;
-	flex				: 1 1;
+	flex				: 1 1 10em;
 }
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix {
+	display				: inline-flex;
+	flex				: 1 1 auto;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix .top {
+	width				: auto;
+	position			: static;
+	background			: none;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix .middle {
+	width				: auto;
+	position			: relative;
+	display				: inline-flex;
+	flex-flow			: row;
+	background			: none;
+	left				: 0;
+	top					: 0;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix .middle > .left {
+	background			: lightblue;
+	position			: relative;
+	flex				: 0 0 3px;
+	left				: -2px;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix .middle > .right {
+	background			: lightblue;
+	position			: relative;
+	flex				: 1 1 10px;
+	left				: 7px;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix .bottom {
+	width				: auto;
+	position			: static;
+}
+
+

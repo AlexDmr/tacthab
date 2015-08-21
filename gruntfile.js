@@ -1,3 +1,5 @@
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+
 module.exports = function(grunt) {
   var files =	[ './js/**/*.js'
 				, './TactHab_modules/**/*.js'
@@ -14,10 +16,12 @@ module.exports = function(grunt) {
 	webpack: {
 		editor: {
 			// webpack options
-			entry	: "./test/testEditor.js",
+			entry	: {
+				bundleEditor: "./test/testEditor.js"
+			},
 			output	: {
 				path	: "./test/",
-				filename: "bundleEditor.js",
+				filename: "[name].js",
 			},
 			stats: {
 				// Configure the console output
@@ -27,14 +31,18 @@ module.exports = function(grunt) {
 			},
 			module: {
 				loaders: [
+					{ test	: /\.css$/	
+					, loader: ExtractTextPlugin.extract("style-loader", "css-loader")
+					}
+					 // {test: /\.html$/, loader: "raw!" }
 					// {test: /\.css$/	, loader: "style!css" },
-					// {test: /\.html$/, loader: "raw!" }
+					//
 				]
 			},
+			plugins: [ new ExtractTextPlugin("[name].css")
+					 ],
 			progress	: true,
-			failOnError	: true/*, 
-			watch		: true,
-			keepalive	: true, */
+			failOnError	: true
 		},
 	},
     eslint: {

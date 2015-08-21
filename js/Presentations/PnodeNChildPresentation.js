@@ -3,12 +3,16 @@ var PnodePresentation	= require( './PnodePresentation.js' )
   , str_template		= require( 'raw!./HTML_templates/PnodeNChildPresentation.html' )
   , htmlTemplate		= document.createElement("div")
   , htmlSeparator		= document.createElement("div")
+  , htmlSeparatorSuffix	= document.createElement("div")
   ;
 
 htmlTemplate.innerHTML	= str_template;
 htmlSeparator.classList.add("separator");
 htmlSeparator.innerHTML	= '<div class="top"></div><div class="middle"></div><div class="bottom"></div>';
-// htmlSeparator.setAttribute("src", "js/Presentations/HTML_templates/separator.svg");
+
+htmlSeparatorSuffix = htmlSeparator.cloneNode(true);
+htmlSeparatorSuffix.classList.add("suffix");
+htmlSeparatorSuffix.querySelector(".middle").innerHTML = '<div class="left"></div><div class="right"></div>';
 
 
 var css = document.createElement('link');
@@ -76,6 +80,8 @@ PnodeNChildPresentation.prototype.encapsulate	= function(c) {
 	encaps.classList.add("child");
 	encaps.appendChild( htmlSeparator.cloneNode(true) );
 	encaps.appendChild( content );
+	var suffix = htmlSeparatorSuffix.cloneNode(true);
+	encaps.appendChild( suffix );
 	
 	if(parent) {parent.appendChild(encaps);}
 	

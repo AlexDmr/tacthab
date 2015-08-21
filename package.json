@@ -31,10 +31,13 @@
     }
 	, "devDependencies" : {
 		  "grunt": "latest"
-		, "grunt-contrib-jshint"	: "latest"
-		, "gruntify-eslint"			: "latest"
-		, "grunt-contrib-watch"		: "latest"
-		, "grunt-webpack"			: "latest"
-		, "raw-loader"				: "latest"
+		, "grunt-contrib-jshint"		: "latest"
+		, "gruntify-eslint"				: "latest"
+		, "grunt-contrib-watch"			: "latest"
+		, "grunt-webpack"				: "latest"
+		, "raw-loader"					: "latest"
+		, "style-loader"				: "latest"
+		, "css-loader"					: "latest"
+		, "extract-text-webpack-plugin"	: "latest"
 	}
 }
