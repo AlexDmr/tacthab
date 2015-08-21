@@ -88,6 +88,7 @@ PnodeNChildPresentation.prototype.encapsulate	= function(c) {
 	return encaps;
 }
 
+
 PnodeNChildPresentation.prototype.primitivePlug	= function(c) {
 	this.Render();
 	// Where is c in children ?

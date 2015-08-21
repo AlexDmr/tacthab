@@ -8862,6 +8862,7 @@
 		return encaps;
 	}
 
+
 	PnodeNChildPresentation.prototype.primitivePlug	= function(c) {
 		this.Render();
 		// Where is c in children ?
@@ -8960,7 +8961,7 @@
 /* 62 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"prefix\"></div>\r\n<div class=\"content\">\r\n\t<div class=\"lastOne Pnode ActionNodePresentation\">Drop an instruction here</div>\r\n</div>\r\n<div class=\"suffix\"></div>\r\n"
+	module.exports = "<div class=\"prefix\"></div>\r\n<div class=\"content\">\r\n\t<div class=\"lastOne Pnode ActionNodePresentation\">Drop node</div>\r\n</div>\r\n<div class=\"suffix\"></div>\r\n"
 
 /***/ },
 /* 63 */

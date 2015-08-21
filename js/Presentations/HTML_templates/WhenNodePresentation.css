@@ -26,11 +26,16 @@
 .WhenNodePresentation > .arrow > .eventSymbol {
 	flex						: 0 0 30px;
 	width						: 30px;
-	background					: url("TriangleArrow-Left.svg");
+	/*background					: url("TriangleArrow-Left.svg");
 	background-size				: 100%;
-	background-repeat			: repeat;
+	background-repeat			: repeat;*/
 	margin						: 0px;
 	padding						: 0px;
+    border						: solid black 1px;
+    border-top-left-radius		: 50%;
+    border-bottom-left-radius	: 50%;
+    background					: lightblue;
+    box-shadow					: 0.2em 0.2em 0.2em 0.05em black inset;
 }
 
 .WhenNodePresentation > .arrow > .defwhen > .eventDrop, .WhenNodePresentation > .arrow > .defwhen > .instructions {
