@@ -51,7 +51,7 @@
 
 .PnodeNChildPresentation > .content > .child > .separator .middle {
 	flex				: 0 1 15px;
-	width				: 21px;
+	width				: 23px;
 	height				: 10px;
 	/*transform			: scale(1.4,1) translate(2.5px);*/
 	background			: lightblue;
@@ -105,6 +105,7 @@
 .PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix {
 	display				: inline-flex;
 	flex				: 1 1 auto;
+	width				: 12px;
 }
 
 .PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix .top {
@@ -134,7 +135,7 @@
 	background			: lightblue;
 	position			: relative;
 	flex				: 1 1 10px;
-	left				: 7px;
+	left				: 9px;
 }
 
 .PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix .bottom {
