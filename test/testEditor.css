@@ -6,10 +6,15 @@
 	overflow-y	: scroll;
 	border		: solid black 3px;
 	background	: grey;
+	display		: none;
 }
 
 #instructionTypes details  > details {
 	margin-left	: 1em;
+}
+
+details, summary {
+	display		: block;
 }
 
 div.instructionType {
@@ -21,7 +26,6 @@ div.instructionType {
 div.instructionType.Implemented {
 	background	: #6F6;
 }
-
 
 html, body {
 	height		: 100%;

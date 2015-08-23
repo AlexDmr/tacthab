@@ -4,9 +4,10 @@ div.Pnode.ActionNodePresentation {
 	padding			: 0.4em;
 	background		: lightblue;
 	display			: inline-flex;
-	vertical-align	: top;
 	flex-flow		: row nowrap;
+	vertical-align	: top;
 	box-shadow		: 0.2em 0.2em 0.2em 0.05em black inset;
+	flex			: 0 0 auto;
 }
 
 .ActionNodePresentation > .action_symbol {
@@ -14,10 +15,13 @@ div.Pnode.ActionNodePresentation {
 	width			: 32px;
 	height			: 32px;
 	vertical-align	: top;
+	position		: relative;
 }
 
 .ActionNodePresentation > .action_description {
-	flex			: 1 1 auto;
+	flex			: 0 0 auto;
+	display			: inline-flex;
+	flex-flow		: column nowrap;
 }
 
 .ActionNodePresentation  p {
@@ -25,13 +29,24 @@ div.Pnode.ActionNodePresentation {
 	padding			: 0px;
 }
 
-.ActionNodePresentation p.actionName {
-	border-bottom	: dashed black 1px;
-	background		: lightblue;
+.ActionNodePresentation > .action_description > * {
+	flex			: 0 0 auto;
 }
 
-.ActionNodePresentation p.selector {
+.ActionNodePresentation .actionName {
+	border-bottom	: dashed black 1px;
+	background		: lightblue;
+	display			: inline-flex;
+}
+
+.ActionNodePresentation .actionName > * {
+	flex			: 0 0 auto;
+}
+
+.ActionNodePresentation .selector {
 	background		: #B9B9FF;
+	display			: inline-flex;
+	white-space		: nowrap;
 }
 
 @keyframes ActionNodePresentation_droppable {
@@ -42,11 +57,11 @@ div.Pnode.ActionNodePresentation {
 	100%			   {background: #B9B9FF;}
 }
 
-.ActionNodePresentation p.selector.possible2drop {
+.ActionNodePresentation .selector.possible2drop {
 	animation		: ActionNodePresentation_droppable 1s ease-in-out infinite;
 }
 
-.ActionNodePresentation p.selector.possible2drop.ready2drop {
+.ActionNodePresentation .selector.possible2drop.ready2drop {
 	transform		: scale(1.2);
 	background		: lightgreen;
 	animation		: initial;

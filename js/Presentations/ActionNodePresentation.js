@@ -8,6 +8,11 @@ css.setAttribute('rel' , 'stylesheet');
 css.setAttribute('href', 'js/Presentations/HTML_templates/ActionNodePresentation.css');
 document.head.appendChild(css);
 
+require("./HTML_templates/ActionNodePresentation.css");
+
+
+
+
 var htmlTemplate = document.createElement('div');
 htmlTemplate.innerHTML = htmlTemplateText;
 
@@ -16,6 +21,7 @@ var ActionNodePresentation = function() {
 	PnodePresentation.prototype.constructor.apply(this, []);
 	return this;
 }
+
 
 ActionNodePresentation.prototype = Object.create( PnodePresentation.prototype ); // new PnodePresentation();
 ActionNodePresentation.prototype.className = ActionNodePresentation;

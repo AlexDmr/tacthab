@@ -8,11 +8,11 @@
 
 .WhenNodePresentation > .arrow {
 	display						: inline-flex;
-	flex-flow					: row wrap;
+	flex-flow					: row nowrap;
 }
 
 .WhenNodePresentation > .arrow > .defwhen {
-	flex						: 0 1 auto;
+	flex						: 0 0 auto;
 	border						: solid black 3px;
 	border-bottom-right-radius	: 2em;
 	border-top-right-radius		: 2em;
@@ -45,19 +45,22 @@
 	padding-top					: 0.3em;
 	border						: solid black 1px;
 	box-shadow					: 0.2em 0.2em 0.2em 0.05em black inset;
+	flex						: 0 0 auto;
 }
 
 .WhenNodePresentation > .arrow > .defwhen > .eventDrop {
-	flex						: 0 1 auto;
+	flex						: 0 0 auto;
 	background					: yellow;
 }
 
 .WhenNodePresentation > .arrow > .defwhen > .instructions {
 	background					: darkcyan;
+	flex						: 0 0 auto;
 }
 
 .WhenNodePresentation > .arrow > .defwhen > img {
 	width						: 50px;
 	height						: 50px;
     align-self					: center;
+	flex						: 0 0 auto;
 }

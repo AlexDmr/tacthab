@@ -5,7 +5,7 @@
 }
 
 .PnodeNChildPresentation > .content {
-	flex				: 0 1 auto;
+	flex				: 0 0 auto;
 	display				: inline-flex;
 	flex-flow			: row  nowrap;
 }
@@ -34,7 +34,7 @@
 	background			: lightblue;
 	border-top			: solid black 1px;
 	border-bottom		: solid black 1px;
-	flex				: 0 1 auto;
+	flex				: 0 0 11px;
 }
 
 .PnodeNChildPresentation > .content > .child > .separator .top {
@@ -43,10 +43,10 @@
 	width				: 12px;
 	height				: 0.25em;
 	/*transform			: scale(1.2,1) translate(1.5px);*/
-	background			: linear-gradient(to bottom, #000000 0%,lightblue 100%);
+	/*background			: linear-gradient(to bottom, #000000 0%,lightblue 100%);*/
 	position			: absolute;
 	left				: -1px;
-	flex				: 0 1 auto;
+	flex				: 0 0 5px;
 }
 
 .PnodeNChildPresentation > .content > .child > .separator .middle {
@@ -90,7 +90,7 @@
     /*margin-left			: 0.5em;*/
     border-radius		: 10px;
 	width				: 20px;
-	flex				: 0 1 auto;
+	flex				: 0 0 20px;
 }
 
 .PnodeNChildPresentation.ParallelNodePresentation > .suffix {
@@ -99,13 +99,13 @@
 
 .PnodeNChildPresentation.ParallelNodePresentation > .content {
 	flex-flow			: column nowrap;
-	flex				: 1 1 10em;
+	flex				: 0 0 auto;
 }
 
 .PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix {
 	display				: inline-flex;
-	flex				: 1 1 auto;
-	width				: 12px;
+	flex				: 1 1 13px;
+	width				: 13px;
 }
 
 .PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix .top {

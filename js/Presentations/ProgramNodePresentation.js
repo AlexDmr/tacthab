@@ -1,7 +1,7 @@
 var PnodePresentation			= require( './PnodePresentation.js' )
   , PnodeNChildPresentation		= require( './PnodeNChildPresentation.js' )
   // , SequenceNodePresentation	= require( './SequenceNodePresentation.js' )
-  // , ParallelNodePresentation	= require( './ParallelNodePresentation.js' )
+  , ParallelNodePresentation	= require( './ParallelNodePresentation.js' )
   , DragDrop					= require( '../DragDrop.js' )
 
 var css = document.createElement('link');
@@ -40,14 +40,18 @@ ProgramNodePresentation.prototype.reset = function() {
 }
 
 ProgramNodePresentation.prototype.serialize	= function() {
+	var children	= this.children;
+	this.children	= [];
 	var json = PnodePresentation.prototype.serialize.apply(this, [])
 	  , i, node;
+	this.children	= children;
 	json.pg = { definitions : []
 			  , instructions: [] };
 	for(i=0; i<this.Pnodes.definitions.length; i++) {
 		 node = this.Pnodes.definitions[i];
 		 json.pg.definitions.push( node.serialize() );
 		}
+	this.Pnodes.instructions = this.Pnode_ParallelInstructions?this.Pnode_ParallelInstructions.children:[];
 	for(i=0; i<this.Pnodes.instructions.length; i++) {
 		 node = this.Pnodes.instructions[i];
 		 json.pg.instructions.push( node.serialize() );
@@ -63,6 +67,7 @@ ProgramNodePresentation.prototype.unserialize	= function(json, PresoUtils) {
 		 jsonNode = json.pg.definitions[i];
 		 this.appendDefinitionNode ( PresoUtils.unserialize(jsonNode) );
 		}
+	this.Render();
 	for(i=0; i<json.pg.instructions.length; i++) {
 		 jsonNode = json.pg.instructions[i];
 		 this.appendInstructionNode( PresoUtils.unserialize(jsonNode) );
@@ -78,9 +83,10 @@ ProgramNodePresentation.prototype.appendDefinitionNode = function(node) {
 }
 
 ProgramNodePresentation.prototype.appendInstructionNode = function(node) {
-	var nodeRoot = node.Render();
-	this.html.instructions.insertBefore(nodeRoot, this.divChildrenInstTxt);
-	this.Pnodes.instructions.push( node );
+	// var nodeRoot = node.Render();
+	// this.html.instructions.insertBefore(nodeRoot, this.divChildrenInstTxt);
+	this.Pnode_ParallelInstructions.appendChild(node);
+	// this.Pnodes.instructions.push( node );
 }
 
 ProgramNodePresentation.prototype.Render	= function() {
@@ -91,7 +97,7 @@ ProgramNodePresentation.prototype.Render	= function() {
 	this.divDescription.innerText = 'ProgramNode ' + this.PnodeID + ' (presentation ' + this.uid + ')' ;
 	// Render blocks for declarations and instructions
 	if(this.html.instructions === null) {
-		 // Déclarations
+		// Déclarations -------------------------------------------------------
 		 this.html.definitions = document.createElement('details');
 			this.html.definitions.setAttribute('open', 'open');
 			this.html.definitionsSummary	= document.createElement('summary');
@@ -115,16 +121,16 @@ ProgramNodePresentation.prototype.Render	= function() {
 								  }
 								);
 		 this.html.definitions.appendChild(this.html.definitionsSummary);
-		 // Instructions
+		 
+		// Instructions -------------------------------------------------------
 		 this.html.instructions = document.createElement('details');
 			this.html.instructions.setAttribute('open', 'open');
 			this.html.instructionsSummary	= document.createElement('summary');
 			this.html.instructionsSummary.innerHTML = "Instructions";
 			// Drop zone
-			this.divChildrenInstTxt = document.createElement('div');
-			this.divChildrenInstTxt.innerText = 'Insert a Definition here';
-			this.html.instructions.appendChild( this.divChildrenInstTxt );
-			this.dropZoneInstId = DragDrop.newDropZone( this.divChildrenInstTxt
+			this.Pnode_ParallelInstructions = new ParallelNodePresentation().init();
+			this.html.instructions.appendChild( this.Pnode_ParallelInstructions.Render() );
+			/*this.dropZoneInstId = DragDrop.newDropZone( this.divChildrenInstTxt
 								, { acceptedClasse	: [['Pnode', 'instruction']]
 								  , CSSwhenAccepted	: 'possible2drop'
 								  , CSSwhenOver		: 'ready2drop'
@@ -137,7 +143,7 @@ ProgramNodePresentation.prototype.Render	= function() {
 										 self.appendInstructionNode( Pnode );
 										}
 								  }
-								);
+								);*/
 		 this.html.instructions.appendChild(this.html.instructionsSummary);
 		 // Plug under the root
 		 this.root.appendChild( this.html.definitions );
