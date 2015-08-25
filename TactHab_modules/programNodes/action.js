@@ -26,6 +26,20 @@ ActionNode.prototype.init		= function(parent, children, mtd, params) {
 	return this;
 }
 
+ActionNode.prototype.triggerDirectly	= function(mtd, params) {
+	var mtd_svg		= this.mtd
+	  , params_svg	= this.params
+	  ;
+
+	this.mtd	= mtd;
+	this.params	= params;
+
+	this.Start();
+	
+	this.mtd	= mtd_svg;
+	this.params	= params_svg;
+}
+
 ActionNode.prototype.setCommand = function(mtd, params) {
 	this.mtd	= mtd;
 	this.params	= params;

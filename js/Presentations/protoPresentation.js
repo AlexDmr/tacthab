@@ -26,6 +26,14 @@ Presentation.prototype.getUniqueId = function() {
 	return 'PresoId_' + uid;
 }
 
+Presentation.prototype.dispose	= function() {
+	if(this.parent) {this.parent.removeChild(this);}
+	while(this.children.length) {
+		 this.removeChild( this.children[0] );
+		}
+	return this;
+}
+
 /**
  * Initialization method: Plug the node to parent and children.
  * @param {Presentation} parent parent {@link Presentation}, can be unspecified.
@@ -81,14 +89,15 @@ Presentation.prototype.getUniqueId = function() {
  * Remove a {@link Presentation} child.
  * @param {Presentation} c {@link Presentation} to remove.
  */
-			 Presentation.prototype.removeChild = function(c) {
-				 var pos = this.children.indexOf(c)
-				 if(pos !== -1) {
-					 this.primitiveUnPlug(c);
-					 this.children.splice(pos,1);
-					 c.setParent(null);
-					}
-				}
+Presentation.prototype.removeChild = function(c) {
+	 var pos = this.children.indexOf(c)
+	 if(pos !== -1) {
+		 this.primitiveUnPlug(c);
+		 this.children.splice(pos,1);
+		 c.setParent(null);
+		}
+	}
+	
 /**
  * Render the HTML structure of the {@link Presentation}. If the structure already exists, it is not created again.
  * The HTML structure can be deleted via the use of {@link deletePrimitives} method.

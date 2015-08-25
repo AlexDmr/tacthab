@@ -17,6 +17,7 @@ BrickOpenHAB_Number.prototype.getTypes		= function() {return types;}
 BrickOpenHAB_Number.prototype.registerType(BrickOpenHAB_Number.prototype.getTypeName(), BrickOpenHAB_Number.prototype);
 
 BrickOpenHAB_Number.prototype.update	= function(topic, operation, message) {
+	console.log( "BrickOpenHAB_Number::update", topic, operation, message );
 	BrickOpenHAB_item.prototype.update.apply(this, [topic, operation, message]);
 	this.state = parseFloat( message );
 	this.emit("state", {value: this.state});

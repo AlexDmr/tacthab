@@ -37,11 +37,11 @@ try {logPass = JSON.parse( fs.readFileSync("logins.json") );
 console.log('webServer.init(',__dirname,',8888)');
 webServer.init(__dirname, '8888', logPass);
 UpnpServer.init();
-webServer.registerSocketIO_CB( 'tel'
-							 , function(data) {
-									 console.log("DEBUG socket.IO\n", data, "\n");
-									}
-							 );
+// webServer.registerSocketIO_CB( 'tel'
+							 // , function(data) {
+									 // console.log("DEBUG socket.IO\n", data, "\n");
+									// }
+							 // );
 
 var pgRootId = '';
 var rootPath = __dirname.slice();
@@ -63,12 +63,15 @@ webServer.app.post( '/openHAB'
 							  openHAB.changeIdTo( 'openHAB' );
 							  var json = { host	: req.body.host
 										 , port	: parseInt( req.body.port )
-										 , desc	: {} 
+										 , desc	: {}
 										 };
 							  if(  req.body.MQTT_host
 								&& req.body.MQTT_port ) {json.mqtt = { host		: req.body.MQTT_host
 																	 , port		: parseInt(req.body.MQTT_port)
-																	 , prefix	: req.body.MQTT_prefix || 'a4h' };
+																	 , prefix	: req.body.MQTT_prefix || 'a4h'
+																	 , logMQTT	: req.body.logMQTT || false
+																	 , logPath	: __dirname.replace(/\\/g, '/')
+																	 };
 														}
 							  openHAB.init( json ).then ( function(devices) {
 															res.end( JSON.stringify(devices) );} 

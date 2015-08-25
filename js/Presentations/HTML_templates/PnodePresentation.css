@@ -1,0 +1,16 @@
+.contextualMenu {
+	display			: none;
+	position		: absolute;
+	border			: solid black 1px;
+	box-shadow		: 0.4em 0.4em 0.4em 0.2em black;
+	background		: lightgrey;
+	z-index			: 1000;
+}
+
+.contextualMenu.display {
+	display			: inline-block;
+}
+
+.contextualMenu .contextualItem:hover {
+	background		: lightgreen;
+}

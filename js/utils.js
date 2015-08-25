@@ -30,8 +30,8 @@ var utils = {
 	, io	: io()
 	, call	: function(objectId, method, params, cb) {
 		 var call =	{ objectId	: objectId
-					, method		: method
-					, params		: JSON.stringify( params )
+					, method	: method
+					, params	: JSON.stringify( params )
 					};
 		 if(cb) {
 			 call.callId = callId++;
@@ -40,7 +40,7 @@ var utils = {
 		 utils.io.emit	( 'call', call
 						, function(data){
 							 // console.log("Call", call.callId, " returns", data);
-							 cb(data);
+							 if(cb) {cb(data);}
 							}
 						);
 		}

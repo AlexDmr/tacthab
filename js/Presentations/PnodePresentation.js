@@ -8,6 +8,8 @@ var protoPresentation	= require( './protoPresentation.js' )
   ;
 var L_Pnodes = {};
 
+require( "./HTML_templates/PnodePresentation.css" );
+
 /**
  * The server side identifier of a presentation node.
  *@typedef {string} PnodeID
@@ -46,11 +48,13 @@ PnodePresentation.prototype.className	= 'PnodePresentation';
  * @param {PnodePresentation[]} children children array {@link PnodePresentation}, can be unspecified.
  */
 PnodePresentation.prototype.init = function(PnodeID, parent, children) {
+	var self = this;
 	protoPresentation.prototype.init.apply(this, [parent, children]);
 	this.PnodeID = PnodeID;
 	if(this.PnodeID) {L_Pnodes[this.PnodeID] = this;}
 	this.state	= null;
 	this.html	= {};
+	this.contextualMenuItems = [{content: 'delete', cb: function() {self.dispose();}}];
 	return this;
 }
 
@@ -108,15 +112,58 @@ PnodePresentation.prototype.setState	= function(prev, next) {
 }
 
 /**
+ * Display the contextual menu
+*/
+var root = document.createElement('div');
+root.classList.add('contextualMenu');
+document.body.appendChild(root);
+document.addEventListener( 'click' 
+						 , function() {
+							  root.classList.remove("display");
+							 }
+						 , true
+						 );
+PnodePresentation.prototype.displayContextMenu	= function(x, y) {
+	var i, htmlItem, item;
+	root.innerHTML = "";
+	root.classList.add( 'display' );
+	for(i=0; i<this.contextualMenuItems.length; i++) {
+		 item				= this.contextualMenuItems[i];
+		 htmlItem			= document.createElement('div');
+		 htmlItem.innerHTML = item.content;
+		 htmlItem.onclick	= item.cb.bind(this);
+		 htmlItem.classList.add( 'contextualItem' );
+		 root.appendChild( htmlItem );
+		}
+	root.style.top	= y + 'px';
+	root.style.left	= x + 'px';
+	if(root.parentNode) {} else {document.body.appendChild(root);}
+	return this;
+}
+
+/**
  * Render the HTML structure of the {@link PnodePresentation}. If the structure already exists, it is not created again.
  * The HTML structure can be deleted via the use of {@link deletePrimitives} method.
  * Overload {@link module:protoPresentation.Presentation#Render}
  * @returns {object} HTML root node representing {@link PnodePresentation}.
  */
 PnodePresentation.prototype.Render		= function() {
-	// var self = this;
+	var self = this;
 	var root = protoPresentation.prototype.Render.apply(this, []);
 	root.classList.add('Pnode');
+	// React on right click
+	root.addEventListener	( 'contextmenu'
+							, function(e) {
+								 //if(e.button === 2) {
+									 self.displayContextMenu(e.pageX, e.pageY);
+									 e.preventDefault();
+									 e.stopPropagation();
+									 return false;
+									}
+								//}
+							, false
+							);
+	// React on state
 	if(this.state) {root.classList.add(this.state);}
 	if(!this.divDescription) {
 		 // root.appendChild( document.createTextNode(this.PnodeID + ' : ') );

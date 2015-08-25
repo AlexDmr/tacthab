@@ -1,15 +1,15 @@
 var PnodePresentation	= require( './PnodePresentation.js' )
   , DragDrop			= require( '../DragDrop.js' )
   , htmlTemplateText	= require( 'raw!./HTML_templates/ActionNodePresentation.html' )
+  , utils				= require( '../utils.js' )
   ;
 
-var css = document.createElement('link');
-css.setAttribute('rel' , 'stylesheet');
-css.setAttribute('href', 'js/Presentations/HTML_templates/ActionNodePresentation.css');
-document.head.appendChild(css);
+// var css = document.createElement('link');
+// css.setAttribute('rel' , 'stylesheet');
+// css.setAttribute('href', 'js/Presentations/HTML_templates/ActionNodePresentation.css');
+// document.head.appendChild(css);
 
 require("./HTML_templates/ActionNodePresentation.css");
-
 
 
 
@@ -28,11 +28,21 @@ ActionNodePresentation.prototype.className = ActionNodePresentation;
 ActionNodePresentation.prototype.className = 'ActionNode';
 
 ActionNodePresentation.prototype.init = function(PnodeID, parent, children) {
+	var self = this;
 	PnodePresentation.prototype.init.apply(this, [PnodeID, parent, children]);
 	this.action			= { method		: ''
 						  , params		: []
 						  };
 	this.html			= {};
+	this.contextualMenuItems.unshift	( { content	: "trigger action"
+										  , cb		: function() {
+														 utils.call	( self.PnodeID
+																	, 'triggerDirectly'
+																	, [self.action.method, self.action.params]
+																	);
+														}
+										  }
+										);
 	return this;
 }
 

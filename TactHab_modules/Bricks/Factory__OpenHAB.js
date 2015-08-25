@@ -6,6 +6,7 @@ var Brick				= require( './Brick.js' )
   // , webServer			= require( '../webServer/webServer.js' )
   , request				= require( 'request' )
   , mqtt				= require( 'mqtt' )
+  , fs					= require( 'fs-extra' )
   // , AlxEvent			= require( '../../js/AlxEvents.js' )
   , Brick_Color			= require( './types/Color.js' )
   , Brick_Contact		= require( './types/Contact.js' )
@@ -102,11 +103,14 @@ BrickOpenHAB.prototype.processItem	= function(item) {
 }
 	
 BrickOpenHAB.prototype.init = function(device) {
-	var self = this;
+	var self = this, logMQTT = false, logFileName;
 	BrickUPnP.prototype.init.apply(this, [device]);
 	// Connect to MQTT
 	if( device.mqtt ) {
-		this.config.mqtt = device.mqtt;
+		this.config.mqtt	= device.mqtt;
+		logMQTT				= device.mqtt.logMQTT;
+		logFileName			= device.mqtt.logPath + "/MQTT " + device.mqtt.prefix + " ___ " + (new Date()).getTime() + ".log";
+		if(logMQTT) {console.log("Logging MQTT into", logFileName);}
 		var MQTT_broker = { servers			: [ { host: device.mqtt.host, port: device.mqtt.port }
 											  ]
 						  ,	protocolId		: 'MQIsdp'
@@ -145,6 +149,18 @@ BrickOpenHAB.prototype.init = function(device) {
 							 subtopic	= topic.slice(prefix.length).split( '/' );
 							 name		= subtopic[0];
 							 operation	= subtopic[1];
+							 if(logMQTT) {
+								 fs.appendFile	( logFileName
+												, new Date().getTime() + " " 
+																	   + JSON.stringify( { topic	: topic
+																						 , name		: name
+																						 , operation: operation
+																						 , message	: message.toString()
+																						 }
+																					   )
+																	   + "\n"
+												)
+								}
 							} 
 						 if(name && (brick = Brick.prototype.getBrickFromId(self.getIdFromName(name))) ) {
 							 // message is Buffer 

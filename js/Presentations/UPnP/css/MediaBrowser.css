@@ -6,6 +6,7 @@ div.MediaBrowser {
 	width			: 90%;
 	height			: 90%;
 	background		: white;
+	z-index			: 9999;
 }
 
 div.MediaBrowser  > div.background {

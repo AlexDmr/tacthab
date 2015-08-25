@@ -6,7 +6,8 @@
 	overflow-y	: scroll;
 	border		: solid black 3px;
 	background	: grey;
-	display		: none;
+	/*display		: none;*/
+	z-index		: 999;
 }
 
 #instructionTypes details  > details {

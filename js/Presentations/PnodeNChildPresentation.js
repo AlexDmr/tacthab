@@ -15,12 +15,13 @@ htmlSeparatorSuffix.classList.add("suffix");
 htmlSeparatorSuffix.querySelector(".middle").innerHTML = '<div class="left"></div><div class="right"></div>';
 
 
-var css = document.createElement('link');
-	css.setAttribute('rel' , 'stylesheet');
-	css.setAttribute('href', 'js/Presentations/HTML_templates/PnodeNChildPresentation.css');
-	document.head.appendChild( css );
+// var css = document.createElement('link');
+	// css.setAttribute('rel' , 'stylesheet');
+	// css.setAttribute('href', 'js/Presentations/HTML_templates/PnodeNChildPresentation.css');
+	// document.head.appendChild( css );
 
-	
+require( "./HTML_templates/PnodeNChildPresentation.css" );
+
 var PnodeNChildPresentation = function() {
 	// console.log(this);
 	PnodePresentation.apply(this, []);
@@ -46,7 +47,8 @@ PnodeNChildPresentation.prototype.Render	= function() {
 		 this.copyHTML(htmlTemplate, root);
 		 this.html.content	= root.querySelector(".content");
 		 this.html.lastOne	= root.querySelector(".content .lastOne");
-		 this.html.children	= [ this.encapsulate(this.html.lastOne) ];
+		 this.encapsulate(this.html.lastOne)
+		 this.html.D_encaps	= {};
 		 this.dropZoneId = DragDrop.newDropZone( this.html.lastOne
 							, { acceptedClasse	: [['Pnode', 'instruction']]
 							  , CSSwhenAccepted	: 'possible2drop'
@@ -89,33 +91,31 @@ PnodeNChildPresentation.prototype.encapsulate	= function(c) {
 }
 
 
+
 PnodeNChildPresentation.prototype.primitivePlug	= function(c) {
 	this.Render();
 	// Where is c in children ?
 	var pos		= this.children.indexOf(c)
-	  , nextOne	= this.html.children[pos]
-	  , encaps		= this.encapsulate(c)
+	  , nextOne	= this.html.content.children[pos]
+	  , encaps	= this.encapsulate(c)
 	  ;
 	 
-	this.html.children.splice(pos, 0, encaps);
 	this.html.content.insertBefore(encaps, nextOne);
+	if(c.uid) {this.html.D_encaps[ c.uid ] = encaps;}
 		
 	return this;
 }
 
 PnodeNChildPresentation.prototype.primitiveUnPlug	= function(c) {
 	 PnodePresentation.prototype.primitiveUnPlug.apply(this, [c]);
-	 var i, c_root = c.Render();
-	 if(this.html.children) {
-		 for(i=0; i<this.html.children; i++) {
-			 if(c_root.parentNode === this.html.children[i]) {
-				 this.html.children.splice(i, 1);
-				 break; 
-				}
-			}
+	 var encaps = this.html.D_encaps[c.uid];
+	 if(encaps) {
+		 encaps.parentNode.removeChild( encaps );
+		 delete this.html.D_encaps[c.uid];
 		}
 	 return this;
  }
+ 
  
 PnodeNChildPresentation.prototype.deletePrimitives = function() {
 	PnodePresentation.prototype.deletePrimitives.apply(this, []);
