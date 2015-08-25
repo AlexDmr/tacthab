@@ -31,9 +31,11 @@ ParallelNode.prototype.Start = function() {
 }
 
 ParallelNode.prototype.childStateChanged = function(child, prevState, newState) {
-	this.childrenStopped[ this.children.indexOf(child) ] = (newState === 0);
-	for(var i=0; i<this.childrenStopped.length; i++) {
-		 if(this.childrenStopped[i] === 0) {return;}
+	if(this.childrenStopped) {
+		this.childrenStopped[ this.children.indexOf(child) ] = (newState === 0);
+		for(var i=0; i<this.childrenStopped.length; i++) {
+			 if(this.childrenStopped[i] === 0) {return;}
+			}
 		}
 	this.Stop();
 }

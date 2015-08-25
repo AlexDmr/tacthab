@@ -29,16 +29,19 @@ ActionNode.prototype.init		= function(parent, children, mtd, params) {
 ActionNode.prototype.triggerDirectly	= function(mtd, params) {
 	var mtd_svg		= this.mtd
 	  , params_svg	= this.params
+	  , self		= this
 	  ;
 
 	this.mtd	= mtd;
 	this.params	= params;
 
 	this.Start();
+	setTimeout( function() {self.Stop();}, 100 );
 	
 	this.mtd	= mtd_svg;
 	this.params	= params_svg;
 }
+
 
 ActionNode.prototype.setCommand = function(mtd, params) {
 	this.mtd	= mtd;

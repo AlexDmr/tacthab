@@ -47,7 +47,36 @@ BrickOpenHAB_Color.prototype.setColor_HSB	= function(H, S, B) {
 	return true;
 }
 
+
+
 BrickOpenHAB_Color.prototype.setColor_RGB	= function(R, G, B) {
+	var min, max, delta
+	  , h, s, v
+	  , r = R / 255.0
+	  , g = G / 255.0
+	  , b = B / 255.0
+	  ;
+	min = Math.min( r, g, b );
+	max = Math.max( r, g, b );
+	v		= max;				// v
+	delta	= max - min;
+	if( max === 0 ) {
+		 s = 0;
+		 h = 0;
+		} else {s = delta / max;		// s
+				if( r === max ) {h = ( g - b ) / delta;		// between yellow & magenta
+					} else { if( g === max ) {h = 2 + ( b - r ) / delta;	// between cyan & yellow
+								} else	{h = 4 + ( r - g ) / delta;	// between magenta & cyan
+										}
+						   }
+				h *= 60;				// degrees
+				if( h < 0 ) {h += 360;}
+				}
+	
+	return this.setColor_HSB(h, 100*s, 100*v);
+}
+	
+BrickOpenHAB_Color.prototype.setColor_RGB_OLD	= function(R, G, B) {
 	console.log( "BrickOpenHAB_Color::setColor_RGB")
 	var r		= R/255.0
 	  , g		= G/255.0
@@ -79,5 +108,6 @@ BrickOpenHAB_Color.prototype.setColor_RGB	= function(R, G, B) {
 							, 100*V
 							);
 }
+
 
 module.exports = BrickOpenHAB_Color;
