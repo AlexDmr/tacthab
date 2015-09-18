@@ -1,0 +1,147 @@
+<!doctype html>
+
+<html>
+<head>
+	<meta charset="UTF-8"/>
+	<style>
+		.NChild {
+			 display		: inline-flex;
+			 flex-flow		: row nowrap;
+			}
+		.NChild > .content {
+			 display		: inline-flex;
+			 flex			: 0 0 auto;
+			 flex-flow		: row nowrap;
+			}
+		.NChild > .prefix,
+		.NChild > .suffix {
+			 width			: 5px;
+			 flex			: 0 0 5px;
+			 background		: lightblue;
+			 border			: solid black 1px;
+			}
+		.NChild.parallel > .content {
+			 flex-flow		: column nowrap;
+			}
+		.content {
+			 border			: solid black 1px;
+			}	
+		.ActionNode {
+			 display		: inline-flex;
+			 flex-flow		: row nowrap;
+			}
+		.ActionNode > * {
+			 flex			: 0 0 auto;
+			}
+		.ActionNode .action_description {
+			 display		: inline-flex;
+			 flex-flow		: column nowrap;
+			}
+		.ActionNode .action_description {
+			 flex			: 0 0 auto;
+			}
+		.ActionNode * {
+			 margin			: 0;
+			 padding		: 0;
+			}
+	</style>
+</head> 
+<body>
+	<div class="parallel NChild">
+		<div class="prefix"></div>
+		<div class="content">
+			<div class="children">
+				<div class="prefix"></div>
+				<div class="content">
+					<div class="sequence NChild">
+						<div class="prefix"></div>
+						<div class="content">
+							<div class="children">
+								<div class="prefix"></div>
+								<div class="content">
+									<div class="ActionNode">
+										<img class="action_symbol" src="js/Presentations/openHab/templates/openhab-logo-square.png">
+										<div class="action_description">
+											<p class="actionName">
+												<label class="turn">Turn </label>
+												<select class="OnOff">
+													<option value="Do_On">On </option>
+													<option value="Do_Off">Off</option>
+												</select>
+											</p>
+											<p class="selector">
+												<label>Drop targets here</label>
+											</p>
+										</div>
+									</div>									
+								</div>
+								<div class="suffix"></div>
+							</div>
+							<div class="children">
+								<div class="prefix"></div>
+									<div class="ActionNode">
+										<img class="action_symbol" src="js/Presentations/openHab/templates/openhab-logo-square.png">
+										<div class="action_description">
+											<p class="actionName">
+												<label class="turn">Turn </label>
+												<select class="OnOff">
+													<option value="Do_On">On </option>
+													<option value="Do_Off">Off</option>
+												</select>
+											</p>
+											<p class="selector">
+												<label>Drop targets here</label>
+											</p>
+										</div>
+									</div>									
+								<div class="suffix"></div>
+							</div>
+							<div class="children">
+								<div class="prefix"></div>
+									<div class="ActionNode">
+										<img class="action_symbol" src="js/Presentations/openHab/templates/openhab-logo-square.png">
+										<div class="action_description">
+											<p class="actionName">
+												<label class="turn">Turn </label>
+												<select class="OnOff">
+													<option value="Do_On">On </option>
+													<option value="Do_Off">Off</option>
+												</select>
+											</p>
+											<p class="selector">
+												<label>Drop targets here</label>
+											</p>
+										</div>
+									</div>									
+								<div class="suffix"></div>
+							</div>
+							<div class="children">
+								<div class="prefix"></div>
+									<div class="ActionNode">
+										<img class="action_symbol" src="js/Presentations/openHab/templates/openhab-logo-square.png">
+										<div class="action_description">
+											<p class="actionName">
+												<label class="turn">Turn </label>
+												<select class="OnOff">
+													<option value="Do_On">On </option>
+													<option value="Do_Off">Off</option>
+												</select>
+											</p>
+											<p class="selector">
+												<label>Drop targets here</label>
+											</p>
+										</div>
+									</div>									
+								<div class="suffix"></div>
+							</div>
+						</div>
+						<div class="suffix"></div>
+					</div>
+				</div>
+				<div class="suffix"></div>
+			</div>
+		</div>
+		<div class="suffix"></div>
+	</div>
+</body>
+</html>

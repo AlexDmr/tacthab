@@ -1,0 +1,259 @@
+.contextualMenu {
+	display			: none;
+	position		: absolute;
+	border			: solid black 1px;
+	box-shadow		: 0.4em 0.4em 0.4em 0.2em black;
+	background		: lightgrey;
+	z-index			: 1000;
+}
+
+.contextualMenu.display {
+	display			: inline-block;
+}
+
+.contextualMenu .contextualItem:hover {
+	background		: lightgreen;
+}.PnodeNChildPresentation {
+	background			: none;
+	display				: inline-flex;
+	flex-flow			: row nowrap;
+}
+
+.PnodeNChildPresentation > .content {
+	flex				: 0 0 auto;
+	display				: inline-flex;
+	flex-flow			: row  nowrap;
+}
+
+.PnodeNChildPresentation > .content > .child {
+	flex				: 0 0 auto;
+	display				: inline-flex;
+	flex-flow			: row nowrap;
+}
+
+.PnodeNChildPresentation > .content > .child:nth-last-child(1) {
+	flex				: 0 0 auto;
+}
+
+.PnodeNChildPresentation > .content > .child > .separator.suffix {
+	display				: none;
+}
+
+.PnodeNChildPresentation > .content > .child > .separator  {
+	position			: relative;
+	width				: 11px;
+	height				: 15px;
+	display				: inline-flex;
+	flex-flow			: column;
+	align-self			: center;
+	background			: lightblue;
+	border-top			: solid black 1px;
+	border-bottom		: solid black 1px;
+	flex				: 0 0 11px;
+}
+
+.PnodeNChildPresentation > .content > .child > .separator .top {
+	border-top			: solid black 1px;
+	box-shadow			: 0 0.2em 0.2em 0.05em black inset;
+	width				: 12px;
+	height				: 0.25em;
+	/*transform			: scale(1.2,1) translate(1.5px);*/
+	/*background			: linear-gradient(to bottom, #000000 0%,lightblue 100%);*/
+	position			: absolute;
+	left				: -1px;
+	flex				: 0 0 5px;
+}
+
+.PnodeNChildPresentation > .content > .child > .separator .middle {
+	flex				: 0 1 15px;
+	width				: 23px;
+	height				: 10px;
+	/*transform			: scale(1.4,1) translate(2.5px);*/
+	background			: lightblue;
+	position			: absolute;
+	left				: -2px;
+	top					: 5px;
+}
+
+.PnodeNChildPresentation > .content > .child > .separator .bottom {
+	flex				: 0 0 auto;
+}
+
+.PnodeNChildPresentation > .content > .child > .container  {
+	flex				: 0 0 auto;
+	display				: inline-flex;
+}
+
+.PnodeNChildPresentation > .content > .child  > .container > .lastOne.Pnode.ActionNodePresentation {
+	flex				: 1 0 3em;
+	width				: 3em;
+	display				: inline-flex;
+	border-radius		: 0px;
+	padding-left		: 0.5em;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content > .child {
+	margin-bottom		: 10px;
+}
+
+
+.PnodeNChildPresentation.ParallelNodePresentation > .prefix, 
+.PnodeNChildPresentation.ParallelNodePresentation > .suffix {
+	background			: lightblue;
+	box-shadow			: 0.2em 0.2em 0.2em 0.05em black inset;
+    border				: solid black 1px;
+    /*margin-left			: 0.5em;*/
+    border-radius		: 10px;
+	width				: 20px;
+	flex				: 0 0 20px;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .suffix {
+    margin-left			: 0;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content {
+	flex-flow			: column nowrap;
+	flex				: 0 0 auto;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix {
+	display				: inline-flex;
+	flex				: 1 1 13px;
+	width				: 13px;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix .top {
+	width				: auto;
+	position			: static;
+	background			: none;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix .middle {
+	width				: auto;
+	position			: relative;
+	display				: inline-flex;
+	flex-flow			: row;
+	background			: none;
+	left				: 0;
+	top					: 0;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix .middle > .left {
+	background			: lightblue;
+	position			: relative;
+	flex				: 0 0 3px;
+	left				: -2px;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix .middle > .right {
+	background			: lightblue;
+	position			: relative;
+	flex				: 1 1 10px;
+	left				: 9px;
+}
+
+.PnodeNChildPresentation.ParallelNodePresentation > .content > .child > .separator.suffix .bottom {
+	width				: auto;
+	position			: static;
+}
+
+
+@keyframes NodePresentation_droppable {
+	0%				 {background	: #B9B9FF;}
+	50%				   {transform		: scale(1.05);
+					   background	: lightgreen;
+					 }
+	100%			   {background: #B9B9FF;}
+}
+
+.ProgramNodePresentation {
+	background		: grey;
+}
+.ProgramNodePresentation .possible2drop {
+	animation		: NodePresentation_droppable 1s ease-in-out infinite;
+}
+
+.ProgramNodePresentation .possible2drop.ready2drop {
+	transform		: scale(1.05);
+	background		: lightgreen;
+	animation		: initial;
+}
+
+.ProgramNodePresentation .Pnode {
+	/*background	: grey;*/
+	transition	: background 1s;
+}
+
+.ProgramNodePresentation .Pnode.state_1 {
+	background	: lightgreen;
+	transition	: background 0s;
+}
+div.Pnode.ActionNodePresentation {
+	border			: solid black 1px;
+	border-radius	: 1em;
+	padding			: 0.4em;
+	background		: lightblue;
+	display			: inline-flex;
+	flex-flow		: row nowrap;
+	vertical-align	: top;
+	box-shadow		: 0.2em 0.2em 0.2em 0.05em black inset;
+	flex			: 0 0 auto;
+}
+
+.ActionNodePresentation > .action_symbol {
+	flex			: 0 0 32px;
+	width			: 32px;
+	height			: 32px;
+	vertical-align	: top;
+	position		: relative;
+}
+
+.ActionNodePresentation > .action_description {
+	flex			: 0 0 auto;
+	display			: inline-flex;
+	flex-flow		: column nowrap;
+}
+
+.ActionNodePresentation  p {
+	margin			: 0px;
+	padding			: 0px;
+}
+
+.ActionNodePresentation > .action_description > * {
+	flex			: 0 0 auto;
+}
+
+.ActionNodePresentation .actionName {
+	border-bottom	: dashed black 1px;
+	background		: lightblue;
+	display			: inline-flex;
+}
+
+.ActionNodePresentation .actionName > * {
+	flex			: 0 0 auto;
+}
+
+.ActionNodePresentation .selector {
+	background		: #B9B9FF;
+	display			: inline-flex;
+	white-space		: nowrap;
+}
+
+@keyframes ActionNodePresentation_droppable {
+	0%				 {background	: #B9B9FF;}
+	50%				   {transform		: scale(1.2);
+					   background	: lightgreen;
+					  }
+	100%			   {background: #B9B9FF;}
+}
+
+.ActionNodePresentation .selector.possible2drop {
+	animation		: ActionNodePresentation_droppable 1s ease-in-out infinite;
+}
+
+.ActionNodePresentation .selector.possible2drop.ready2drop {
+	transform		: scale(1.2);
+	background		: lightgreen;
+	animation		: initial;
+}
