@@ -51,15 +51,18 @@ function swallowError (error) {
 
 gulp.task('lint', function () {
     return gulp.src	( [ 'js/**/*.js'
+					  , 'TactHab_modules/**/*.js'
+					  , 'Server/**/*.js'
 					  , '!./js/domReady.js'
+					  , '!./js/async.js'
 					  ]
 					)
 		.pipe(cached('scripts'))
 		.pipe(jshint(jshintOptions))
 		.pipe(jshint.reporter(stylish))
-        .pipe(eslint())
-		.on('error', swallowError)
-        .pipe(eslint.format())
+        // .pipe(eslint())
+		// .on('error', swallowError)
+        // .pipe(eslint.format())
         // .pipe(eslint.failOnError())
 		.pipe(remember('scripts'))
 		;
@@ -69,21 +72,22 @@ gulp.task("webpack", function(callback) {
     // run webpack
     webpack({
 			entry	: {
-				bundleM2MM			: "./js/M2MM.js",
+				bundleEditor	: "./test/testEditor.js"
 			},
 			output	: {
-				path	: "./",
-				filename: "[name].js",
+				path			: "./",
+				filename		: "[name].js",
 			},
 			progress: false,
 			stats: {
-				colors	: true,
-				modules	: false,
-				reasons	: false
+				colors			: true ,
+				modules			: false,
+				reasons			: false
 			},
-			module: {
+			module	: {
 				loaders: [
-					{ test	: /\.css$/	, loader: ExtractTextPlugin.extract("style-loader", "css-loader")}
+					{ test	: /\.css$/	, loader: ExtractTextPlugin.extract("style-loader", "css-loader")},
+					{ test	: /\.html$/	, loader: 'raw-loader'}
 				]
 			},
 			plugins: [ new ExtractTextPlugin("[name].css")
@@ -91,11 +95,13 @@ gulp.task("webpack", function(callback) {
 			failOnError	: false
     }, function(err, stats) {
         if(err) throw new gutil.PluginError("webpack", err);
-        gutil.log("[webpack]", stats.toString({
-				colors	: true,
-				modules	: false,
-				reasons	: false
-			}));
+        gutil.log( "[webpack]"
+				 , stats.toString( { colors		: true
+								   , modules	: false
+								   , chunck		: false
+								   }
+								 )
+				 );
         callback();
     });
 });
@@ -106,6 +112,8 @@ gulp.task("webpack", function(callback) {
 var filesToWatch =	[ 'css/**/*.css'
 					, 'js/**/*.js'
 					, 'js/**/*.css'
+					, 'TactHab_modules/**/*.js'
+					, 'Server/**/*.js'
 					];
 
 

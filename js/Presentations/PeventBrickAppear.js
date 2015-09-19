@@ -1,7 +1,7 @@
 var EventNodePresentation	= require( './EventNodePresentation.js' )
   , DragDrop				= require( '../DragDrop.js' )
   // , utils					= require( '../utils.js' )
-  , strTemplate				= require( 'raw!./HTML_templates/PeventBrickAppear.html' )
+  , strTemplate				= require( './HTML_templates/PeventBrickAppear.html' )
   , htmlTemplate			= document.createElement("div")
   ;
   

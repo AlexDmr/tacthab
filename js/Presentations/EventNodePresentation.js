@@ -1,7 +1,7 @@
 var PnodePresentation	= require( './PnodePresentation.js' )
   , DragDrop			= require( '../DragDrop.js' )
   // , utils				= require( '../utils.js' )
-  , htmlTemplateText	= require( 'raw!./HTML_templates/EventNodePresentation.html' )
+  , htmlTemplateText	= require( './HTML_templates/EventNodePresentation.html' )
   ;
 
 var css = document.createElement('link');

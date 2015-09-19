@@ -2,7 +2,7 @@ var PnodePresentation	= require( './PnodePresentation.js' )
   , utils				= require( '../utils.js' )
   , DragDrop			= require( '../DragDrop.js' )
   , Var_UsePresentation	= require( './Var_UsePresentation.js' )
-  , str_template		= require( 'raw!./HTML_templates/WhenNodePresentation.html' )
+  , str_template		= require( './HTML_templates/WhenNodePresentation.html' )
   , htmlTemplate		= document.createElement("div")
   ;
 

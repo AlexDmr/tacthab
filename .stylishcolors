@@ -1,0 +1,7 @@
+{
+    "meta": "gray",
+    "reason": "white",
+    "verbose": "gray",
+    "error": "red",
+    "noproblem": "green"
+}

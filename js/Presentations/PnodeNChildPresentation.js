@@ -1,6 +1,6 @@
 var PnodePresentation	= require( './PnodePresentation.js' )
   , DragDrop			= require( '../DragDrop.js' )
-  , str_template		= require( 'raw!./HTML_templates/PnodeNChildPresentation.html' )
+  , str_template		= require( './HTML_templates/PnodeNChildPresentation.html' )
   , htmlTemplate		= document.createElement("div")
   , htmlSeparator		= document.createElement("div")
   , htmlSeparatorSuffix	= document.createElement("div")

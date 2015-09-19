@@ -1,6 +1,6 @@
 var PnodePresentation	= require( './PnodePresentation.js' )
   , DragDrop			= require( '../DragDrop.js' )
-  , htmlTemplateText	= require( 'raw!./HTML_templates/ActionNodePresentation.html' )
+  , htmlTemplateText	= require( './HTML_templates/ActionNodePresentation.html' )
   , utils				= require( '../utils.js' )
   ;
 

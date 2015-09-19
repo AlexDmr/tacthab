@@ -2,7 +2,7 @@ var openHab_Event	= require( './openHab_Event.js' )
   // , utils		= require( '../../../utils.js' )
   , DragDrop		= require( '../../DragDrop.js' )
   , openHabTypes	= require( '../../openHabTypes.js' )
-  , str_template	= require( 'raw!./templates/openHab_Event_Contact.html' )
+  , str_template	= require( './templates/openHab_Event_Contact.html' )
   , html_template	= document.createElement( "div" )
   ;
   

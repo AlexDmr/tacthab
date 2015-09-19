@@ -4,17 +4,21 @@ var fs				= require( 'fs-extra' )
   , xmldom			= require( 'xmldom' )
   , multer			= require( 'multer' )
   , io				= require( 'socket.io' )
-  , ioClient		= require( 'socket.io-client' )
-  , smtp			= require( 'smtp-protocol' )
   , request			= require( 'request' )
   , path			= require( 'path' )
+  // , ioClient		= require( 'socket.io-client' )
+  , Brick			= require( '../Bricks/Brick.js' )
+  , ProgramNode		= require( '../programNodes/program.js' )
   ;
   
-var TLS_SSL =	{ key	: fs.readFileSync( path.join('MM.pem'		 ))
-				, cert	: fs.readFileSync( path.join('certificat.pem'))
+ 
+var TLS_SSL =	{ key	: fs.readFileSync( path.join('MM.pem'		 ) )
+				, cert	: fs.readFileSync( path.join('certificat.pem') )
 				};	
-					
-var webServer = {
+// console.log( "Brick:", Brick);
+// console.log( "Brick.D_brick:", Brick.D_brick);
+
+var webServer = Brick.D_brick.webServer = {
 	  fs			: fs
 	, express		: express
 	, bodyParser	: bodyParser
@@ -26,31 +30,9 @@ var webServer = {
 	, CB_addClient	: null
 	, CB_subClient	: null
 	, D_CB_socketIO	: {}
-	, mailServer	: {
-		  init		: function(port) {
-			 // var self = this;
-			 var server = this.server = smtp.createServer(function (req) {
-				req.on('to', function (to, ack) {
-					// var domain = to.split('@')[1] || 'localhost';
-					console.log('mail sent to:', to);
-					ack.accept();
-					// if (domain === 'localhost') ack.accept()
-					// else ack.reject()
-				});
-
-				req.on('message', function (stream, ack) {
-					console.log('from: ' + req.from);
-					console.log('to: ' + req.to);
-
-					stream.pipe(process.stdout, { end : false });
-					ack.accept();
-				});
-			 });
-
-			 server.listen(port);
-			 console.log("Mail server running on port", port);
-			}
-		}
+	, pgRootId		: null
+	, rootPath		: ''
+	, pipoPgRoot	: (new ProgramNode()).init()
 	, addClient		: function(socket) {
 		 this.clients[socket.id] = {socket: socket};
 		}
@@ -63,9 +45,9 @@ var webServer = {
 			}
 		}
 	, oncall		: null
-	, init			: function(staticPath, HTTP_port, logPass) {
+	, init			: function(staticPath, HTTP_port, rootPath) { //logPass) {
 		 var self = this;
-		 this.mailServer.init(25);
+		 this.rootPath		= rootPath;
 		 
 		 this.domParser		= new this.DOMParser();
 		 this.xmlSerializer	= new this.XMLSerializer();
@@ -97,6 +79,28 @@ var webServer = {
 						}
 					);
 		
+		 // proxy
+		 webServer.app.all( '/proxy'
+			, function(req, res) {
+				 var URL = req.body.url || req.query.url;
+				 var binary = req.body.binary || req.query.binary || false;
+				 // console.log("Proxy for ", URL);
+				 var query = {url: URL};
+				 if(binary) query.encoding = 'binary';
+				 request(query, function (error, response, body) {
+					  if (!error && response.statusCode == 200) {
+						 // Parse webpage
+						 // console.log( response.headers );
+						 res.writeHead(200, { 'content-type'	: response.headers['Content-Type'] || response.headers['content-type'] 
+											// , 'content-length'	: response.headers['content-length']
+											} );
+						 if(binary) {res.end( body, 'binary' );} else {res.end(body);}
+						} else {res.writeHead(400);
+								res.end();
+							   }
+					});
+				});
+
 		 // Init IFTTT wrapper based on wordPress pipo server
 		 this.app.post( '/wordPress'
 					  , function(req, res) {
@@ -112,73 +116,7 @@ var webServer = {
 									);
 						 res.end();
 					  } );
-		 // Init a socket.IO client to http://thacthab.herokuapp.com
-		 var socket = this.socketioClient = ioClient( "https://thacthab.herokuapp.com" );
-		 if(logPass.thacthab) {
-			 this.socketioClient.off();
-			 this.socketioClient.on( 'connect'
-								   , function() {
-										 console.log("Connected to https://thacthab.herokuapp.com");
-										 socket.emit( 'login'
-													, {login: logPass.thacthab.login, pass: logPass.thacthab.pass}
-													, function(res) {
-														 console.log("login =>", res);
-														 if(res === 'banco') {
-															 socket.emit( "subscribe"
-																		, { id		: 'all'
-																		  , data	: { title	: '.*'
-																					  , regexp	: true
-																					  }
-																		  }
-																		);
-															 socket.on	( 'all'
-																		, function(data) {
-																			 console.log("receive", data);
-																			 // Process message into several variables
-																			 try {var obj = JSON.parse(data.message);
-																				  for(var att in obj) {
-																					 if(typeof data[att] === 'undefined') {data[att] = obj[att];}
-																					}
-																				 } catch(err) {console.error("Error processing message from websocket:", err)}
-																			 // Callbacks...
-																			 for(var i in self.D_CB_socketIO) {
-																				 self.D_CB_socketIO[i](data);
-																				}
-																			}
-																		);
-															}
-														}
-													);
-										}
-								   );
-			 this.socketioClient.on( 'disconnect'
-								   , function() {
-										 console.log("Disconnected from https://thacthab.herokuapp.com");
-										}
-								   );
-			}
-		}
-	, registerSocketIO_CB			: function(topic, re, CB) {
-		 var title = re?'*':'_', RE;
-		 title += topic;
-		 if(re) {
-			 RE = new RegExp(re);
-			 this.D_CB_socketIO[title] = function(data) {
-				 if(RE.test(data.title)) {CB(data);}
-				}
-			} else {this.D_CB_socketIO[title] = function(data) {
-						 if(topic === data.title) {CB(data);}
-						}
-				   }
-		 // this.socketioClient.on(topic, CB);
-		}
-	, unregisterSocketIO_CB			: function(topic, re, CB) {
-		 // this.socketioClient.removeListener(topic, CB);
-		 var title = re?'*':'_';
-		 title += topic;
-		 if(CB === this.D_CB_socketIO[title]) {
-			 delete this.D_CB_socketIO[title];
-			}
+					  
 		}
 	, wordPressEvent				: function(user, pass, title, categs) {
 		 for(var i in this.CB_wordPressEvent) {
@@ -203,9 +141,6 @@ var webServer = {
 		 return this;
 		}
 	, httpRequestJSONstringified	: function(json, CB_success, CB_error) {
-		 // console.log("httpRequestJSONstringified", json);
-		 // var json = JSON.parse(str);
-		 // console.log("json:", json);
 		 this.httpRequest( json.url
 						 , json.method
 						 , json.headers

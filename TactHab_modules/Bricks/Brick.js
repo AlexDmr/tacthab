@@ -1,10 +1,10 @@
 var AlxEvents	= require(  '../../js/AlxEvents.js' )
-  , webServer	= require( '../webServer/webServer.js' )
+  // , webServer	= require( '../webServer/webServer.js' )
   ;
 		  
 var brickId = 0;
 var D_brickTypes	= {};
-var D_brick			= {webServer: webServer};
+var D_brick			= {};
 
 var ProtoBrick = D_brick.ProtoBrick = { brickId			: 'ProtoBrick'
 									  , getDescription	: function() {return {type:'ProtoBrick', id:'ProtoBrick',name:'ProtoBrick'};}
@@ -19,7 +19,9 @@ var Brick = function() {
 	 ProtoBrick.emit('appear', {brickId: this.brickId});
 	 return this;
 	}
-	
+
+Brick.D_brick = D_brick;
+
 Brick.prototype = Object.create( {} );
 Brick.prototype.registerType	= function(name, proto) {
 	 D_brickTypes[name] = proto;

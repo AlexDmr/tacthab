@@ -1,5 +1,5 @@
 var PnodePresentation	= require( './PnodePresentation.js' )
-  , str_template	= require( 'raw!./HTML_templates/Pselector_ObjTypePresentation.html' )
+  , str_template	= require( './HTML_templates/Pselector_ObjTypePresentation.html' )
   , html_template	= document.createElement( "div" )
   ;
   
