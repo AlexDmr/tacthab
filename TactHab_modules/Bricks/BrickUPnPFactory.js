@@ -14,8 +14,8 @@ var BrickUPnPFactory = function(name, constr, fct_UPnP_type) {
 			 // console.log("\tProcessing a", device.deviceType, type, device.uuid);
 			 switch(type) {
 				 case 'add':
-					var brick = self.newBrick();
-					brick.changeIdTo( device.uuid );
+					var brick = self.newBrick( [device.uuid] );
+					// brick.changeIdTo( device.uuid );
 					brick.init(device);
 					// console.log( brick );
 				 break;

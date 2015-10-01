@@ -2,10 +2,11 @@ var PnodePresentation	= require( './PnodePresentation.js' )
   // , DragDrop			= require( '../DragDrop.js' )
   ;
   
-var css = document.createElement('link');
-	css.setAttribute('rel' , 'stylesheet');
-	css.setAttribute('href', 'css/Var_UsePresentation.css');
-	document.head.appendChild( css );
+require( "./HTML_templates/Var_UsePresentation.css" );
+// var css = document.createElement('link');
+	// css.setAttribute('rel' , 'stylesheet');
+	// css.setAttribute('href', 'css/Var_UsePresentation.css');
+	// document.head.appendChild( css );
 
 var Var_UsePresentation = function() {
 	// console.log(this);

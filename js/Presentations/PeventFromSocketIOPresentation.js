@@ -1,21 +1,25 @@
 var EventNodePresentation	= require( './EventNodePresentation.js' )
   // , DragDrop				= require( '../DragDrop.js' )
-  , utils					= require( '../utils.js' )
+  // , utils					= require( '../utils.js' )
+  , htmlTemplate			= require( './HTML_templates/PeventFromSocketIOPresentation.html' )
+  , htmlTemplateFilter		= require( './HTML_templates/PeventFromSocketIOPresentationFilter.html' )
   ;
 
 // linking CSS
-var css = document.createElement('link');
-	css.setAttribute('rel' , 'stylesheet');
-	css.setAttribute('href', 'js/Presentations/HTML_templates/PeventFromSocketIOPresentation.css');
-	document.body.appendChild(css);
+// var css = document.createElement('link');
+	// css.setAttribute('rel' , 'stylesheet');
+	// css.setAttribute('href', 'js/Presentations/HTML_templates/PeventFromSocketIOPresentation.css');
+	// document.body.appendChild(css);
+require( "./HTML_templates/PeventFromSocketIOPresentation.css" );
 	
-var htmlTemplate = null, htmlTemplateFilter = null;
-utils.XHR( 'GET', 'js/Presentations/HTML_templates/PeventFromSocketIOPresentation.html'
-		 , function() {htmlTemplate = this.responseText;}
-		 );
-utils.XHR( 'GET', 'js/Presentations/HTML_templates/PeventFromSocketIOPresentationFilter.html'
-		 , function() {htmlTemplateFilter = this.responseText;}
-		 );
+	
+// var htmlTemplate = null, htmlTemplateFilter = null;
+// utils.XHR( 'GET', 'js/Presentations/HTML_templates/PeventFromSocketIOPresentation.html'
+		 // , function() {htmlTemplate = this.responseText;}
+		 // );
+// utils.XHR( 'GET', 'js/Presentations/HTML_templates/PeventFromSocketIOPresentationFilter.html'
+		 // , function() {htmlTemplateFilter = this.responseText;}
+		 // );
 
 // Defining PeventFromSocketIOPresentation
 var PeventFromSocketIOPresentation = function() {

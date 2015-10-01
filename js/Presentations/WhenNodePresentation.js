@@ -7,10 +7,11 @@ var PnodePresentation	= require( './PnodePresentation.js' )
   ;
 
 htmlTemplate.innerHTML = str_template;
-var css = document.createElement('link');
-	css.setAttribute('rel' , 'stylesheet');
-	css.setAttribute('href', 'js/Presentations/HTML_templates/WhenNodePresentation.css');
-	document.head.appendChild( css );
+require( "./HTML_templates/WhenNodePresentation.css" );
+// var css = document.createElement('link');
+	// css.setAttribute('rel' , 'stylesheet');
+	// css.setAttribute('href', 'js/Presentations/HTML_templates/WhenNodePresentation.css');
+	// document.head.appendChild( css );
 
 var WhenNodePresentation = function() {
 	PnodePresentation.prototype.constructor.apply(this, []);

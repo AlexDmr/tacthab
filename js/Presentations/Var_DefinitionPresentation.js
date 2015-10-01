@@ -3,10 +3,11 @@ var PnodePresentation	= require( './PnodePresentation.js' )
   ;
 
 // linking CSS
-var css = document.createElement('link');
-	css.setAttribute('rel' , 'stylesheet');
-	css.setAttribute('href', 'css/Var_DefinitionPresentation.css');
-	document.body.appendChild(css);
+require( "./HTML_templates/Var_DefinitionPresentation.css" );
+// var css = document.createElement('link');
+	// css.setAttribute('rel' , 'stylesheet');
+	// css.setAttribute('href', 'css/Var_DefinitionPresentation.css');
+	// document.body.appendChild(css);
 		
 // Defining Var_DefinitionPresentation
 var Var_DefinitionPresentation = function() {

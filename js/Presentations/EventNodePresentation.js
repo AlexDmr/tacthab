@@ -4,10 +4,11 @@ var PnodePresentation	= require( './PnodePresentation.js' )
   , htmlTemplateText	= require( './HTML_templates/EventNodePresentation.html' )
   ;
 
-var css = document.createElement('link');
-css.setAttribute('rel' , 'stylesheet');
-css.setAttribute('href', 'js/Presentations/HTML_templates/EventNodePresentation.css');
-document.head.appendChild(css);
+// var css = document.createElement('link');
+// css.setAttribute('rel' , 'stylesheet');
+// css.setAttribute('href', 'js/Presentations/HTML_templates/EventNodePresentation.css');
+// document.head.appendChild(css);
+require( "./HTML_templates/EventNodePresentation.css" );
 
 var htmlTemplate = document.createElement('div');
 htmlTemplate.innerHTML = htmlTemplateText;

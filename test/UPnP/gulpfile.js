@@ -1,6 +1,5 @@
 var gulp				= require('gulp')
   , gutil				= require("gulp-util")
-  , eslint				= require('gulp-eslint')
   , webpack				= require("webpack")
   , ExtractTextPlugin	= require("extract-text-webpack-plugin")
   , uglify				= require('gulp-uglify')
@@ -42,26 +41,16 @@ var gulp				= require('gulp')
 							}
   ;
 
-function swallowError (error) {
-	console.error("ESLINT:", error.toString());
-	this.emit('end');
-}
+
 
 gulp.task('lint', function () {
-    return gulp.src	( [ 'js/**/*.js'
-					  , 'TactHab_modules/**/*.js'
-					  , 'Server/**/*.js'
-					  , '!./js/domReady.js'
-					  , '!./js/async.js'
+    return gulp.src	( [ './js/**/*.js'
+					  , './upnp.js'
 					  ]
 					)
 		.pipe(cached('scripts'))
 		.pipe(jshint(jshintOptions))
 		.pipe(jshint.reporter(stylish))
-        // .pipe(eslint())
-		// .on('error', swallowError)
-        // .pipe(eslint.format())
-        // .pipe(eslint.failOnError())
 		.pipe(remember('scripts'))
 		;
 });
@@ -70,10 +59,10 @@ gulp.task("webpack", function(callback) {
     // run webpack
     webpack({
 			entry	: {
-				bundleEditor			: "./test/testEditor.js"
+				bundleUPnP		: "./upnp.js"
 			},
 			output	: {
-				path			: "./test/",
+				path			: "./",
 				filename		: "[name].js",
 			},
 			progress: false,
@@ -107,11 +96,11 @@ gulp.task("webpack", function(callback) {
 
 
 
-var filesToWatch =	[ 'css/**/*.css'
-					, 'js/**/*.js'
-					, 'js/**/*.css'
-					, 'TactHab_modules/**/*.js'
-					, 'Server/**/*.js'
+var filesToWatch =	[ './css/**/*.css'
+					, './js/**/*.js'
+					, './js/**/*.css'
+					, './upnp.js'
+					, './upnp.css'
 					];
 
 

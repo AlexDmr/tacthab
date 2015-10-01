@@ -1,18 +1,21 @@
 var PnodePresentation	= require( './PnodePresentation.js' )
   , DragDrop			= require( '../DragDrop.js' )
   , utils				= require( '../utils.js' )
+  , htmlTemplate		= require( './HTML_templates/PForbidPresentation.html' )
   ;
 
+
 // linking CSS
-var css = document.createElement('link');
-	css.setAttribute('rel' , 'stylesheet');
-	css.setAttribute('href', 'js/Presentations/HTML_templates/PForbidPresentation.css');
-	document.body.appendChild(css);
+require( "./HTML_templates/PForbidPresentation.css" );
+// var css = document.createElement('link');
+	// css.setAttribute('rel' , 'stylesheet');
+	// css.setAttribute('href', 'js/Presentations/HTML_templates/PForbidPresentation.css');
+	// document.body.appendChild(css);
 	
-var htmlTemplate = null;
-utils.XHR( 'GET', 'js/Presentations/HTML_templates/PForbidPresentation.html'
-		 , function() {htmlTemplate = this.responseText;}
-		 );
+// var htmlTemplate = null;
+// utils.XHR( 'GET', 'js/Presentations/HTML_templates/PForbidPresentation.html'
+		 // , function() {htmlTemplate = this.responseText;}
+		 // );
 
 		
 var PForbidPresentation = function() {

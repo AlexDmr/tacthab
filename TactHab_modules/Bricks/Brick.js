@@ -9,8 +9,8 @@ var D_brick			= {};
 var ProtoBrick = D_brick.ProtoBrick = { brickId			: 'ProtoBrick'
 									  , getDescription	: function() {return {type:'ProtoBrick', id:'ProtoBrick',name:'ProtoBrick'};}
 									  };
-var Brick = function() {
-	 this.brickId	= 'Brick' + (brickId++);
+var Brick = function(id) {
+	 this.brickId	= id || ('Brick' + (brickId++));
 		D_brick[this.brickId] = this;
 	 // this.types		= [ 'Brick' ];
 	 this.Actions	= [];
@@ -20,7 +20,8 @@ var Brick = function() {
 	 return this;
 	}
 
-Brick.D_brick = D_brick;
+Brick.D_brick		= D_brick;
+Brick.ProtoBrick	= ProtoBrick;
 
 Brick.prototype = Object.create( {} );
 Brick.prototype.registerType	= function(name, proto) {
@@ -35,7 +36,7 @@ Brick.prototype.getTypesFromName= function(name) {
 	}
 Brick.prototype.constructor		= Brick;
 Brick.prototype.dispose			= function() {
-	 ProtoBrick.emit('disappear', {brickId: this.brickId});
+	 // ProtoBrick.emit('disappear', {brickId: this.brickId});
 	 this.disposeAlxEvent();
 	 this.unreference();
 	}	
@@ -59,10 +60,12 @@ Brick.prototype.unreference		= function() {
 	 return this;
 	}
 Brick.prototype.changeIdTo		= function(newId) {
-	 this.unreference();
-	 D_brick[newId] = this;
-	 this.brickId	= newId;
-	 ProtoBrick.emit('appear', {brickId: this.brickId});
+	if(newId !== this.brickId) {
+		 this.unreference();
+		 D_brick[newId] = this;
+		 this.brickId	= newId;
+		 ProtoBrick.emit('appear', {brickId: this.brickId});
+		}
 	 return this;
 	}
 Brick.prototype.getDescription	= function() {

@@ -6,8 +6,8 @@ var xmldom		= require( 'xmldom' );
 var xmldomparser= new xmldom.DOMParser();
 // var xml2js		= require('xml2js');
 
-var BrickUPnP = function() {
-	 Brick.prototype.constructor.apply(this, []);
+var BrickUPnP = function(id) {
+	 Brick.apply(this, [id]);
 	 //console.log( "BrickUPnP", this.brickId);
 	 this.subscriptions	= [];
 	 this.UPnP			= {};

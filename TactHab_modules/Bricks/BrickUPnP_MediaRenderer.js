@@ -10,11 +10,11 @@ var BrickUPnP				= require( './BrickUPnP.js' )
 var xmldom		= require( 'xmldom' );
 var xmldomparser= new xmldom.DOMParser();
 
-var BrickUPnP_MediaRenderer = function() {
-	 BrickUPnP.prototype.constructor.apply(this, []);
+var BrickUPnP_MediaRenderer = function(id) {
+	 BrickUPnP.apply(this, [id]);
 	 return this;
 	}
-BrickUPnP_MediaRenderer.prototype = Object.create( BrickUPnP.prototype ); // new BrickUPnP(); BrickUPnP_MediaRenderer.prototype.unreference();
+BrickUPnP_MediaRenderer.prototype = Object.create( BrickUPnP.prototype ); 
 BrickUPnP_MediaRenderer.prototype.registerType('BrickUPnP_MediaRenderer', BrickUPnP_MediaRenderer.prototype);
 BrickUPnP_MediaRenderer.prototype.constructor	= BrickUPnP_MediaRenderer;
 BrickUPnP_MediaRenderer.prototype.getTypeName	= function() {return "BrickUPnP_MediaRenderer";}

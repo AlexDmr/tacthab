@@ -5,6 +5,7 @@
  */
 var protoPresentation	= require( './protoPresentation.js' )
   // , DragDrop			= require( '../DragDrop.js' )
+  , domReady			= require( '../domReady.js' )
   ;
 var L_Pnodes = {};
 
@@ -115,14 +116,17 @@ PnodePresentation.prototype.setState	= function(prev, next) {
  * Display the contextual menu
 */
 var root = document.createElement('div');
-root.classList.add('contextualMenu');
-document.body.appendChild(root);
-document.addEventListener( 'click' 
-						 , function() {
-							  root.classList.remove("display");
-							 }
-						 , true
-						 );
+domReady( function() {
+	root.classList.add('contextualMenu');
+	document.body.appendChild(root);
+	document.addEventListener( 'click' 
+							 , function() {
+								  root.classList.remove("display");
+								 }
+							 , true
+							 );
+});
+						 
 PnodePresentation.prototype.displayContextMenu	= function(x, y) {
 	var i, htmlItem, item;
 	root.innerHTML = "";

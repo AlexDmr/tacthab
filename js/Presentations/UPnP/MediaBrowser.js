@@ -4,10 +4,12 @@ var protoPresentation	= require( '../protoPresentation.js' )
   ;
   
 var XMLparser = new DOMParser();
-var css = document.createElement('link');
-	css.setAttribute('rel' , 'stylesheet');
-	css.setAttribute('href', 'js/Presentations/UPnP/css/MediaBrowser.css');
-	document.head.appendChild( css );
+
+require( "./css/MediaBrowser.css" );
+// var css = document.createElement('link');
+	// css.setAttribute('rel' , 'stylesheet');
+	// css.setAttribute('href', 'js/Presentations/UPnP/css/MediaBrowser.css');
+	// document.head.appendChild( css );
 
 function MediaBrowser(title) {
 	 // var self			= this;
@@ -167,11 +169,8 @@ MediaBrowser.prototype.getHtmlItemFrom = function(mediaServerId, itemId, cb) {
 						var Result = doc.getElementsByTagName('Result').item(0);
 						if(Result) {
 							 var ResultDoc	= XMLparser.parseFromString(Result.textContent, "text/xml");
-							 var title		= ResultDoc.querySelector("title").textContent; // ResultDoc.getElementsByTagName('title').item(0).textContent;
+							 var title		= ResultDoc.querySelector("title").textContent; 
 							 var icon		= ResultDoc.querySelector("albumArtURI"); icon = icon?icon.textContent:null;
-								// if(ResultDoc.getElementsByTagName('albumArtURI').length) {
-									 // icon = ResultDoc.getElementsByTagName('albumArtURI').item(0).textContent;
-									// } else {icon = null;}
 							 var htmlMedia = self.RenderItem( title
 															, icon || 'js/Presentations/UPnP/images/media_icon.jpg'
 															, mediaServerId
@@ -195,24 +194,19 @@ MediaBrowser.prototype.Browse = function(PnodeID) {
 				, 'Browse'
 				, [element.directoryId]
 				, function(res) {
-					 // console.log("Result of Browse", id, ":", res);
 					 self.htmldivContent.innerHTML = '';
 					 if(typeof res === "string") {
 						 var doc = XMLparser.parseFromString(res, "text/xml");
 						 var Result = doc.getElementsByTagName('Result').item(0);
 						 if(Result) {
 							 var ResultDoc = XMLparser.parseFromString(Result.textContent, "text/xml");
-							 var L_containers = ResultDoc.querySelectorAll('container') //ResultDoc.getElementsByTagName('container')
+							 var L_containers = ResultDoc.querySelectorAll('container') 
 							   , i, title, icon;
 							 for(i=0; i<L_containers.length; i++) {
 								 var container	= L_containers.item(i);
 								 var contId		= container.getAttribute('id');
 								 title	= container.querySelector('title').textContent; //container.getElementsByTagName('title').item(0).textContent;
-								 icon	= container.querySelector('albumArtURI'); icon = icon?icon.textContent:null; 
-								 // console.log('title', container);
-									// if(container.getElementsByTagName('albumArtURI').length) {
-										 // icon = container.getElementsByTagName('albumArtURI').item(0).textContent;
-										// } else {icon = null;}
+								 icon	= container.querySelector('albumArtURI'); icon = icon?icon.textContent:null;
 								 var htmlContainer = self.RenderItem( title
 																	, icon || 'js/Presentations/UPnP/images/folder_256.png'
 																	, element.mediaServerId
@@ -221,17 +215,12 @@ MediaBrowser.prototype.Browse = function(PnodeID) {
 																	, false );
 								 self.htmldivContent.appendChild( htmlContainer );
 								} // End of containers
-							 var L_items	= ResultDoc.querySelectorAll('item'); //ResultDoc.getElementsByTagName('item');
-							 // console.log("There is", L_items.length, "items");
+							 var L_items	= ResultDoc.querySelectorAll('item'); 
 							 for(i=0; i<L_items.length; i++) {
 								 var item	= L_items.item(i);
 								 var itemId	= item.getAttribute('id');
 								 title	= item.querySelector('title').textContent; //item.getElementsByTagName('title').item(0).textContent;
 								 icon	= item.querySelector('albumArtURI'); icon = icon?icon.textContent:null; 
-									 // if(item.getElementsByTagName('albumArtURI').length) {
-										 // icon = item.getElementsByTagName('albumArtURI').item(0).textContent;
-										// } else {icon = null;}
-								 // var uri	= item.getElementsByTagName('res').item(0).textContent;
 								 var htmlMedia = self.RenderItem( title
 																, icon || 'js/Presentations/UPnP/images/media_icon.jpg'
 																, element.mediaServerId

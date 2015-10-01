@@ -6,9 +6,10 @@ var BrickFactory = function(constr) {
 	
 BrickFactory.prototype = Object.create( {} );
 BrickFactory.prototype.constructor = BrickFactory;
-BrickFactory.prototype.newBrick	= function() {
-	 var n = new this.constr();
-	 // n.init();
+BrickFactory.prototype.newBrick	= function(params) {
+	 var n = Object.create( this.constr.prototype );
+	 this.constr.apply(n, params || []);
+	 // var n = new this.constr();
 	 return n;
 	}
 BrickFactory.prototype.removeBrick	= function(brickId) {

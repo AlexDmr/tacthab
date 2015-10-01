@@ -2,14 +2,33 @@ var Pnode	= require( '../TactHab_modules/programNodes/Pnode.js' )
   , Brick	= require( '../TactHab_modules/Bricks/Brick.js' )
   ;
 
+
 module.exports = function(webServer) {
-	var pipoPgRoot = webServer.pipoPgRoot;
+	var pipoPgRoot = webServer.pipoPgRoot, getContext, getDescription;
 	
+	function getObject(id) {
+		 if(id === 'webServer') {return webServer;}
+		 var obj = Pnode.prototype.getNode(id);
+		 if(!obj) {obj = Brick.prototype.getBrickFromId(id);}		 
+		 return obj;
+		}
+		
 	Pnode.prototype.CB_setState = function(node, prev, next) {
 		 webServer.emit('updateState', {objectId: node.id, prevState: 'state_'+prev, nextState: 'state_'+next});
 		};
+	webServer.app.post( '/getDescription'
+					  , getDescription = function(req, res) {
+							var brickId = req.body.brickId
+							  , brick	= Brick.prototype.getBrickFromId( brickId )
+							  , json	= brick?brick.getDescription():{}
+							  ;
+							if(!brick) {console.error("/getDescription : unknown brick", brickId);}
+							res.json( json );
+							}
+					  );	
+	webServer.app.get ( '/getDescription', getDescription);
 	webServer.app.post( '/getContext'
-					  , function(req, res) {
+					  , getContext = function(req, res) {
 							var nodeId = req.body.nodeId; 
 							var json;
 							var node =  Pnode.prototype.getNode( nodeId ) 
@@ -23,7 +42,9 @@ module.exports = function(webServer) {
 								 // console.log("/getContext", node.id, "\n", json);
 								} else {json = JSON.stringify( {} );}
 							res.end(json);
-							} );
+							}
+					  );
+	webServer.app.get ( '/getContext', getContext);
 	webServer.app.post( '/Start'
 					  , function(req, res) {
 							 if(req.body.programId) {
@@ -46,12 +67,6 @@ module.exports = function(webServer) {
 							}
 					  );
 
-	function getObject(id) {
-		 if(id === 'webServer') {return webServer;}
-		 var obj = Pnode.prototype.getNode(id);
-		 if(!obj) {obj = Brick.prototype.getBrickFromId(id);}		 
-		 return obj;
-		}
 	webServer.oncall = function(json, fctCB) {
 		 var obj	= getObject(json.objectId)
 		   , mtd	= json.method

@@ -5,8 +5,8 @@ var BrickUPnP			= require( './BrickUPnP.js' )
   , request				= require( 'request' )
   ;
   
-var BrickUPnP_HueBridge = function() {
-	 BrickUPnP.prototype.constructor.apply(this, []);
+var BrickUPnP_HueBridge = function(id) {
+	 BrickUPnP.prototype.constructor.apply(this, [id]);
 	 console.log( "BrickUPnP", this.brickId);
 	 this.authorizedConnection = false;
 	 this.Lamps = {};

@@ -1,5 +1,5 @@
 var io = require(//'../node_modules/socket.io/lib/client.js'
-				//'../../socket.io/socket.io' 
+				// '../node_modules/socket.io/node_modules/socket.io-client/socket.io.js'
 				'socket.io-client'
 				);
 
@@ -12,22 +12,36 @@ var utils = {
 		//		- onload	: a function taking no argument, response will be contains in object this.
 		//		- variables : an object containing a set of attribute<->value
 		//		- form 		: a reference to a HTML form node
-		var xhr = new XMLHttpRequest();
-		if(typeof params === 'function') {
-			 params = {onload: params};
-			}
-		params = params || {};
-		/*xhr.onload*/ xhr.onloadend = params.onload || null;
-		xhr.open(method, ad, true);
-		if(params.form || params.variables) {
-			 var F = new FormData( params.form );
-			 for(var i in params.variables) {
-				 F.append(i, params.variables[i]);
-				}
-			 xhr.send( F );
-			} else {xhr.send();}
+		return new Promise	( function(resolve, reject) {
+								var xhr = new XMLHttpRequest();
+								if(typeof params === 'function') {
+									 params = {onload: params};
+									}
+								if( typeof params === "object" 
+									&& !params.onload 
+									&& !params.form 
+									&& !params.variables) {params = { variables : params };}
+								params = params || {};
+								xhr.onloadend = function() {
+													 if(params.onload) {params.onload.call(this);}
+													 if	( this.status >= 400) {reject(this);} else {resolve(this);}
+													}
+								xhr.open(method, ad, true);
+								console.log(method, ad, params);
+								if(params.form || params.variables) {
+									 var F = new FormData( params.form );
+									 for(var i in params.variables) {
+										 F.append(i, params.variables[i]);
+										}
+									 xhr.send( F );
+									} else {xhr.send();}
+								}
+							);
 	}
-	, io	: io()
+	, initIO: function() {
+		 this.io = io.apply(null, arguments);
+		}
+	// , io	: io()
 	, call	: function(objectId, method, params, cb) {
 		 var call =	{ objectId	: objectId
 					, method	: method

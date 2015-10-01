@@ -25,20 +25,4 @@ require( "./Server/interpreter.js" )(webServer);
 require( "./Server/editor.js"      )(webServer);
 require( "./Server/tacthab_web.js" )(webServer);
 require( "./Server/openHab.js"     )(webServer);
-
-// OAuth identification
-/*var GoogleStrategy = passportGoogle.Strategy;
-passport.use(new GoogleStrategy( { returnURL: 'http://localhost:8888/'
-								 , realm	: 'http://www.example.com/'
-								 }
-							   , function(identifier, profile, done) {
-									User.findOrCreate( { openId: identifier }
-													 , function(err, user) {
-															 done(err, user);
-															}
-													 );
-									}
-							   )
-			);
-*/
-
+require( "./Server/M2MIAGE.js"     )(webServer);

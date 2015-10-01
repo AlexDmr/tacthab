@@ -257,3 +257,315 @@ div.Pnode.ActionNodePresentation {
 	background		: lightgreen;
 	animation		: initial;
 }
+div.EventNodePresentation {
+	border			: solid black 1px;
+	border-radius	: 1em;
+	padding			: 0.4em;
+	background		: lightyellow;
+	display			: inline-flex;
+	vertical-align	: top;
+	flex-flow		: row nowrap;
+	box-shadow		: 0.2em 0.2em 0.2em 0.05em black inset
+}
+
+.EventNodePresentation > .event_symbol {
+	flex			: 0 0 32px;
+	width			: 32px;
+	height			: 32px;
+	vertical-align	: top;
+}
+
+div.EventNodePresentation > * {
+	display			: inline-block;
+}
+
+.EventNodePresentation > .event_description {
+	flex			: 1;
+}
+
+.EventNodePresentation  p {
+	margin			: 0px;
+	padding			: 0px;
+}
+
+.EventNodePresentation p.eventName {
+	border-bottom	: dashed black 1px;
+	background		: lightyellow;
+	white-space		: nowrap;
+}
+
+.EventNodePresentation p.selector {
+	background		: #B9B9FF;
+}
+
+@keyframes EventNodePresentation_droppable {
+	0%				 {background	: #B9B9FF;}
+	50%				   {transform		: scale(1.2);
+					   background	: lightgreen;
+					  }
+	100%			   {background: #B9B9FF;}
+}
+
+.EventNodePresentation p.selector.possible2drop {
+	animation		: EventNodePresentation_droppable 1s ease-in-out infinite;
+}
+
+.EventNodePresentation p.selector.possible2drop.ready2drop {
+	transform		: scale(1.2);
+	background		: lightgreen;
+	animation		: initial;
+}
+.PeventFromSocketIOPresentation   {
+	background	: yellow;
+	border		: solid black 1px;
+	padding		: 0.2em;
+}
+
+.PeventFromSocketIOPresentation  > .description {
+
+}
+div.Pnode.Pselector_variable {
+	display			: inline-block;
+	margin-left		: 0.1em;
+	margin-right	: 0.1em;
+	padding-left	: 0.2em;
+	padding-right	: 0.2em;
+	background		: white;
+	border			: solid black 1px;
+	border-radius	: 3px;
+}
+.WhenNodePresentation > .arrow > .defwhen > .eventDrop > .ImplicitVariable {
+	display						: none;
+}
+
+.WhenNodePresentation > .arrow > .defwhen > .eventDrop > .ImplicitVariable.display {
+	display						: block;
+}
+
+.WhenNodePresentation > .arrow {
+	display						: inline-flex;
+	flex-flow					: row nowrap;
+}
+
+.WhenNodePresentation > .arrow > .defwhen {
+	flex						: 0 0 auto;
+	border						: solid black 3px;
+	border-bottom-right-radius	: 2em;
+	border-top-right-radius		: 2em;
+	margin-left					: 0px;
+	padding						: 0.5em;
+	display						: inline-flex;
+	flex-flow					: row nowrap;
+	background					: linear-gradient(to bottom, #FDFDFD 0%,#C0E8F9 0.7em,#393b7c 95%,#022848 100%);
+}
+
+.WhenNodePresentation > .arrow > .eventSymbol {
+	flex						: 0 0 30px;
+	width						: 30px;
+	/*background					: url("TriangleArrow-Left.svg");
+	background-size				: 100%;
+	background-repeat			: repeat;*/
+	margin						: 0px;
+	padding						: 0px;
+    border						: solid black 1px;
+    border-top-left-radius		: 50%;
+    border-bottom-left-radius	: 50%;
+    background					: lightblue;
+    box-shadow					: 0.2em 0.2em 0.2em 0.05em black inset;
+}
+
+.WhenNodePresentation > .arrow > .defwhen > .eventDrop, .WhenNodePresentation > .arrow > .defwhen > .instructions {
+	border-radius				: 1em;
+	padding						: 0.25em;
+	padding-left				: 0.3em;
+	padding-top					: 0.3em;
+	border						: solid black 1px;
+	box-shadow					: 0.2em 0.2em 0.2em 0.05em black inset;
+	flex						: 0 0 auto;
+}
+
+.WhenNodePresentation > .arrow > .defwhen > .eventDrop {
+	flex						: 0 0 auto;
+	background					: yellow;
+}
+
+.WhenNodePresentation > .arrow > .defwhen > .instructions {
+	background					: darkcyan;
+	flex						: 0 0 auto;
+}
+
+.WhenNodePresentation > .arrow > .defwhen > img {
+	width						: 50px;
+	height						: 50px;
+    align-self					: center;
+	flex						: 0 0 auto;
+}
+.PForbidPresentation {
+	
+}
+div.Pnode.Pselector_program {
+	display			: inline-block;
+	margin-left		: 0.3em;
+	margin-right	: 0.3em;
+	padding			: 0.1em;
+	border			: solid black 1px;
+	background		: white;
+	border-radius	: 0.2em;
+}
+
+div.Pnode.Pselector_program span.program {
+	margin			: 0.2em;
+}
+
+div.Pnode.Pselector_program span.variable {
+	border			: solid black 1px;
+	padding			: 0.2em;
+	padding-left	: 0.3em;
+	padding-right	: 0.3em;
+}
+
+div.Pnode.Pselector_program span.variable.EventNode {
+	background		: yellow;
+}
+
+span. {
+	display			: inline-block;
+	background		: white;
+	border			: dashed black 1px;
+}.DefinitionNode > .description > .selector {
+	display	: inline-block;
+}
+div.MediaBrowser {
+	border			: solid black 5px;
+	position		: fixed;
+	top				: 5%;
+	left			: 5%;
+	width			: 90%;
+	height			: 90%;
+	background		: white;
+	z-index			: 9999;
+}
+
+div.MediaBrowser  > div.background {
+	position		: fixed;
+	display			: block;
+	z-index			: -1;
+	top				: 0px;
+	left			: 0px;
+	width			: 100%;
+	height			: 100%;
+	background		: rgba(0,0,0,0.8);
+}
+
+div.MediaBrowser > .foreground {
+	position		: absolute;
+	top				: 0px;
+	left			: 0px;
+	width			: 100%;
+	height			: 100%;
+	background		: rgb(244, 243, 255);
+	overflow		: auto;
+}
+
+div.MediaBrowserFlow {
+	display			: inline-block;
+}
+
+div.MediaBrowser > .foreground > div.navigation .element {
+	font-weight		: bold;
+	cursor			: pointer;
+}
+
+div.MediaBrowser > .foreground > div.navigation .MediaServer {
+	color			: #5B55FF;
+}
+
+div.MediaBrowser > .foreground > div.navigation .MediaFolder {
+	color			: #09AB20;
+}
+
+div.MediaBrowser > .foreground > div.navigation .MediaFile {
+	color			: #F70;
+}
+
+div.MediaBrowser > .foreground .Media.MediaServer, .MediaBrowserFlow > .Media.MediaServer {
+	border-color	: #5B55FF;
+}
+
+div.MediaBrowser > .foreground .Media.MediaFolder, .MediaBrowserFlow > .Media.MediaFolder {
+	border-color	: #09AB20;
+}
+
+div.MediaBrowser > .foreground .Media.MediaFile, .MediaBrowserFlow > .Media.MediaFile {
+	border-color	: #F70;
+}
+
+div.MediaBrowser > .foreground .Media.MediaRenderer, .MediaBrowserFlow > .Media.MediaRenderer {
+	border-color	: #5BFFFF;
+}
+
+
+div.MediaBrowser > .foreground > h1{
+	position		: static;
+	top				: 0px;
+	left			: 0px;
+	width			: 100%;
+	font-size		: 1.5em;
+	text-align		: center;
+	border-bottom	: solid black 1px;
+	margin			: 0px;
+	padding			: 0px;
+	background		: #1e5799; /* Old browsers */
+	background		: -moz-linear-gradient(top,  #1e5799 0%, #6da6d6 17%, #6da6d6 83%, #77bbff 100%); /* FF3.6+ */
+	background		: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1e5799), color-stop(17%,#6da6d6), color-stop(83%,#6da6d6), color-stop(100%,#77bbff)); /* Chrome,Safari4+ */
+	background		: -webkit-linear-gradient(top,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* Chrome10+,Safari5.1+ */
+	background		: -o-linear-gradient(top,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* Opera 11.10+ */
+	background		: -ms-linear-gradient(top,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* IE10+ */
+	background		: linear-gradient(to bottom,  #1e5799 0%,#6da6d6 17%,#6da6d6 83%,#77bbff 100%); /* W3C */
+	filter			: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#77bbff',GradientType=0 ); /* IE6-9 */
+}
+
+div.MediaBrowser > .foreground > h1 > .cancel {
+	float			: right;
+	width			: 1.2em;
+	height			: 1.15em;
+	background		: rgb(164, 0, 0);
+	border			: solid black 1px;
+	cursor			: pointer;
+}
+
+div.MediaBrowser > .foreground > div.navigation {
+	position		: static;
+	top				: 1.6em;
+	left			: 0px;
+}
+
+div.MediaBrowser > .foreground .Media.selected {
+	transform		: scale(1.5, 1.5);
+}
+
+div.MediaBrowser > .foreground .Media, .MediaBrowserFlow > .Media {
+	border			: solid black 3px;
+	display			: inline-flex;
+	margin			: 4px;
+	padding			: 2px;
+	width			: 192px;
+	height			: 64px;
+	overflow		: hidden;
+	text-align		: left;
+	vertical-align	: top;
+	cursor			: pointer;
+	border-radius	: 8px;
+	background		: white;
+}
+
+div.MediaBrowser > .foreground .Media img.icon , .MediaBrowserFlow > .Media img.icon {
+	width			: 64px;
+	height			: 64px;
+	flex			: 0 0 96px;
+	object-fit		: contain;
+}
+
+div.MediaBrowser > .foreground .Media .title , .MediaBrowserFlow > .Media .title {
+	flex			: 1;
+}

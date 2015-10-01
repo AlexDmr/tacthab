@@ -7,6 +7,8 @@ var DragDrop				= require( './DragDrop.js' )
   , inputHidden				= null
   ;
 
+utils.initIO();
+
 function createSubCateg(editor, subCateg, variable, api, t, i) {
 	 subCateg.appendChild( editor.createDragNode ( api[t][i].name
 											     , { constructor	: PresoUtils.get('Program_ExposedAPI_elementPresentation')

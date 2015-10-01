@@ -4,8 +4,8 @@ var BrickUPnP		= require( './BrickUPnP.js' )
   , webServer		= require( '../webServer/webServer.js' )
   ;
 
-var BrickUPnP_MediaServer = function() {
-	 BrickUPnP.prototype.constructor.apply(this, []);
+var BrickUPnP_MediaServer = function(id) {
+	 BrickUPnP.apply(this, [id]);
 	 this.ServerStates = {};
 	 return this;
 	}
