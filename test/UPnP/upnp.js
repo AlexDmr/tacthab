@@ -16,7 +16,13 @@ getContext.then	( function(response) {
 utils.initIO(window.location.origin + "/m2m");
 utils.io.on	( "brickAppears"
 			, function(json) {console.log("brickAppears:", json);
-							  
+							  utils.XHR( 'GET', '/getContext'
+									   , {brickId : json.brickId}
+									   ).then( function(xhr) {
+											 var objDescr = JSON.parse( xhr.response );
+											 console.log(json.brickId, "=>", objDescr);
+											}
+									   );
 							 }
 			);
 utils.io.on	( "brickDisappears"
