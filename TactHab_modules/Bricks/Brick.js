@@ -10,13 +10,15 @@ var ProtoBrick = D_brick.ProtoBrick = { brickId			: 'ProtoBrick'
 									  , getDescription	: function() {return {type:'ProtoBrick', id:'ProtoBrick',name:'ProtoBrick'};}
 									  };
 var Brick = function(id) {
+	 var brick = this;
 	 this.brickId	= id || ('Brick' + (brickId++));
 		D_brick[this.brickId] = this;
 	 // this.types		= [ 'Brick' ];
 	 this.Actions	= [];
 	 this.Events	= [];
 	 this.States	= [];
-	 ProtoBrick.emit('appear', {brickId: this.brickId});
+	 setTimeout	( function() {ProtoBrick.emit('appear', brick.getDescription());}
+				, 100 );
 	 return this;
 	}
 
@@ -60,11 +62,12 @@ Brick.prototype.unreference		= function() {
 	 return this;
 	}
 Brick.prototype.changeIdTo		= function(newId) {
+	//var brick = this;
 	if(newId !== this.brickId) {
 		 this.unreference();
 		 D_brick[newId] = this;
 		 this.brickId	= newId;
-		 ProtoBrick.emit('appear', {brickId: this.brickId});
+		 ProtoBrick.emit('appear', this.getDescription());
 		}
 	 return this;
 	}

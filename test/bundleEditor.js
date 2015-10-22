@@ -85,7 +85,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var io = __webpack_require__(//'../node_modules/socket.io/lib/client.js'
-					//'../../socket.io/socket.io' 
+					// '../node_modules/socket.io/node_modules/socket.io-client/socket.io.js'
 					2
 					);
 
@@ -103,12 +103,17 @@
 									if(typeof params === 'function') {
 										 params = {onload: params};
 										}
+									if( typeof params === "object" 
+										&& !params.onload 
+										&& !params.form 
+										&& !params.variables) {params = { variables : params };}
 									params = params || {};
 									xhr.onloadend = function() {
 														 if(params.onload) {params.onload.call(this);}
 														 if	( this.status >= 400) {reject(this);} else {resolve(this);}
 														}
 									xhr.open(method, ad, true);
+									console.log(method, ad, params);
 									if(params.form || params.variables) {
 										 var F = new FormData( params.form );
 										 for(var i in params.variables) {

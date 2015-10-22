@@ -1,3 +1,4 @@
+/*
 var BrickUPnP		= require( './BrickUPnP.js' )
   , BrickUPnPFactory= require( './BrickUPnPFactory.js' )
   , websocket		= require( 'websocket' )
@@ -62,8 +63,8 @@ BrickFhem.prototype.init = function(device) {
 									console.log("\t////Fhem => listentry\t:", msg.payload.name, msg.payload.attributes.subType);
 									// Create related brick
 									if(msg.payload.arg === listArg) {	// EnOcean
-										 var subType = msg.payload.attributes.subType
-										   , fileName= /*process.cwd() +*/ './TactHab_modules/Bricks/Fhem/' + subType + '.js';
+										 var subType	= msg.payload.attributes.subType
+										   , fileName	= './TactHab_modules/Bricks/Fhem/' + subType + '.js';
 										 console.log("\trequire", fileName);
 										 fs.exists( fileName
 												  , function(exists) {
@@ -119,3 +120,4 @@ var Factory__Fhem = new BrickUPnPFactory( 'Factory__Fhem'
 											}
 										); 
 module.exports = Factory__Fhem;
+*/

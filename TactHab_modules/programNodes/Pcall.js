@@ -1,5 +1,3 @@
-// var async	= require( 'async' );
-
 // Definition of a call for programs
 var Pcall = function(targets, mtdName, params, CB_success, CB_cancel) {
 	 this.CB_cancel	= CB_cancel;

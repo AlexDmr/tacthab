@@ -85,7 +85,8 @@ gulp.task("webpack", function(callback) {
 			module	: {
 				loaders: [
 					{ test	: /\.css$/	, loader: ExtractTextPlugin.extract("style-loader", "css-loader")},
-					{ test	: /\.html$/	, loader: 'raw-loader'}
+					{ test	: /\.html$/	, loader: 'raw-loader'},
+					{ test: /\.(png|woff|jpg|jpeg|gif)$/, loader: 'url-loader?limit=100000' }
 				]
 			},
 			plugins: [ new ExtractTextPlugin("[name].css")

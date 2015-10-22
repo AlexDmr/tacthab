@@ -35,7 +35,14 @@ module.exports = function(webServer) {
 									 || Pnode.prototype.getNode( webServer.pgRootId )
 									 || pipoPgRoot;
 							if(node) {
-								 try {json = JSON.stringify( node.getContextDescription() );
+								 try {var context			= node.getContextDescription()
+										, contextFiltered	= {bricks: {}, variables: context.variables};
+									  for(var i in context.bricks) {
+										 if( context.bricks[i].id !== "ProtoBrick"
+										   &&context.bricks[i].id !== "webServer"
+										   ) {contextFiltered.bricks[i] = context.bricks[i];}  
+										}
+									  json = JSON.stringify( contextFiltered );
 									 } catch(err) {console.error("ERROR: getContextDescription", err, node);
 												   json = JSON.stringify( {} );
 												  }
@@ -87,7 +94,7 @@ module.exports = function(webServer) {
 		}
 	webServer.app.post( '/call'
 					  , function(req, res) {
-							 var obj	= Pnode.prototype.getNode(req.body.objectId)
+							 var obj	= getObject(req.body.objectId); //Pnode.prototype.getNode(req.body.objectId)
 							 if(obj) {
 								 var mtd	= req.body.method
 								   , params	= JSON.parse(req.body.params);
