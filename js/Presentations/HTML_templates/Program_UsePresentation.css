@@ -1,0 +1,30 @@
+div.Pnode.Pselector_program {
+	display			: inline-block;
+	margin-left		: 0.3em;
+	margin-right	: 0.3em;
+	padding			: 0.1em;
+	border			: solid black 1px;
+	background		: white;
+	border-radius	: 0.2em;
+}
+
+div.Pnode.Pselector_program span.program {
+	margin			: 0.2em;
+}
+
+div.Pnode.Pselector_program span.variable {
+	border			: solid black 1px;
+	padding			: 0.2em;
+	padding-left	: 0.3em;
+	padding-right	: 0.3em;
+}
+
+div.Pnode.Pselector_program span.variable.EventNode {
+	background		: yellow;
+}
+
+span. {
+	display			: inline-block;
+	background		: white;
+	border			: dashed black 1px;
+}
