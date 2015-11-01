@@ -1,5 +1,6 @@
 // Plug to Brick appear/disappear
-var Brick = require( "../TactHab_modules/Bricks/Brick.js" );
+var Brick = require( "../TactHab_modules/Bricks/Brick.js" )
+  ;
 
 module.exports = function(webServer) {
 	var io		= webServer.io;
@@ -15,11 +16,14 @@ module.exports = function(webServer) {
 												}
 						);
 	m2m.on('connection', function(socket) {
+		webServer.registerSocketForCall( socket );
+		webServer.addClient(socket);
 		socket.on( 'broadcast'
 				 , function(id, msg) {
-						 console.log( "m2m broadcast:", id, ":", msg );
-						 m2m.emit(msg.title, msg.body);
-						}
-				 );
+						console.log( "m2m broadcast:", id, ":", msg );
+						m2m.emit(msg.title, msg.body);
+				 });
+		socket.on( 'disconnect'
+				 , function() {webServer.removeClient(socket);} );
 	});
 };

@@ -125,7 +125,7 @@
 								);
 		}
 		, initIO: function() {
-			 this.io = io.apply(null, arguments);
+			 this.io = this.io || io.apply(null, arguments);
 			}
 		// , io	: io()
 		, call	: function(objectId, method, params, cb) {
@@ -137,12 +137,15 @@
 				 call.callId = callId++;
 				}
 			 // console.log( "Calling", call);
-			 utils.io.emit	( 'call', call
-							, function(data){
-								 // console.log("Call", call.callId, " returns", data);
-								 if(cb) {cb(data);}
-								}
-							);
+			 return new Promise	( function(resolve, reject) {
+				 utils.io.emit	( 'call', call
+								, function(data){
+									 // console.log("Call", call.callId, " returns", data);
+									 if(cb) {cb(data);}
+									 resolve(data);
+									}
+								);
+				});
 			}
 		, getUrlEncodedParameters	: function(a) {
 			 if(typeof a === 'string') {

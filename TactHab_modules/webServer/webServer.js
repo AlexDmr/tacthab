@@ -45,6 +45,19 @@ var webServer = Brick.D_brick.webServer = {
 			}
 		}
 	, oncall		: null
+	, registerSocketForCall	: function(socket) {
+		 var self = this;
+		 socket.on( 'call'
+				  , function(call, fctCB) {
+						 if(self.oncall) {
+							 var res = self.oncall(call, fctCB);
+							 if( res !== undefined
+							   &&fctCB ) {
+								 fctCB( res );
+								}
+							}
+						} );
+		}
 	, init			: function(staticPath, HTTP_port, rootPath) { //logPass) {
 		 var self = this;
 		 this.rootPath		= rootPath;
@@ -66,16 +79,7 @@ var webServer = Brick.D_brick.webServer = {
 						webServer.addClient(socket);
 						socket.on ( 'disconnect'
 								  , function() {webServer.removeClient(socket);} );
-						socket.on ( 'call'
-								  , function(call, fctCB) {
-										 if(self.oncall) {
-											 var res = self.oncall(call, fctCB);
-											 if( res !== undefined
-											   &&fctCB ) {
-												 fctCB( res );
-												}
-											}
-										} );
+						webServer.registerSocketForCall(socket);
 						}
 					);
 		

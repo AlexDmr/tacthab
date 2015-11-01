@@ -31,7 +31,7 @@ BrickUPnP.prototype.dispose			= function() {
 BrickUPnP.prototype.UPnP_call		= function() {
 	 console.error( "BrickUPnP.prototype.UPnP_call : To be implemented");
 	}
-BrickUPnP.prototype.getDescription = function() {
+BrickUPnP.prototype.getDescription	= function() {
 	 var json = Brick.prototype.getDescription.apply(this, []);
 	 json.name = this.UPnP.friendlyName;
 	 if(this.UPnP.icons[0]) {
@@ -122,7 +122,7 @@ BrickUPnP.prototype.UPnPEvent		= function(event, service) {
 			}
 		} else {console.error('document get an error:', event, error);}
 	}
-BrickUPnP.prototype.serialize	= function() {
+BrickUPnP.prototype.serialize		= function() {
 	 var json = Brick.prototype.serialize.apply(this, []);
 	 json.brickId	= this.brickId;
 	 json.classe	= 'BrickUPnP';
