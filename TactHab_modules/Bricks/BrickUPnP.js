@@ -60,7 +60,7 @@ function CB_service(brick, service) {
 	return function(err, data) {
 				 if(err) {
 					 console.error('BrickUPnP', brick.brickId, "received:", "\n\terr :", err, "\n\tdata :", data);
-					} else {console.log('subscription done for', brick.brickId, service.serviceType);
+					} else {//console.log('subscription done for', brick.brickId, service.serviceType);
 							brick.subscriptions.push( data ); // data is a subscription in the sense of upnp-service.js library
 						   }
 				 };
@@ -103,7 +103,7 @@ BrickUPnP.prototype.UpdateFromEvent	= function(eventNode, service) {
 		 var pos;
 		 if(L.item(i).childNodes.length > 1) {pos = 1;} else {pos = 0;}
 		 try {this.UpdateEvent( L.item(i).childNodes[pos], service );
-			 } catch(err) {console.error("ERROR updating UPnP event: ",  L.item(i).childNodes[pos].tagName);}
+			 } catch(err) {console.error("ERROR updating UPnP event: ", err, L.item(i).childNodes[pos].tagName);}
 		}
 	 return L.length;
 	}

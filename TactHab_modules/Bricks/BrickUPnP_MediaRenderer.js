@@ -257,11 +257,13 @@ BrickUPnP_MediaRenderer.prototype.UpdateEvent	= function(eventNode, service) {
 		 default:
 			 if(eventNode.hasAttribute('val')) {
 				 val = eventNode.getAttribute('val');
-				 this.MediasStates[this.currentInstanceID || 0][eventNode.tagName] = val;
+				 // this.MediasStates[this.currentInstanceID || 0][eventNode.tagName] = val;
+				 this.MediasStates[service.serviceType] = this.MediasStates[service.serviceType] || {};
+				 this.MediasStates[service.serviceType][eventNode.tagName] = val;
 				 console.log("BrickUPnP_MediaRenderer::event", eventNode.tagName, '=', val);
 				 this.emit(eventNode.tagName, {value: val});
 				 webServer.emit	( "eventForBrick_" + this.brickId
-								, { serviceType	: this.currentInstanceID
+								, { serviceType	: service.serviceType //this.currentInstanceID
 								  , attribut	: eventNode.tagName
 								  , value		: val
 								  }
