@@ -1,7 +1,7 @@
 var BrickUPnP				= require( './BrickUPnP.js' )
   , BrickUPnPFactory		= require( './BrickUPnPFactory.js' )
   // , UpnpServer				= require( '../UpnpServer/UpnpServer.js' )
-  , webServer				= require( '../webServer/webServer.js' )
+  // , webServer				= require( '../webServer/webServer.js' )
   , BrickUPnP_MediaServer	= require( './BrickUPnP_MediaServer.js' )
   , AlxEvents				= require( '../../js/AlxEvents.js' )
   , AlxAutomate				= require( '../../js/AlxAutomate.js' )
@@ -247,12 +247,18 @@ BrickUPnP_MediaRenderer.prototype.UpdateEvent	= function(eventNode, service) {
 				 this.MediasStates[service.serviceType] = {};
 				}
 			this.MediasStates[service.serviceType][eventNode.tagName] = content;
-			webServer.emit	( "eventForBrick_" + this.brickId
+			this.emit		( "eventUPnP" 
 							, { serviceType	: service.serviceType
 							  , attribut	: eventNode.tagName
 							  , value		: content
 							  }
-							);
+							)
+			// webServer.emit	( "eventForBrick_" + this.brickId
+							// , { serviceType	: service.serviceType
+							  // , attribut	: eventNode.tagName
+							  // , value		: content
+							  // }
+							// );
 		 break;
 		 default:
 			 if(eventNode.hasAttribute('val')) {
@@ -260,14 +266,21 @@ BrickUPnP_MediaRenderer.prototype.UpdateEvent	= function(eventNode, service) {
 				 // this.MediasStates[this.currentInstanceID || 0][eventNode.tagName] = val;
 				 this.MediasStates[service.serviceType] = this.MediasStates[service.serviceType] || {};
 				 this.MediasStates[service.serviceType][eventNode.tagName] = val;
-				 console.log("BrickUPnP_MediaRenderer::event", eventNode.tagName, '=', val);
-				 this.emit(eventNode.tagName, {value: val});
-				 webServer.emit	( "eventForBrick_" + this.brickId
+				 console.log(service.serviceType, eventNode.tagName, val);
+				 this.MediasStates[service.serviceType][eventNode.tagName] = val;
+				 this.emit		(eventNode.tagName, {value: val});
+				 this.emit		( "eventUPnP" 
 								, { serviceType	: service.serviceType //this.currentInstanceID
 								  , attribut	: eventNode.tagName
 								  , value		: val
 								  }
 								);
+				 // webServer.emit	( "eventForBrick_" + this.brickId
+								// , { serviceType	: service.serviceType //this.currentInstanceID
+								  // , attribut	: eventNode.tagName
+								  // , value		: val
+								  // }
+								// );
 				} else {console.error('Event that has no val attribute :', eventNode.tagName);
 					   }
 			//console.log('BrickUPnP_MediaRenderer::UpdateEvent('+eventNode.tagName+') has to be implemented : ');

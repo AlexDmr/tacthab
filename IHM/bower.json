@@ -1,0 +1,29 @@
+{
+  "name": "TActHab IHM",
+  "version": "0.0.0",
+  "authors": [
+    "alexandre.demeure@inria.fr"
+  ],
+  "description": "IHM de gestion pour TActHab.",
+  "main": "",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "angularjs#~1.4.7",
+    "angular-material": "~0.11.4",
+    "angular-route": "~1.4.7",
+    "angular-ui-router": "~0.2.15",
+    "angular-toArrayFilter": "~1.0.1",
+    "interact": "~1.2.6"
+  }
+}

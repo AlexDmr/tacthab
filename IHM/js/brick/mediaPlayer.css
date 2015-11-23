@@ -1,0 +1,11 @@
+media-player {
+
+}
+
+media-player > md-card.acceptDrop {
+	background-color		: lightyellow;
+}
+
+media-player > md-card.acceptDrop.droppable {
+	background-color		: yellow;
+}

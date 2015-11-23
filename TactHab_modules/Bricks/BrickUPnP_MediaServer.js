@@ -1,7 +1,7 @@
 var BrickUPnP		= require( './BrickUPnP.js' )
   // , UpnpServer		= require( '../UpnpServer/UpnpServer.js' )
   , BrickUPnPFactory= require( './BrickUPnPFactory.js' )
-  , webServer		= require( '../webServer/webServer.js' )
+  // , webServer		= require( '../webServer/webServer.js' )
   ;
 
 var BrickUPnP_MediaServer = function(id) {
@@ -82,12 +82,18 @@ BrickUPnP_MediaServer.prototype.UpdateEvent	= function(eventNode, service) {
 				 this.ServerStates[service.serviceType] = {};
 				}
 			this.ServerStates[service.serviceType][eventNode.tagName] = content;
-			webServer.emit	( "eventForBrick_" + this.brickId
+			this.emit		( "eventUPnP"
 							, { serviceType	: service.serviceType
 							  , attribut	: eventNode.tagName
 							  , value		: content
 							  }
 							);
+			// webServer.emit	( "eventForBrick_" + this.brickId
+							// , { serviceType	: service.serviceType
+							  // , attribut	: eventNode.tagName
+							  // , value		: content
+							  // }
+							// );
 		 break;
 		 default:
 			console.error( "BrickUPnP_MediaServer: Unknown event type", eventNode.tagName);

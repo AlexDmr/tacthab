@@ -1,0 +1,41 @@
+<h3 ng-bind="title"></h3>
+<p class="breadcrumb">
+	<label ng-repeat="ad in ms.breadcrumb" ng-click="ms.navigateTo(ad)">{{ad.name}}</label>
+</p>
+
+<section class="elements">
+	<md-progress-circular md-mode="indeterminate" ng-show="ms.searching"></md-progress-circular>
+	<!-- Servers -->
+	<md-card ng-repeat="server in ms.localBricks | toArray:false | filter:{type:'BrickUPnP_MediaServer'}"
+			 class="UPnP directory"
+			 ng-click="ms.navigateTo(server)"
+			 >
+		<img ng-src="{{server.iconURL}}" class="md-card-image" alt="{{server.name}}">
+		<md-card-content>
+			<p ng-bind="server.name"></p>
+		</md-card-content>
+	</md-card>
+
+	<!-- Directories -->
+	<md-card ng-repeat="dir in ms.directories"
+			 class="UPnP directory"
+			 ng-click="ms.navigateTo(dir)"
+			 >
+		<img ng-src="{{dir.iconURL}}" class="md-card-image" alt="{{dir.name}}" draggable="false">
+		<md-card-content>
+			<p ng-bind="dir.name"></p>
+		</md-card-content>
+	</md-card>
+
+
+	<!-- Medias -->
+	<md-card ng-repeat		= "media in ms.medias"
+			 class			= "UPnP media"
+			 >
+		<img ng-src="{{media.iconURL}}" class="md-card-image UPnP media" alt="{{media.name}}" alx-draggable="media"/>
+		<md-card-content>
+			<p ng-bind="media.name"></p>
+		</md-card-content>
+	</md-card>
+
+</section>

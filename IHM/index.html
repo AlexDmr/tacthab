@@ -1,0 +1,58 @@
+<!doctype html>
+
+<html ng-app="ihmActivity">
+<head>
+	<meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css">
+	<link rel="stylesheet" href="bundleIHM.css"></link>
+	
+	<script src="bower_components/angular/angular.min.js"></script>
+	<script src="bower_components/angular-toArrayFilter/toArrayFilter.js"></script>
+	<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+	<script src="bower_components/angular-aria/angular-aria.js"s></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-material/angular-material.js"></script>
+	<script src="bundleIHM.js"></script>
+
+</head>
+<body ng-controller="TActHabIHMController as T">
+	<md-toolbar>
+		<h2>TActHab</h2>
+	</md-toolbar>
+	<md-tabs md-border-bottom class="menu" md-selected="selectedTabIndex">
+		<md-tab>
+			<md-tab-label>Multimedia</md-tab-label>
+			<md-tab-body class="bricks BrickUPnP_MediaRenderer">
+				<md-card class="bricks list BrickUPnP_MediaRenderer">
+					<media-player ng-repeat	= "brick in T.context.bricks | toArray:false | filter:{type:'BrickUPnP_MediaRenderer'}" 
+								  brick		= "brick"
+								  >
+					</media-player>
+				</md-card>
+				<md-card bricks	= "T.context.bricks"
+						 title	= "Explore media available in UPnP"
+						 media-selector
+						 >
+				</md-card>
+			</md-tab-body>
+		</md-tab>
+		<md-tab >
+			<md-tab-label>Activities</md-tab-label>
+			<md-tab-body class="activities">
+				<alx-activities context="T.context" activities="T.activities" title="Les activités"></alx-activities>
+			</md-tab-body>
+		</md-tab>
+		<md-tab >
+			<md-tab-label>open Hab</md-tab-label>
+			<md-tab-body class="openHab">
+				<open-hab ng-repeat="brick in ((T.context.bricks | toArray:false) | filter:filterBrickOpenHAB)"
+						  brick="brick"
+						>
+				</open-hab>
+				<open-hab></open-hab>
+			</md-tab-body>
+		</md-tab>
+	</md-tabs>
+</body>
+</html>

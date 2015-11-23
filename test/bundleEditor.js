@@ -12284,10 +12284,15 @@
 	}
 
 	AlxEvent.prototype.emit	= function(eventName, event) {
+		var i;
 		if(this.AlxEvent && this.AlxEvent[eventName]) {
 			 // console.log("emiting to", this.AlxEvent[eventName]);
-			 for(var i=0; i<this.AlxEvent[eventName].length; i++) {
+			 for(i=0; i<this.AlxEvent[eventName].length; i++) {
 				 this.AlxEvent[eventName][i].apply(this, [event])
+				}
+			 this.AlxEvent["*"] = this.AlxEvent["*"] || [];
+			 for(i=0; i<this.AlxEvent["*"].length; i++) {
+				 this.AlxEvent["*"][i].apply(this, [event])
 				}
 			}
 		return this;

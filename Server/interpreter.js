@@ -42,13 +42,13 @@ module.exports = function(webServer) {
 										   &&context.bricks[i].id !== "webServer"
 										   ) {contextFiltered.bricks[i] = context.bricks[i];}  
 										}
-									  json = JSON.stringify( contextFiltered );
+									  json = contextFiltered;
 									 } catch(err) {console.error("ERROR: getContextDescription", err, node);
-												   json = JSON.stringify( {} );
+												   json = {}
 												  }
 								 // console.log("/getContext", node.id, "\n", json);
-								} else {json = JSON.stringify( {} );}
-							res.end(json);
+								} else {json = {};}
+							res.json(json);
 							}
 					  );
 	webServer.app.get ( '/getContext', getContext);

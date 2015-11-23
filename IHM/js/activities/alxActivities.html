@@ -1,0 +1,43 @@
+<section md-swipe-left ="ctrl.openBricks()" 
+		 md-swipe-right="ctrl.closeBricks()"
+		 class="no-select" >
+	<h3>
+		<span>{{title}}</span>
+		<span class="flex"></span>
+		<md-button class="md-icon-button md-primary" aria-label="Settings" ng-click="ctrl.toggleBricks()">
+			<md-icon md-svg-icon="/IHM/images/Menu_Hamburger_Round.svg"></md-icon>
+		</md-button>
+	</h3>
+
+	<md-sidenav class="md-sidenav-right md-whiteframe-z2 bricks" md-component-id="bricksList">
+		<md-content>
+			<h4>Bricks</h4>
+			<md-list>
+				<md-subheader class="md-no-sticky">OpenHab</md-subheader>
+				<md-list-item ng-repeat="brick in context.bricks | toArray:flase | filter:{type: 'BrickOpenHAB_item'}">
+					<label alx-draggable="brick">
+						<brick-openhab data="brick"></brick-openhab>
+					</label>
+				</<md-list-item>
+			</md-list>
+		</md-content>
+	</md-sidenav>
+
+	<section class="activities">
+		<form layout="column">
+			<md-content class="addActivity" layout-padding layout="raw">
+				<md-input-container class="md-block">
+					<label>Name</label>
+					<!-- <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon> -->
+					<input ng-model="newActivity.name" type="text">
+				</md-input-container>
+				<md-input-container class="md-block">
+					<label>Description</label>
+					<textarea ng-model="newActivity.description" columns="1" md-maxlength="150"></textarea>
+				</md-input-container>
+			</md-content>
+			<alx-activity activity="newActivity"></alx-activity>
+		</form>
+		<alx-activity ng-repeat="activity in activities" activity="activity"></alx-activity>
+	</section>
+</section>

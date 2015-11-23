@@ -1,0 +1,13 @@
+<md-card class="activity">
+	<md-card-content>
+		<h2 ng-bind="activity.name"></h2>
+		<p ng-bind="activity.description"></p>
+	</md-card-content>
+	<md-card-content class="bricks">
+		<h2>Bricks</h2>
+		<section>
+			<mini-brick data="brick" ng-repeat="brick in activity.context.bricks">
+			</mini-brick>
+		</section>
+	</md-card-content>
+</md-card>

@@ -1,0 +1,53 @@
+*[media-selector] {
+	/*background				: black;*/
+}
+
+*[media-selector] > section.elements {
+	display					: flex;
+	flex-flow				: row;
+	flex-wrap				: wrap;
+	justify-content			: flex-start;
+}
+
+*[media-selector] > section.elements > * {
+	flex					: 0 1 auto;
+	width					: 150px;
+}
+
+*[media-selector] > section.elements md-card.UPnP {
+	position				: relative;
+}
+
+*[media-selector] > section.elements md-card-content {
+	position				: absolute;
+	width					: 150px;
+	height					: 50px;
+	left					: 0;
+	bottom					: 0;
+	background				: rgba(0,0,0,0.85);
+	padding					: 0.1em;
+	display					: flex;
+	flex-flow				: row;
+	align-items				: flex-start;
+	font-size				: small;
+	color					: white;
+}
+
+*[media-selector] > section.elements md-card-content p {
+	margin					: 0;
+	padding					: 0;
+}
+
+*[media-selector] > section.elements > md-card > img.md-card-image:hover + md-card-content {
+	opacity					: 0;
+	transition				: opacity 2s;
+}
+
+*[media-selector] > .breadcrumb label {
+	color					: blue;
+}
+
+*[media-selector] > .breadcrumb label:before {
+	content					: " > ";
+	color					: black;
+}

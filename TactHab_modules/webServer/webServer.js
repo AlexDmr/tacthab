@@ -59,7 +59,7 @@ var webServer = Brick.D_brick.webServer = {
 						} );
 		}
 	, init			: function(staticPath, HTTP_port, rootPath) { //logPass) {
-		 var self = this;
+		 // var self = this;
 		 this.rootPath		= rootPath;
 		 
 		 this.domParser		= new this.DOMParser();

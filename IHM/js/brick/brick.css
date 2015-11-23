@@ -1,0 +1,31 @@
+md-card.Brick {
+	/*background-color	: blue;*/
+}
+
+md-card.Brick {
+	width				: 400px;
+	color				: black;
+	background-image	: url("../../images/icons/osa_server_media.svg");
+	background-position	: top right;
+	background-size		: 3em;
+	background-repeat	: no-repeat;
+}
+
+md-card.Brick.BrickUPnP_MediaServer {
+	background-image	: url("../../images/icons/osa_server_media.svg");
+}
+
+md-card.Brick.BrickUPnP_MediaRenderer {
+	background-image	: url("../../images/icons/Multimedia-icon.svg");
+}
+
+md-card.Brick img.iconURL {
+	width				: 5em;
+	height				: 5em;
+	float				: left;
+	margin-right		: 0.2em;
+}
+
+md-card.Brick md-card-footer {
+	text-align			: left;
+}

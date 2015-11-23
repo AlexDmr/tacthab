@@ -1,0 +1,45 @@
+* {
+	box-sizing						: border-box;
+}
+
+body {
+	display							: flex;
+	flex-flow						: column;
+}
+
+md-toolbar {
+	flex							: 0 1 auto;
+}
+
+md-tabs.menu {
+	flex							: 1 1 auto;
+	background						: rgb(63,81,181);
+	border							: 1px solid #e1e1e1;
+}
+
+
+	
+@media (min-width: 530px) {
+	.bricks.list {
+		display						: flex;
+		flex-flow					: row;
+		flex-wrap					: wrap;
+		justify-content				: flex-start;
+	}
+
+	.bricks.list > * {
+		flex						: 1 1 auto;
+		width						: 15em;
+	}
+}
+
+@media (max-width: 530px) {
+	.bricks.list {
+		display						: flex;
+		flex-flow					: column;
+	}
+
+	.bricks.list > * {
+		flex						: 1 1 auto;
+	}
+}

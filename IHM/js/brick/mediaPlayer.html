@@ -1,0 +1,37 @@
+<md-card alx-droppable
+		 accept				= ".UPnP.media"
+		 accept-feedback	= "acceptDrop"
+		 hover-feedback		= "droppable"
+		 drop-action		= "mpc.dropMedia(event, draggedInfo)"
+		 class				= "Brick UPnP mediaPlayer"
+		>
+	<md-card-content>
+		<img ng-src		= "{{brick.iconURL}}" 
+			 class		= "md-card-image iconURL" 
+			 alt		= "{{brick.iconURL}}"*
+			 />
+		{{brick.name}}
+	</md-card-content>
+	<md-card-footer>
+		<!-- Commands here -->
+		<md-button class="play" ng-click="mpc.Play()" ng-show="mpc.playState !== 'PLAYING'">
+			<md-icon md-svg-src="./images/play.svg"></md-icon>
+			Play
+		</md-button>
+		<md-button class="pause" ng-click="mpc.Pause()" ng-show="mpc.playState === 'PLAYING'">
+			<md-icon md-svg-src="./images/pause.svg"></md-icon>
+			Pause
+		</md-button>
+		<md-button class="stop" ng-click="mpc.Stop()" ng-click="mpc.Pause()" >
+			<md-icon md-svg-src="./images/stop.svg"></md-icon>
+			Stop
+		</md-button>
+		<md-slider	ng-model="mpc.volume" 
+					ng-mouseup="mpc.setVolume(mpc.volume)"
+					min="0" max="100" aria-label="volume">
+		</md-slider>
+		<!-- <md-slider aria-label="volume"></md-slider>
+		<input type="number" ng-model="mpc.volume"></input><span ng-bind="mpc.volume"></span> -->
+	</md-card-footer>
+
+</md-card>

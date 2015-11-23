@@ -1,0 +1,6 @@
+alx-activity > md-card {
+	width				: 200px;
+	height				: 300px;
+	word-break			: break-all;
+}
+
