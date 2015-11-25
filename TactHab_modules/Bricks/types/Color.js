@@ -1,16 +1,28 @@
 var BrickOpenHAB_item = require( './BrickOpenHAB_item.js' )
 
-var BrickOpenHAB_Color = function() {
+var BrickOpenHAB_Color							= function() {
 	BrickOpenHAB_item.apply(this, []);
-	this.color =	{ hue			: 0
-					, saturation	: 0
-					, brightness	: 0 };
+	this.color = { hue			: 0
+				 , saturation	: 0
+				 , brightness	: 0
+				 };
 	return this;
 }
 
 BrickOpenHAB_Color.prototype = Object.create( BrickOpenHAB_item.prototype );
-BrickOpenHAB_Color.prototype.constructor	= BrickOpenHAB_Color;
-BrickOpenHAB_Color.prototype.getTypeName 	= function() {return "BrickOpenHAB_Color";}
+BrickOpenHAB_Color.prototype.constructor		= BrickOpenHAB_Color;
+BrickOpenHAB_Color.prototype.getTypeName 		= function() {return "BrickOpenHAB_Color";}
+
+BrickOpenHAB_Color.prototype.init				= function(device) {
+	BrickOpenHAB_item.prototype.init.apply(this, [device]);
+	// console.log( "BrickOpenHAB_Color init", this.name, device );
+	var HSV = device.state.split(',');
+	this.state =	{ hue			: parseFloat( HSV[0] )
+					, saturation	: parseFloat( HSV[1] )
+					, brightness	: parseFloat( HSV[2] ) };
+	return this;
+}
+
 var types = BrickOpenHAB_item.prototype.getTypes();
 types.push	( BrickOpenHAB_Color.prototype.getTypeName()
 			, BrickOpenHAB_item.types.OnOff
@@ -18,38 +30,46 @@ types.push	( BrickOpenHAB_Color.prototype.getTypeName()
 			, BrickOpenHAB_item.types.Percent
 			, BrickOpenHAB_item.types.HSB
 			);
-BrickOpenHAB_Color.prototype.getTypes		= function() {return types;}
+BrickOpenHAB_Color.prototype.getTypes			= function() {return types;}
 
 BrickOpenHAB_Color.prototype.registerType(BrickOpenHAB_Color.prototype.getTypeName(), BrickOpenHAB_Color.prototype);
-
-BrickOpenHAB_Color.prototype.getColor	= function() {return this.color;}
-BrickOpenHAB_Color.prototype.update	= function(topic, operation, message) {
+BrickOpenHAB_Color.prototype.getColor			= function() {return this.color;}
+BrickOpenHAB_Color.prototype.update				= function(topic, operation, message) {
 	BrickOpenHAB_item.prototype.update.apply(this, [topic, operation, message]);
 
-	var HSV = message.split(',');
-	this.color.hue			= parseFloat( HSV[0] );
-	this.color.saturation	= parseFloat( HSV[1] );
-	this.color.brightness	= parseFloat( HSV[2] );
-	this.emit('color', this.color);
-	this.emit('state', this.color);
+	switch(message) {
+		 case 'ON' :
+		 case 'OFF':
+			this.state = message;
+			console.log("BrickOpenHAB_Switch::state", this.state);
+			this.emit("state", {value: this.state==="ON"});
+		 break;
+		 default:
+			var HSV = message.split(',');
+			if(HSV.length === 3) {
+				 this.color.hue			= parseFloat( HSV[0] );
+				 this.color.saturation	= parseFloat( HSV[1] );
+				 this.color.brightness	= parseFloat( HSV[2] );
+				 this.emit('color', this.color);
+				 this.emit('state', this.color);
+				}			
+		}
+
 
 	return this;
 }
 
-BrickOpenHAB_Color.prototype.Do_On			= function() {this.sendCommand("ON" ); return true;}
-BrickOpenHAB_Color.prototype.Do_Off			= function() {this.sendCommand("OFF"); return true;}
+BrickOpenHAB_Color.prototype.Do_On				= function() {this.sendCommand("ON" ); return true;}
+BrickOpenHAB_Color.prototype.Do_Off				= function() {this.sendCommand("OFF"); return true;}
 
-BrickOpenHAB_Color.prototype.setColor_HSB	= function(H, S, B) {
+BrickOpenHAB_Color.prototype.setColor_HSB		= function(H, S, B) {
 	this.color.hue			= H;
 	this.color.saturation	= S;
 	this.color.brightness	= B;
 	this.sendCommand( H + "," + S + "," + B );
 	return true;
 }
-
-
-
-BrickOpenHAB_Color.prototype.setColor_RGB	= function(R, G, B) {
+BrickOpenHAB_Color.prototype.setColor_RGB		= function(R, G, B) {
 	var min, max, delta
 	  , h, s, v
 	  , r = R / 255.0
@@ -75,7 +95,6 @@ BrickOpenHAB_Color.prototype.setColor_RGB	= function(R, G, B) {
 	
 	return this.setColor_HSB(h, 100*s, 100*v);
 }
-	
 BrickOpenHAB_Color.prototype.setColor_RGB_OLD	= function(R, G, B) {
 	console.log( "BrickOpenHAB_Color::setColor_RGB")
 	var r		= R/255.0

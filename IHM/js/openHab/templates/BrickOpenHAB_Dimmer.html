@@ -1,0 +1,11 @@
+<md-content layout="column">
+	<p>{{brick.name}}</p>
+	<md-slider	flex 
+				md-discrete 
+				ng-model="ctrl.value" 
+				step="1" min="0" max="100" 
+				aria-label="{{brick.name}}"
+				ng-change="ctrl.userSetDimmer()"
+				>
+	</md-slider>
+</md-content>

@@ -17,7 +17,7 @@ function dragEnter(event, idPointer, scope) {
 		}
 		if(canDrop) {
 			event.preventDefault();
-			console.log( "over -> adding class", scope.hoverFeedback );
+			// console.log( "over -> adding class", scope.hoverFeedback );
 			event.currentTarget.classList.add( scope.hoverFeedback );
 		}
 		draggingPointers[idPointer].canDrop += canDrop;
@@ -52,7 +52,7 @@ function getCB_dragLeave_mouse(scope) {return function(e) {dragLeave(e, "mouse",
 // Draggables -----------------------------------------------------------------------------------------------------
 //_________________________________________________________________________________________________________________
 function dragStart(event, idPointer, info, draggedData) {
-	console.log( "->dragStart", idPointer, draggedData );
+	// console.log( "->dragStart", idPointer, draggedData );
 	if(event.dataTransfer) {event.dataTransfer.setData("text/plain", "toto");}
 	draggingPointers[idPointer] = { node		: event.currentTarget
 								  , draggedData	: draggedData
@@ -88,7 +88,7 @@ function dragEnd(event, idPointer) {
 		}
 	}
 	// Unregister drag
-	console.log( "dragEnd", idPointer );
+	// console.log( "dragEnd", idPointer );
 	delete draggingPointers[idPointer];
 }
 
@@ -107,7 +107,7 @@ module.exports = function(app) {
 							  restrict		: 'A'
 							, link	: function(scope, elements, attr, controller) {
 								 var element = elements[0];
-								 console.log( "alxDraggable:", attr.alxDraggable, attr);
+								 // console.log( "alxDraggable:", attr.alxDraggable, attr);
 								 element.setAttribute("draggable", "true");
 								 
 								 var draggedData = scope.$eval( attr.alxDraggable );
@@ -128,15 +128,9 @@ module.exports = function(app) {
 		.directive	("alxDroppable" 
 					, function($parse) {
 						return {
-							  /*scope	: { accept			: "@accept"
-									  , acceptFeedback	: "@acceptFeedback"
-									  , hoverFeedback	: "@hoverFeedback"
-									  , dropAction		: "&dropAction"
-									  }
-							, */link	: function(scope, elements, attrs, controller) {
+							  link	: function(scope, elements, attrs, controller) {
 								 var element = elements[0];
 								 var idDrop = idDropZone++;
-								 console.log("drop zone", attrs);
 								 var innerScope = 	{ accept			: attrs.accept
 													, acceptFeedback	: attrs.acceptFeedback
 													, hoverFeedback		: attrs.hoverFeedback
@@ -154,13 +148,9 @@ module.exports = function(app) {
 								 element.ondragleave	= getCB_dragLeave_mouse(innerScope);
 								 element.ondrop			= function(e) {
 															 var idPointer = e.identifier || "mouse";
-															 // var res = scope.dropAction(e, draggingPointers[idPointer]);
-															 var res = innerScope.dropAction(scope, {event: e, draggedInfo: draggingPointers[idPointer]});
-															 console.log("res", res);
+															 innerScope.dropAction(scope, {event: e, draggedInfo: draggingPointers[idPointer]});
 															 e.preventDefault();
 															 e.stopPropagation();
-															 // var fn = $parse(attrs.dropEvent);
-															 // fn(scope, {$element : elementTransfer, $to : element});
 															}
 								 elements.on('$destroy', function() {
 									 element.ondragenter	= null;

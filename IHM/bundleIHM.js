@@ -45,7 +45,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__( 1 );
-	var utils	= __webpack_require__( 5 )
+	__webpack_require__( 5 );
+	var utils	= __webpack_require__( 7 )
 	  , context	= {bricks: {}}
 	  ;
 
@@ -54,7 +55,7 @@
 	var timer;
 	function refresh(scope, dt) {
 		if(timer) {clearTimeout( timer );}
-		timer = setTimeout( function() {scope.$apply(); delete timer;}, dt );
+		timer = setTimeout( function() {scope.$apply(); timer = null;}, dt );
 	}
 
 	var app =
@@ -92,13 +93,13 @@
 						)
 			;
 
-	__webpack_require__( 56 )(app);
-	__webpack_require__( 61 )(app);
-	__webpack_require__( 64 )(app);
-	__webpack_require__( 67 )(app);
-	__webpack_require__( 68 )(app);
-	__webpack_require__( 71 )(app);
-	__webpack_require__( 74 )(app);
+	__webpack_require__( 58 )(app);
+	__webpack_require__( 63 )(app);
+	__webpack_require__( 66 )(app);
+	__webpack_require__( 69 )(app);
+	__webpack_require__( 70 )(app);
+	__webpack_require__( 73 )(app);
+	__webpack_require__( 76 )(app);
 
 
 
@@ -113,11 +114,18 @@
 /* 3 */,
 /* 4 */,
 /* 5 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 6 */,
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var io = __webpack_require__(//'../node_modules/socket.io/lib/client.js'
 					// '../node_modules/socket.io/node_modules/socket.io-client/socket.io.js'
-					6
+					8
 					);
 
 	var callId = 0;
@@ -222,15 +230,15 @@
 
 
 /***/ },
-/* 6 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(7);
+	module.exports = __webpack_require__(9);
 
 
 /***/ },
-/* 7 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -238,10 +246,10 @@
 	 * Module dependencies.
 	 */
 
-	var url = __webpack_require__(8);
-	var parser = __webpack_require__(11);
-	var Manager = __webpack_require__(18);
-	var debug = __webpack_require__(10)('socket.io-client');
+	var url = __webpack_require__(10);
+	var parser = __webpack_require__(13);
+	var Manager = __webpack_require__(20);
+	var debug = __webpack_require__(12)('socket.io-client');
 
 	/**
 	 * Module exports.
@@ -318,12 +326,12 @@
 	 * @api public
 	 */
 
-	exports.Manager = __webpack_require__(18);
-	exports.Socket = __webpack_require__(50);
+	exports.Manager = __webpack_require__(20);
+	exports.Socket = __webpack_require__(52);
 
 
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -331,8 +339,8 @@
 	 * Module dependencies.
 	 */
 
-	var parseuri = __webpack_require__(9);
-	var debug = __webpack_require__(10)('socket.io-client:url');
+	var parseuri = __webpack_require__(11);
+	var debug = __webpack_require__(12)('socket.io-client:url');
 
 	/**
 	 * Module exports.
@@ -403,7 +411,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports) {
 
 	/**
@@ -434,7 +442,7 @@
 
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports) {
 
 	
@@ -577,7 +585,7 @@
 
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -585,12 +593,12 @@
 	 * Module dependencies.
 	 */
 
-	var debug = __webpack_require__(10)('socket.io-parser');
-	var json = __webpack_require__(12);
-	var isArray = __webpack_require__(14);
-	var Emitter = __webpack_require__(15);
-	var binary = __webpack_require__(16);
-	var isBuf = __webpack_require__(17);
+	var debug = __webpack_require__(12)('socket.io-parser');
+	var json = __webpack_require__(14);
+	var isArray = __webpack_require__(16);
+	var Emitter = __webpack_require__(17);
+	var binary = __webpack_require__(18);
+	var isBuf = __webpack_require__(19);
 
 	/**
 	 * Protocol version.
@@ -983,7 +991,7 @@
 
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*! JSON v3.2.6 | http://bestiejs.github.io/json3 | Copyright 2012-2013, Kit Cambridge | http://kit.mit-license.org */
@@ -993,7 +1001,7 @@
 
 	  // Detect the `define` function exposed by asynchronous module loaders. The
 	  // strict `define` check is necessary for compatibility with `r.js`.
-	  var isLoader = "function" === "function" && __webpack_require__(13);
+	  var isLoader = "function" === "function" && __webpack_require__(15);
 
 	  // Detect native implementations.
 	  var nativeJSON = typeof JSON == "object" && JSON;
@@ -1850,7 +1858,7 @@
 
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -1858,7 +1866,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports) {
 
 	module.exports = Array.isArray || function (arr) {
@@ -1867,7 +1875,7 @@
 
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports) {
 
 	
@@ -2037,7 +2045,7 @@
 
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*global Blob,File*/
@@ -2046,8 +2054,8 @@
 	 * Module requirements
 	 */
 
-	var isArray = __webpack_require__(14);
-	var isBuf = __webpack_require__(17);
+	var isArray = __webpack_require__(16);
+	var isBuf = __webpack_require__(19);
 
 	/**
 	 * Replaces every Buffer | ArrayBuffer in packet with a numbered placeholder.
@@ -2185,7 +2193,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -2205,7 +2213,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -2213,17 +2221,17 @@
 	 * Module dependencies.
 	 */
 
-	var url = __webpack_require__(8);
-	var eio = __webpack_require__(19);
-	var Socket = __webpack_require__(50);
-	var Emitter = __webpack_require__(15);
-	var parser = __webpack_require__(11);
-	var on = __webpack_require__(52);
-	var bind = __webpack_require__(53);
-	var object = __webpack_require__(54);
-	var debug = __webpack_require__(10)('socket.io-client:manager');
-	var indexOf = __webpack_require__(47);
-	var Backoff = __webpack_require__(55);
+	var url = __webpack_require__(10);
+	var eio = __webpack_require__(21);
+	var Socket = __webpack_require__(52);
+	var Emitter = __webpack_require__(17);
+	var parser = __webpack_require__(13);
+	var on = __webpack_require__(54);
+	var bind = __webpack_require__(55);
+	var object = __webpack_require__(56);
+	var debug = __webpack_require__(12)('socket.io-client:manager');
+	var indexOf = __webpack_require__(49);
+	var Backoff = __webpack_require__(57);
 
 	/**
 	 * Module exports
@@ -2714,19 +2722,19 @@
 
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports =  __webpack_require__(20);
+	module.exports =  __webpack_require__(22);
 
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(21);
+	module.exports = __webpack_require__(23);
 
 	/**
 	 * Exports parser
@@ -2734,25 +2742,25 @@
 	 * @api public
 	 *
 	 */
-	module.exports.parser = __webpack_require__(29);
+	module.exports.parser = __webpack_require__(31);
 
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 
-	var transports = __webpack_require__(22);
-	var Emitter = __webpack_require__(15);
-	var debug = __webpack_require__(41)('engine.io-client:socket');
-	var index = __webpack_require__(47);
-	var parser = __webpack_require__(29);
-	var parseuri = __webpack_require__(48);
-	var parsejson = __webpack_require__(49);
-	var parseqs = __webpack_require__(39);
+	var transports = __webpack_require__(24);
+	var Emitter = __webpack_require__(17);
+	var debug = __webpack_require__(43)('engine.io-client:socket');
+	var index = __webpack_require__(49);
+	var parser = __webpack_require__(31);
+	var parseuri = __webpack_require__(50);
+	var parsejson = __webpack_require__(51);
+	var parseqs = __webpack_require__(41);
 
 	/**
 	 * Module exports.
@@ -2867,9 +2875,9 @@
 	 */
 
 	Socket.Socket = Socket;
-	Socket.Transport = __webpack_require__(28);
-	Socket.transports = __webpack_require__(22);
-	Socket.parser = __webpack_require__(29);
+	Socket.Transport = __webpack_require__(30);
+	Socket.transports = __webpack_require__(24);
+	Socket.parser = __webpack_require__(31);
 
 	/**
 	 * Creates transport of the given type.
@@ -3450,17 +3458,17 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies
 	 */
 
-	var XMLHttpRequest = __webpack_require__(23);
-	var XHR = __webpack_require__(26);
-	var JSONP = __webpack_require__(44);
-	var websocket = __webpack_require__(45);
+	var XMLHttpRequest = __webpack_require__(25);
+	var XHR = __webpack_require__(28);
+	var JSONP = __webpack_require__(46);
+	var websocket = __webpack_require__(47);
 
 	/**
 	 * Export transports.
@@ -3510,11 +3518,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// browser shim for xmlhttprequest module
-	var hasCORS = __webpack_require__(24);
+	var hasCORS = __webpack_require__(26);
 
 	module.exports = function(opts) {
 	  var xdomain = opts.xdomain;
@@ -3552,7 +3560,7 @@
 
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -3560,7 +3568,7 @@
 	 * Module dependencies.
 	 */
 
-	var global = __webpack_require__(25);
+	var global = __webpack_require__(27);
 
 	/**
 	 * Module exports.
@@ -3581,7 +3589,7 @@
 
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports) {
 
 	
@@ -3595,18 +3603,18 @@
 
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module requirements.
 	 */
 
-	var XMLHttpRequest = __webpack_require__(23);
-	var Polling = __webpack_require__(27);
-	var Emitter = __webpack_require__(15);
-	var inherit = __webpack_require__(40);
-	var debug = __webpack_require__(41)('engine.io-client:polling-xhr');
+	var XMLHttpRequest = __webpack_require__(25);
+	var Polling = __webpack_require__(29);
+	var Emitter = __webpack_require__(17);
+	var inherit = __webpack_require__(42);
+	var debug = __webpack_require__(43)('engine.io-client:polling-xhr');
 
 	/**
 	 * Module exports.
@@ -3986,18 +3994,18 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Transport = __webpack_require__(28);
-	var parseqs = __webpack_require__(39);
-	var parser = __webpack_require__(29);
-	var inherit = __webpack_require__(40);
-	var debug = __webpack_require__(41)('engine.io-client:polling');
+	var Transport = __webpack_require__(30);
+	var parseqs = __webpack_require__(41);
+	var parser = __webpack_require__(31);
+	var inherit = __webpack_require__(42);
+	var debug = __webpack_require__(43)('engine.io-client:polling');
 
 	/**
 	 * Module exports.
@@ -4010,7 +4018,7 @@
 	 */
 
 	var hasXHR2 = (function() {
-	  var XMLHttpRequest = __webpack_require__(23);
+	  var XMLHttpRequest = __webpack_require__(25);
 	  var xhr = new XMLHttpRequest({ xdomain: false });
 	  return null != xhr.responseType;
 	})();
@@ -4237,15 +4245,15 @@
 
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var parser = __webpack_require__(29);
-	var Emitter = __webpack_require__(15);
+	var parser = __webpack_require__(31);
+	var Emitter = __webpack_require__(17);
 
 	/**
 	 * Module exports.
@@ -4402,19 +4410,19 @@
 
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 
-	var keys = __webpack_require__(30);
-	var hasBinary = __webpack_require__(31);
-	var sliceBuffer = __webpack_require__(33);
-	var base64encoder = __webpack_require__(34);
-	var after = __webpack_require__(35);
-	var utf8 = __webpack_require__(36);
+	var keys = __webpack_require__(32);
+	var hasBinary = __webpack_require__(33);
+	var sliceBuffer = __webpack_require__(35);
+	var base64encoder = __webpack_require__(36);
+	var after = __webpack_require__(37);
+	var utf8 = __webpack_require__(38);
 
 	/**
 	 * Check if we are running an android browser. That requires us to use
@@ -4471,7 +4479,7 @@
 	 * Create a blob api even for blob builder when vendor prefixes exist
 	 */
 
-	var Blob = __webpack_require__(38);
+	var Blob = __webpack_require__(40);
 
 	/**
 	 * Encodes a packet.
@@ -5003,7 +5011,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports) {
 
 	
@@ -5028,7 +5036,7 @@
 
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -5036,7 +5044,7 @@
 	 * Module requirements.
 	 */
 
-	var isArray = __webpack_require__(32);
+	var isArray = __webpack_require__(34);
 
 	/**
 	 * Module exports.
@@ -5093,7 +5101,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports) {
 
 	module.exports = Array.isArray || function (arr) {
@@ -5102,7 +5110,7 @@
 
 
 /***/ },
-/* 33 */
+/* 35 */
 /***/ function(module, exports) {
 
 	/**
@@ -5137,7 +5145,7 @@
 
 
 /***/ },
-/* 34 */
+/* 36 */
 /***/ function(module, exports) {
 
 	/*
@@ -5202,7 +5210,7 @@
 
 
 /***/ },
-/* 35 */
+/* 37 */
 /***/ function(module, exports) {
 
 	module.exports = after
@@ -5236,7 +5244,7 @@
 
 
 /***/ },
-/* 36 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/utf8js v2.0.0 by @mathias */
@@ -5482,10 +5490,10 @@
 
 	}(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(37)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(39)(module), (function() { return this; }())))
 
 /***/ },
-/* 37 */
+/* 39 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -5501,7 +5509,7 @@
 
 
 /***/ },
-/* 38 */
+/* 40 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -5604,7 +5612,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 39 */
+/* 41 */
 /***/ function(module, exports) {
 
 	/**
@@ -5647,7 +5655,7 @@
 
 
 /***/ },
-/* 40 */
+/* 42 */
 /***/ function(module, exports) {
 
 	
@@ -5659,7 +5667,7 @@
 	};
 
 /***/ },
-/* 41 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -5669,7 +5677,7 @@
 	 * Expose `debug()` as the module.
 	 */
 
-	exports = module.exports = __webpack_require__(42);
+	exports = module.exports = __webpack_require__(44);
 	exports.log = log;
 	exports.formatArgs = formatArgs;
 	exports.save = save;
@@ -5812,7 +5820,7 @@
 
 
 /***/ },
-/* 42 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -5828,7 +5836,7 @@
 	exports.disable = disable;
 	exports.enable = enable;
 	exports.enabled = enabled;
-	exports.humanize = __webpack_require__(43);
+	exports.humanize = __webpack_require__(45);
 
 	/**
 	 * The currently active debug mode names, and names to skip.
@@ -6015,7 +6023,7 @@
 
 
 /***/ },
-/* 43 */
+/* 45 */
 /***/ function(module, exports) {
 
 	/**
@@ -6132,7 +6140,7 @@
 
 
 /***/ },
-/* 44 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -6140,8 +6148,8 @@
 	 * Module requirements.
 	 */
 
-	var Polling = __webpack_require__(27);
-	var inherit = __webpack_require__(40);
+	var Polling = __webpack_require__(29);
+	var inherit = __webpack_require__(42);
 
 	/**
 	 * Module exports.
@@ -6372,18 +6380,18 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 45 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Transport = __webpack_require__(28);
-	var parser = __webpack_require__(29);
-	var parseqs = __webpack_require__(39);
-	var inherit = __webpack_require__(40);
-	var debug = __webpack_require__(41)('engine.io-client:websocket');
+	var Transport = __webpack_require__(30);
+	var parser = __webpack_require__(31);
+	var parseqs = __webpack_require__(41);
+	var inherit = __webpack_require__(42);
+	var debug = __webpack_require__(43)('engine.io-client:websocket');
 
 	/**
 	 * `ws` exposes a WebSocket-compatible interface in
@@ -6391,7 +6399,7 @@
 	 * in the browser.
 	 */
 
-	var WebSocket = __webpack_require__(46);
+	var WebSocket = __webpack_require__(48);
 
 	/**
 	 * Module exports.
@@ -6616,7 +6624,7 @@
 
 
 /***/ },
-/* 46 */
+/* 48 */
 /***/ function(module, exports) {
 
 	
@@ -6665,7 +6673,7 @@
 
 
 /***/ },
-/* 47 */
+/* 49 */
 /***/ function(module, exports) {
 
 	
@@ -6680,7 +6688,7 @@
 	};
 
 /***/ },
-/* 48 */
+/* 50 */
 /***/ function(module, exports) {
 
 	/**
@@ -6725,7 +6733,7 @@
 
 
 /***/ },
-/* 49 */
+/* 51 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -6763,7 +6771,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 50 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -6771,13 +6779,13 @@
 	 * Module dependencies.
 	 */
 
-	var parser = __webpack_require__(11);
-	var Emitter = __webpack_require__(15);
-	var toArray = __webpack_require__(51);
-	var on = __webpack_require__(52);
-	var bind = __webpack_require__(53);
-	var debug = __webpack_require__(10)('socket.io-client:socket');
-	var hasBin = __webpack_require__(31);
+	var parser = __webpack_require__(13);
+	var Emitter = __webpack_require__(17);
+	var toArray = __webpack_require__(53);
+	var on = __webpack_require__(54);
+	var bind = __webpack_require__(55);
+	var debug = __webpack_require__(12)('socket.io-client:socket');
+	var hasBin = __webpack_require__(33);
 
 	/**
 	 * Module exports.
@@ -7154,7 +7162,7 @@
 
 
 /***/ },
-/* 51 */
+/* 53 */
 /***/ function(module, exports) {
 
 	module.exports = toArray
@@ -7173,7 +7181,7 @@
 
 
 /***/ },
-/* 52 */
+/* 54 */
 /***/ function(module, exports) {
 
 	
@@ -7203,7 +7211,7 @@
 
 
 /***/ },
-/* 53 */
+/* 55 */
 /***/ function(module, exports) {
 
 	/**
@@ -7232,7 +7240,7 @@
 
 
 /***/ },
-/* 54 */
+/* 56 */
 /***/ function(module, exports) {
 
 	
@@ -7321,7 +7329,7 @@
 	};
 
 /***/ },
-/* 55 */
+/* 57 */
 /***/ function(module, exports) {
 
 	
@@ -7412,10 +7420,10 @@
 
 
 /***/ },
-/* 56 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 57 );
+	__webpack_require__( 59 );
 
 	module.exports = function(app) {
 		app.directive	( "brickItem"
@@ -7438,20 +7446,20 @@
 
 
 /***/ },
-/* 57 */
+/* 59 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 58 */,
-/* 59 */,
 /* 60 */,
-/* 61 */
+/* 61 */,
+/* 62 */,
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 62 );
-	var utils = __webpack_require__( 5 );
+	__webpack_require__( 64 );
+	var utils = __webpack_require__( 7 );
 
 	module.exports = function(app) {
 		app.directive	( "mediaPlayer"
@@ -7578,18 +7586,18 @@
 
 
 /***/ },
-/* 62 */
+/* 64 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 63 */,
-/* 64 */
+/* 65 */,
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 65 );
-	var utils		= __webpack_require__( 5 )
+	__webpack_require__( 67 );
+	var utils		= __webpack_require__( 7 )
 	  , parser		= new DOMParser()
 	  ;
 
@@ -7681,14 +7689,14 @@
 
 
 /***/ },
-/* 65 */
+/* 67 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 66 */,
-/* 67 */
+/* 68 */,
+/* 69 */
 /***/ function(module, exports) {
 
 	var draggingPointers	= {}
@@ -7710,7 +7718,7 @@
 			}
 			if(canDrop) {
 				event.preventDefault();
-				console.log( "over -> adding class", scope.hoverFeedback );
+				// console.log( "over -> adding class", scope.hoverFeedback );
 				event.currentTarget.classList.add( scope.hoverFeedback );
 			}
 			draggingPointers[idPointer].canDrop += canDrop;
@@ -7745,7 +7753,7 @@
 	// Draggables -----------------------------------------------------------------------------------------------------
 	//_________________________________________________________________________________________________________________
 	function dragStart(event, idPointer, info, draggedData) {
-		console.log( "->dragStart", idPointer, draggedData );
+		// console.log( "->dragStart", idPointer, draggedData );
 		if(event.dataTransfer) {event.dataTransfer.setData("text/plain", "toto");}
 		draggingPointers[idPointer] = { node		: event.currentTarget
 									  , draggedData	: draggedData
@@ -7781,7 +7789,7 @@
 			}
 		}
 		// Unregister drag
-		console.log( "dragEnd", idPointer );
+		// console.log( "dragEnd", idPointer );
 		delete draggingPointers[idPointer];
 	}
 
@@ -7800,7 +7808,7 @@
 								  restrict		: 'A'
 								, link	: function(scope, elements, attr, controller) {
 									 var element = elements[0];
-									 console.log( "alxDraggable:", attr.alxDraggable, attr);
+									 // console.log( "alxDraggable:", attr.alxDraggable, attr);
 									 element.setAttribute("draggable", "true");
 									 
 									 var draggedData = scope.$eval( attr.alxDraggable );
@@ -7821,15 +7829,9 @@
 			.directive	("alxDroppable" 
 						, function($parse) {
 							return {
-								  /*scope	: { accept			: "@accept"
-										  , acceptFeedback	: "@acceptFeedback"
-										  , hoverFeedback	: "@hoverFeedback"
-										  , dropAction		: "&dropAction"
-										  }
-								, */link	: function(scope, elements, attrs, controller) {
+								  link	: function(scope, elements, attrs, controller) {
 									 var element = elements[0];
 									 var idDrop = idDropZone++;
-									 console.log("drop zone", attrs);
 									 var innerScope = 	{ accept			: attrs.accept
 														, acceptFeedback	: attrs.acceptFeedback
 														, hoverFeedback		: attrs.hoverFeedback
@@ -7847,13 +7849,9 @@
 									 element.ondragleave	= getCB_dragLeave_mouse(innerScope);
 									 element.ondrop			= function(e) {
 																 var idPointer = e.identifier || "mouse";
-																 // var res = scope.dropAction(e, draggingPointers[idPointer]);
-																 var res = innerScope.dropAction(scope, {event: e, draggedInfo: draggingPointers[idPointer]});
-																 console.log("res", res);
+																 innerScope.dropAction(scope, {event: e, draggedInfo: draggingPointers[idPointer]});
 																 e.preventDefault();
 																 e.stopPropagation();
-																 // var fn = $parse(attrs.dropEvent);
-																 // fn(scope, {$element : elementTransfer, $to : element});
 																}
 									 elements.on('$destroy', function() {
 										 element.ondragenter	= null;
@@ -7871,10 +7869,10 @@
 
 
 /***/ },
-/* 68 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 69 );
+	__webpack_require__( 71 );
 	// var utils = require( "../../../js/utils.js" );
 
 	module.exports = function(app) {
@@ -7907,17 +7905,17 @@
 	}
 
 /***/ },
-/* 69 */
+/* 71 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 70 */,
-/* 71 */
+/* 72 */,
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 72 );
+	__webpack_require__( 74 );
 	// var utils = require( "../../../js/utils.js" );
 
 	/* Activity :
@@ -7952,29 +7950,39 @@
 
 
 /***/ },
-/* 72 */
+/* 74 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 73 */,
-/* 74 */
+/* 75 */,
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 75 );
+	__webpack_require__( 5 );
 
-	var utils = __webpack_require__( 5 );
-	var templates =	{ BrickOpenHAB_Switch			: __webpack_require__( 77		)
-					, BrickOpenHAB_String			: __webpack_require__( 78		)
-					, BrickOpenHAB_RollerShutter	: __webpack_require__( 79)
-					, BrickOpenHAB_Number			: __webpack_require__( 80		)
-					, BrickOpenHAB_Dimmer			: __webpack_require__( 81		)
-					, BrickOpenHAB_DateTime			: __webpack_require__( 82		)
-					, BrickOpenHAB_Contact			: __webpack_require__( 83		)
-					, BrickOpenHAB_Color			: __webpack_require__( 84		)
-					};
+	var utils = __webpack_require__( 7 );
+	var templates	=	{ BrickOpenHAB_Switch			: __webpack_require__( 77		)
+						, BrickOpenHAB_String			: __webpack_require__( 78		)
+						, BrickOpenHAB_RollerShutter	: __webpack_require__( 79)
+						, BrickOpenHAB_Number			: __webpack_require__( 80		)
+						, BrickOpenHAB_Dimmer			: __webpack_require__( 81		)
+						, BrickOpenHAB_DateTime			: __webpack_require__( 82		)
+						, BrickOpenHAB_Contact			: __webpack_require__( 83		)
+						, BrickOpenHAB_Color			: __webpack_require__( 84		)
+						};
 
+	var controllers	=	{BrickOpenHAB_Switch			: __webpack_require__( 85			)
+						, BrickOpenHAB_String			: __webpack_require__( 86			)
+						, BrickOpenHAB_RollerShutter	: __webpack_require__( 87	)
+						, BrickOpenHAB_Number			: __webpack_require__( 88			)
+						, BrickOpenHAB_Dimmer			: __webpack_require__( 89			)
+						, BrickOpenHAB_DateTime			: __webpack_require__( 90		)
+						, BrickOpenHAB_Contact			: __webpack_require__( 91		)
+						, BrickOpenHAB_Color			: __webpack_require__( 92			)
+						};
+						
 	// Subscribe to openHab messages
 	// 		openHab_state
 	// 		openHab_update
@@ -8031,28 +8039,42 @@
 								}
 						 } 
 						}
-					)
+					) 
 		.directive	( "brickOpenhab"
 					, function($compile) {
 						 return {
 							   restrict		: 'E'
 							 , scope		: { brick	: "=data" }
 							 , controller	: function($scope) {
-								 console.log("brick:", $scope.brick);
+								 // console.log("brick:", $scope.brick);
+								 var ctrl = this;
 								 var cbEventName = $scope.brick.id + "::state";
 								 utils.io.emit	( "subscribeBrick"
 												, { brickId		: $scope.brick.id
-												  , eventName	: "update"
+												  , eventName	: "state"
 												  , cbEventName	: cbEventName
 												  } 
 												);
+								 this.updateState = function(event) {
+									 $scope.brick.state = event.data.value;
+									 $scope.$apply();
+									}
 								 utils.io.on	( cbEventName
 												, function(event) {
-													 console.log("brickOpenhab event:", event);
-													 brick.state = event.data.value;
-													 $scope.$apply();
+													 // console.log("brickOpenhab event:", event);
+													 ctrl.updateState(event);
 													}
 												);
+								 this.setState = function() {
+									 // console.log( "state", $scope.brick.state);
+									 utils.call	( $scope.brick.id
+												, "setState"
+												, [$scope.brick.state]
+												);
+									}
+								 if( typeof controllers[$scope.brick.class] === "function" ) {
+									 controllers[$scope.brick.class].apply(this, [$scope, utils])
+									}
 								}
 							 , controllerAs	: "ctrl"
 							 , link			: function(scope, element, attr, controller) {
@@ -8066,59 +8088,366 @@
 
 
 /***/ },
-/* 75 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 76 */,
 /* 77 */
 /***/ function(module, exports) {
 
-	module.exports = "<md-switch ng-model=\"brick.state\" aria-label=\"brick.name\" class=\"md-block\">\r\n\t{{brick.name}} {{brick.state}}\r\n</md-switch>"
+	module.exports = "<md-switch\tng-model=\"ctrl.value\" \r\n\t\t\taria-label=\"brick.name\" \r\n\t\t\tclass=\"md-block\" \r\n\t\t\tng-change=\"ctrl.userSetSwitch()\"\r\n\t\t\t>\r\n{{brick.name}}\r\n</md-switch>"
 
 /***/ },
 /* 78 */
 /***/ function(module, exports) {
 
-	module.exports = ""
+	module.exports = "\r\n<md-input-container>\r\n    <label>{{brick.name}}</label>\r\n    <input\tng-model=\"brick.state\" \r\n\t\t\ttype=\"text\"\r\n\t\t\tng-change=\"ctrl.userSetText()\"\r\n\t\t\t/>\r\n</md-input-container>\r\n"
 
 /***/ },
 /* 79 */
 /***/ function(module, exports) {
 
-	module.exports = ""
+	module.exports = "\r\nRollerShutter"
 
 /***/ },
 /* 80 */
 /***/ function(module, exports) {
 
-	module.exports = ""
+	module.exports = "\r\n<md-input-container class=\"md-block\" flex>\r\n\t<label>{{brick.name}}</label>\r\n\t<!--<md-icon md-svg-src=\"img/icons/ic_card_giftcard_24px.svg\"></md-icon>-->\r\n\t<input\tng-model=\"ctrl.value\" \r\n\t\t\ttype=\"number\" \r\n\t\t\tng-change=\"ctrl.userSetNumber()\"\r\n\t\t\tflex \r\n\t\t\t/>\r\n</md-input-container>"
 
 /***/ },
 /* 81 */
 /***/ function(module, exports) {
 
-	module.exports = ""
+	module.exports = "<md-content layout=\"column\">\r\n\t<p>{{brick.name}}</p>\r\n\t<md-slider\tflex \r\n\t\t\t\tmd-discrete \r\n\t\t\t\tng-model=\"ctrl.value\" \r\n\t\t\t\tstep=\"1\" min=\"0\" max=\"100\" \r\n\t\t\t\taria-label=\"{{brick.name}}\"\r\n\t\t\t\tng-change=\"ctrl.userSetDimmer()\"\r\n\t\t\t\t>\r\n\t</md-slider>\r\n</md-content>\r\n"
 
 /***/ },
 /* 82 */
 /***/ function(module, exports) {
 
-	module.exports = ""
+	module.exports = "\r\nDateTime"
 
 /***/ },
 /* 83 */
 /***/ function(module, exports) {
 
-	module.exports = ""
+	module.exports = "Contact {{brick.name}}: {{brick.state}}"
 
 /***/ },
 /* 84 */
 /***/ function(module, exports) {
 
-	module.exports = ""
+	module.exports = "<md-content class=\"md-block color\">\r\n\t<input \t\taria-label=\"{{brick.name}}\"\r\n\t\t\t\tng-model=\"ctrl.color\"\r\n\t\t\t\ttype=\"color\"\r\n\t\t\t\tng-change=\"ctrl.userSetColor()\"\r\n\t\t\t\t/>\r\n\t{{brick.name}}\r\n</md-content>"
+
+/***/ },
+/* 85 */
+/***/ function(module, exports) {
+
+	module.exports = function(scope, utils) {
+		// console.log( "Create a switch controller", scope.brick.state, this );
+		this.userSetSwitch = function() {
+			// console.log(e, this.value);
+			utils.call	( scope.brick.id
+						, "setState"
+						, [this.value?"ON":"OFF"]
+						);
+		}
+		this.updateState = function(event, noUpdate) {
+			// console.log( "Switch event", event);
+			this.value = event.data.value === "ON";
+			// console.log(this.color);
+			if(noUpdate !== true) {scope.$apply();}
+		}
+		this.updateState( {data: {value: scope.brick.state}}, true );
+		
+	}
+
+
+/***/ },
+/* 86 */
+/***/ function(module, exports) {
+
+	module.exports = function(scope, utils) {
+		// console.log( "Create a color controller", this, scope );
+		this.userSetText = function() {
+			utils.call	( scope.brick.id
+						, "setString"
+						, [scope.brick.state]
+						);
+		}
+		this.updateState = function(event, noUpdate) {
+			console.log( "string update", event.data.value );
+			scope.brick.state = event.data.value;
+			if(noUpdate !== true) {scope.$apply();}
+		}
+		
+		this.updateState( {data: {value: scope.brick.state}}
+						, true 
+						);
+	}
+
+
+/***/ },
+/* 87 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by Alexandre on 24/11/2015.
+	 */
+
+
+/***/ },
+/* 88 */
+/***/ function(module, exports) {
+
+	module.exports = function(scope, utils) {
+		// console.log( "Create a Dimmer controller", scope.brick.state, this );
+		this.userSetNumber = function(e) {
+			// console.log(e, this.value);
+			utils.call	( scope.brick.id
+						, "setNumber"
+						, [this.value]
+						);
+		}
+		this.updateState = function(event, noUpdate) {
+			// console.log( "Number event", event);
+			this.value = event.data.value;
+			// console.log(this.color);
+			if(noUpdate !== true) {scope.$apply();}
+		}
+		if(typeof scope.brick.state !== "number") {scope.brick.state = 0;}
+		this.updateState( {data: {value: scope.brick.state}}, true );
+	}
+
+
+/***/ },
+/* 89 */
+/***/ function(module, exports) {
+
+	module.exports = function(scope, utils) {
+		// console.log( "Create a Dimmer controller", scope.brick.state, this );
+		this.userSetDimmer = function() {
+			// console.log("userSetDimmer", this.value);
+			utils.call	( scope.brick.id
+						, "setValue"
+						, [this.value]
+						);
+		}
+		this.updateState = function(event, noUpdate) {
+			// console.log( "Dimmer event", event.data.value);
+			this.value = event.data.value;
+			// console.log(this.color);
+			if(noUpdate !== true) {scope.$apply();}
+		}
+		if(typeof scope.brick.state === "string") {scope.brick.state = parseInt(scope.brick.state) || 0;}
+		this.updateState( {data: {value: scope.brick.state}}, true );
+		
+	}
+
+
+/***/ },
+/* 90 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by Alexandre on 24/11/2015.
+	 */
+
+
+/***/ },
+/* 91 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by Alexandre on 24/11/2015.
+	 */
+
+
+/***/ },
+/* 92 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var convert = __webpack_require__( 93 );
+
+	function toHex(d) {
+		return  ("0"+(Number(d).toString(16))).slice(-2).toLowerCase()
+	}
+
+	module.exports = function(scope, utils) {
+		// console.log( "Create a color controller", this, scope );
+		this.userSetColor = function(e) {
+			// console.log(e, this.color);
+			var r = parseInt( this.color.slice(1,3), 16 )
+			  , g = parseInt( this.color.slice(3,5), 16 )
+			  , b = parseInt( this.color.slice(5,7), 16 )
+			  ;
+			// console.log(this.color, "=>", r, g, b);
+			utils.call	( scope.brick.id
+						, "setColor_RGB"
+						, [r, g, b]
+						);
+		}
+		this.updateState = function(event, noUpdate) {
+			// console.log( "Color event", event);
+			var rgb  = convert.hsvToRgb ( event.data.hue / 360
+										, event.data.saturation / 100
+										, event.data.brightness / 100
+										);
+			// console.log(rgb);
+			var str = "#" + toHex(rgb[0]) + toHex(rgb[1]) + toHex(rgb[2]);
+			this.color = str;
+			// console.log(this.color);
+			if(noUpdate !== true) {scope.$apply();}
+		}
+		
+		this.updateState( {data: scope.brick.state}
+						, true 
+						);
+	}
+
+
+/***/ },
+/* 93 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by Alexandre on 24/11/2015.
+	 */
+	/* Converts an RGB color value to HSL. Conversion formula
+	* adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+	    * Assumes r, g, and b are contained in the set [0, 255] and
+	* returns h, s, and l in the set [0, 1].
+	*
+	* @param   Number  r       The red color value
+	* @param   Number  g       The green color value
+	* @param   Number  b       The blue color value
+	* @return  Array           The HSL representation
+	*/
+
+	function rgbToHsl(r, g, b){
+	    r /= 255; g /= 255; b /= 255;
+	    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+	    var h, s, l = (max + min) / 2;
+
+	    if(max == min){
+	        h = s = 0; // achromatic
+	    }else{
+	        var d = max - min;
+	        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+	        switch(max){
+	            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+	            case g: h = (b - r) / d + 2; break;
+	            case b: h = (r - g) / d + 4; break;
+	        }
+	        h /= 6;
+	    }
+
+	    return [h, s, l];
+	}
+
+	/**
+	 * Converts an HSL color value to RGB. Conversion formula
+	 * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+	 * Assumes h, s, and l are contained in the set [0, 1] and
+	 * returns r, g, and b in the set [0, 255].
+	 *
+	 * @param   Number  h       The hue
+	 * @param   Number  s       The saturation
+	 * @param   Number  l       The lightness
+	 * @return  Array           The RGB representation
+	 */
+	function hue2rgb(p, q, t){
+	    if(t < 0) t += 1;
+	    if(t > 1) t -= 1;
+	    if(t < 1/6) return p + (q - p) * 6 * t;
+	    if(t < 1/2) return q;
+	    if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+	    return p;
+	}
+	function hslToRgb(h, s, l){
+	    var r, g, b;
+
+	    if(s === 0){
+	        r = g = b = l; // achromatic
+	    }else{
+
+	        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+	        var p = 2 * l - q;
+	        r = hue2rgb(p, q, h + 1/3);
+	        g = hue2rgb(p, q, h);
+	        b = hue2rgb(p, q, h - 1/3);
+	    }
+
+	    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+	}
+
+	/**
+	 * Converts an RGB color value to HSV. Conversion formula
+	 * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+	 * Assumes r, g, and b are contained in the set [0, 255] and
+	 * returns h, s, and v in the set [0, 1].
+	 *
+	 * @param   Number  r       The red color value
+	 * @param   Number  g       The green color value
+	 * @param   Number  b       The blue color value
+	 * @return  Array           The HSV representation
+	 */
+	function rgbToHsv(r, g, b){
+	    r = r/255; g = g/255; b = b/255;
+	    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+	    var h, s, v = max;
+
+	    var d = max - min;
+	    s = max === 0 ? 0 : d / max;
+
+	    if(max === min){
+	        h = 0; // achromatic
+	    }else{
+	        switch(max){
+	            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+	            case g: h = (b - r) / d + 2; break;
+	            case b: h = (r - g) / d + 4; break;
+	        }
+	        h /= 6;
+	    }
+
+	    return [h, s, v];
+	}
+
+	/**
+	 * Converts an HSV color value to RGB. Conversion formula
+	 * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+	 * Assumes h, s, and v are contained in the set [0, 1] and
+	 * returns r, g, and b in the set [0, 255].
+	 *
+	 * @param   Number  h       The hue
+	 * @param   Number  s       The saturation
+	 * @param   Number  v       The value
+	 * @return  Array           The RGB representation
+	 */
+	function hsvToRgb(h, s, v){
+	    var r, g, b;
+
+	    var i = Math.floor(h * 6);
+	    var f = h * 6 - i;
+	    var p = v * (1 - s);
+	    var q = v * (1 - f * s);
+	    var t = v * (1 - (1 - f) * s);
+
+	    switch(i % 6){
+	        case 0: r = v; g = t; b = p; break;
+	        case 1: r = q; g = v; b = p; break;
+	        case 2: r = p; g = v; b = t; break;
+	        case 3: r = p; g = q; b = v; break;
+	        case 4: r = t; g = p; b = v; break;
+	        case 5: r = v; g = p; b = q; break;
+	    }
+
+	    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+	}
+
+	module.exports = {
+	    rgbToHsl    : rgbToHsl,
+	    hslToRgb    : hslToRgb,
+	    rgbToHsv    : rgbToHsv,
+	    hsvToRgb    : hsvToRgb
+	};
 
 /***/ }
 /******/ ]);

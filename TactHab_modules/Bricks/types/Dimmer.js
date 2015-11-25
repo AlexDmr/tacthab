@@ -20,7 +20,16 @@ BrickOpenHAB_Dimmer.prototype.registerType(BrickOpenHAB_Dimmer.prototype.getType
 
 BrickOpenHAB_Dimmer.prototype.update	= function(topic, operation, message) {
 	BrickOpenHAB_item.prototype.update.apply(this, [topic, operation, message]);
+	if(typeof message === "string") {message = parseInt(message);}
+	this.state = message;
+	this.emit( "state", {value: message} );
 	return this;
 }
 
+BrickOpenHAB_Dimmer.prototype.setValue	= function(value) {
+	this.sendCommand(""+value);
+	return value;
+}
+
 module.exports = BrickOpenHAB_Dimmer;
+

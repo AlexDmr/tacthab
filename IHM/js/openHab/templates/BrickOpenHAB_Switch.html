@@ -1,3 +1,7 @@
-<md-switch ng-model="brick.state" aria-label="brick.name" class="md-block">
-	{{brick.name}} {{brick.state}}
+<md-switch	ng-model="ctrl.value" 
+			aria-label="brick.name" 
+			class="md-block" 
+			ng-change="ctrl.userSetSwitch()"
+			>
+{{brick.name}}
 </md-switch>

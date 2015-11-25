@@ -102,8 +102,10 @@ gulp.task("webpack", function(callback) {
 var filesToWatch =	[ 'css/**/*.css'
 					, 'js/**/*.js'
 					, 'js/**/*.css'
+					, 'js/**/*.html'
 					, 'templates/**/*.js'
 					, 'templates/**/*.css'
+					, 'templates/**/*.html'
 					];
 
 

@@ -14,10 +14,12 @@
 			<h4>Bricks</h4>
 			<md-list>
 				<md-subheader class="md-no-sticky">OpenHab</md-subheader>
-				<md-list-item ng-repeat="brick in context.bricks | toArray:flase | filter:{type: 'BrickOpenHAB_item'}">
-					<label alx-draggable="brick">
-						<brick-openhab data="brick"></brick-openhab>
-					</label>
+				<md-list-item flex ng-repeat="brick in context.bricks | toArray:flase | filter:{type: 'BrickOpenHAB_item'}">
+					<section alx-draggable="brick" flex>
+						<md-card>
+							<brick-openhab data="brick"></brick-openhab>
+						</md-card>
+					</section>
 				</<md-list-item>
 			</md-list>
 		</md-content>

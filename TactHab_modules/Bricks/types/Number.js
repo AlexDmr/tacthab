@@ -16,6 +16,12 @@ BrickOpenHAB_Number.prototype.getTypes		= function() {return types;}
 
 BrickOpenHAB_Number.prototype.registerType(BrickOpenHAB_Number.prototype.getTypeName(), BrickOpenHAB_Number.prototype);
 
+BrickOpenHAB_Number.prototype.init			= function(device) {
+	BrickOpenHAB_item.prototype.init.apply(this, [device]);
+	this.state = parseFloat( device.state );
+	return this;
+}
+
 BrickOpenHAB_Number.prototype.update	= function(topic, operation, message) {
 	console.log( "BrickOpenHAB_Number::update", topic, operation, message );
 	BrickOpenHAB_item.prototype.update.apply(this, [topic, operation, message]);
@@ -24,6 +30,6 @@ BrickOpenHAB_Number.prototype.update	= function(topic, operation, message) {
 	return this;
 }
 
-BrickOpenHAB_Number.prototype.setNumber	= function(num) {this.sendCommand(num); return true;}
+BrickOpenHAB_Number.prototype.setNumber	= function(num) {this.sendCommand(""+num); return true;}
 
 module.exports = BrickOpenHAB_Number;

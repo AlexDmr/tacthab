@@ -24,7 +24,7 @@ BrickOpenHAB_item.prototype.dispose			= function() {
 	return this;
 }
 
-BrickOpenHAB_item.prototype.getDescription		= function() {
+BrickOpenHAB_item.prototype.getDescription	= function() {
 	// console.log("BrickOpenHAB_item::getDescription");
 	var json	= Brick.prototype.getDescription.apply(this, []);
 	json.class	= this.getTypeName();
@@ -34,6 +34,7 @@ BrickOpenHAB_item.prototype.getDescription		= function() {
 BrickOpenHAB_item.prototype.init			= function(device) {
 	Brick.prototype.init.apply(this, [device]);
 	this.name	= device.name;
+	this.state	= device.state || "";
 	return this;
 }
 BrickOpenHAB_item.prototype.getESA			= function() {
@@ -54,11 +55,7 @@ BrickOpenHAB_item.prototype.publish			= function(topic, message) {
 		}
 	}
 BrickOpenHAB_item.prototype.update			= function(topic, operation, message) {
-	/*console.log	( this.brickId, this.getTypeName(), "::update"
-				, "\n\t- topic     :", topic
-				, "\n\t- operation :", operation
-				, "\n\t- message   :", message
-				)*/
+	this.state = message;
 	this.emit('update', {topic:topic, operation:operation, message:message});
 	return this;
 }

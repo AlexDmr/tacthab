@@ -1,4 +1,5 @@
 require( "./controllerIHM.css" );
+require( "./openHab/openHab.css" );
 var utils	= require( "../../js/utils.js" )
   , context	= {bricks: {}}
   ;
@@ -8,7 +9,7 @@ utils.initIO( location.hostname + ":" + location.port + "/m2m" );
 var timer;
 function refresh(scope, dt) {
 	if(timer) {clearTimeout( timer );}
-	timer = setTimeout( function() {scope.$apply(); delete timer;}, dt );
+	timer = setTimeout( function() {scope.$apply(); timer = null;}, dt );
 }
 
 var app =

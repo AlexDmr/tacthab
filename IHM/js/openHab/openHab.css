@@ -7,3 +7,14 @@ open-hab h4 {
     margin-top		: 0.5em;
     margin-bottom	: 0.75em;
 }
+
+brick-openhab md-slider[md-discrete] {
+    margin-right	: 20px;
+	margin-left		: 15px;
+}
+
+brick-openhab md-input-container.color input {
+	width			: 2em;
+	height			: 2em;
+	display			: inline-flex;
+}

@@ -21,7 +21,6 @@ BrickOpenHAB_String.prototype.update	= function(topic, operation, message) {
 	BrickOpenHAB_item.prototype.update.apply(this, [topic, operation, message]);
 	this.state = message;
 	this.emit("state", {value: this.state});
-	console.log("BrickOpenHAB_String::update with", message);
 	return this;
 }
 
