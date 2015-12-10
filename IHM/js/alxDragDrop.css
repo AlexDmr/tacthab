@@ -1,0 +1,7 @@
+.acceptDrop {
+	border			: solid black 3px;
+}
+
+.acceptDrop.canDrop {
+	border			: solid green 3px;
+}
