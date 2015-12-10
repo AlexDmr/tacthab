@@ -30,7 +30,7 @@ module.exports = function(scope, utils) {
 		// console.log(this.color);
 		if(noUpdate !== true) {scope.$apply();}
 	}
-	
+	console.log( "color init with", scope.brick.state ); 
 	this.updateState( {data: scope.brick.state}
 					, true 
 					);

@@ -15,7 +15,11 @@
 			<md-list>
 				<md-subheader class="md-no-sticky">OpenHab</md-subheader>
 				<md-list-item flex ng-repeat="brick in context.bricks | toArray:flase | filter:{type: 'BrickOpenHAB_item'}">
-					<section alx-draggable="brick" flex>
+					<section alx-draggable="brick" 
+							 class="Brick" 
+							 alx-drag-start="ctrl.closeBricks()"
+							 alx-drag-end="ctrl.openBricks()"
+							 flex>
 						<md-card>
 							<brick-openhab data="brick"></brick-openhab>
 						</md-card>

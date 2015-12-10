@@ -1,4 +1,8 @@
-<md-card class="activity">
+<md-card class="activity"
+		 alx-droppable		= ".Brick"
+		 alx-accept-feedback= "acceptDrop"
+		 alx-hover-feedback	= "canDrop"
+		 >
 	<md-card-content>
 		<h2 ng-bind="activity.name"></h2>
 		<p ng-bind="activity.description"></p>

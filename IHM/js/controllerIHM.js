@@ -1,5 +1,7 @@
 require( "./controllerIHM.css" );
 require( "./openHab/openHab.css" );
+require( "../bower_components/ngDraggable/ngDraggable.js" );
+
 var utils	= require( "../../js/utils.js" )
   , context	= {bricks: {}}
   ;
@@ -13,7 +15,7 @@ function refresh(scope, dt) {
 }
 
 var app =
-angular	.module( "ihmActivity", ["ngMaterial", "ui.router", "angular-toArrayFilter"] )
+angular	.module( "ihmActivity", ["ngMaterial", "ui.router", "angular-toArrayFilter", "ngDraggable"] )
 		.controller	( "TActHabIHMController"
 					, function($scope, $http) {
 						 var ctrl = this;

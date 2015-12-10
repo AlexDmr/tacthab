@@ -46,7 +46,9 @@
 
 	__webpack_require__( 1 );
 	__webpack_require__( 5 );
-	var utils	= __webpack_require__( 7 )
+	__webpack_require__( 7 );
+
+	var utils	= __webpack_require__( 8 )
 	  , context	= {bricks: {}}
 	  ;
 
@@ -59,7 +61,7 @@
 	}
 
 	var app =
-	angular	.module( "ihmActivity", ["ngMaterial", "ui.router", "angular-toArrayFilter"] )
+	angular	.module( "ihmActivity", ["ngMaterial", "ui.router", "angular-toArrayFilter", "ngDraggable"] )
 			.controller	( "TActHabIHMController"
 						, function($scope, $http) {
 							 var ctrl = this;
@@ -93,13 +95,13 @@
 						)
 			;
 
-	__webpack_require__( 58 )(app);
-	__webpack_require__( 63 )(app);
-	__webpack_require__( 66 )(app);
-	__webpack_require__( 69 )(app);
+	__webpack_require__( 59 )(app);
+	__webpack_require__( 64 )(app);
+	__webpack_require__( 67 )(app);
 	__webpack_require__( 70 )(app);
 	__webpack_require__( 73 )(app);
 	__webpack_require__( 76 )(app);
+	__webpack_require__( 79 )(app);
 
 
 
@@ -121,11 +123,618 @@
 /***/ },
 /* 6 */,
 /* 7 */
+/***/ function(module, exports) {
+
+	/*
+	 *
+	 * https://github.com/fatlinesofcode/ngDraggable
+	 */
+	angular.module("ngDraggable", [])
+	        .service('ngDraggable', [function() {
+
+
+	            var scope = this;
+	            scope.inputEvent = function(event) {
+	                return angular.isDefined(event.touches) ? event.touches[0] : event;
+	            };
+
+	        }])
+	        .directive('ngDrag', ['$rootScope', '$parse', '$document', '$window', 'ngDraggable', function ($rootScope, $parse, $document, $window, ngDraggable) {
+	            return {
+	                restrict: 'A',
+	                link: function (scope, element, attrs) {
+	                    scope.value = attrs.ngDrag;
+	                    var offset,_centerAnchor=false,_mx,_my,_tx,_ty,_mrx,_mry;
+	                    var _hasTouch = ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch;
+	                    var _pressEvents = 'touchstart mousedown';
+	                    var _moveEvents = 'touchmove mousemove';
+	                    var _releaseEvents = 'touchend mouseup';
+	                    var _dragHandle;
+
+	                    // to identify the element in order to prevent getting superflous events when a single element has both drag and drop directives on it.
+	                    var _myid = scope.$id;
+	                    var _data = null;
+
+	                    var _dragOffset = null;
+
+	                    var _dragEnabled = false;
+
+	                    var _pressTimer = null;
+
+	                    var onDragSuccessCallback = $parse(attrs.ngDragSuccess) || null;
+	                    var allowTransform = angular.isDefined(attrs.allowTransform) ? scope.$eval(attrs.allowTransform) : true;
+
+	                    var getDragData = $parse(attrs.ngDragData);
+
+	                    // deregistration function for mouse move events in $rootScope triggered by jqLite trigger handler
+	                    var _deregisterRootMoveListener = angular.noop;
+
+	                    var initialize = function () {
+	                        element.attr('draggable', 'false'); // prevent native drag
+	                        // check to see if drag handle(s) was specified
+	                        var dragHandles = element.find('[ng-drag-handle]');
+	                        if (dragHandles.length) {
+	                            _dragHandle = dragHandles;
+	                        }
+	                        toggleListeners(true);
+	                    };
+
+	                    var toggleListeners = function (enable) {
+	                        if (!enable)return;
+	                        // add listeners.
+
+	                        scope.$on('$destroy', onDestroy);
+	                        scope.$watch(attrs.ngDrag, onEnableChange);
+	                        scope.$watch(attrs.ngCenterAnchor, onCenterAnchor);
+	                        // wire up touch events
+	                        if (_dragHandle) {
+	                            // handle(s) specified, use those to initiate drag
+	                            _dragHandle.on(_pressEvents, onpress);
+	                        } else {
+	                            // no handle(s) specified, use the element as the handle
+	                            element.on(_pressEvents, onpress);
+	                        }
+	                        if(! _hasTouch && element[0].nodeName.toLowerCase() == "img"){
+	                            element.on('mousedown', function(){ return false;}); // prevent native drag for images
+	                        }
+	                    };
+	                    var onDestroy = function (enable) {
+	                        toggleListeners(false);
+	                    };
+	                    var onEnableChange = function (newVal, oldVal) {
+	                        _dragEnabled = (newVal);
+	                    };
+	                    var onCenterAnchor = function (newVal, oldVal) {
+	                        if(angular.isDefined(newVal))
+	                        _centerAnchor = (newVal || 'true');
+	                    };
+
+	                    var isClickableElement = function (evt) {
+	                        return (
+	                                angular.isDefined(angular.element(evt.target).attr("ng-cancel-drag"))
+	                                );
+	                    };
+	                    /*
+	                     * When the element is clicked start the drag behaviour
+	                     * On touch devices as a small delay so as not to prevent native window scrolling
+	                     */
+	                    var onpress = function(evt) {
+	                        if(! _dragEnabled)return;
+
+	                        if (isClickableElement(evt)) {
+	                            return;
+	                        }
+
+	                        if (evt.type == "mousedown" && evt.button != 0) {
+	                            // Do not start dragging on right-click
+	                            return;
+	                        }
+
+	                        if(_hasTouch){
+	                            cancelPress();
+	                            _pressTimer = setTimeout(function(){
+	                                cancelPress();
+	                                onlongpress(evt);
+	                            },100);
+	                            $document.on(_moveEvents, cancelPress);
+	                            $document.on(_releaseEvents, cancelPress);
+	                        }else{
+	                            onlongpress(evt);
+	                        }
+
+	                    };
+
+	                    var cancelPress = function() {
+	                        clearTimeout(_pressTimer);
+	                        $document.off(_moveEvents, cancelPress);
+	                        $document.off(_releaseEvents, cancelPress);
+	                    };
+
+	                    var onlongpress = function(evt) {
+	                        if(! _dragEnabled)return;
+	                        evt.preventDefault();
+
+	                        offset = element[0].getBoundingClientRect();
+	                        if(allowTransform)
+	                        _dragOffset = offset;
+	                        else{
+	                            _dragOffset = {left:document.body.scrollLeft, top:document.body.scrollTop};
+	                        }
+
+
+	                        element.centerX = element[0].offsetWidth / 2;
+	                        element.centerY = element[0].offsetHeight / 2;
+
+	                        _mx = ngDraggable.inputEvent(evt).pageX;//ngDraggable.getEventProp(evt, 'pageX');
+	                        _my = ngDraggable.inputEvent(evt).pageY;//ngDraggable.getEventProp(evt, 'pageY');
+	                        _mrx = _mx - offset.left;
+	                        _mry = _my - offset.top;
+	                         if (_centerAnchor) {
+	                             _tx = _mx - element.centerX - $window.pageXOffset;
+	                             _ty = _my - element.centerY - $window.pageYOffset;
+	                        } else {
+	                             _tx = _mx - _mrx - $window.pageXOffset;
+	                             _ty = _my - _mry - $window.pageYOffset;
+	                        }
+
+	                        $document.on(_moveEvents, onmove);
+	                        $document.on(_releaseEvents, onrelease);
+	                        // This event is used to receive manually triggered mouse move events
+	                        // jqLite unfortunately only supports triggerHandler(...)
+	                        // See http://api.jquery.com/triggerHandler/
+	                        // _deregisterRootMoveListener = $rootScope.$on('draggable:_triggerHandlerMove', onmove);
+	                        _deregisterRootMoveListener = $rootScope.$on('draggable:_triggerHandlerMove', function(event, origEvent) {
+	                            onmove(origEvent);
+	                        });
+	                    };
+
+	                    var onmove = function (evt) {
+	                        if (!_dragEnabled)return;
+	                        evt.preventDefault();
+
+	                        if (!element.hasClass('dragging')) {
+	                            _data = getDragData(scope);
+	                            element.addClass('dragging');
+	                            $rootScope.$broadcast('draggable:start', {x:_mx, y:_my, tx:_tx, ty:_ty, event:evt, element:element, data:_data});
+	                        }
+
+	                        _mx = ngDraggable.inputEvent(evt).pageX;//ngDraggable.getEventProp(evt, 'pageX');
+	                        _my = ngDraggable.inputEvent(evt).pageY;//ngDraggable.getEventProp(evt, 'pageY');
+
+	                        if (_centerAnchor) {
+	                            _tx = _mx - element.centerX - _dragOffset.left;
+	                            _ty = _my - element.centerY - _dragOffset.top;
+	                        } else {
+	                            _tx = _mx - _mrx - _dragOffset.left;
+	                            _ty = _my - _mry - _dragOffset.top;
+	                        }
+
+	                        moveElement(_tx, _ty);
+
+	                        $rootScope.$broadcast('draggable:move', { x: _mx, y: _my, tx: _tx, ty: _ty, event: evt, element: element, data: _data, uid: _myid });
+	                    };
+
+	                    var onrelease = function(evt) {
+	                        if (!_dragEnabled)
+	                            return;
+	                        evt.preventDefault();
+	                        $rootScope.$broadcast('draggable:end', {x:_mx, y:_my, tx:_tx, ty:_ty, event:evt, element:element, data:_data, callback:onDragComplete, uid: _myid});
+	                        element.removeClass('dragging');
+	                        element.parent().find('.drag-enter').removeClass('drag-enter');
+	                        reset();
+	                        $document.off(_moveEvents, onmove);
+	                        $document.off(_releaseEvents, onrelease);
+	                        _deregisterRootMoveListener();
+	                    };
+
+	                    var onDragComplete = function(evt) {
+	                        if (!onDragSuccessCallback )return;
+
+	                        scope.$apply(function () {
+	                            onDragSuccessCallback(scope, {$data: _data, $event: evt});
+	                        });
+	                    };
+
+	                    var reset = function() {
+	                        if(allowTransform)
+	                        element.css({transform:'', 'z-index':'', '-webkit-transform':'', '-ms-transform':''});
+	                        else
+	                        element.css({'position':'',top:'',left:''});
+	                    };
+
+	                    var moveElement = function (x, y) {
+	                        if(allowTransform) {
+	                            element.css({
+	                                transform: 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 0, 1)',
+	                                'z-index': 99999,
+	                                '-webkit-transform': 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + x + ', ' + y + ', 0, 1)',
+	                                '-ms-transform': 'matrix(1, 0, 0, 1, ' + x + ', ' + y + ')'
+	                            });
+	                        }else{
+	                            element.css({'left':x+'px','top':y+'px', 'position':'fixed'});
+	                        }
+	                    };
+	                    initialize();
+	                }
+	            };
+	        }])
+
+	        .directive('ngDrop', ['$parse', '$timeout', '$window', '$document', 'ngDraggable', function ($parse, $timeout, $window, $document, ngDraggable) {
+	            return {
+	                restrict: 'A',
+	                link: function (scope, element, attrs) {
+	                    scope.value = attrs.ngDrop;
+	                    scope.isTouching = false;
+
+	                    var _lastDropTouch=null;
+
+	                    var _myid = scope.$id;
+
+	                    var _dropEnabled=false;
+
+	                    var onDropCallback = $parse(attrs.ngDropSuccess);// || function(){};
+
+	                    var onDragStartCallback = $parse(attrs.ngDragStart);
+	                    var onDragStopCallback = $parse(attrs.ngDragStop);
+	                    var onDragMoveCallback = $parse(attrs.ngDragMove);
+
+	                    var initialize = function () {
+	                        toggleListeners(true);
+	                    };
+
+	                    var toggleListeners = function (enable) {
+	                        // remove listeners
+
+	                        if (!enable)return;
+	                        // add listeners.
+	                        scope.$watch(attrs.ngDrop, onEnableChange);
+	                        scope.$on('$destroy', onDestroy);
+	                        scope.$on('draggable:start', onDragStart);
+	                        scope.$on('draggable:move', onDragMove);
+	                        scope.$on('draggable:end', onDragEnd);
+	                    };
+
+	                    var onDestroy = function (enable) {
+	                        toggleListeners(false);
+	                    };
+	                    var onEnableChange = function (newVal, oldVal) {
+	                        _dropEnabled=newVal;
+	                    };
+	                    var onDragStart = function(evt, obj) {
+	                        if(! _dropEnabled)return;
+	                        isTouching(obj.x,obj.y,obj.element);
+
+	                        if (attrs.ngDragStart) {
+	                            $timeout(function(){
+	                                onDragStartCallback(scope, {$data: obj.data, $event: obj});
+	                            });
+	                        }
+	                    };
+	                    var onDragMove = function(evt, obj) {
+	                        if(! _dropEnabled)return;
+	                        isTouching(obj.x,obj.y,obj.element);
+
+	                        if (attrs.ngDragMove) {
+	                            $timeout(function(){
+	                                onDragMoveCallback(scope, {$data: obj.data, $event: obj});
+	                            });
+	                        }
+	                    };
+
+	                    var onDragEnd = function (evt, obj) {
+
+	                        // don't listen to drop events if this is the element being dragged
+	                        // only update the styles and return
+	                        if (!_dropEnabled || _myid === obj.uid) {
+	                            updateDragStyles(false, obj.element);
+	                            return;
+	                        }
+	                        if (isTouching(obj.x, obj.y, obj.element)) {
+	                            // call the ngDraggable ngDragSuccess element callback
+	                           if(obj.callback){
+	                                obj.callback(obj);
+	                            }
+
+	                            if (attrs.ngDropSuccess) {
+	                                $timeout(function(){
+	                                    onDropCallback(scope, {$data: obj.data, $event: obj, $target: scope.$eval(scope.value)});
+	                                });
+	                            }
+	                        }
+
+	                        if (attrs.ngDragStop) {
+	                            $timeout(function(){
+	                                onDragStopCallback(scope, {$data: obj.data, $event: obj});
+	                            });
+	                        }
+
+	                        updateDragStyles(false, obj.element);
+	                    };
+
+	                    var isTouching = function(mouseX, mouseY, dragElement) {
+	                        var touching= hitTest(mouseX, mouseY);
+	                        scope.isTouching = touching;
+	                        if(touching){
+	                            _lastDropTouch = element;
+	                        }
+	                        updateDragStyles(touching, dragElement);
+	                        return touching;
+	                    };
+
+	                    var updateDragStyles = function(touching, dragElement) {
+	                        if(touching){
+	                            element.addClass('drag-enter');
+	                            dragElement.addClass('drag-over');
+	                        }else if(_lastDropTouch == element){
+	                            _lastDropTouch=null;
+	                            element.removeClass('drag-enter');
+	                            dragElement.removeClass('drag-over');
+	                        }
+	                    };
+
+	                    var hitTest = function(x, y) {
+	                        var bounds = element[0].getBoundingClientRect();// ngDraggable.getPrivOffset(element);
+	                        x -= $document[0].body.scrollLeft + $document[0].documentElement.scrollLeft;
+	                        y -= $document[0].body.scrollTop + $document[0].documentElement.scrollTop;
+	                        return  x >= bounds.left
+	                                && x <= bounds.right
+	                                && y <= bounds.bottom
+	                                && y >= bounds.top;
+	                    };
+
+	                    initialize();
+	                }
+	            };
+	        }])
+	        .directive('ngDragClone', ['$parse', '$timeout', 'ngDraggable', function ($parse, $timeout, ngDraggable) {
+	            return {
+	                restrict: 'A',
+	                link: function (scope, element, attrs) {
+	                    var img, _allowClone=true;
+	                    var _dragOffset = null;
+	                    scope.clonedData = {};
+	                    var initialize = function () {
+
+	                        img = element.find('img');
+	                        element.attr('draggable', 'false');
+	                        img.attr('draggable', 'false');
+	                        reset();
+	                        toggleListeners(true);
+	                    };
+
+
+	                    var toggleListeners = function (enable) {
+	                        // remove listeners
+
+	                        if (!enable)return;
+	                        // add listeners.
+	                        scope.$on('draggable:start', onDragStart);
+	                        scope.$on('draggable:move', onDragMove);
+	                        scope.$on('draggable:end', onDragEnd);
+	                        preventContextMenu();
+
+	                    };
+	                    var preventContextMenu = function() {
+	                      //  element.off('mousedown touchstart touchmove touchend touchcancel', absorbEvent_);
+	                        img.off('mousedown touchstart touchmove touchend touchcancel', absorbEvent_);
+	                      //  element.on('mousedown touchstart touchmove touchend touchcancel', absorbEvent_);
+	                        img.on('mousedown touchstart touchmove touchend touchcancel', absorbEvent_);
+	                    };
+	                    var onDragStart = function(evt, obj, elm) {
+	                        _allowClone=true;
+	                        if(angular.isDefined(obj.data.allowClone)){
+	                            _allowClone=obj.data.allowClone;
+	                        }
+	                        if(_allowClone) {
+	                            scope.$apply(function () {
+	                                scope.clonedData = obj.data;
+	                            });
+	                            element.css('width', obj.element[0].offsetWidth);
+	                            element.css('height', obj.element[0].offsetHeight);
+
+	                            moveElement(obj.tx, obj.ty);
+	                        }
+
+	                        _dragOffset = element[0].getBoundingClientRect();//ngDraggable.getPrivOffset(element);
+	                    };
+	                    var onDragMove = function(evt, obj) {
+	                        if(_allowClone) {
+
+	                            _tx = obj.tx + _dragOffset.left;
+	                            _ty = obj.ty + _dragOffset.top;
+
+	                            moveElement(_tx, _ty);
+	                        }
+	                    };
+	                    var onDragEnd = function(evt, obj) {
+	                        //moveElement(obj.tx,obj.ty);
+	                        if(_allowClone) {
+	                            reset();
+	                        }
+	                    };
+
+	                    var reset = function() {
+	                        element.css({left:0,top:0, position:'fixed', 'z-index':-1, visibility:'hidden'});
+	                    };
+	                    var moveElement = function(x,y) {
+	                        element.css({
+	                            transform: 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, '+x+', '+y+', 0, 1)', 'z-index': 99999, 'visibility': 'visible',
+	                            '-webkit-transform': 'matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, '+x+', '+y+', 0, 1)',
+	                            '-ms-transform': 'matrix(1, 0, 0, 1, '+x+', '+y+')'
+	                            //,margin: '0'  don't monkey with the margin,
+	                        });
+	                    };
+
+	                    var absorbEvent_ = function (event) {
+	                        var e = event;//.originalEvent;
+	                        e.preventDefault && e.preventDefault();
+	                        e.stopPropagation && e.stopPropagation();
+	                        e.cancelBubble = true;
+	                        e.returnValue = false;
+	                        return false;
+	                    };
+
+	                    initialize();
+	                }
+	            };
+	        }])
+	    .directive('ngPreventDrag', ['$parse', '$timeout', function ($parse, $timeout) {
+	        return {
+	            restrict: 'A',
+	            link: function (scope, element, attrs) {
+	                var initialize = function () {
+
+	                    element.attr('draggable', 'false');
+	                    toggleListeners(true);
+	                };
+
+
+	                var toggleListeners = function (enable) {
+	                    // remove listeners
+
+	                    if (!enable)return;
+	                    // add listeners.
+	                    element.on('mousedown touchstart touchmove touchend touchcancel', absorbEvent_);
+	                };
+
+
+	                var absorbEvent_ = function (event) {
+	                    var e = event.originalEvent;
+	                    e.preventDefault && e.preventDefault();
+	                    e.stopPropagation && e.stopPropagation();
+	                    e.cancelBubble = true;
+	                    e.returnValue = false;
+	                    return false;
+	                };
+
+	                initialize();
+	            }
+	        };
+	    }])
+	    .directive('ngCancelDrag', [function () {
+	        return {
+	            restrict: 'A',
+	            link: function (scope, element, attrs) {
+	                element.find('*').attr('ng-cancel-drag', 'ng-cancel-drag');
+	            }
+	        };
+	    }])
+	    .directive('ngDragScroll', ['$window', '$interval', '$timeout', '$document', '$rootScope', function($window, $interval, $timeout, $document, $rootScope) {
+	        return {
+	            restrict: 'A',
+	            link: function(scope, element, attrs) {
+	                var intervalPromise = null;
+	                var lastMouseEvent = null;
+
+	                var config = {
+	                    verticalScroll: attrs.verticalScroll || true,
+	                    horizontalScroll: attrs.horizontalScroll || true,
+	                    activationDistance: attrs.activationDistance || 75,
+	                    scrollDistance: attrs.scrollDistance || 50,
+	                    scrollInterval: attrs.scrollInterval || 250
+	                };
+
+	                var createInterval = function() {
+	                    intervalPromise = $interval(function() {
+	                        if (!lastMouseEvent) return;
+
+	                        var viewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+	                        var viewportHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+	                        var scrollX = 0;
+	                        var scrollY = 0;
+
+	                        if (config.horizontalScroll) {
+	                            // If horizontal scrolling is active.
+	                            if (lastMouseEvent.clientX < config.activationDistance) {
+	                                // If the mouse is on the left of the viewport within the activation distance.
+	                                scrollX = -config.scrollDistance;
+	                            }
+	                            else if (lastMouseEvent.clientX > viewportWidth - config.activationDistance) {
+	                                // If the mouse is on the right of the viewport within the activation distance.
+	                                scrollX = config.scrollDistance;
+	                            }
+	                        }
+
+	                        if (config.verticalScroll) {
+	                            // If vertical scrolling is active.
+	                            if (lastMouseEvent.clientY < config.activationDistance) {
+	                                // If the mouse is on the top of the viewport within the activation distance.
+	                                scrollY = -config.scrollDistance;
+	                            }
+	                            else if (lastMouseEvent.clientY > viewportHeight - config.activationDistance) {
+	                                // If the mouse is on the bottom of the viewport within the activation distance.
+	                                scrollY = config.scrollDistance;
+	                            }
+	                        }
+
+	                        if (scrollX !== 0 || scrollY !== 0) {
+	                            // Record the current scroll position.
+	                            var currentScrollLeft = $document[0].documentElement.scrollLeft;
+	                            var currentScrollTop = $document[0].documentElement.scrollTop;
+
+	                            // Remove the transformation from the element, scroll the window by the scroll distance
+	                            // record how far we scrolled, then reapply the element transformation.
+	                            var elementTransform = element.css('transform');
+	                            element.css('transform', 'initial');
+
+	                            $window.scrollBy(scrollX, scrollY);
+
+	                            var horizontalScrollAmount = $document[0].documentElement.scrollLeft - currentScrollLeft;
+	                            var verticalScrollAmount =  $document[0].documentElement.scrollTop - currentScrollTop;
+
+	                            element.css('transform', elementTransform);
+
+	                            // On the next digest cycle, trigger a mousemove event equal to the amount we scrolled so
+	                            // the element moves correctly.
+	                            $timeout(function() {
+	                                lastMouseEvent.pageX += horizontalScrollAmount;
+	                                lastMouseEvent.pageY += verticalScrollAmount;
+
+	                                $rootScope.$emit('draggable:_triggerHandlerMove', lastMouseEvent);
+	                            });
+	                        }
+
+	                    }, config.scrollInterval);
+	                };
+
+	                var clearInterval = function() {
+	                    $interval.cancel(intervalPromise);
+	                    intervalPromise = null;
+	                };
+
+	                scope.$on('draggable:start', function(event, obj) {
+	                    // Ignore this event if it's not for this element.
+	                    if (obj.element[0] !== element[0]) return;
+
+	                    if (!intervalPromise) createInterval();
+	                });
+
+	                scope.$on('draggable:end', function(event, obj) {
+	                    // Ignore this event if it's not for this element.
+	                    if (obj.element[0] !== element[0]) return;
+
+	                    if (intervalPromise) clearInterval();
+	                });
+
+	                scope.$on('draggable:move', function(event, obj) {
+	                    // Ignore this event if it's not for this element.
+	                    if (obj.element[0] !== element[0]) return;
+
+	                    lastMouseEvent = obj.event;
+	                });
+	            }
+	        };
+	    }]);
+
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var io = __webpack_require__(//'../node_modules/socket.io/lib/client.js'
 					// '../node_modules/socket.io/node_modules/socket.io-client/socket.io.js'
-					8
+					9
 					);
 
 	var callId = 0;
@@ -230,15 +839,15 @@
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(9);
+	module.exports = __webpack_require__(10);
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -246,10 +855,10 @@
 	 * Module dependencies.
 	 */
 
-	var url = __webpack_require__(10);
-	var parser = __webpack_require__(13);
-	var Manager = __webpack_require__(20);
-	var debug = __webpack_require__(12)('socket.io-client');
+	var url = __webpack_require__(11);
+	var parser = __webpack_require__(14);
+	var Manager = __webpack_require__(21);
+	var debug = __webpack_require__(13)('socket.io-client');
 
 	/**
 	 * Module exports.
@@ -326,12 +935,12 @@
 	 * @api public
 	 */
 
-	exports.Manager = __webpack_require__(20);
-	exports.Socket = __webpack_require__(52);
+	exports.Manager = __webpack_require__(21);
+	exports.Socket = __webpack_require__(53);
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -339,8 +948,8 @@
 	 * Module dependencies.
 	 */
 
-	var parseuri = __webpack_require__(11);
-	var debug = __webpack_require__(12)('socket.io-client:url');
+	var parseuri = __webpack_require__(12);
+	var debug = __webpack_require__(13)('socket.io-client:url');
 
 	/**
 	 * Module exports.
@@ -411,7 +1020,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 	/**
@@ -442,7 +1051,7 @@
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 	
@@ -585,7 +1194,7 @@
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -593,12 +1202,12 @@
 	 * Module dependencies.
 	 */
 
-	var debug = __webpack_require__(12)('socket.io-parser');
-	var json = __webpack_require__(14);
-	var isArray = __webpack_require__(16);
-	var Emitter = __webpack_require__(17);
-	var binary = __webpack_require__(18);
-	var isBuf = __webpack_require__(19);
+	var debug = __webpack_require__(13)('socket.io-parser');
+	var json = __webpack_require__(15);
+	var isArray = __webpack_require__(17);
+	var Emitter = __webpack_require__(18);
+	var binary = __webpack_require__(19);
+	var isBuf = __webpack_require__(20);
 
 	/**
 	 * Protocol version.
@@ -991,7 +1600,7 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*! JSON v3.2.6 | http://bestiejs.github.io/json3 | Copyright 2012-2013, Kit Cambridge | http://kit.mit-license.org */
@@ -1001,7 +1610,7 @@
 
 	  // Detect the `define` function exposed by asynchronous module loaders. The
 	  // strict `define` check is necessary for compatibility with `r.js`.
-	  var isLoader = "function" === "function" && __webpack_require__(15);
+	  var isLoader = "function" === "function" && __webpack_require__(16);
 
 	  // Detect native implementations.
 	  var nativeJSON = typeof JSON == "object" && JSON;
@@ -1858,7 +2467,7 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -1866,7 +2475,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	module.exports = Array.isArray || function (arr) {
@@ -1875,7 +2484,7 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	
@@ -2045,7 +2654,7 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*global Blob,File*/
@@ -2054,8 +2663,8 @@
 	 * Module requirements
 	 */
 
-	var isArray = __webpack_require__(16);
-	var isBuf = __webpack_require__(19);
+	var isArray = __webpack_require__(17);
+	var isBuf = __webpack_require__(20);
 
 	/**
 	 * Replaces every Buffer | ArrayBuffer in packet with a numbered placeholder.
@@ -2193,7 +2802,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -2213,7 +2822,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -2221,17 +2830,17 @@
 	 * Module dependencies.
 	 */
 
-	var url = __webpack_require__(10);
-	var eio = __webpack_require__(21);
-	var Socket = __webpack_require__(52);
-	var Emitter = __webpack_require__(17);
-	var parser = __webpack_require__(13);
-	var on = __webpack_require__(54);
-	var bind = __webpack_require__(55);
-	var object = __webpack_require__(56);
-	var debug = __webpack_require__(12)('socket.io-client:manager');
-	var indexOf = __webpack_require__(49);
-	var Backoff = __webpack_require__(57);
+	var url = __webpack_require__(11);
+	var eio = __webpack_require__(22);
+	var Socket = __webpack_require__(53);
+	var Emitter = __webpack_require__(18);
+	var parser = __webpack_require__(14);
+	var on = __webpack_require__(55);
+	var bind = __webpack_require__(56);
+	var object = __webpack_require__(57);
+	var debug = __webpack_require__(13)('socket.io-client:manager');
+	var indexOf = __webpack_require__(50);
+	var Backoff = __webpack_require__(58);
 
 	/**
 	 * Module exports
@@ -2722,19 +3331,19 @@
 
 
 /***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	module.exports =  __webpack_require__(22);
-
-
-/***/ },
 /* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(23);
+	module.exports =  __webpack_require__(23);
+
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	module.exports = __webpack_require__(24);
 
 	/**
 	 * Exports parser
@@ -2742,25 +3351,25 @@
 	 * @api public
 	 *
 	 */
-	module.exports.parser = __webpack_require__(31);
+	module.exports.parser = __webpack_require__(32);
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 
-	var transports = __webpack_require__(24);
-	var Emitter = __webpack_require__(17);
-	var debug = __webpack_require__(43)('engine.io-client:socket');
-	var index = __webpack_require__(49);
-	var parser = __webpack_require__(31);
-	var parseuri = __webpack_require__(50);
-	var parsejson = __webpack_require__(51);
-	var parseqs = __webpack_require__(41);
+	var transports = __webpack_require__(25);
+	var Emitter = __webpack_require__(18);
+	var debug = __webpack_require__(44)('engine.io-client:socket');
+	var index = __webpack_require__(50);
+	var parser = __webpack_require__(32);
+	var parseuri = __webpack_require__(51);
+	var parsejson = __webpack_require__(52);
+	var parseqs = __webpack_require__(42);
 
 	/**
 	 * Module exports.
@@ -2875,9 +3484,9 @@
 	 */
 
 	Socket.Socket = Socket;
-	Socket.Transport = __webpack_require__(30);
-	Socket.transports = __webpack_require__(24);
-	Socket.parser = __webpack_require__(31);
+	Socket.Transport = __webpack_require__(31);
+	Socket.transports = __webpack_require__(25);
+	Socket.parser = __webpack_require__(32);
 
 	/**
 	 * Creates transport of the given type.
@@ -3458,17 +4067,17 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies
 	 */
 
-	var XMLHttpRequest = __webpack_require__(25);
-	var XHR = __webpack_require__(28);
-	var JSONP = __webpack_require__(46);
-	var websocket = __webpack_require__(47);
+	var XMLHttpRequest = __webpack_require__(26);
+	var XHR = __webpack_require__(29);
+	var JSONP = __webpack_require__(47);
+	var websocket = __webpack_require__(48);
 
 	/**
 	 * Export transports.
@@ -3518,11 +4127,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// browser shim for xmlhttprequest module
-	var hasCORS = __webpack_require__(26);
+	var hasCORS = __webpack_require__(27);
 
 	module.exports = function(opts) {
 	  var xdomain = opts.xdomain;
@@ -3560,7 +4169,7 @@
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -3568,7 +4177,7 @@
 	 * Module dependencies.
 	 */
 
-	var global = __webpack_require__(27);
+	var global = __webpack_require__(28);
 
 	/**
 	 * Module exports.
@@ -3589,7 +4198,7 @@
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 	
@@ -3603,18 +4212,18 @@
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module requirements.
 	 */
 
-	var XMLHttpRequest = __webpack_require__(25);
-	var Polling = __webpack_require__(29);
-	var Emitter = __webpack_require__(17);
-	var inherit = __webpack_require__(42);
-	var debug = __webpack_require__(43)('engine.io-client:polling-xhr');
+	var XMLHttpRequest = __webpack_require__(26);
+	var Polling = __webpack_require__(30);
+	var Emitter = __webpack_require__(18);
+	var inherit = __webpack_require__(43);
+	var debug = __webpack_require__(44)('engine.io-client:polling-xhr');
 
 	/**
 	 * Module exports.
@@ -3994,18 +4603,18 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Transport = __webpack_require__(30);
-	var parseqs = __webpack_require__(41);
-	var parser = __webpack_require__(31);
-	var inherit = __webpack_require__(42);
-	var debug = __webpack_require__(43)('engine.io-client:polling');
+	var Transport = __webpack_require__(31);
+	var parseqs = __webpack_require__(42);
+	var parser = __webpack_require__(32);
+	var inherit = __webpack_require__(43);
+	var debug = __webpack_require__(44)('engine.io-client:polling');
 
 	/**
 	 * Module exports.
@@ -4018,7 +4627,7 @@
 	 */
 
 	var hasXHR2 = (function() {
-	  var XMLHttpRequest = __webpack_require__(25);
+	  var XMLHttpRequest = __webpack_require__(26);
 	  var xhr = new XMLHttpRequest({ xdomain: false });
 	  return null != xhr.responseType;
 	})();
@@ -4245,15 +4854,15 @@
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var parser = __webpack_require__(31);
-	var Emitter = __webpack_require__(17);
+	var parser = __webpack_require__(32);
+	var Emitter = __webpack_require__(18);
 
 	/**
 	 * Module exports.
@@ -4410,19 +5019,19 @@
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 
-	var keys = __webpack_require__(32);
-	var hasBinary = __webpack_require__(33);
-	var sliceBuffer = __webpack_require__(35);
-	var base64encoder = __webpack_require__(36);
-	var after = __webpack_require__(37);
-	var utf8 = __webpack_require__(38);
+	var keys = __webpack_require__(33);
+	var hasBinary = __webpack_require__(34);
+	var sliceBuffer = __webpack_require__(36);
+	var base64encoder = __webpack_require__(37);
+	var after = __webpack_require__(38);
+	var utf8 = __webpack_require__(39);
 
 	/**
 	 * Check if we are running an android browser. That requires us to use
@@ -4479,7 +5088,7 @@
 	 * Create a blob api even for blob builder when vendor prefixes exist
 	 */
 
-	var Blob = __webpack_require__(40);
+	var Blob = __webpack_require__(41);
 
 	/**
 	 * Encodes a packet.
@@ -5011,7 +5620,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports) {
 
 	
@@ -5036,7 +5645,7 @@
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -5044,7 +5653,7 @@
 	 * Module requirements.
 	 */
 
-	var isArray = __webpack_require__(34);
+	var isArray = __webpack_require__(35);
 
 	/**
 	 * Module exports.
@@ -5101,7 +5710,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports) {
 
 	module.exports = Array.isArray || function (arr) {
@@ -5110,7 +5719,7 @@
 
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports) {
 
 	/**
@@ -5145,7 +5754,7 @@
 
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports) {
 
 	/*
@@ -5210,7 +5819,7 @@
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports) {
 
 	module.exports = after
@@ -5244,7 +5853,7 @@
 
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/utf8js v2.0.0 by @mathias */
@@ -5490,10 +6099,10 @@
 
 	}(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(39)(module), (function() { return this; }())))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(40)(module), (function() { return this; }())))
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -5509,7 +6118,7 @@
 
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -5612,7 +6221,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports) {
 
 	/**
@@ -5655,7 +6264,7 @@
 
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports) {
 
 	
@@ -5667,7 +6276,7 @@
 	};
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -5677,7 +6286,7 @@
 	 * Expose `debug()` as the module.
 	 */
 
-	exports = module.exports = __webpack_require__(44);
+	exports = module.exports = __webpack_require__(45);
 	exports.log = log;
 	exports.formatArgs = formatArgs;
 	exports.save = save;
@@ -5820,7 +6429,7 @@
 
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -5836,7 +6445,7 @@
 	exports.disable = disable;
 	exports.enable = enable;
 	exports.enabled = enabled;
-	exports.humanize = __webpack_require__(45);
+	exports.humanize = __webpack_require__(46);
 
 	/**
 	 * The currently active debug mode names, and names to skip.
@@ -6023,7 +6632,7 @@
 
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports) {
 
 	/**
@@ -6140,7 +6749,7 @@
 
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -6148,8 +6757,8 @@
 	 * Module requirements.
 	 */
 
-	var Polling = __webpack_require__(29);
-	var inherit = __webpack_require__(42);
+	var Polling = __webpack_require__(30);
+	var inherit = __webpack_require__(43);
 
 	/**
 	 * Module exports.
@@ -6380,18 +6989,18 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Transport = __webpack_require__(30);
-	var parser = __webpack_require__(31);
-	var parseqs = __webpack_require__(41);
-	var inherit = __webpack_require__(42);
-	var debug = __webpack_require__(43)('engine.io-client:websocket');
+	var Transport = __webpack_require__(31);
+	var parser = __webpack_require__(32);
+	var parseqs = __webpack_require__(42);
+	var inherit = __webpack_require__(43);
+	var debug = __webpack_require__(44)('engine.io-client:websocket');
 
 	/**
 	 * `ws` exposes a WebSocket-compatible interface in
@@ -6399,7 +7008,7 @@
 	 * in the browser.
 	 */
 
-	var WebSocket = __webpack_require__(48);
+	var WebSocket = __webpack_require__(49);
 
 	/**
 	 * Module exports.
@@ -6624,7 +7233,7 @@
 
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports) {
 
 	
@@ -6673,7 +7282,7 @@
 
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports) {
 
 	
@@ -6688,7 +7297,7 @@
 	};
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports) {
 
 	/**
@@ -6733,7 +7342,7 @@
 
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -6771,7 +7380,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -6779,13 +7388,13 @@
 	 * Module dependencies.
 	 */
 
-	var parser = __webpack_require__(13);
-	var Emitter = __webpack_require__(17);
-	var toArray = __webpack_require__(53);
-	var on = __webpack_require__(54);
-	var bind = __webpack_require__(55);
-	var debug = __webpack_require__(12)('socket.io-client:socket');
-	var hasBin = __webpack_require__(33);
+	var parser = __webpack_require__(14);
+	var Emitter = __webpack_require__(18);
+	var toArray = __webpack_require__(54);
+	var on = __webpack_require__(55);
+	var bind = __webpack_require__(56);
+	var debug = __webpack_require__(13)('socket.io-client:socket');
+	var hasBin = __webpack_require__(34);
 
 	/**
 	 * Module exports.
@@ -7162,7 +7771,7 @@
 
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports) {
 
 	module.exports = toArray
@@ -7181,7 +7790,7 @@
 
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports) {
 
 	
@@ -7211,7 +7820,7 @@
 
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports) {
 
 	/**
@@ -7240,7 +7849,7 @@
 
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports) {
 
 	
@@ -7329,7 +7938,7 @@
 	};
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports) {
 
 	
@@ -7420,10 +8029,10 @@
 
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 59 );
+	__webpack_require__( 60 );
 
 	module.exports = function(app) {
 		app.directive	( "brickItem"
@@ -7446,20 +8055,20 @@
 
 
 /***/ },
-/* 59 */
+/* 60 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 60 */,
 /* 61 */,
 /* 62 */,
-/* 63 */
+/* 63 */,
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 64 );
-	var utils = __webpack_require__( 7 );
+	__webpack_require__( 65 );
+	var utils = __webpack_require__( 8 );
 
 	module.exports = function(app) {
 		app.directive	( "mediaPlayer"
@@ -7586,18 +8195,18 @@
 
 
 /***/ },
-/* 64 */
+/* 65 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 65 */,
-/* 66 */
+/* 66 */,
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 67 );
-	var utils		= __webpack_require__( 7 )
+	__webpack_require__( 68 );
+	var utils		= __webpack_require__( 8 )
 	  , parser		= new DOMParser()
 	  ;
 
@@ -7689,15 +8298,17 @@
 
 
 /***/ },
-/* 67 */
+/* 68 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 68 */,
-/* 69 */
-/***/ function(module, exports) {
+/* 69 */,
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__( 71 );
 
 	var draggingPointers	= {}
 	  , dropZones			= {}
@@ -7772,7 +8383,15 @@
 			}
 		}
 	}
-	function getCB_dragStart_mouse(draggedData) {return function(e) {dragStart(e, "mouse", e, draggedData);}}
+	function getCB_dragStart_mouse(innerScope) {
+		 return function(e) {dragStart(e, "mouse", e, innerScope.draggedData);
+							 innerScope.alxDragStart( innerScope.scope
+													, { event	: e
+													  , data	: innerScope.draggedData
+													  }
+													);
+							}
+		}
 
 	function dragEnd(event, idPointer) {
 		// Stop drop zones feedback
@@ -7793,8 +8412,14 @@
 		delete draggingPointers[idPointer];
 	}
 
-	function dragEnd_mouse(event) {
-		return dragEnd(event, "mouse");
+	function getCB_dragEnd_mouse(innerScope) {
+		return function (e) {dragEnd(e, "mouse");
+							 innerScope.alxDragEnd	( innerScope.scope
+													, { event	: e
+													  , data	: innerScope.draggedData
+													  }
+													);
+							}
 	}
 
 
@@ -7803,19 +8428,24 @@
 	//_________________________________________________________________________________________________________________
 	module.exports = function(app) {
 		app	.directive	( "alxDraggable" 
-						, function() {
+						, function($parse) {
 							return {
 								  restrict		: 'A'
-								, link	: function(scope, elements, attr, controller) {
+								, link	: function(scope, elements, attrs, controller) {
 									 var element = elements[0];
-									 // console.log( "alxDraggable:", attr.alxDraggable, attr);
+									 // console.log( "alxDraggable:", attrs.alxDraggable, attrs);
 									 element.setAttribute("draggable", "true");
 									 
-									 var draggedData = scope.$eval( attr.alxDraggable );
+									 var innerScope =	{ alxDragStart	: $parse( attrs.alxDragStart )
+														, alxDragEnd	: $parse( attrs.alxDragEnd   )
+														, draggedData	: scope.$eval( attrs.alxDraggable )
+														, scope			: scope
+														};
+									 // var draggedData = scope.$eval( attrs.alxDraggable );
 									 
-									 element.ondragstart	= getCB_dragStart_mouse(draggedData)
-									 element.ondragend		= dragEnd_mouse;
-									 element.ondragcancel	= dragEnd_mouse;
+									 element.ondragstart	= getCB_dragStart_mouse	( innerScope );
+									 element.ondragend		= getCB_dragEnd_mouse	( innerScope );
+									 element.ondragcancel	= getCB_dragEnd_mouse	( innerScope );
 									 elements.on('$destroy', function() {
 										element.setAttribute("draggable", "false");
 										element.ondragstart		= null;
@@ -7832,9 +8462,10 @@
 								  link	: function(scope, elements, attrs, controller) {
 									 var element = elements[0];
 									 var idDrop = idDropZone++;
-									 var innerScope = 	{ accept			: attrs.accept
-														, acceptFeedback	: attrs.acceptFeedback
-														, hoverFeedback		: attrs.hoverFeedback
+									 console.log( "alxDroppable", attrs);
+									 var innerScope = 	{ accept			: attrs.alxDroppable
+														, acceptFeedback	: attrs.alxAcceptFeedback
+														, hoverFeedback		: attrs.alxHoverFeedback
 														, dropAction		: $parse( attrs.dropAction )
 														}
 									   ;
@@ -7869,10 +8500,17 @@
 
 
 /***/ },
-/* 70 */
+/* 71 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 72 */,
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 71 );
+	__webpack_require__( 74 );
 	// var utils = require( "../../../js/utils.js" );
 
 	module.exports = function(app) {
@@ -7905,17 +8543,17 @@
 	}
 
 /***/ },
-/* 71 */
+/* 74 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 72 */,
-/* 73 */
+/* 75 */,
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 74 );
+	__webpack_require__( 77 );
 	// var utils = require( "../../../js/utils.js" );
 
 	/* Activity :
@@ -7950,37 +8588,37 @@
 
 
 /***/ },
-/* 74 */
+/* 77 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 75 */,
-/* 76 */
+/* 78 */,
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__( 5 );
 
-	var utils = __webpack_require__( 7 );
-	var templates	=	{ BrickOpenHAB_Switch			: __webpack_require__( 77		)
-						, BrickOpenHAB_String			: __webpack_require__( 78		)
-						, BrickOpenHAB_RollerShutter	: __webpack_require__( 79)
-						, BrickOpenHAB_Number			: __webpack_require__( 80		)
-						, BrickOpenHAB_Dimmer			: __webpack_require__( 81		)
-						, BrickOpenHAB_DateTime			: __webpack_require__( 82		)
-						, BrickOpenHAB_Contact			: __webpack_require__( 83		)
-						, BrickOpenHAB_Color			: __webpack_require__( 84		)
+	var utils = __webpack_require__( 8 );
+	var templates	=	{ BrickOpenHAB_Switch			: __webpack_require__( 80		)
+						, BrickOpenHAB_String			: __webpack_require__( 81		)
+						, BrickOpenHAB_RollerShutter	: __webpack_require__( 82)
+						, BrickOpenHAB_Number			: __webpack_require__( 83		)
+						, BrickOpenHAB_Dimmer			: __webpack_require__( 84		)
+						, BrickOpenHAB_DateTime			: __webpack_require__( 85		)
+						, BrickOpenHAB_Contact			: __webpack_require__( 86		)
+						, BrickOpenHAB_Color			: __webpack_require__( 87		)
 						};
 
-	var controllers	=	{BrickOpenHAB_Switch			: __webpack_require__( 85			)
-						, BrickOpenHAB_String			: __webpack_require__( 86			)
-						, BrickOpenHAB_RollerShutter	: __webpack_require__( 87	)
-						, BrickOpenHAB_Number			: __webpack_require__( 88			)
-						, BrickOpenHAB_Dimmer			: __webpack_require__( 89			)
-						, BrickOpenHAB_DateTime			: __webpack_require__( 90		)
-						, BrickOpenHAB_Contact			: __webpack_require__( 91		)
-						, BrickOpenHAB_Color			: __webpack_require__( 92			)
+	var controllers	=	{BrickOpenHAB_Switch			: __webpack_require__( 88			)
+						, BrickOpenHAB_String			: __webpack_require__( 89			)
+						, BrickOpenHAB_RollerShutter	: __webpack_require__( 90	)
+						, BrickOpenHAB_Number			: __webpack_require__( 91			)
+						, BrickOpenHAB_Dimmer			: __webpack_require__( 92			)
+						, BrickOpenHAB_DateTime			: __webpack_require__( 93		)
+						, BrickOpenHAB_Contact			: __webpack_require__( 94		)
+						, BrickOpenHAB_Color			: __webpack_require__( 95			)
 						};
 						
 	// Subscribe to openHab messages
@@ -8088,55 +8726,55 @@
 
 
 /***/ },
-/* 77 */
+/* 80 */
 /***/ function(module, exports) {
 
 	module.exports = "<md-switch\tng-model=\"ctrl.value\" \r\n\t\t\taria-label=\"brick.name\" \r\n\t\t\tclass=\"md-block\" \r\n\t\t\tng-change=\"ctrl.userSetSwitch()\"\r\n\t\t\t>\r\n{{brick.name}}\r\n</md-switch>"
 
 /***/ },
-/* 78 */
+/* 81 */
 /***/ function(module, exports) {
 
 	module.exports = "\r\n<md-input-container>\r\n    <label>{{brick.name}}</label>\r\n    <input\tng-model=\"brick.state\" \r\n\t\t\ttype=\"text\"\r\n\t\t\tng-change=\"ctrl.userSetText()\"\r\n\t\t\t/>\r\n</md-input-container>\r\n"
 
 /***/ },
-/* 79 */
+/* 82 */
 /***/ function(module, exports) {
 
 	module.exports = "\r\nRollerShutter"
 
 /***/ },
-/* 80 */
+/* 83 */
 /***/ function(module, exports) {
 
 	module.exports = "\r\n<md-input-container class=\"md-block\" flex>\r\n\t<label>{{brick.name}}</label>\r\n\t<!--<md-icon md-svg-src=\"img/icons/ic_card_giftcard_24px.svg\"></md-icon>-->\r\n\t<input\tng-model=\"ctrl.value\" \r\n\t\t\ttype=\"number\" \r\n\t\t\tng-change=\"ctrl.userSetNumber()\"\r\n\t\t\tflex \r\n\t\t\t/>\r\n</md-input-container>"
 
 /***/ },
-/* 81 */
+/* 84 */
 /***/ function(module, exports) {
 
 	module.exports = "<md-content layout=\"column\">\r\n\t<p>{{brick.name}}</p>\r\n\t<md-slider\tflex \r\n\t\t\t\tmd-discrete \r\n\t\t\t\tng-model=\"ctrl.value\" \r\n\t\t\t\tstep=\"1\" min=\"0\" max=\"100\" \r\n\t\t\t\taria-label=\"{{brick.name}}\"\r\n\t\t\t\tng-change=\"ctrl.userSetDimmer()\"\r\n\t\t\t\t>\r\n\t</md-slider>\r\n</md-content>\r\n"
 
 /***/ },
-/* 82 */
+/* 85 */
 /***/ function(module, exports) {
 
 	module.exports = "\r\nDateTime"
 
 /***/ },
-/* 83 */
+/* 86 */
 /***/ function(module, exports) {
 
 	module.exports = "Contact {{brick.name}}: {{brick.state}}"
 
 /***/ },
-/* 84 */
+/* 87 */
 /***/ function(module, exports) {
 
 	module.exports = "<md-content class=\"md-block color\">\r\n\t<input \t\taria-label=\"{{brick.name}}\"\r\n\t\t\t\tng-model=\"ctrl.color\"\r\n\t\t\t\ttype=\"color\"\r\n\t\t\t\tng-change=\"ctrl.userSetColor()\"\r\n\t\t\t\t/>\r\n\t{{brick.name}}\r\n</md-content>"
 
 /***/ },
-/* 85 */
+/* 88 */
 /***/ function(module, exports) {
 
 	module.exports = function(scope, utils) {
@@ -8160,7 +8798,7 @@
 
 
 /***/ },
-/* 86 */
+/* 89 */
 /***/ function(module, exports) {
 
 	module.exports = function(scope, utils) {
@@ -8184,7 +8822,7 @@
 
 
 /***/ },
-/* 87 */
+/* 90 */
 /***/ function(module, exports) {
 
 	/**
@@ -8193,7 +8831,7 @@
 
 
 /***/ },
-/* 88 */
+/* 91 */
 /***/ function(module, exports) {
 
 	module.exports = function(scope, utils) {
@@ -8217,7 +8855,7 @@
 
 
 /***/ },
-/* 89 */
+/* 92 */
 /***/ function(module, exports) {
 
 	module.exports = function(scope, utils) {
@@ -8242,7 +8880,7 @@
 
 
 /***/ },
-/* 90 */
+/* 93 */
 /***/ function(module, exports) {
 
 	/**
@@ -8251,7 +8889,7 @@
 
 
 /***/ },
-/* 91 */
+/* 94 */
 /***/ function(module, exports) {
 
 	/**
@@ -8260,10 +8898,10 @@
 
 
 /***/ },
-/* 92 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var convert = __webpack_require__( 93 );
+	var convert = __webpack_require__( 96 );
 
 	function toHex(d) {
 		return  ("0"+(Number(d).toString(16))).slice(-2).toLowerCase()
@@ -8295,7 +8933,7 @@
 			// console.log(this.color);
 			if(noUpdate !== true) {scope.$apply();}
 		}
-		
+		console.log( "color init with", scope.brick.state ); 
 		this.updateState( {data: scope.brick.state}
 						, true 
 						);
@@ -8303,7 +8941,7 @@
 
 
 /***/ },
-/* 93 */
+/* 96 */
 /***/ function(module, exports) {
 
 	/**

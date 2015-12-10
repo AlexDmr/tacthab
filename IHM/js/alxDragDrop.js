@@ -1,3 +1,5 @@
+require( "./alxDragDrop.css" );
+
 var draggingPointers	= {}
   , dropZones			= {}
   , idDropZone			= 0
@@ -71,7 +73,15 @@ function dragStart(event, idPointer, info, draggedData) {
 		}
 	}
 }
-function getCB_dragStart_mouse(draggedData) {return function(e) {dragStart(e, "mouse", e, draggedData);}}
+function getCB_dragStart_mouse(innerScope) {
+	 return function(e) {dragStart(e, "mouse", e, innerScope.draggedData);
+						 innerScope.alxDragStart( innerScope.scope
+												, { event	: e
+												  , data	: innerScope.draggedData
+												  }
+												);
+						}
+	}
 
 function dragEnd(event, idPointer) {
 	// Stop drop zones feedback
@@ -92,8 +102,14 @@ function dragEnd(event, idPointer) {
 	delete draggingPointers[idPointer];
 }
 
-function dragEnd_mouse(event) {
-	return dragEnd(event, "mouse");
+function getCB_dragEnd_mouse(innerScope) {
+	return function (e) {dragEnd(e, "mouse");
+						 innerScope.alxDragEnd	( innerScope.scope
+												, { event	: e
+												  , data	: innerScope.draggedData
+												  }
+												);
+						}
 }
 
 
@@ -102,19 +118,24 @@ function dragEnd_mouse(event) {
 //_________________________________________________________________________________________________________________
 module.exports = function(app) {
 	app	.directive	( "alxDraggable" 
-					, function() {
+					, function($parse) {
 						return {
 							  restrict		: 'A'
-							, link	: function(scope, elements, attr, controller) {
+							, link	: function(scope, elements, attrs, controller) {
 								 var element = elements[0];
-								 // console.log( "alxDraggable:", attr.alxDraggable, attr);
+								 // console.log( "alxDraggable:", attrs.alxDraggable, attrs);
 								 element.setAttribute("draggable", "true");
 								 
-								 var draggedData = scope.$eval( attr.alxDraggable );
+								 var innerScope =	{ alxDragStart	: $parse( attrs.alxDragStart )
+													, alxDragEnd	: $parse( attrs.alxDragEnd   )
+													, draggedData	: scope.$eval( attrs.alxDraggable )
+													, scope			: scope
+													};
+								 // var draggedData = scope.$eval( attrs.alxDraggable );
 								 
-								 element.ondragstart	= getCB_dragStart_mouse(draggedData)
-								 element.ondragend		= dragEnd_mouse;
-								 element.ondragcancel	= dragEnd_mouse;
+								 element.ondragstart	= getCB_dragStart_mouse	( innerScope );
+								 element.ondragend		= getCB_dragEnd_mouse	( innerScope );
+								 element.ondragcancel	= getCB_dragEnd_mouse	( innerScope );
 								 elements.on('$destroy', function() {
 									element.setAttribute("draggable", "false");
 									element.ondragstart		= null;
@@ -131,9 +152,10 @@ module.exports = function(app) {
 							  link	: function(scope, elements, attrs, controller) {
 								 var element = elements[0];
 								 var idDrop = idDropZone++;
-								 var innerScope = 	{ accept			: attrs.accept
-													, acceptFeedback	: attrs.acceptFeedback
-													, hoverFeedback		: attrs.hoverFeedback
+								 console.log( "alxDroppable", attrs);
+								 var innerScope = 	{ accept			: attrs.alxDroppable
+													, acceptFeedback	: attrs.alxAcceptFeedback
+													, hoverFeedback		: attrs.alxHoverFeedback
 													, dropAction		: $parse( attrs.dropAction )
 													}
 								   ;

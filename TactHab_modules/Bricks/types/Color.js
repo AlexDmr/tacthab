@@ -2,10 +2,10 @@ var BrickOpenHAB_item = require( './BrickOpenHAB_item.js' )
 
 var BrickOpenHAB_Color							= function() {
 	BrickOpenHAB_item.apply(this, []);
-	this.color = { hue			: 0
+	/*this.color = { hue			: 0
 				 , saturation	: 0
 				 , brightness	: 0
-				 };
+				 };*/
 	return this;
 }
 
@@ -15,8 +15,8 @@ BrickOpenHAB_Color.prototype.getTypeName 		= function() {return "BrickOpenHAB_Co
 
 BrickOpenHAB_Color.prototype.init				= function(device) {
 	BrickOpenHAB_item.prototype.init.apply(this, [device]);
-	// console.log( "BrickOpenHAB_Color init", this.name, device );
 	var HSV = device.state.split(',');
+	this.color = 
 	this.state =	{ hue			: parseFloat( HSV[0] )
 					, saturation	: parseFloat( HSV[1] )
 					, brightness	: parseFloat( HSV[2] ) };
@@ -47,6 +47,7 @@ BrickOpenHAB_Color.prototype.update				= function(topic, operation, message) {
 		 default:
 			var HSV = message.split(',');
 			if(HSV.length === 3) {
+				 this.state = this.color;
 				 this.color.hue			= parseFloat( HSV[0] );
 				 this.color.saturation	= parseFloat( HSV[1] );
 				 this.color.brightness	= parseFloat( HSV[2] );
