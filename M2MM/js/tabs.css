@@ -1,0 +1,72 @@
+/* Tabs */
+.tabs > .tabMenu {
+	border-top		: solid black 1px;
+	border-left		: solid black 1px;
+	border-right	: solid black 1px;
+	background		: lightgrey;
+}
+
+.tabs > .tabMenu > * {
+	border-right		: solid black 1px;
+	padding-left		: 1em;
+	padding-right		: 1em;
+	padding-bottom		: 0px;
+	margin				: 0px;
+	position			: relative;
+    top					: 1px;
+}
+
+.tabs > .tabMenu > .display {
+	background			: #9FF;
+}
+
+.tabs > .tabContents > .tabContent.hidden {
+	display				: none;
+}
+
+.tabs > .tabContents > .tabContent.appearing {
+	transform			: rotateY(90deg);
+	-webkit-transform	: rotateY(90deg);
+}
+
+.tabs > .tabContents > .tabContent {
+	transform			: rotateY(-90deg);
+	-webkit-transform	: rotateY(-90deg);
+	opacity				: 0.5;
+	-webkit-transition	: -webkit-transform 0.25s ease-in, opacity 0.25s; /* Safari */
+    transition			: transform 0.25s ease-in, opacity 0.25s;
+	-webkit-transform-style: preserve-3d;
+}
+
+.tabs > .tabContents > .tabContent.display {
+	transform			: rotateY(0deg);
+	-webkit-transform	: rotateY(0deg);
+	opacity				: 1;
+	-webkit-transition	: -webkit-transform 0.25s ease-out, opacity 0.25s; /* Safari */
+    transition			: transform 0.25s ease-out, opacity 0.25s;
+	
+}
+
+.tabContents {
+	background			: #9FF;
+	padding				: 0.5em;
+}
+
+.tabs {
+	border				: solid black 1px;
+	border-radius		: 5px;
+	-moz-perspective	: 1000px; /* FireFox */
+	-webkit-perspective	: 1000px; /* Chrome, Safari, Opera */
+    perspective			: 1000px;
+
+	display				: flex;
+	flex-flow			: column wrap;
+	/*
+	-moz-box-shadow		: 10px 10px 5px #656565;
+	-webkit-box-shadow	: 10px 10px 5px #656565;
+	-o-box-shadow		: 10px 10px 5px #656565;
+	box-shadow			: 10px 10px 5px #656565;
+	filter				: progid:DXImageTransform.Microsoft.Shadow(color='#6565', Direction=135, Strength=5);
+	*/
+}
+

@@ -1,0 +1,41 @@
+<!doctype html>
+
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, user-scalable=yes"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	
+	<link rel="stylesheet" type="text/css" href="bundleM2MM.css"></link>
+	<script src="bundleM2MM.js"></script>
+</head>
+<body>
+	<h1>Démo multimodale</h1>
+	<div class="tabs">
+		<div class="tabMenu">
+			<span data-target="accelerometer"  >Accéléromètre</span>
+			<span data-target="multitouch">Multi-touches</span>
+			<span data-target="vocal">Voix</span>
+		</div>
+		<div class="tabContents">
+			<div class="tabContent accelerometer" data-tab="accelerometer">
+				<svg>
+					<g class="root">
+						<polyline class="alpha"/>
+						<polyline class="beta" />
+						<polyline class="gamma"/>
+					</g>
+				</svg>
+				<div class="root_perspective">
+					<img src="surface3.png" class="device"/>
+				</div>
+			</div>
+			<div class="tabContent multitouch" data-tab="multitouch">
+			</div>
+			<div class="tabContent vocal" data-tab="vocal">
+				<p class="intermediate"></p>
+				<div class="final"/>
+			</div>
+		</div>
+
+</body>
+</html>

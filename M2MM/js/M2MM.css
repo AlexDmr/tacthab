@@ -1,0 +1,46 @@
+html, body {
+	font-family			: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	height				: 100%;
+	margin				: 0;
+	padding				: 0;
+}
+
+input, select, button {
+	border-radius		: 5px;
+	
+}
+
+input:focus, select:focus {
+	border-color		: rgba(128, 128, 255, 1);
+	box-shadow			: 0 1px 1px rgba(128, 128, 255, 0.075) inset, 0 0 8px rgba(128, 128, 255, 0.6);
+	outline				: 0 none;
+	transition			: border-color 0.15s, box-shadow 0.15s;
+}
+
+body {
+	display				: flex;
+	flex-flow			: column;
+}
+
+body > h1 {
+	flex				: 0 1 auto;
+}
+
+.tabs {
+	flex				: 1 1;
+	display				: flex;
+	flex-flow			: column;
+}
+
+.tabs > .tabMenu {
+	flex				: 0 1 auto;
+}
+
+.tabs > .tabContents  {
+	flex				: 1 1;
+	display				: flex;
+}
+
+.tabs > .tabContents > *  {
+	flex				: 1 1;
+}

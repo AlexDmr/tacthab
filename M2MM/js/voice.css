@@ -1,0 +1,13 @@
+.vocal {
+	background		: blue;
+	color			: yellow;
+	font-family		: "Lucida Console";
+}
+
+.vocal p {
+	display			: block;
+}
+
+.vocal .intermediate {
+	background		: lightblue;
+}

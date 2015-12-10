@@ -1,0 +1,43 @@
+.accelerometer svg {
+	border			: solid black 1px;
+	height			: 200px;
+	width			: 100%;
+}
+
+.accelerometer  svg   polyline {
+	fill			: none;
+	stroke-width	: 1;
+}
+
+.accelerometer svg  polyline.alpha {stroke: red  ;}
+.accelerometer svg  polyline.beta   {stroke: green;}
+.accelerometer svg  polyline.gamma {stroke: blue ;}
+
+.accelerometer svg g.root {
+	transform		: matrix(1,0,0,0.5,0,10);
+}
+
+
+.accelerometer {
+	display			: block;
+	text-align		: center;
+}
+
+.device {
+	position		: absolute;
+	width			: 10cm;
+	height			: 10cm;
+	display			: inline-block;
+/*	background		: yellow;
+	border			: solid black 3px;
+	border-radius	: 1em;*/
+}
+
+.root_perspective {
+	position		: relative;
+	width			: 10cm;
+	height			: 10cm;
+	border			: solid black 3px;
+	display			: inline-block;
+	text-align		: left;
+}

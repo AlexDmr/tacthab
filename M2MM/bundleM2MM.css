@@ -1,0 +1,204 @@
+/* Tabs */
+.tabs > .tabMenu {
+	border-top		: solid black 1px;
+	border-left		: solid black 1px;
+	border-right	: solid black 1px;
+	background		: lightgrey;
+}
+
+.tabs > .tabMenu > * {
+	border-right		: solid black 1px;
+	padding-left		: 1em;
+	padding-right		: 1em;
+	padding-bottom		: 0px;
+	margin				: 0px;
+	position			: relative;
+    top					: 1px;
+}
+
+.tabs > .tabMenu > .display {
+	background			: #9FF;
+}
+
+.tabs > .tabContents > .tabContent.hidden {
+	display				: none;
+}
+
+.tabs > .tabContents > .tabContent.appearing {
+	transform			: rotateY(90deg);
+	-webkit-transform	: rotateY(90deg);
+}
+
+.tabs > .tabContents > .tabContent {
+	transform			: rotateY(-90deg);
+	-webkit-transform	: rotateY(-90deg);
+	opacity				: 0.5;
+	-webkit-transition	: -webkit-transform 0.25s ease-in, opacity 0.25s; /* Safari */
+    transition			: transform 0.25s ease-in, opacity 0.25s;
+	-webkit-transform-style: preserve-3d;
+}
+
+.tabs > .tabContents > .tabContent.display {
+	transform			: rotateY(0deg);
+	-webkit-transform	: rotateY(0deg);
+	opacity				: 1;
+	-webkit-transition	: -webkit-transform 0.25s ease-out, opacity 0.25s; /* Safari */
+    transition			: transform 0.25s ease-out, opacity 0.25s;
+	
+}
+
+.tabContents {
+	background			: #9FF;
+	padding				: 0.5em;
+}
+
+.tabs {
+	border				: solid black 1px;
+	border-radius		: 5px;
+	-moz-perspective	: 1000px; /* FireFox */
+	-webkit-perspective	: 1000px; /* Chrome, Safari, Opera */
+    perspective			: 1000px;
+
+	display				: flex;
+	flex-flow			: column wrap;
+	/*
+	-moz-box-shadow		: 10px 10px 5px #656565;
+	-webkit-box-shadow	: 10px 10px 5px #656565;
+	-o-box-shadow		: 10px 10px 5px #656565;
+	box-shadow			: 10px 10px 5px #656565;
+	filter				: progid:DXImageTransform.Microsoft.Shadow(color='#6565', Direction=135, Strength=5);
+	*/
+}
+
+.accelerometer svg {
+	border			: solid black 1px;
+	height			: 200px;
+	width			: 100%;
+}
+
+.accelerometer  svg   polyline {
+	fill			: none;
+	stroke-width	: 1;
+}
+
+.accelerometer svg  polyline.alpha {stroke: red  ;}
+.accelerometer svg  polyline.beta   {stroke: green;}
+.accelerometer svg  polyline.gamma {stroke: blue ;}
+
+.accelerometer svg g.root {
+	transform		: matrix(1,0,0,0.5,0,10);
+}
+
+
+.accelerometer {
+	display			: block;
+	text-align		: center;
+}
+
+.device {
+	position		: absolute;
+	width			: 10cm;
+	height			: 10cm;
+	display			: inline-block;
+/*	background		: yellow;
+	border			: solid black 3px;
+	border-radius	: 1em;*/
+}
+
+.root_perspective {
+	position		: relative;
+	width			: 10cm;
+	height			: 10cm;
+	border			: solid black 3px;
+	display			: inline-block;
+	text-align		: left;
+}
+.multitouch {
+	background		: radial-gradient(circle at 0% 50%, rgba(96, 16, 48, 0) 9px, #613 10px, rgba(96, 16, 48, 0) 11px) 0px 10px,
+					  radial-gradient(at 100% 100%,     rgba(96, 16, 48, 0) 9px, #613 10px, rgba(96, 16, 48, 0) 11px),
+					  #8a3;
+	background-size	: 20px 20px;
+	overflow		: hidden;
+}
+
+div.geometric {
+	border			: solid black 1px;
+	background		: white;
+	position		: absolute;
+	width			: 2cm;
+	height			: 2cm;
+}
+
+div.geometric.selected {
+	border			: solid black 3px;
+}
+
+div.geometric.rectangle {
+	border-radius	: 0;
+}
+
+div.geometric.ovale {
+	border-radius	: 50%;
+}
+
+div.geometric.arrondi {
+	border-radius	: 1em;
+}
+.vocal {
+	background		: blue;
+	color			: yellow;
+	font-family		: "Lucida Console";
+}
+
+.vocal p {
+	display			: block;
+}
+
+.vocal .intermediate {
+	background		: lightblue;
+}html, body {
+	font-family			: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	height				: 100%;
+	margin				: 0;
+	padding				: 0;
+}
+
+input, select, button {
+	border-radius		: 5px;
+	
+}
+
+input:focus, select:focus {
+	border-color		: rgba(128, 128, 255, 1);
+	box-shadow			: 0 1px 1px rgba(128, 128, 255, 0.075) inset, 0 0 8px rgba(128, 128, 255, 0.6);
+	outline				: 0 none;
+	transition			: border-color 0.15s, box-shadow 0.15s;
+}
+
+body {
+	display				: flex;
+	flex-flow			: column;
+}
+
+body > h1 {
+	flex				: 0 1 auto;
+}
+
+.tabs {
+	flex				: 1 1;
+	display				: flex;
+	flex-flow			: column;
+}
+
+.tabs > .tabMenu {
+	flex				: 0 1 auto;
+}
+
+.tabs > .tabContents  {
+	flex				: 1 1;
+	display				: flex;
+}
+
+.tabs > .tabContents > *  {
+	flex				: 1 1;
+}
