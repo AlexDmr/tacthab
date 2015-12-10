@@ -1,14 +1,15 @@
-var fs				= require( 'fs-extra' )
-  , express			= require( 'express' )
-  , bodyParser		= require( 'body-parser' )
-  , xmldom			= require( 'xmldom' )
-  , multer			= require( 'multer' )
-  , io				= require( 'socket.io' )
-  , request			= require( 'request' )
-  , path			= require( 'path' )
+var fs				= require( 'fs-extra'					)
+  , express			= require( 'express'					)
+  , bodyParser		= require( 'body-parser'				)
+  , xmldom			= require( 'xmldom'						)
+  , multer			= require( 'multer'						)
+  , io				= require( 'socket.io'					)
+  , request			= require( 'request'					)
+  , path			= require( 'path'						)
+  , https			= require( "https"						)
   // , ioClient		= require( 'socket.io-client' )
-  , Brick			= require( '../Bricks/Brick.js' )
-  , ProgramNode		= require( '../programNodes/program.js' )
+  , Brick			= require( '../Bricks/Brick.js'			)
+  , ProgramNode		= require( '../programNodes/program.js'	)
   ;
   
  
@@ -20,6 +21,7 @@ var TLS_SSL =	{ key	: fs.readFileSync( path.join('MM.pem'		 ) )
 
 var webServer = Brick.D_brick.webServer = {
 	  fs			: fs
+	, TLS_SSL		: TLS_SSL
 	, express		: express
 	, bodyParser	: bodyParser
 	, xmldom		: xmldom
@@ -58,7 +60,7 @@ var webServer = Brick.D_brick.webServer = {
 							}
 						} );
 		}
-	, init			: function(staticPath, HTTP_port, rootPath) { //logPass) {
+	, init			: function(staticPath, HTTP_port, https_port, rootPath) { //logPass) {
 		 // var self = this;
 		 this.rootPath		= rootPath;
 		 
@@ -71,6 +73,11 @@ var webServer = Brick.D_brick.webServer = {
 								.use( this.bodyParser.json() )
 								.use( this.multer.single() )
 								.listen( HTTP_port ) ;
+		 // HTTPS
+		 https.createServer(TLS_SSL, this.app).listen(https_port);
+		 console.log("HTTPS server listening on port " + https_port);
+
+		 // Socket.io and clients
 		 this.clients = {};
 		 this.io	= io;
 		 this.io	= this.io.listen( this.server, { log: false } );
@@ -158,7 +165,7 @@ var webServer = Brick.D_brick.webServer = {
 					   , method	: method
 					   , headers: headers
 					   };
-		 if(url.indexOf('https://') === 0) {
+		 if(TLS_SSL && url.indexOf('https://') === 0) {
 			 options.agentOptions = { cert				: TLS_SSL.cert
 									, key				: TLS_SSL.key
 									// , passphrase		: 'password'
