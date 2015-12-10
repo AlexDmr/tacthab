@@ -3,19 +3,13 @@ var Brick = require( "../TactHab_modules/Bricks/Brick.js" )
   ;
 
 module.exports = function(webServer) {
-	var io		= webServer.io;
-	var m2m		= io.of('/m2m');
-	Brick.ProtoBrick.on	( 'appear'
-						, function(jsonBrickId) {//console.log("brickAppears"		, jsonBrickId);
-												 m2m.emit("brickAppears"		, jsonBrickId);
-												}
-						);
-	Brick.ProtoBrick.on	( 'disappear'
-						, function(jsonBrickId) {//console.log("brickDisappears"	, jsonBrickId);
-												 m2m.emit("brickDisappears"		, jsonBrickId);
-												}
-						);
-	m2m.on('connection', function(socket) {
+	var io		= webServer.io
+	  , ioHTTPS	= webServer.ioHTTPS
+	  ;
+	var m2m		= io		.of('/m2m')
+	  , m2mHTTPS= ioHTTPS	.of('/m2m')
+	  ;
+	var cbNewSocket = function(socket) {
 		webServer.registerSocketForCall( socket );
 		webServer.addClient(socket);
 		var D_callbacks = {};
@@ -38,9 +32,9 @@ module.exports = function(webServer) {
 						 var D_id = subscription.brickId + "::" + subscription.eventName + "::" + subscription.cbEventName;
 						 // console.log( "subscribeBrick", subscription.eventName );
 						 D_callbacks[D_id] = D_callbacks[D_id] ||
-											 { callback : function(msg) {m2m.emit	( subscription.cbEventName
-																				, {eventName: subscription.eventName, data: msg} 
-																				);
+											 { callback : function(msg) {socket.emit( subscription.cbEventName
+																					, {eventName: subscription.eventName, data: msg} 
+																					);
 																	  }
 											 , subscription	: subscription
 											 , brick			: brick
@@ -55,7 +49,8 @@ module.exports = function(webServer) {
 		socket.on( 'broadcast'
 				 , function(id, msg) {
 						console.log( "m2m broadcast:", id, ":", msg );
-						m2m.emit(msg.title, msg.body);
+						m2m		.emit(msg.title, msg.body);
+						m2mHTTPS.emit(msg.title, msg.body);
 				 });
 		socket.on( 'disconnect'
 				 , function() {
@@ -71,5 +66,23 @@ module.exports = function(webServer) {
 						} catch(errUnsubscribe) {console.error("Error unsubscribe", item);}
 					  }
 					 });
-	});
+	};
+	
+	
+	
+	
+	Brick.ProtoBrick.on	( 'appear'
+						, function(jsonBrickId) {//console.log("brickAppears"		, jsonBrickId);
+												 m2m	 .emit("brickAppears"		, jsonBrickId);
+												 m2mHTTPS.emit("brickAppears"		, jsonBrickId);
+												}
+						);
+	Brick.ProtoBrick.on	( 'disappear'
+						, function(jsonBrickId) {//console.log("brickDisappears"	, jsonBrickId);
+												 m2m	 .emit("brickDisappears"	, jsonBrickId);
+												 m2mHTTPS.emit("brickDisappears"	, jsonBrickId);
+												}
+						);
+	m2m		.on('connection', cbNewSocket);
+	m2mHTTPS.on('connection', cbNewSocket);
 };

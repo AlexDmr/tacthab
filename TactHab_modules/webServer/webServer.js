@@ -74,21 +74,24 @@ var webServer = Brick.D_brick.webServer = {
 								.use( this.multer.single() )
 								.listen( HTTP_port ) ;
 		 // HTTPS
-		 https.createServer(TLS_SSL, this.app).listen(https_port);
+		 var https_server = https.createServer(TLS_SSL, this.app).listen(https_port);
 		 console.log("HTTPS server listening on port " + https_port);
 
 		 // Socket.io and clients
 		 this.clients = {};
-		 this.io	= io;
-		 this.io	= this.io.listen( this.server, { log: false } );
-		 this.io.on	( 'connection'
-					, function (socket) {
+		 function cbConnectIO (socket) {
 						webServer.addClient(socket);
 						socket.on ( 'disconnect'
 								  , function() {webServer.removeClient(socket);} );
 						webServer.registerSocketForCall(socket);
 						}
-					);
+		// HTTP binding
+		 this.io		= io.listen( this.server, { log: false } );
+		 this.io.on		( 'connection', cbConnectIO );
+		// HTTPS binding
+		 this.ioHTTPS	= io.listen( https_server, { log: false } );
+		 this.ioHTTPS.on( 'connection', cbConnectIO );
+		 
 		
 		 // proxy
 		 webServer.app.all( '/proxy'
