@@ -3,11 +3,11 @@ var BrickBLE_server;
 module.exports = function(webServer) {
 	webServer.app.get	( "/BLE_init"
 						, function(req, res) {
-							res.end( BrickBLE_server?BrickBLE_server.init():false );
+							res.end( BrickBLE_server?""+BrickBLE_server.init():"false" );
 						});
 	webServer.app.get	( "/BLE_isInit"
 						, function(req, res) {
-							res.end( BrickBLE_server?BrickBLE_server.isInit():false );
+							res.end( BrickBLE_server?""+BrickBLE_server.isInit():"false" );
 						});
 }
 

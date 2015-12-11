@@ -9103,13 +9103,13 @@
 								this.isInit	= false;
 								$http.get( "/BLE_isInit" ).then( function(obj) {
 									console.log("BLE_isInit =>", obj, ctrl);
-									if(obj.status === 200) {ctrl.isInit = true;}
+									if(obj.status === 200 && obj.data === "true") {ctrl.isInit = true;}
 								});
 								this.init = function() {
-									$http.get( "/BLE_init" ).then( function(obj) {
-										console.log("/BLE_init =>", obj);
-										if(obj.status === 200) {ctrl.isInit = true;}
-									});
+								$http.get( "/BLE_init" ).then( function(obj) {
+									console.log("/BLE_init =>", obj);
+									if(obj.status === 200 && obj.data === "true") {ctrl.isInit = true;}
+								});
 								}
 							},
 							controllerAs: "ctrl",
