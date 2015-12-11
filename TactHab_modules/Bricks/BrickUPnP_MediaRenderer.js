@@ -192,7 +192,7 @@ BrickUPnP_MediaRenderer.prototype.getVolume	= function(callback) {
 						, function(err, buffer) {
 							 // console.log(this.brickId, "BrickUPnP_MediaRenderer::GetVolume", err || buffer);
 							 if(callback) {
-								 callback(err, buffer);
+								 callback(err || buffer);
 								}
 							}
 						);
