@@ -46,7 +46,8 @@ md-tabs.menu {
 
 md-pagination-wrapper {
 	width							: auto !important;
-}open-hab img.icon {
+}
+open-hab img.icon {
 	width			: 75px;
 	height			: 75px;
 }
