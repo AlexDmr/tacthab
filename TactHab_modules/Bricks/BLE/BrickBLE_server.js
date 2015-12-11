@@ -11,12 +11,12 @@ function init() {
 	if(initDone) {return false;} else {initDone = true;}
 	
 	noble.on('stateChange', function(state) {
-		console.log("noble state:", state);
+		console.log("\tnoble state:", state);
 		if (state === 'poweredOn') {
-			console.log("start scanning");
+			console.log("\tnoble start scanning");
 			noble.startScanning();
 		} else  {
-			console.log("stop scanning");
+			console.log("\tnoble stop scanning");
 			noble.stopScanning();
 		}
 		return true;
