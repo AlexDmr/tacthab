@@ -1,0 +1,10 @@
+<h2>BlueTooth 4 devices (BLE)</h2>
+<md-button class="md-raised" ng-hide="ctrl.isInit">
+	INIT
+</md-button>
+
+<hr/>
+
+<section ng-repeat	= "brick in T.context.bricks | toArray:false | filter:{type:'BrickBLE'}" 
+		>
+</section>

@@ -43,3 +43,7 @@ md-tabs.menu {
 		flex						: 1 1 auto;
 	}
 }
+
+md-pagination-wrapper {
+	width							: auto !important;
+}

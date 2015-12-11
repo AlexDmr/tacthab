@@ -3,7 +3,7 @@ module.exports = function(app) {
 				 , function() {
 					 return {
 						restrict	: 'E',
-						scope		: {}
+						scope		: {},
 						controller	: function($http, $scope) {
 							var ctrl = this;
 							this.isInit	= false;
@@ -12,7 +12,7 @@ module.exports = function(app) {
 								$http.get( "/BLE_init" ).then( function(obj) {console.log(obj);} );
 							}
 						},
-						controllerAs: "ctrl"
+						controllerAs: "ctrl",
 						templateUrl	: "/IHM/js/BLE/templates/bleServer.html",
 						link		: function() {}
 					 };

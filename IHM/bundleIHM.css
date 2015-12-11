@@ -43,7 +43,10 @@ md-tabs.menu {
 		flex						: 1 1 auto;
 	}
 }
-open-hab img.icon {
+
+md-pagination-wrapper {
+	width							: auto !important;
+}open-hab img.icon {
 	width			: 75px;
 	height			: 75px;
 }
