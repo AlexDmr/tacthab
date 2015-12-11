@@ -56,4 +56,5 @@ require( "./alxDragDrop.js" )(app);
 require( "./activities/alxActivities.js" )(app);
 require( "./activities/alxActivity.js" )(app);
 require( "./openHab/openHab.js" )(app);
+require( "./BLE/BLE.js" )(app);
 

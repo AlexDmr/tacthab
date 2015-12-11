@@ -26,3 +26,7 @@ require( "./Server/editor.js"      )(webServer);
 require( "./Server/tacthab_web.js" )(webServer);
 require( "./Server/openHab.js"     )(webServer);
 require( "./Server/M2MIAGE.js"     )(webServer);
+
+try {
+	require( "./Server/BLE.js"     	   )(webServer);
+} catch(errorBLE) {console.error("errorBLE", errorBLE);}

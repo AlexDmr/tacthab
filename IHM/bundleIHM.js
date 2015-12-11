@@ -102,6 +102,7 @@
 	__webpack_require__( 73 )(app);
 	__webpack_require__( 76 )(app);
 	__webpack_require__( 79 )(app);
+	__webpack_require__( 97 )(app);
 
 
 
@@ -9086,6 +9087,12 @@
 	    rgbToHsv    : rgbToHsv,
 	    hsvToRgb    : hsvToRgb
 	};
+
+/***/ },
+/* 97 */
+/***/ function(module, exports) {
+
+	
 
 /***/ }
 /******/ ]);
