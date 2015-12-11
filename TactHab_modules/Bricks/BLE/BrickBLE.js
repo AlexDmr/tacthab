@@ -12,3 +12,5 @@ BrickBLE.prototype.constructor	= BrickBLE;
 BrickBLE.prototype.getTypeName	= function() {return "BrickBLE";}
 BrickBLE.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickBLE.prototype.getTypeName()); return L;}
 BrickBLE.prototype.registerType('BrickBLE', BrickBLE.prototype);
+
+module.exports = BrickBLE;

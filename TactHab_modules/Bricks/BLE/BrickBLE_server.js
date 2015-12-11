@@ -28,7 +28,7 @@ function init() {
 				console.log("Discover peripheral", peripheral);
 				// Create a new Brick ?
 				var brick = new BrickBLE(peripheral.id, peripheral);
-				BLE_devices.id	= brick.id;
+				BLE_devices[id]	= brick;
 				// Callbacks
 				for(i=0; i<L_CB_Discover.length; i++) {L_CB_Discover[i].apply(peripheral);}
 			}
