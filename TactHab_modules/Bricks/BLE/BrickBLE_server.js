@@ -3,7 +3,6 @@ var noble		= require('noble')
   , BrickBLE	= require("./BrickBLE.js")
   ;
 
-var BLE_devices		= {};
 var L_CB_Discover	= [];
 var initDone		= false;
 
@@ -28,11 +27,9 @@ function init() {
 				console.log("Discover peripheral", peripheral);
 				// Create a new Brick ?
 				var brick = new BrickBLE(peripheral.id, peripheral);
-				BLE_devices[id]	= brick;
 				// Callbacks
-				for(i=0; i<L_CB_Discover.length; i++) {L_CB_Discover[i].apply(peripheral);}
-			}
-			);
+				for(i=0; i<L_CB_Discover.length; i++) {L_CB_Discover[i].apply(brick);}
+			});
 
 			
 	function onDiscoverSensorTag(sensorTag) {
@@ -67,7 +64,6 @@ function init() {
 
 
 module.exports = {
-	BLE_devices	: BLE_devices,
 	onDiscover	: function(cb) {
 		if(L_CB_Discover.indexOf(cb) !== -1) {L_CB_Discover.push(cb);}
 		return this;
