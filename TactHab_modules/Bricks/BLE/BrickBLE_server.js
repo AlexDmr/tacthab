@@ -61,6 +61,7 @@ function init() {
 	}
 	
 	SensorTag.discoverAll(onDiscoverSensorTag);
+	return true;
 }
 
 

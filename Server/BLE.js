@@ -1,15 +1,17 @@
-var BrickBLE_server	= require( "../TactHab_modules/Bricks/BLE/BrickBLE_server.js" )
-  ;
-  
+var BrickBLE_server;
   
 module.exports = function(webServer) {
 	webServer.app.get	( "/BLE_init"
 						, function(req, res) {
-							res.end( BrickBLE_server.init() );
+							res.end( BrickBLE_server?BrickBLE_server.init():false );
 						});
 	webServer.app.get	( "/BLE_isInit"
 						, function(req, res) {
-							res.end( BrickBLE_server.isInit() );
+							res.end( BrickBLE_server?BrickBLE_server.isInit():false );
 						});
 }
 
+try {
+	BrickBLE_server	= require( "../TactHab_modules/Bricks/BLE/BrickBLE_server.js" );
+} catch(errorBLE) {BrickBLE_server = undefined;}
+  
