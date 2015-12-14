@@ -1,6 +1,7 @@
-var noble		= require('noble')
-  , SensorTag	= require('sensortag')
-  , BrickBLE	= require("./BrickBLE.js")
+var noble			= require('noble')
+  , SensorTag		= require('sensortag')
+  , BrickBLE		= require("./BrickBLE.js")
+  , BrickSensorTag	= require("./BrickSensorTag.js")
   ;
 
 var L_CB_Discover	= [];
@@ -39,6 +40,15 @@ function init() {
 			sensorTag.readDeviceName( function(error, deviceName) {
 				if(error) {console.error(error); return;}
 				console.log( "SensorTag", deviceName );
+				var brick = BrickBLE.prototype.getBrickFromId( sensorTag.id );
+				if(brick) {
+					console.log( "switch from BrickBLE to BrickSensorTag", sensorTag.id );
+					var peripheral = brick.peripheral;
+					brick.dispose();
+					brick = new BrickSensorTag(peripheral.id, peripheral, sensorTag);
+					// Callbacks
+					for(var i=0; i<L_CB_Discover.length; i++) {L_CB_Discover[i].apply(brick);}
+				}
 			});
 			/*
 			sensorTag.enableAccelerometer( function(error) {

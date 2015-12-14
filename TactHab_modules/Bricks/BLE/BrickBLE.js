@@ -3,8 +3,9 @@ var Brick		= require( '../Brick.js' )
   
   
 var BrickBLE = function(id, peripheral) {
-	Brick.apply(this, ["BLE::" + id]);
+	Brick.apply(this, [id]);
 	this.peripheral	= peripheral;
+	this.name		= peripheral.advertisement?peripheral.advertisement.localName:peripheral.address;
 }
 
 BrickBLE.prototype = Object.create(Brick.prototype); // new Brick(); BrickUPnP.prototype.unreference();
@@ -14,3 +15,4 @@ BrickBLE.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.p
 BrickBLE.prototype.registerType('BrickBLE', BrickBLE.prototype);
 
 module.exports = BrickBLE;
+

@@ -53,9 +53,16 @@ var webServer = Brick.D_brick.webServer = {
 				  , function(call, fctCB) {
 						 if(self.oncall) {
 							 var res = self.oncall(call, fctCB);
-							 if( res !== undefined
-							   &&fctCB ) {
-								 fctCB( res );
+							 //console.log("call", call);
+							 if(fctCB && Promise.prototype.isPrototypeOf(res)) {
+							 	res.then( function(data ) {fctCB(data)}
+							 			, function(error) {fctCB( {error: JSON.stringify(error)} )} 
+							 			);
+							 } else {
+								 if( res !== undefined
+								   &&fctCB ) {
+									 fctCB( res );
+									}
 								}
 							}
 						} );

@@ -11,7 +11,8 @@
 		</md-card-title-media>
 	</md-card-title>
 	<md-content>
-		<md-button>Enable Accelerometer</md-button>
+		<md-button ng-hide="ctrl.accelerationEnabled" ng-click="ctrl.enableAccelerometer()">!Enable Accelerometer</md-button>
+		<md-button ng-show="ctrl.accelerationEnabled" ng-click="ctrl.disableAccelerometer()">Disable Accelerometer</md-button>
 		<label>Acceleration : {{ctrl.acceleration | json}}</label>
 	<md-content>
 	<md-card-actions layout="row" layout-align="end center">

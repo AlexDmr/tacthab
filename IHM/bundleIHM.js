@@ -9275,7 +9275,11 @@
 						);
 		utils.io.on	( cbEventName
 						, eventCB = function(eventData) {
-							 try {cb(eventData.data);} catch(error) {console.error(error);}
+							 try {
+							 	cb(eventData.data);
+							 } catch(error) {
+							 	console.error(error);
+							 }
 							}
 						); 
 		element.on		( "$destroy"
@@ -9299,10 +9303,12 @@
 							controller	: function($http, $scope) {
 								var ctrl = this;
 								this.accelerationEnabled = false;
-								utils.acceleration = {x:0, y:0, z:0};
+								this.acceleration = {x:0, y:0, z:0};
 								this.enableAccelerometer	= function() {console.log("enableAccelerometer", $scope.brick.id);
 																		  utils.call($scope.brick.id, "enableAccelerometer", []
-																					).then( function() {ctrl.accelerationEnabled = true;})
+																					).then( function() {return utils.call($scope.brick.id, "notifyAccelerometer", []);} )
+																		  			 .then( function() {return utils.call($scope.brick.id, "setAccelerometerPeriod", [100]);} )
+																		  			 .then( function() {ctrl.accelerationEnabled = true; $scope.$apply();})
 																		 };
 								this.disableAccelerometer	= function() {utils.call($scope.brick.id, "disableAccelerometer", []
 																					).then( function() {ctrl.accelerationEnabled = false;})
@@ -9312,7 +9318,7 @@
 							templateUrl	: "/IHM/js/BLE/templates/bleSensorTag.html",
 							link		: function(scope, element, attr, controller) {
 								subscribeForEvent(scope.brick, "accelerometerChange", controller, element, function(event) {
-									console.log("accelerometerChange", event);
+									//console.log("accelerometerChange", event);
 									controller.accelerationEnabled = true;
 									Object.assign(controller.acceleration, event);
 									scope.$apply();
