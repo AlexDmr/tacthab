@@ -858,7 +858,7 @@
 
 	var url = __webpack_require__(11);
 	var parser = __webpack_require__(14);
-	var Manager = __webpack_require__(21);
+	var Manager = __webpack_require__(22);
 	var debug = __webpack_require__(13)('socket.io-client');
 
 	/**
@@ -936,7 +936,7 @@
 	 * @api public
 	 */
 
-	exports.Manager = __webpack_require__(21);
+	exports.Manager = __webpack_require__(22);
 	exports.Socket = __webpack_require__(53);
 
 
@@ -1203,12 +1203,12 @@
 	 * Module dependencies.
 	 */
 
-	var debug = __webpack_require__(13)('socket.io-parser');
-	var json = __webpack_require__(15);
-	var isArray = __webpack_require__(17);
-	var Emitter = __webpack_require__(18);
-	var binary = __webpack_require__(19);
-	var isBuf = __webpack_require__(20);
+	var debug = __webpack_require__(15)('socket.io-parser');
+	var json = __webpack_require__(16);
+	var isArray = __webpack_require__(18);
+	var Emitter = __webpack_require__(19);
+	var binary = __webpack_require__(20);
+	var isBuf = __webpack_require__(21);
 
 	/**
 	 * Protocol version.
@@ -1602,6 +1602,149 @@
 
 /***/ },
 /* 15 */
+/***/ function(module, exports) {
+
+	
+	/**
+	 * Expose `debug()` as the module.
+	 */
+
+	module.exports = debug;
+
+	/**
+	 * Create a debugger with the given `name`.
+	 *
+	 * @param {String} name
+	 * @return {Type}
+	 * @api public
+	 */
+
+	function debug(name) {
+	  if (!debug.enabled(name)) return function(){};
+
+	  return function(fmt){
+	    fmt = coerce(fmt);
+
+	    var curr = new Date;
+	    var ms = curr - (debug[name] || curr);
+	    debug[name] = curr;
+
+	    fmt = name
+	      + ' '
+	      + fmt
+	      + ' +' + debug.humanize(ms);
+
+	    // This hackery is required for IE8
+	    // where `console.log` doesn't have 'apply'
+	    window.console
+	      && console.log
+	      && Function.prototype.apply.call(console.log, console, arguments);
+	  }
+	}
+
+	/**
+	 * The currently active debug mode names.
+	 */
+
+	debug.names = [];
+	debug.skips = [];
+
+	/**
+	 * Enables a debug mode by name. This can include modes
+	 * separated by a colon and wildcards.
+	 *
+	 * @param {String} name
+	 * @api public
+	 */
+
+	debug.enable = function(name) {
+	  try {
+	    localStorage.debug = name;
+	  } catch(e){}
+
+	  var split = (name || '').split(/[\s,]+/)
+	    , len = split.length;
+
+	  for (var i = 0; i < len; i++) {
+	    name = split[i].replace('*', '.*?');
+	    if (name[0] === '-') {
+	      debug.skips.push(new RegExp('^' + name.substr(1) + '$'));
+	    }
+	    else {
+	      debug.names.push(new RegExp('^' + name + '$'));
+	    }
+	  }
+	};
+
+	/**
+	 * Disable debug output.
+	 *
+	 * @api public
+	 */
+
+	debug.disable = function(){
+	  debug.enable('');
+	};
+
+	/**
+	 * Humanize the given `ms`.
+	 *
+	 * @param {Number} m
+	 * @return {String}
+	 * @api private
+	 */
+
+	debug.humanize = function(ms) {
+	  var sec = 1000
+	    , min = 60 * 1000
+	    , hour = 60 * min;
+
+	  if (ms >= hour) return (ms / hour).toFixed(1) + 'h';
+	  if (ms >= min) return (ms / min).toFixed(1) + 'm';
+	  if (ms >= sec) return (ms / sec | 0) + 's';
+	  return ms + 'ms';
+	};
+
+	/**
+	 * Returns true if the given mode name is enabled, false otherwise.
+	 *
+	 * @param {String} name
+	 * @return {Boolean}
+	 * @api public
+	 */
+
+	debug.enabled = function(name) {
+	  for (var i = 0, len = debug.skips.length; i < len; i++) {
+	    if (debug.skips[i].test(name)) {
+	      return false;
+	    }
+	  }
+	  for (var i = 0, len = debug.names.length; i < len; i++) {
+	    if (debug.names[i].test(name)) {
+	      return true;
+	    }
+	  }
+	  return false;
+	};
+
+	/**
+	 * Coerce `val`.
+	 */
+
+	function coerce(val) {
+	  if (val instanceof Error) return val.stack || val.message;
+	  return val;
+	}
+
+	// persist
+
+	try {
+	  if (window.localStorage) debug.enable(localStorage.debug);
+	} catch(e){}
+
+
+/***/ },
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*! JSON v3.2.6 | http://bestiejs.github.io/json3 | Copyright 2012-2013, Kit Cambridge | http://kit.mit-license.org */
@@ -1611,7 +1754,7 @@
 
 	  // Detect the `define` function exposed by asynchronous module loaders. The
 	  // strict `define` check is necessary for compatibility with `r.js`.
-	  var isLoader = "function" === "function" && __webpack_require__(16);
+	  var isLoader = "function" === "function" && __webpack_require__(17);
 
 	  // Detect native implementations.
 	  var nativeJSON = typeof JSON == "object" && JSON;
@@ -2468,7 +2611,7 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -2476,7 +2619,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	module.exports = Array.isArray || function (arr) {
@@ -2485,7 +2628,7 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	
@@ -2655,7 +2798,7 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*global Blob,File*/
@@ -2664,8 +2807,8 @@
 	 * Module requirements
 	 */
 
-	var isArray = __webpack_require__(17);
-	var isBuf = __webpack_require__(20);
+	var isArray = __webpack_require__(18);
+	var isBuf = __webpack_require__(21);
 
 	/**
 	 * Replaces every Buffer | ArrayBuffer in packet with a numbered placeholder.
@@ -2803,7 +2946,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -2823,7 +2966,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -2832,9 +2975,9 @@
 	 */
 
 	var url = __webpack_require__(11);
-	var eio = __webpack_require__(22);
+	var eio = __webpack_require__(23);
 	var Socket = __webpack_require__(53);
-	var Emitter = __webpack_require__(18);
+	var Emitter = __webpack_require__(19);
 	var parser = __webpack_require__(14);
 	var on = __webpack_require__(55);
 	var bind = __webpack_require__(56);
@@ -3332,19 +3475,19 @@
 
 
 /***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	module.exports =  __webpack_require__(23);
-
-
-/***/ },
 /* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(24);
+	module.exports =  __webpack_require__(24);
+
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	module.exports = __webpack_require__(25);
 
 	/**
 	 * Exports parser
@@ -3352,22 +3495,22 @@
 	 * @api public
 	 *
 	 */
-	module.exports.parser = __webpack_require__(32);
+	module.exports.parser = __webpack_require__(33);
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 
-	var transports = __webpack_require__(25);
-	var Emitter = __webpack_require__(18);
+	var transports = __webpack_require__(26);
+	var Emitter = __webpack_require__(19);
 	var debug = __webpack_require__(44)('engine.io-client:socket');
 	var index = __webpack_require__(50);
-	var parser = __webpack_require__(32);
+	var parser = __webpack_require__(33);
 	var parseuri = __webpack_require__(51);
 	var parsejson = __webpack_require__(52);
 	var parseqs = __webpack_require__(42);
@@ -3485,9 +3628,9 @@
 	 */
 
 	Socket.Socket = Socket;
-	Socket.Transport = __webpack_require__(31);
-	Socket.transports = __webpack_require__(25);
-	Socket.parser = __webpack_require__(32);
+	Socket.Transport = __webpack_require__(32);
+	Socket.transports = __webpack_require__(26);
+	Socket.parser = __webpack_require__(33);
 
 	/**
 	 * Creates transport of the given type.
@@ -4068,15 +4211,15 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies
 	 */
 
-	var XMLHttpRequest = __webpack_require__(26);
-	var XHR = __webpack_require__(29);
+	var XMLHttpRequest = __webpack_require__(27);
+	var XHR = __webpack_require__(30);
 	var JSONP = __webpack_require__(47);
 	var websocket = __webpack_require__(48);
 
@@ -4128,11 +4271,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// browser shim for xmlhttprequest module
-	var hasCORS = __webpack_require__(27);
+	var hasCORS = __webpack_require__(28);
 
 	module.exports = function(opts) {
 	  var xdomain = opts.xdomain;
@@ -4170,7 +4313,7 @@
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -4178,7 +4321,7 @@
 	 * Module dependencies.
 	 */
 
-	var global = __webpack_require__(28);
+	var global = __webpack_require__(29);
 
 	/**
 	 * Module exports.
@@ -4199,7 +4342,7 @@
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports) {
 
 	
@@ -4213,16 +4356,16 @@
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module requirements.
 	 */
 
-	var XMLHttpRequest = __webpack_require__(26);
-	var Polling = __webpack_require__(30);
-	var Emitter = __webpack_require__(18);
+	var XMLHttpRequest = __webpack_require__(27);
+	var Polling = __webpack_require__(31);
+	var Emitter = __webpack_require__(19);
 	var inherit = __webpack_require__(43);
 	var debug = __webpack_require__(44)('engine.io-client:polling-xhr');
 
@@ -4604,16 +4747,16 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Transport = __webpack_require__(31);
+	var Transport = __webpack_require__(32);
 	var parseqs = __webpack_require__(42);
-	var parser = __webpack_require__(32);
+	var parser = __webpack_require__(33);
 	var inherit = __webpack_require__(43);
 	var debug = __webpack_require__(44)('engine.io-client:polling');
 
@@ -4628,7 +4771,7 @@
 	 */
 
 	var hasXHR2 = (function() {
-	  var XMLHttpRequest = __webpack_require__(26);
+	  var XMLHttpRequest = __webpack_require__(27);
 	  var xhr = new XMLHttpRequest({ xdomain: false });
 	  return null != xhr.responseType;
 	})();
@@ -4855,15 +4998,15 @@
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var parser = __webpack_require__(32);
-	var Emitter = __webpack_require__(18);
+	var parser = __webpack_require__(33);
+	var Emitter = __webpack_require__(19);
 
 	/**
 	 * Module exports.
@@ -5020,15 +5163,15 @@
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 
-	var keys = __webpack_require__(33);
-	var hasBinary = __webpack_require__(34);
+	var keys = __webpack_require__(34);
+	var hasBinary = __webpack_require__(35);
 	var sliceBuffer = __webpack_require__(36);
 	var base64encoder = __webpack_require__(37);
 	var after = __webpack_require__(38);
@@ -5621,7 +5764,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports) {
 
 	
@@ -5646,7 +5789,7 @@
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -5654,7 +5797,7 @@
 	 * Module requirements.
 	 */
 
-	var isArray = __webpack_require__(35);
+	var isArray = __webpack_require__(18);
 
 	/**
 	 * Module exports.
@@ -5709,15 +5852,6 @@
 	}
 
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 35 */
-/***/ function(module, exports) {
-
-	module.exports = Array.isArray || function (arr) {
-	  return Object.prototype.toString.call(arr) == '[object Array]';
-	};
-
 
 /***/ },
 /* 36 */
@@ -6758,7 +6892,7 @@
 	 * Module requirements.
 	 */
 
-	var Polling = __webpack_require__(30);
+	var Polling = __webpack_require__(31);
 	var inherit = __webpack_require__(43);
 
 	/**
@@ -6997,8 +7131,8 @@
 	 * Module dependencies.
 	 */
 
-	var Transport = __webpack_require__(31);
-	var parser = __webpack_require__(32);
+	var Transport = __webpack_require__(32);
+	var parser = __webpack_require__(33);
 	var parseqs = __webpack_require__(42);
 	var inherit = __webpack_require__(43);
 	var debug = __webpack_require__(44)('engine.io-client:websocket');
@@ -7390,12 +7524,12 @@
 	 */
 
 	var parser = __webpack_require__(14);
-	var Emitter = __webpack_require__(18);
+	var Emitter = __webpack_require__(19);
 	var toArray = __webpack_require__(54);
 	var on = __webpack_require__(55);
 	var bind = __webpack_require__(56);
 	var debug = __webpack_require__(13)('socket.io-client:socket');
-	var hasBin = __webpack_require__(34);
+	var hasBin = __webpack_require__(35);
 
 	/**
 	 * Module exports.
@@ -8730,37 +8864,37 @@
 /* 80 */
 /***/ function(module, exports) {
 
-	module.exports = "<md-switch\tng-model=\"ctrl.value\" \r\n\t\t\taria-label=\"brick.name\" \r\n\t\t\tclass=\"md-block\" \r\n\t\t\tng-change=\"ctrl.userSetSwitch()\"\r\n\t\t\t>\r\n{{brick.name}}\r\n</md-switch>"
+	module.exports = "<md-switch\tng-model=\"ctrl.value\" \n\t\t\taria-label=\"brick.name\" \n\t\t\tclass=\"md-block\" \n\t\t\tng-change=\"ctrl.userSetSwitch()\"\n\t\t\t>\n{{brick.name}}\n</md-switch>"
 
 /***/ },
 /* 81 */
 /***/ function(module, exports) {
 
-	module.exports = "\r\n<md-input-container>\r\n    <label>{{brick.name}}</label>\r\n    <input\tng-model=\"brick.state\" \r\n\t\t\ttype=\"text\"\r\n\t\t\tng-change=\"ctrl.userSetText()\"\r\n\t\t\t/>\r\n</md-input-container>\r\n"
+	module.exports = "\n<md-input-container>\n    <label>{{brick.name}}</label>\n    <input\tng-model=\"brick.state\" \n\t\t\ttype=\"text\"\n\t\t\tng-change=\"ctrl.userSetText()\"\n\t\t\t/>\n</md-input-container>\n"
 
 /***/ },
 /* 82 */
 /***/ function(module, exports) {
 
-	module.exports = "\r\nRollerShutter"
+	module.exports = "\nRollerShutter"
 
 /***/ },
 /* 83 */
 /***/ function(module, exports) {
 
-	module.exports = "\r\n<md-input-container class=\"md-block\" flex>\r\n\t<label>{{brick.name}}</label>\r\n\t<!--<md-icon md-svg-src=\"img/icons/ic_card_giftcard_24px.svg\"></md-icon>-->\r\n\t<input\tng-model=\"ctrl.value\" \r\n\t\t\ttype=\"number\" \r\n\t\t\tng-change=\"ctrl.userSetNumber()\"\r\n\t\t\tflex \r\n\t\t\t/>\r\n</md-input-container>"
+	module.exports = "\n<md-input-container class=\"md-block\" flex>\n\t<label>{{brick.name}}</label>\n\t<!--<md-icon md-svg-src=\"img/icons/ic_card_giftcard_24px.svg\"></md-icon>-->\n\t<input\tng-model=\"ctrl.value\" \n\t\t\ttype=\"number\" \n\t\t\tng-change=\"ctrl.userSetNumber()\"\n\t\t\tflex \n\t\t\t/>\n</md-input-container>"
 
 /***/ },
 /* 84 */
 /***/ function(module, exports) {
 
-	module.exports = "<md-content layout=\"column\">\r\n\t<p>{{brick.name}}</p>\r\n\t<md-slider\tflex \r\n\t\t\t\tmd-discrete \r\n\t\t\t\tng-model=\"ctrl.value\" \r\n\t\t\t\tstep=\"1\" min=\"0\" max=\"100\" \r\n\t\t\t\taria-label=\"{{brick.name}}\"\r\n\t\t\t\tng-change=\"ctrl.userSetDimmer()\"\r\n\t\t\t\t>\r\n\t</md-slider>\r\n</md-content>\r\n"
+	module.exports = "<md-content layout=\"column\">\n\t<p>{{brick.name}}</p>\n\t<md-slider\tflex \n\t\t\t\tmd-discrete \n\t\t\t\tng-model=\"ctrl.value\" \n\t\t\t\tstep=\"1\" min=\"0\" max=\"100\" \n\t\t\t\taria-label=\"{{brick.name}}\"\n\t\t\t\tng-change=\"ctrl.userSetDimmer()\"\n\t\t\t\t>\n\t</md-slider>\n</md-content>\n"
 
 /***/ },
 /* 85 */
 /***/ function(module, exports) {
 
-	module.exports = "\r\nDateTime"
+	module.exports = "\nDateTime"
 
 /***/ },
 /* 86 */
@@ -8772,7 +8906,7 @@
 /* 87 */
 /***/ function(module, exports) {
 
-	module.exports = "<md-content class=\"md-block color\">\r\n\t<input \t\taria-label=\"{{brick.name}}\"\r\n\t\t\t\tng-model=\"ctrl.color\"\r\n\t\t\t\ttype=\"color\"\r\n\t\t\t\tng-change=\"ctrl.userSetColor()\"\r\n\t\t\t\t/>\r\n\t{{brick.name}}\r\n</md-content>"
+	module.exports = "<md-content class=\"md-block color\">\n\t<input \t\taria-label=\"{{brick.name}}\"\n\t\t\t\tng-model=\"ctrl.color\"\n\t\t\t\ttype=\"color\"\n\t\t\t\tng-change=\"ctrl.userSetColor()\"\n\t\t\t\t/>\n\t{{brick.name}}\n</md-content>"
 
 /***/ },
 /* 88 */
@@ -9090,31 +9224,101 @@
 
 /***/ },
 /* 97 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
+
+	var bleSensorTag = __webpack_require__( 98 )
+	  ;
 
 	module.exports = function(app) {
+		bleSensorTag(app);
 		app.directive( "bleServer"
 					 , function() {
 						 return {
 							restrict	: 'E',
-							scope		: {},
+							scope		: {context	: "="},
 							controller	: function($http, $scope) {
 								var ctrl = this;
 								this.isInit	= false;
 								$http.get( "/BLE_isInit" ).then( function(obj) {
 									console.log("BLE_isInit =>", obj, ctrl);
-									if(obj.status === 200 && obj.data === "true") {ctrl.isInit = true;}
+									if(obj.status === 200 && obj.data === true) {ctrl.isInit = true;}
 								});
 								this.init = function() {
 								$http.get( "/BLE_init" ).then( function(obj) {
 									console.log("/BLE_init =>", obj);
-									if(obj.status === 200 && obj.data === "true") {ctrl.isInit = true;}
+									if(obj.status === 200 && obj.data === true) {ctrl.isInit = true;}
 								});
 								}
 							},
 							controllerAs: "ctrl",
 							templateUrl	: "/IHM/js/BLE/templates/bleServer.html",
-							link		: function() {}
+							link		: function(scope, element, attr, controller) {}
+						 };
+					 });
+	}
+
+/***/ },
+/* 98 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var utils = __webpack_require__( 8 )
+	  ; 
+
+	function subscribeForEvent(brick, eventName, controller, element, cb) {
+		var eventCB
+		  , cbEventName = brick.id + "->" + eventName;
+		utils.io.emit	( "subscribeBrick"
+						, { brickId		: brick.id
+						  , eventName	: eventName
+						  , cbEventName	: cbEventName
+						  } 
+						);
+		utils.io.on	( cbEventName
+						, eventCB = function(eventData) {
+							 try {cb(eventData.data);} catch(error) {console.error(error);}
+							}
+						); 
+		element.on		( "$destroy"
+						, function() {
+							 utils.io.off( cbEventName, eventCB);
+							 utils.io.emit	( "unSubscribeBrick"
+											, { brickId		: brick.brickId
+											  , eventName	: eventName
+											  , cbEventName	: cbEventName
+											  }
+											);
+							} 
+						);
+	}
+	module.exports = function(app) {
+		app.directive( "bleSensorTag"
+					 , function() {
+						 return {
+							restrict	: 'E',
+							scope		: {brick	: "="},
+							controller	: function($http, $scope) {
+								var ctrl = this;
+								this.accelerationEnabled = false;
+								utils.acceleration = {x:0, y:0, z:0};
+								this.enableAccelerometer	= function() {console.log("enableAccelerometer", $scope.brick.id);
+																		  utils.call($scope.brick.id, "enableAccelerometer", []
+																					).then( function() {ctrl.accelerationEnabled = true;})
+																		 };
+								this.disableAccelerometer	= function() {utils.call($scope.brick.id, "disableAccelerometer", []
+																					).then( function() {ctrl.accelerationEnabled = false;})
+																		 };
+							},
+							controllerAs: "ctrl",
+							templateUrl	: "/IHM/js/BLE/templates/bleSensorTag.html",
+							link		: function(scope, element, attr, controller) {
+								subscribeForEvent(scope.brick, "accelerometerChange", controller, element, function(event) {
+									console.log("accelerometerChange", event);
+									controller.accelerationEnabled = true;
+									Object.assign(controller.acceleration, event);
+									scope.$apply();
+								});
+								
+							}
 						 };
 					 });
 	}

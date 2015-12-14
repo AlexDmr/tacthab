@@ -4,7 +4,13 @@
 </md-button>
 
 <hr/>
-
-<section ng-repeat	= "brick in T.context.bricks | toArray:false | filter:{type:'BrickBLE'}" 
+<!--context: {{context | json}}
+<hr/> -->
+<ble-sensor-tag brick="brick" 
+				ng-repeat = "brick in context.bricks | toArray:false | filter:{type:'BrickSensorTag'}">
+</ble-sensor-tag>
+<hr/>
+<section ng-repeat	= "brick in context.bricks | toArray:false | filter:{type:'BrickBLE'}" 
 		>
+		brick: {{brick.id}} : {{brick | json}}
 </section>
