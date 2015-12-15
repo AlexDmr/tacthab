@@ -14,5 +14,7 @@ module.exports = function(webServer) {
 try {
 	BrickBLE_server	= require( "../TactHab_modules/Bricks/BLE/BrickBLE_server.js" );
 	console.log( "BrickBLE_server required" );
-} catch(errorBLE) {BrickBLE_server = undefined;}
+} catch(errorBLE) {BrickBLE_server = undefined;
+				   console.error( "BrickBLE_server error:", errorBLE );
+				  }
   
