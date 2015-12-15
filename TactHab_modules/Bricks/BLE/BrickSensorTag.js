@@ -45,6 +45,14 @@ BrickSensorTag.prototype.getTypes		= function() {var L=BrickBLE.prototype.getTyp
 													  return L;}
 BrickSensorTag.prototype.registerType('BrickSensorTag', BrickSensorTag.prototype);
 
+connect
+BrickSensorTag.prototype.dispose	= function() {
+	this.peripheral = null;
+	if(this.isConnected) {
+		
+	}
+	BrickBLE.prototype.apply(this, []);
+}
 
 function generatePromise_mtd(mtdName, mtdParams, cbParams) {
 	var i;
@@ -133,21 +141,13 @@ var L_mtd = [
 	{name: "unnotifyLuxometer"		, params:[]			, cb_params:[]},
 	// Simple Key
 	{name: "notifySimpleKey", params:[], cb_params:[]},
-	{name: "unnotifySimpleKey", params:[], cb_params:[]},
-	{name: "", params:[], cb_params:[]},
-	{name: "", params:[], cb_params:[]},
-	{name: "", params:[], cb_params:[]},
-	{name: "", params:[], cb_params:[]},
-	{name: "", params:[], cb_params:[]},
-	{name: "", params:[], cb_params:[]},
-	{name: "", params:[], cb_params:[]},
-	{name: "", params:[], cb_params:[]},
-	{name: "", params:[], cb_params:[]},
+	{name: "unnotifySimpleKey", params:[], cb_params:[]}
 ];
 
 var i, mtd;
 for(var i=0; i<L_mtd.length; i++) {
 	mtd = L_mtd[i];
+	//console.log("Generating method", mtd);
 	BrickSensorTag.prototype[mtd.name] = new Function( mtd.params
 													 , generatePromise_mtd(mtd.name, mtd.params, mtd.cb_params)
 													 );

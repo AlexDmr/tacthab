@@ -12,12 +12,11 @@ function init() {
 	
 	noble.on('stateChange', function(state) {
 		console.log("\tnoble state:", state);
-		if (state === 'poweredOn') {
-			console.log("\tnoble start scanning");
-			noble.startScanning();
-		} else  {
-			console.log("\tnoble stop scanning");
-			noble.stopScanning();
+		switch(state) {
+			case 'poweredOn':
+				noble.startScanning();
+			break;
+			default:
 		}
 		return true;
 	});
@@ -44,26 +43,16 @@ function init() {
 				if(brick) {
 					console.log( "switch from BrickBLE to BrickSensorTag", sensorTag.id );
 					var peripheral = brick.peripheral;
-					brick.dispose();
-					brick = new BrickSensorTag(peripheral.id, peripheral, sensorTag);
+					sensorTag.connectAndSetUp( function(error) {
+						if(error) {console.error("sensorTag initialization error", error);} else {
+							brick.dispose();
+							brick = new BrickSensorTag(peripheral.id, peripheral, sensorTag);
+						}
+					});
 					// Callbacks
 					for(var i=0; i<L_CB_Discover.length; i++) {L_CB_Discover[i].apply(brick);}
 				}
 			});
-			/*
-			sensorTag.enableAccelerometer( function(error) {
-				if(error) {console.error(error); return;}
-				sensorTag.setAccelerometerPeriod(100, function(error) {
-					if(error) {console.error(error);}
-				});
-				sensorTag.notifyAccelerometer(function(error) {
-					if(error) {console.error(error);}
-				});
-				sensorTag.on('accelerometerChange', function(x, y, z) {
-					console.log("acc", x, y, z);
-				});
-			});
-			*/
 		});
 	}
 	

@@ -1,8 +1,10 @@
-var bleSensorTag = require( "./bleSensorTag.js" )
+var bleSensorTag 	= require( "./bleSensorTag.js" )
+  , alxGrapher		= require( "./alxGrapher.js" )
   ;
 
 module.exports = function(app) {
 	bleSensorTag(app);
+	alxGrapher	(app);
 	app.directive( "bleServer"
 				 , function() {
 					 return {
