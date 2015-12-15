@@ -45,7 +45,7 @@ BrickSensorTag.prototype.getTypes		= function() {var L=BrickBLE.prototype.getTyp
 													  return L;}
 BrickSensorTag.prototype.registerType('BrickSensorTag', BrickSensorTag.prototype);
 
-connect
+
 BrickSensorTag.prototype.dispose	= function() {
 	this.peripheral = null;
 	if(this.isConnected) {
