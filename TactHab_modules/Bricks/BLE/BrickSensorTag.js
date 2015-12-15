@@ -14,7 +14,27 @@ var BrickSensorTag = function(id, peripheral, sensorTag) {
 		//console.log("accelerometerChange", id, x, y, z);
 		self.emit("accelerometerChange", {x:4*x, y:4*y, z:4*z});
 	});
-
+	sensorTag.on('gyroscopeChange', function(x, y, z) {
+		self.emit("gyroscopeChange", {x:x, y:y, z:z});
+	});
+	sensorTag.on('magnetometerChange', function(x, y, z) {
+		self.emit("magnetometerChange", {x:x, y:y, z:z});
+	});
+	sensorTag.on('irTemperatureChange', function(objectTemperature, ambientTemperature) {
+		self.emit("irTemperatureChange", {objectTemperature:objectTemperature, ambientTemperature:ambientTemperature});
+	});
+	sensorTag.on('humidityChange', function(temperature, humidity) {
+		self.emit("humidityChange", {temperature:temperature, humidity:humidity});
+	});
+	sensorTag.on('barometricPressureChange', function(pressure) {
+		self.emit("barometricPressureChange", {pressure:pressure});
+	});
+	sensorTag.on('luxometerChange', function(lux) {
+		self.emit("luxometerChange", {lux:lux});
+	});
+	sensorTag.on('simpleKeyChange', function(left, right, reedRelay) {
+		self.emit("luxometerChange", {left:left, right:right, reedRelay:reedRelay});
+	});
 }
 
 BrickSensorTag.prototype = Object.create(BrickBLE.prototype); // new Brick(); BrickUPnP.prototype.unreference();
@@ -25,147 +45,112 @@ BrickSensorTag.prototype.getTypes		= function() {var L=BrickBLE.prototype.getTyp
 													  return L;}
 BrickSensorTag.prototype.registerType('BrickSensorTag', BrickSensorTag.prototype);
 
-
-/*-----------------------------------------------------------------------------------------------------
- * Device informations
-*/
-BrickSensorTag.prototype.readDeviceName = function() {
-	var self = this;
-	return new Promise(function(resolve, reject) {
-		self.sensorTag.readDeviceName(function(error, deviceName) {
-			if(error) {reject(error);} else {resolve(deviceName);}
-		});
-	});
-}
-
-BrickSensorTag.prototype.readSystemId = function() {
-	var self = this;
-	return new Promise(function(resolve, reject) {
-		self.sensorTag.readSystemId(function(error, systemId) {
-			if(error) {reject(error);} else {resolve(systemId);}
-		});
-	});
-}
-
-BrickSensorTag.prototype.readSerialNumber = function() {
-	var self = this;
-	return new Promise(function(resolve, reject) {
-		self.sensorTag.readSerialNumber(function(error, serialNumber) {
-			if(error) {reject(error);} else {resolve(serialNumber);}
-		});
-	});
-}
-
-BrickSensorTag.prototype.readFirmwareRevision = function() {
-	var self = this;
-	return new Promise(function(resolve, reject) {
-		self.sensorTag.readFirmwareRevision(function(error, firmwareRevision) {
-			if(error) {reject(error);} else {resolve(firmwareRevision);}
-		});
-	});
-}
-
-BrickSensorTag.prototype.readHardwareRevision = function() {
-	var self = this;
-	return new Promise(function(resolve, reject) {
-		self.sensorTag.readHardwareRevision(function(error, hardwareRevision) {
-			if(error) {reject(error);} else {resolve(hardwareRevision);}
-		});
-	});
-}
-
-BrickSensorTag.prototype.readSoftwareRevision = function() {
-	var self = this;
-	return new Promise(function(resolve, reject) {
-		self.sensorTag.readSoftwareRevision(function(error, softwareRevision) {
-			if(error) {reject(error);} else {resolve(softwareRevision);}
-		});
-	});
-}
-
-BrickSensorTag.prototype.readManufacturerName = function() {
-	var self = this;
-	return new Promise(function(resolve, reject) {
-		self.sensorTag.readManufacturerName(function(error, manufacturerName) {
-			if(error) {reject(error);} else {resolve(manufacturerName);}
-		});
-	});
-}
-
-/*-----------------------------------------------------------------------------------------------------
- * Accelerometer
-*/
-BrickSensorTag.prototype.enableAccelerometer = function() {
-	var self = this;
-	console.log("Enabling accelerometer of sensorTag...");
-	return new Promise(function(resolve, reject) {
-		self.sensorTag.enableAccelerometer(function(error) {
-			console.log("sensorTag Accelerometer enabled =>", error);
-			if(error) {reject(error);} else {resolve(self);}
-		});
-	});
-}
-
-BrickSensorTag.prototype.disableAccelerometer = function() {
-	var self = this;
-	return new Promise(function(resolve, reject) {
-		self.sensorTag.disableAccelerometer(function(error) {
-			if(error) {reject(error);} else {resolve(self);}
-		});
-	});
-}
-
-BrickSensorTag.prototype.setAccelerometerPeriod = function(ms) {
-	var self = this;
-	switch(this.sensorTag.type.toLowerCase()) {
-		case "cc2650": // CC2650: period 100 - 2550 ms, default period is 1000 ms
-			ms = ms || 1000;
-			ms = Math.max(100, Math.min(ms, 2550))
-		break; 
-		case "cc2540": // CC2540: period 1 - 2550 ms, default period is 2000 ms
-			ms = ms || 2000;
-			ms = Math.max(1, Math.min(ms, 2550))
-		break;
-		default:
-			console.error("Unknown sensorTag type", this.sensorTag.type);
+connect
+BrickSensorTag.prototype.dispose	= function() {
+	this.peripheral = null;
+	if(this.isConnected) {
+		
 	}
-	return new Promise(function(resolve, reject) {
-		self.sensorTag.setAccelerometerPeriod(ms, function(error) {
-			if(error) {reject(error);} else {resolve(self);}
-		});
-	});
+	BrickBLE.prototype.apply(this, []);
 }
 
-BrickSensorTag.prototype.readAccelerometer = function() {
-	var self = this;
-	return new Promise(function(resolve, reject) {
-		self.sensorTag.readAccelerometer(function(error, x, y, z) {
-			if(error) {reject(error);} else {resolve({x:x, y:y, z:z});}
-		});
-	});
+function generatePromise_mtd(mtdName, mtdParams, cbParams) {
+	var i;
+	var str = ""; //proto.slice();
+	// str += "." + mtdName + " = function(";
+	// for(i=0; i<mtdParams.length; i++) {str+=mtdParams[i]; if(i !== mtdParams.length-1) {str+=", ";}}
+	// str += ") {\n";
+	str += "\tvar self = this;\n"
+	str += "\treturn new Promise(function(resolve, reject) {\n"
+	str += "\t\tself.sensorTag." + mtdName + "(";
+		for(i=0; i<mtdParams.length; i++) {str += mtdParams[i] + ", ";}
+		str += "function(error";
+		for(i=0; i<cbParams.length; i++) {str+= ", " + cbParams[i];}
+		str+=") {\n"
+	str += "\t\t\tif(error) {reject(error);} else {resolve( {"
+		for(i=0; i<cbParams.length; i++) {str+=cbParams[i] + ":" + cbParams[i]; if(i !== cbParams.length-1) {str+=", ";}}
+		str += "} );}\n";
+	str +=	"\t\t});\n"
+	str +=	"\t});\n"
+	//str +=	"});";
+	//console.log(str);
+	return str;
 }
 
-BrickSensorTag.prototype.notifyAccelerometer = function() {
-	var self = this;
-	return new Promise(function(resolve, reject) {
-		self.sensorTag.notifyAccelerometer(function(error) {
-			if(error) {reject(error);} else {resolve(self);}
-		});
-	});
+var L_mtd = [
+	{name: "readDeviceName"			, params:[]			, cb_params:["deviceName"]},
+	{name: "readSystemId"			, params:[]			, cb_params:["systemId"]},
+	{name: "readSerialNumber"		, params:[]			, cb_params:["serialNumber"]},
+	{name: "readFirmwareRevision"	, params:[]			, cb_params:["firmwareRevision"]},
+	{name: "readHardwareRevision"	, params:[]			, cb_params:["hardwareRevision"]},
+	{name: "readSoftwareRevision"	, params:[]			, cb_params:["softwareRevision"]},
+	{name: "readSoftwareRevision"	, params:[]			, cb_params:["manufacturerName"]},
+	// IR temperature
+	{name: "enableIrTemperature"	, params:[]			, cb_params:[]},
+	{name: "disableIrTemperature"	, params:[]			, cb_params:[]},
+	{name: "setIrTemperaturePeriod"	, params:["period"]	, cb_params:[]},
+	{name: "readIrTemperature"		, params:[]			, cb_params:["objectTemperature", "ambientTemperature"]},
+	{name: "notifyIrTemperature"	, params:[]			, cb_params:[]},
+	{name: "unnotifyIrTemperature"	, params:[]			, cb_params:[]},
+	// Accelerometer
+	{name: "enableAccelerometer"	, params:[]			, cb_params:[]},
+	{name: "disableAccelerometer"	, params:[]			, cb_params:[]},
+	{name: "setAccelerometerPeriod"	, params:["ms"]		, cb_params:[]},
+	{name: "readAccelerometer"		, params:[]			, cb_params:["x", "y", "z"]},
+	{name: "notifyAccelerometer"	, params:[]			, cb_params:[]},
+	{name: "unnotifyAccelerometer"	, params:[]			, cb_params:[]},
+	// Humidity Sensor
+	{name: "enableHumidity"			, params:[]			, cb_params:[]},
+	{name: "disableHumidity"		, params:[]			, cb_params:[]},
+	{name: "setHumidityPeriod"		, params:["ms"]		, cb_params:[]},
+	{name: "readHumidity"			, params:[]			, cb_params:["temperature", "humidity"]},
+	{name: "notifyHumidity"			, params:[]			, cb_params:[]},
+	{name: "unnotifyHumidity"		, params:[]			, cb_params:[]},
+	// Magnetometer
+	{name: "enableMagnetometer"		, params:[]			, cb_params:[]},
+	{name: "disableMagnetometer"	, params:[]			, cb_params:[]},
+	{name: "setMagnetometerPeriod"	, params:["ms"]		, cb_params:[]},
+	{name: "readMagnetometer"		, params:[]			, cb_params:["x", "y", "z"]},
+	{name: "notifyMagnetometer"		, params:[]			, cb_params:[]},
+	{name: "unnotifyMagnetometer"	, params:[]			, cb_params:[]},
+	// Barometric Pressure Sensor
+	{name: "enableBarometricPressure", params:[]		, cb_params:[]},
+	{name: "disableBarometricPressure", params:[]		, cb_params:[]},
+	{name: "setBarometricPressurePeriod", params:["ms"]	, cb_params:[]},
+	{name: "readBarometricPressure", params:[]			, cb_params:["pressure"]},
+	{name: "notifyBarometricPressure", params:[]		, cb_params:[]},
+	{name: "unnotifyBarometricPressure", params:[]		, cb_params:[]},
+	// Gyroscope
+	{name: "enableGyroscope"		, params:[]			, cb_params:[]},
+	{name: "disableGyroscope"		, params:[]			, cb_params:[]},
+	{name: "setGyroscopePeriod"		, params:["ms"]		, cb_params:[]},
+	{name: "readGyroscope"			, params:[]			, cb_params:["x", "y", "z"]},
+	{name: "notifyGyroscope"		, params:[]			, cb_params:[]},
+	{name: "unnotifyGyroscope"		, params:[]			, cb_params:[]},
+	// IO (CC2650 only)
+	{name: "readIoData"				, params:[]			, cb_params:["value"]},
+	{name: "writeIoData"			, params:["value"]	, cb_params:[]},
+	{name: "readIoConfig"			, params:[]			, cb_params:["value"]},
+	{name: "writeIoConfig"			, params:["value"]	, cb_params:[]},
+	// Luxometer (CC2650 only)
+	{name: "enableLuxometer"		, params:[]			, cb_params:[]},
+	{name: "disableLuxometer"		, params:[]			, cb_params:[]},
+	{name: "setLuxometerPeriod"		, params:["ms"]		, cb_params:[]},
+	{name: "readLuxometer"			, params:[]			, cb_params:["lux"]},
+	{name: "notifyLuxometer"		, params:[]			, cb_params:[]},
+	{name: "unnotifyLuxometer"		, params:[]			, cb_params:[]},
+	// Simple Key
+	{name: "notifySimpleKey", params:[], cb_params:[]},
+	{name: "unnotifySimpleKey", params:[], cb_params:[]}
+];
+
+var i, mtd;
+for(var i=0; i<L_mtd.length; i++) {
+	mtd = L_mtd[i];
+	//console.log("Generating method", mtd);
+	BrickSensorTag.prototype[mtd.name] = new Function( mtd.params
+													 , generatePromise_mtd(mtd.name, mtd.params, mtd.cb_params)
+													 );
 }
-
-BrickSensorTag.prototype.unnotifyAccelerometer = function() {
-	var self = this;
-	return new Promise(function(resolve, reject) {
-		self.sensorTag.unnotifyAccelerometer(function(error) {
-			if(error) {reject(error);} else {resolve(self);}
-		});
-	});
-}
-
-
-
-
-
 
 module.exports = BrickSensorTag;

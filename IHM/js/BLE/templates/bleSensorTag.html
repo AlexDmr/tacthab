@@ -11,9 +11,16 @@
 		</md-card-title-media>
 	</md-card-title>
 	<md-content>
-		<md-button ng-hide="ctrl.accelerationEnabled" ng-click="ctrl.enableAccelerometer()">!Enable Accelerometer</md-button>
+		<md-button ng-hide="ctrl.accelerationEnabled" ng-click="ctrl.enableAccelerometer()">Enable Accelerometer</md-button>
 		<md-button ng-show="ctrl.accelerationEnabled" ng-click="ctrl.disableAccelerometer()">Disable Accelerometer</md-button>
-		<label>Acceleration : {{ctrl.acceleration | json}}</label>
+		<!-- <label>Acceleration : {{ctrl.acceleration | json}}</label> -->
+		<svg class="acceleration">
+			<g class="root">
+				<polyline class="x" ng-attr-points={{ctrl.accelerationsX}}></polyline>
+				<polyline class="y" ng-attr-points={{ctrl.accelerationsY}}></polyline>
+				<polyline class="z" ng-attr-points={{ctrl.accelerationsZ}}></polyline>
+			</g>
+		</svg>
 	<md-content>
 	<md-card-actions layout="row" layout-align="end center">
 		<md-button>Action 1</md-button>
