@@ -73,7 +73,7 @@ module.exports = function(app) {
 							};
 							this.disableSensor	= function(sensor) {
 								utils.call	($scope.brick.id, "disable"+sensor.name, []
-											).then( function() {sensor.enabled = false;})
+											).then( function() {sensor.enabled = false; $scope.$apply();})
 							};
 						},
 						controllerAs: "ctrl",
