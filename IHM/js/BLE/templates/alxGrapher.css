@@ -1,6 +1,34 @@
+alx-grapher {
+	padding-left	: 1em;
+	padding-right	: 1em;
+/*	border			: solid grey 1px; */
+}
+
 alx-grapher svg {
-	border		: solid black 2px;
-	width		: 100%;
-	height		: 100px;
-	display		: block;
+	border			: solid black 2px;
+	width			: 100%;
+	height			: 100px;
+	display			: block;
+}
+
+alx-grapher svg g.root {
+	transform		: matrix(1,0,0,-1,0,50);
+}
+
+alx-grapher svg polyline {
+    fill			: none;
+    stroke-width	: 1;
+    stroke			: black;
+}
+
+alx-grapher svg polyline.x {
+    stroke			: red;
+}
+
+alx-grapher svg polyline.y {
+    stroke			: green;
+}
+
+alx-grapher svg polyline.z {
+    stroke			: blue;
 }

@@ -2,7 +2,7 @@ var utils = require( "../../../js/utils.js" )
   ; 
 require( "./templates/bleSensorTag.css" );
 
-function subscribeForEvent(brick, eventName, controller, element, cb) {
+function subscribeForEvent(brick, eventName, element, cb) {
 	var eventCB
 	  , cbEventName = brick.id + "->" + eventName;
 	utils.io.emit	( "subscribeBrick"
@@ -40,46 +40,70 @@ module.exports = function(app) {
 						scope		: {brick	: "="},
 						controller	: function($http, $scope) {
 							var ctrl = this;
-							this.accelerationEnabled = false;
-							this.acceleration   = {x:0, y:0, z:0};
-							this.accelerations  = [];
-							this.accelerationsX = "";
-							this.accelerationsY = "";
-							this.accelerationsZ = "";
+							this.acc   = { data: [], period: 100, maxSize: 200, enabled: false
+										 , name 		: "Accelerometer"};
+							this.gyro  = { data: [], period: 100, maxSize: 200, enabled: false
+										 , name 		: "Gyroscope"};
+							this.compas = { data: [], period: 100, maxSize: 200, enabled: false
+										 , enable 		: "Magnetometer"};
+							this.IR_temperature = { data: [], period: 100, maxSize: 200, enabled: false
+										 , name 		: "IrTemperature"};
+							this.Humidity = { data: [], period: 100, maxSize: 200, enabled: false
+										 , name 		: "Humidity"};
+							this.BarometricPressure = { data: [], period: 100, maxSize: 200, enabled: false
+										 , name 		: "BarometricPressure"};
+							this.Luxometer = { data: [], period: 100, maxSize: 200, enabled: false
+										 , name 		: "Luxometer"};
 
-							this.enableAccelerometer	= function() {console.log("enableAccelerometer", $scope.brick.id);
-																	  utils.call($scope.brick.id, "enableAccelerometer", []
-																				).then( function() {return utils.call($scope.brick.id, "notifyAccelerometer", []);} )
-																	  			 .then( function() {return utils.call($scope.brick.id, "setAccelerometerPeriod", [100]);} )
-																	  			 .then( function() {ctrl.accelerationEnabled = true; $scope.$apply();})
-																	 };
-							this.disableAccelerometer	= function() {utils.call($scope.brick.id, "disableAccelerometer", []
-																				).then( function() {ctrl.accelerationEnabled = false;})
-																	 };
+
+							this.setPeriodSensor		= function(sensor) {
+								if(sensor.enabled) {
+									var ms = sensor.period;
+									utils.call($scope.brick.id, "set"+sensor.name+"Period", [ms]).then(
+										function() {console.log(sensor.name, "<-", ms);}
+										);
+								}
+							};
+							this.enableSensor	= function(sensor) {
+								console.log("enable"+sensor.name, $scope.brick.id);
+								utils.call	($scope.brick.id, "enable"+sensor.name, []
+											).then( function() {return utils.call($scope.brick.id, "notify"+sensor.name, []);} )
+								  			 .then( function() {return utils.call($scope.brick.id, "set"+sensor.name+"Period", [ctrl.acc.period]);} )
+								  			 .then( function() {sensor.enabled = true; $scope.$apply();})
+							};
+							this.disableSensor	= function(sensor) {
+								utils.call	($scope.brick.id, "disable"+sensor.name, []
+											).then( function() {sensor.enabled = false;})
+							};
 						},
 						controllerAs: "ctrl",
 						templateUrl	: "/IHM/js/BLE/templates/bleSensorTag.html",
 						//templateNamespace: "svg",
 						link		: function(scope, element, attr, controller) {
-							console.log("create bleSensorTag HTML");
-							subscribeForEvent(scope.brick, "accelerometerChange", controller, element, function(event) {
-								var i, acc, scale = 30;
-								//console.log("accelerometerChange", event);
-								controller.accelerationEnabled = true;
-								Object.assign(controller.acceleration, event);
-								controller.accelerations.push( event );
-								controller.accelerationsX = "";
-								controller.accelerationsY = "";
-								controller.accelerationsZ = "";
-								for(i=0; i<controller.accelerations.length; i++) {
-									acc = controller.accelerations[i];
-									controller.accelerationsX += i + " " + scale*acc.x + " ";
-									controller.accelerationsY += i + " " + scale*acc.y + " ";
-									controller.accelerationsZ += i + " " + scale*acc.z + " ";
-								}
-								scope.$apply();
-							});
-							
+							// console.log("create bleSensorTag HTML");
+							var processEvent = function(event, sensor) {
+								scope.$applyAsync( function() {
+									sensor.enabled = true;
+									sensor.data.push( event );
+									sensor.data.splice(0, sensor.data.length - sensor.maxSize);
+								});
+							}
+							subscribeForEvent( scope.brick, "accelerometerChange", element
+											 , function(event) {processEvent(event, controller.acc);} );
+							subscribeForEvent( scope.brick, "gyroscopeChange", element
+											 , function(event) {processEvent(event, controller.gyro);} );
+							subscribeForEvent( scope.brick, "magnetometerChange", element
+											 , function(event) {processEvent(event, controller.compas);} );
+
+
+							subscribeForEvent( scope.brick, "irTemperatureChange", element
+											 , function(event) {processEvent(event, controller.IR_temperature);} );
+							subscribeForEvent( scope.brick, "humidityChange", element
+											 , function(event) {processEvent(event, controller.Humidity);} );
+							subscribeForEvent( scope.brick, "barometricPressureChange", element
+											 , function(event) {processEvent(event, controller.BarometricPressure);} );
+							subscribeForEvent( scope.brick, "luxometerChange", element
+											 , function(event) {processEvent(event, controller.Luxometer);} );
 						}
 					 };
 				 });

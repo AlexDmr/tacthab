@@ -1,19 +1,20 @@
-<h3 ng-bind="title"></h3>
-<md-button ng-hide="ctrl.enabled" ng-click="ctrl.enable()" >Enable </md-button>
-<md-button ng-show="ctrl.enabled" ng-click="ctrl.disable()">Disable</md-button>
+<md-content layout="row">
+	<h3 ng-bind="title"></h3>
+	<md-button ng-hide="descriptionData.enabled" ng-click="onEnable ()" >Enable </md-button>
+	<md-button ng-show="descriptionData.enabled" ng-click="onDisable()">Disable</md-button>
+	<md-input-container>
+		<label>period</label>
+		<md-select ng-model="descriptionData.period" ng-change="onPeriodChange()">
+			<md-option ng-repeat="p in periods" value="{{p}}">{{p}}ms</md-option>
+		</md-select>
+	</md-input-container>
+</md-content>
 
-<md-input-container>
-	<label>period</label>
-	<md-select ng-model="period" ng-change="ctrl.periodChange(period)">
-		<md-option ng-repeat="p in periods" value="{{p}}">{{p}}ms</md-option>
-	</md-select>
-</md-input-container>
-
-<svg class="{{dataName}}">
+<svg>
 	<g class="root">
 		<polyline stroke="black" fill="none" points="-99999 0 99999 0"></polyline>
 		<polyline ng-repeat 		= "data in ctrl.values" 
-				  class 			= "data.name" 
+				  class 			= "{{data.name}}" 
 				  ng-attr-points 	= "{{data.string}}" >
 		</polyline>
 	</g>

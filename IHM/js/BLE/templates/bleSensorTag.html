@@ -10,20 +10,84 @@
 			</div>
 		</md-card-title-media>
 	</md-card-title>
-	<md-content>
-		<md-button ng-hide="ctrl.accelerationEnabled" ng-click="ctrl.enableAccelerometer()">Enable Accelerometer</md-button>
-		<md-button ng-show="ctrl.accelerationEnabled" ng-click="ctrl.disableAccelerometer()">Disable Accelerometer</md-button>
-		<!-- <label>Acceleration : {{ctrl.acceleration | json}}</label> -->
-		<svg class="acceleration">
-			<g class="root">
-				<polyline class="x" ng-attr-points={{ctrl.accelerationsX}}></polyline>
-				<polyline class="y" ng-attr-points={{ctrl.accelerationsY}}></polyline>
-				<polyline class="z" ng-attr-points={{ctrl.accelerationsZ}}></polyline>
-			</g>
-		</svg>
-	<md-content>
-	<md-card-actions layout="row" layout-align="end center">
+	<md-content class="graphers">
+<!-- 		<p>Acceleration: {{ctrl.acceleration | json}}</p>
+ -->
+ 	<md-tabs>
+		<md-tab label="Accelerometer">
+			<alx-grapher title 				= "Accelerometer"
+						 description-data	= "ctrl.acc"
+						 on-enable 			= "ctrl.enableSensor   (ctrl.acc)"
+						 on-disable 		= "ctrl.disableSensor  (ctrl.acc)"
+						 on-period-change 	= "ctrl.setPeriodSensor(ctrl.acc)"
+						 periods			= "[100, 200, 300, 400, 500, 1000, 2000]"
+						 >
+			</alx-grapher>
+		</md-tab>
+		<md-tab label="Gyroscope">
+			<alx-grapher title 				= "Gyroscope"
+						 description-data	= "ctrl.gyro"
+						 on-enable 			= "ctrl.enableSensor   (ctrl.gyro)"
+						 on-disable 		= "ctrl.disableSensor  (ctrl.gyro)"
+						 on-period-change 	= "ctrl.setPeriodSensor(ctrl.gyro)"
+						 periods			= "[100, 200, 300, 400, 500, 1000, 2000]"
+						 >
+			</alx-grapher>
+		</md-tab>
+		<md-tab label="Magnetometer">
+			<alx-grapher title 				= "Magnetometer"
+						 description-data	= "ctrl.compas"
+						 on-enable 			= "ctrl.enableSensor   (ctrl.compas)"
+						 on-disable 		= "ctrl.disableSensor  (ctrl.compas)"
+						 on-period-change 	= "ctrl.setPeriodSensor(ctrl.compas)"
+						 periods			= "[100, 200, 300, 400, 500, 1000, 2000]"
+						 >
+			</alx-grapher>
+		</md-tab>
+		<md-tab label="IrTemperature">
+			<alx-grapher title 				= "IrTemperature"
+						 description-data	= "ctrl.IR_temperature"
+						 on-enable 			= "ctrl.enableSensor   (ctrl.IR_temperature)"
+						 on-disable 		= "ctrl.disableSensor  (ctrl.IR_temperature)"
+						 on-period-change 	= "ctrl.setPeriodSensor(ctrl.IR_temperature)"
+						 periods			= "[100, 200, 300, 400, 500, 1000, 2000]"
+						 >
+			</alx-grapher>
+		</md-tab>
+		<md-tab label="Humidity">
+			<alx-grapher title 				= "Humidity"
+						 description-data	= "ctrl.Humidity"
+						 on-enable 			= "ctrl.enableSensor   (ctrl.Humidity)"
+						 on-disable 		= "ctrl.disableSensor  (ctrl.Humidity)"
+						 on-period-change 	= "ctrl.setPeriodSensor(ctrl.Humidity)"
+						 periods			= "[100, 200, 300, 400, 500, 1000, 2000]"
+						 >
+			</alx-grapher>
+		</md-tab>
+		<md-tab label="Barometric Pressure">
+			<alx-grapher title 				= "Barometric Pressure"
+						 description-data	= "ctrl.BarometricPressure"
+						 on-enable 			= "ctrl.enableSensor   (ctrl.BarometricPressure)"
+						 on-disable 		= "ctrl.disableSensor  (ctrl.BarometricPressure)"
+						 on-period-change 	= "ctrl.setPeriodSensor(ctrl.BarometricPressure)"
+						 periods			= "[100, 200, 300, 400, 500, 1000, 2000]"
+						 >
+			</alx-grapher>
+		</md-tab>
+		<md-tab label="Luxometer">
+			<alx-grapher title 				= "Luxometer"
+						 description-data	= "ctrl.Luxometer"
+						 on-enable 			= "ctrl.enableSensor   (ctrl.Luxometer)"
+						 on-disable 		= "ctrl.disableSensor  (ctrl.Luxometer)"
+						 on-period-change 	= "ctrl.setPeriodSensor(ctrl.Luxometer)"
+						 periods			= "[100, 200, 300, 400, 500, 1000, 2000]"
+						 >
+			</alx-grapher>
+		</md-tab>
+	</md-tabs>
+	</md-content>
+<!-- 	<md-card-actions layout="row" layout-align="end center">
 		<md-button>Action 1</md-button>
 		<md-button>Action 2</md-button>
 	</md-card-actions>
-</md-card>
+ --></md-card>
