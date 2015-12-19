@@ -39,20 +39,20 @@ module.exports = function(app) {
 						restrict	: 'E',
 						scope		: {brick	: "="},
 						controller	: function($http, $scope) {
-							var ctrl = this;
+							//var ctrl = this;
 							this.acc   = { data: [], period: 100, maxSize: 200, enabled: false
 										 , name 		: "Accelerometer"};
 							this.gyro  = { data: [], period: 100, maxSize: 200, enabled: false
 										 , name 		: "Gyroscope"};
 							this.compas = { data: [], period: 100, maxSize: 200, enabled: false
 										 , enable 		: "Magnetometer"};
-							this.IR_temperature = { data: [], period: 100, maxSize: 200, enabled: false
+							this.IR_temperature = { data: [], period: 1000, maxSize: 200, enabled: false
 										 , name 		: "IrTemperature"};
-							this.Humidity = { data: [], period: 100, maxSize: 200, enabled: false
+							this.Humidity = { data: [], period: 1000, maxSize: 200, enabled: false
 										 , name 		: "Humidity"};
-							this.BarometricPressure = { data: [], period: 100, maxSize: 200, enabled: false
+							this.BarometricPressure = { data: [], period: 1000, maxSize: 200, enabled: false
 										 , name 		: "BarometricPressure"};
-							this.Luxometer = { data: [], period: 100, maxSize: 200, enabled: false
+							this.Luxometer = { data: [], period: 1000, maxSize: 200, enabled: false
 										 , name 		: "Luxometer"};
 
 
@@ -68,7 +68,7 @@ module.exports = function(app) {
 								console.log("enable"+sensor.name, $scope.brick.id);
 								utils.call	($scope.brick.id, "enable"+sensor.name, []
 											).then( function() {return utils.call($scope.brick.id, "notify"+sensor.name, []);} )
-								  			 .then( function() {return utils.call($scope.brick.id, "set"+sensor.name+"Period", [ctrl.acc.period]);} )
+								  			 .then( function() {return utils.call($scope.brick.id, "set"+sensor.name+"Period", [sensor.period]);} )
 								  			 .then( function() {sensor.enabled = true; $scope.$apply();})
 							};
 							this.disableSensor	= function(sensor) {
