@@ -18,17 +18,19 @@ function subscribeForEvent(brick, eventName, element, cb) {
 						 }
 						}
 					); 
-	element.on		( "$destroy"
-					, function() {
-						 utils.io.off( cbEventName, eventCB);
-						 utils.io.emit	( "unSubscribeBrick"
-										, { brickId		: brick.brickId
-										  , eventName	: eventName
-										  , cbEventName	: cbEventName
-										  }
-										);
-						} 
-					);
+	if(element) {
+		element.on		( "$destroy"
+						, function() {
+							 utils.io.off( cbEventName, eventCB);
+							 utils.io.emit	( "unSubscribeBrick"
+											, { brickId		: brick.brickId
+											  , eventName	: eventName
+											  , cbEventName	: cbEventName
+											  }
+											);
+							} 
+						);
+	}
 }
 
 module.exports = subscribeForEvent;

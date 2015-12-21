@@ -148,28 +148,32 @@ BrickBLE.prototype.writeCharacteristic	= function(uuid, value) {
 BrickBLE.prototype.notifyCharacteristic = function(uuid, notify) {
 	var characteristic = this.characteristics[uuid],
 		brick = this;
-
-	console.log( this.brickId, "notifyCharacteristic", uuid );
+	
 	if( characteristic ) {
+		console.log( this.brickId, "notifyCharacteristic", uuid, notify );
 		return new Promise( function(resolve, reject) {
-			characteristic.notify(notify, true, function(error) {
+			characteristic.notify(notify, function(error) {
 				console.log( "\tnotification response has error", error);
 				if(error) {reject(error);} else {resolve(true);}
-				var cb = brick.cb_characterisitcs[ uuid ];
-				if(!cb) {
-					cb = function(data, isNotification) {
-						console.log("\notification for", uuid, "<<", data, isNotification);
-						if( !isNotification ) {return;}
-						var res = 	{ data	: data
-									, length: data.length
-									, utf8	: data.toString('ascii')
-									};
-						this.emit("notification_" + uuid, res);
-					}
-					characteristic.on('data', cb);
-				}
 				console.log("\terror", error);
 			});
+			console.log("subscribing sent...")
+			var cb = brick.cb_characterisitcs[ uuid ];
+			if(!cb) {
+				cb = function(data, isNotification) {
+					console.log("\tnotification for", uuid, "<<", data, isNotification);
+					if( !isNotification ) {return;}
+					var res = 	{ data	: data
+								, length: data.length
+								, utf8	: data.toString('ascii')
+								};
+					console.log("Emiting", uuid, res);
+					brick.emit(uuid, res);
+					console.log("\tdone...");
+				}
+				characteristic.on('data', cb);
+				resolve(true); // DEBUG
+			}
 		});
 	}
 	return false;

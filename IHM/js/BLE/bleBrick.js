@@ -44,6 +44,7 @@ module.exports = function(app) {
 													}
 										  );
 							}
+							
 							this.notifyCharacteristic   = function(characteristic){
 								utils.call( $scope.brick.id, "notifyCharacteristic", [characteristic.uuid, true]
 										  ).then( function(res) {
@@ -54,11 +55,11 @@ module.exports = function(app) {
 													cb = function(eventData) {
 														console.log("notification", characteristic.uuid, ":", eventData);
 														characteristic.stringInput = eventData.utf8;
-														utils.io.on	( "notification_" + characteristic.uuid, cb);
-														$scope.$apply();
+														$scope.$applyAsync();
 													};
+													console.log("subscribeForEvent", $scope.brick, characteristic.uuid);
+													subscribeForEvent($scope.brick, characteristic.uuid, null, cb);
 												}
-												$scope.$apply();
 										  } );
 							}
 							this.readCharacteristic		= function(characteristic) {
