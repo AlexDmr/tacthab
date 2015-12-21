@@ -1,8 +1,11 @@
 var bleSensorTag 	= require( "./bleSensorTag.js" )
+  , bleBrick		= require( "./bleBrick.js" )
   , alxGrapher		= require( "./alxGrapher.js" )
+  , utils			= require( "../../../js/utils.js" )
   ;
 
 module.exports = function(app) {
+	bleBrick	(app);
 	bleSensorTag(app);
 	alxGrapher	(app);
 	app.directive( "bleServer"
@@ -17,6 +20,25 @@ module.exports = function(app) {
 								console.log("BLE_isInit =>", obj, ctrl);
 								if(obj.status === 200 && obj.data === true) {ctrl.isInit = true;}
 							});
+							
+							this.readCharacteristic		= function(brick, characteristic) {
+								utils.call( brick.id, "readCharacteristic", [characteristic.uuid]
+										  ).then( function(res) {
+											  console.log("readCharacteristic =>", res);
+											  characteristic.stringInput = res;
+											  $scope.$apply();
+										  } );
+							}
+							
+							this.writeCharacteristic	= function(brick, characteristic, value) {
+								utils.call( brick.id, "writeCharacteristic", [characteristic.uuid, value]
+										  ).then( function(res) {
+											  console.log("writeCharacteristic =>", res);
+											  characteristic.stringInput = res.utf8;
+											  $scope.$apply();
+										  } );
+							}
+							
 							this.init = function() {
 							$http.get( "/BLE_init" ).then( function(obj) {
 								console.log("/BLE_init =>", obj);

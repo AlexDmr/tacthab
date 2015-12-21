@@ -11,40 +11,9 @@
 </ble-sensor-tag>
 <hr/>
 
-<md-card ng-repeat	= "brick in context.bricks | toArray:false | filter:{type:'BrickBLE'}" >
-    <md-card-title>
-		<md-card-title-text>
-        	<span class="md-headline" ng-bind="brick.name"></span>
-        	<span class="md-subhead" ng-bind="brick.id"></span>
-     	</md-card-title-text>
-     	<md-card-title-media>
-        	<div class="md-media-sm card-media"></div>
-     	</md-card-title-media>
-	</md-card-title>
-	<md-content>
-		<details ng-repeat="service in brick.services">
-			<summary>
-				<span class="name" ng-bind="service.name"></span>
-				<span class="uuid" ng-bind="service.uuid"></span>
-				<span class="type" ng-bind="service.type"></span>
-			</summary>
-			<ul>
-				<li ng-repeat="characteristic in service.characteristics">
-					<details>
-						<summary>
-							<span class="name" ng-bind="characteristic.name"></span>
-							<span class="uuid" ng-bind="characteristic.uuid"></span>
-							<span class="type" ng-bind="characteristic.type"></span>
-						</summary>
-						<p>{{characteristic.properties | json}}</p>
-						<md-input-container>
-							<label>Send</label>
-							<input ng-model="user.title">
-						</md-input-container>
-					</details>
-				</li>
-			</ul>
-		</details>
-	</md-content>
+<ble-brick 	ng-repeat = "brick in context.bricks | toArray:false | filter:{type:'BrickBLE'}" 
+			brick = "brick"
+			>
+    
 </md-card>
 

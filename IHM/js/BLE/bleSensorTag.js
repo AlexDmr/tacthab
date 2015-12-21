@@ -1,37 +1,9 @@
-var utils = require( "../../../js/utils.js" )
-  ; 
 require( "./templates/bleSensorTag.css" );
 
-function subscribeForEvent(brick, eventName, element, cb) {
-	var eventCB
-	  , cbEventName = brick.id + "->" + eventName;
-	utils.io.emit	( "subscribeBrick"
-					, { brickId		: brick.id
-					  , eventName	: eventName
-					  , cbEventName	: cbEventName
-					  } 
-					);
-	utils.io.on	( cbEventName
-					, eventCB = function(eventData) {
-						 try {
-						 	cb(eventData.data);
-						 } catch(error) {
-						 	console.error(error);
-						 }
-						}
-					); 
-	element.on		( "$destroy"
-					, function() {
-						 utils.io.off( cbEventName, eventCB);
-						 utils.io.emit	( "unSubscribeBrick"
-										, { brickId		: brick.brickId
-										  , eventName	: eventName
-										  , cbEventName	: cbEventName
-										  }
-										);
-						} 
-					);
-}
+var utils				= require( "../../../js/utils.js" )
+  , subscribeForEvent	= require( "./subscribeForEvent.js" )
+  ;
+
 module.exports = function(app) {
 	app.directive( "bleSensorTag"
 				 , function() {
@@ -45,7 +17,7 @@ module.exports = function(app) {
 							this.gyro  = { data: [], period: 100, maxSize: 200, enabled: false
 										 , name 		: "Gyroscope"};
 							this.compas = { data: [], period: 100, maxSize: 200, enabled: false
-										 , enable 		: "Magnetometer"};
+										 , name 		: "Magnetometer"};
 							this.IR_temperature = { data: [], period: 1000, maxSize: 200, enabled: false
 										 , name 		: "IrTemperature"};
 							this.Humidity = { data: [], period: 1000, maxSize: 200, enabled: false

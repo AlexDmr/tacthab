@@ -35,6 +35,7 @@ var gulp				= require('gulp')
 										  , "Int8Array"		: false
 										  , "google"		: false
 										  , "window"		: false
+										  , "Buffer"		: false
 										  , "webkitSpeechRecognition"	: false
 										  , "SpeechSynthesisUtterance"	: false
 										  , "speechSynthesis"			: false

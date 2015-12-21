@@ -6,8 +6,12 @@ var BrickSensorTag = function(id, peripheral, sensorTag) {
 	var self = this;
 
 	BrickBLE.apply(this, [id, peripheral]);
-	this.peripheral	= peripheral;
-	this.sensorTag 	= sensorTag;
+	
+	this.peripheral		= peripheral;
+	this.sensorTag 		= sensorTag;
+	this.isConnected	= true;
+	
+	this.emit("connected", {value: true});
 
 	// Accelerometer
 	sensorTag.on('accelerometerChange', function(x, y, z) {
