@@ -1,3 +1,16 @@
+erf: {{activity | json}}
+<md-content class="root md-whiteframe-20dp">
+	<h3 ng-bind="activity.title"></h3>
+	
+	<section 	class				= "components"
+				alx-droppable		= ".Brick"
+				alx-accept-feedback	= "candrop"
+				alx-hover-feedback	= "overdrop"
+				drop-action			= ""
+				></section>
+</md-content>
+
+<!-- 
 <md-card class="activity"
 		 alx-droppable		= ".Brick"
 		 alx-accept-feedback= "acceptDrop"
@@ -15,3 +28,4 @@
 		</section>
 	</md-card-content>
 </md-card>
+ -->

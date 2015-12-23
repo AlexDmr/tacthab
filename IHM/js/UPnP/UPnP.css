@@ -1,0 +1,10 @@
+brick-upnp img.icon {
+	width			: 75px;
+	height			: 75px;
+}
+
+brick-upnp h4 {
+    margin-top		: 0.5em;
+    margin-bottom	: 0.75em;
+}
+

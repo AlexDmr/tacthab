@@ -11,6 +11,21 @@
 
 	<md-sidenav class="md-sidenav-right md-whiteframe-z2 bricks" md-component-id="bricksList">
 		<md-content>
+			<h4>UPnP</h4>
+			<md-list>
+				<md-list-item flex ng-repeat="brick in context.bricks | toArray:flase | filter:{type: 'Brick'}">
+					<section alx-draggable="brick" 
+							 class="Brick" 
+							 alx-drag-start="ctrl.closeBricks()"
+							 alx-drag-end="ctrl.openBricks()"
+							 flex>
+						<md-card>
+							{{brick.name}}
+							<brick-upnp data="brick"></brick-upnp>
+						</md-card>
+					</section>
+				</<md-list-item>
+			</md-list>
 			<h4>Bricks</h4>
 			<md-list>
 				<md-subheader class="md-no-sticky">OpenHab</md-subheader>
@@ -30,11 +45,10 @@
 	</md-sidenav>
 
 	<section class="activities">
-		<form layout="column">
+		<!-- <form layout="column">
 			<md-content class="addActivity" layout-padding layout="raw">
 				<md-input-container class="md-block">
 					<label>Name</label>
-					<!-- <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon> -->
 					<input ng-model="newActivity.name" type="text">
 				</md-input-container>
 				<md-input-container class="md-block">
@@ -43,7 +57,9 @@
 				</md-input-container>
 			</md-content>
 			<alx-activity activity="newActivity"></alx-activity>
-		</form>
+		</form> -->
+		Les activités sont là :
 		<alx-activity ng-repeat="activity in activities" activity="activity"></alx-activity>
+		<alx-activity></alx-activity>
 	</section>
 </section>

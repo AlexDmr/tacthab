@@ -67,7 +67,7 @@ gulp.task("webpack", function(callback) {
 				path			: "./",
 				filename		: "[name].js",
 			},
-			progress: false,
+			progress			: false,
 			stats: {
 				colors			: true ,
 				modules			: false,

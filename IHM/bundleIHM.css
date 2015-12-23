@@ -173,12 +173,27 @@ alx-activities {
 
 alx-activities button.bricks {
 	transform			: rotate(90deg);
-}alx-activity > md-card {
-	width				: 200px;
-	height				: 300px;
+}alx-activity .root {
+	margin 				: 0.3em;
 	word-break			: break-word;
 }
 
+alx-activity section.components {
+	box-shadow			: inset 3px 3px 5px 0px #656565;
+	min-height 			: 3em; 
+	margin 				: 0.3em;
+	transition			: box-shadow 0.5s;
+}
+
+alx-activity section.components.candrop {
+	box-shadow			: inset 6px 6px 10px 0px #656565;
+	transition			: box-shadow 0.5s;
+}
+
+alx-activity section.components.candrop.overdrop {
+	background-color	: lightgreen;
+	transition			: background-color 0.5s;
+}
 alx-grapher {
 	padding-left	: 1em;
 	padding-right	: 1em;

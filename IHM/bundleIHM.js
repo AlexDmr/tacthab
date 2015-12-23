@@ -8568,6 +8568,13 @@
 						  , users	: {}
 						  }
 	*/
+	var pipo = {
+		title		: "End-User DomiCube",
+		components	: [],
+		inputs		: [],
+		outputs		: [],
+		logic		: null
+	};
 
 	module.exports = function(app) {
 		app.directive	( "alxActivity"
@@ -8575,12 +8582,12 @@
 							return {
 								  restrict	: 'E'
 								, controller	: function($scope) {
-									 this.activity = $scope.activity;
-									 
+									 $scope.activity = pipo;
+									 //$scope.$apply();
 									}
 								, controllerAs	: 'ctrl'
 								, templateUrl	: "/IHM/js/activities/alxActivity.html"
-								, scope			: { activity	: "=activity"
+								, scope			: { //activity	: "=activity"
 												  }
 								, link			: function(scope, element, attr, controller) {}
 							};
@@ -9265,17 +9272,19 @@
 							 }
 							}
 						); 
-		element.on		( "$destroy"
-						, function() {
-							 utils.io.off( cbEventName, eventCB);
-							 utils.io.emit	( "unSubscribeBrick"
-											, { brickId		: brick.brickId
-											  , eventName	: eventName
-											  , cbEventName	: cbEventName
-											  }
-											);
-							} 
-						);
+		if(element) {
+			element.on		( "$destroy"
+							, function() {
+								 utils.io.off( cbEventName, eventCB);
+								 utils.io.emit	( "unSubscribeBrick"
+												, { brickId		: brick.brickId
+												  , eventName	: eventName
+												  , cbEventName	: cbEventName
+												  }
+												);
+								} 
+							);
+		}
 	}
 
 	module.exports = subscribeForEvent;
@@ -9331,6 +9340,7 @@
 														}
 											  );
 								}
+								
 								this.notifyCharacteristic   = function(characteristic){
 									utils.call( $scope.brick.id, "notifyCharacteristic", [characteristic.uuid, true]
 											  ).then( function(res) {
@@ -9341,11 +9351,11 @@
 														cb = function(eventData) {
 															console.log("notification", characteristic.uuid, ":", eventData);
 															characteristic.stringInput = eventData.utf8;
-															utils.io.on	( "notification_" + characteristic.uuid, cb);
-															$scope.$apply();
+															$scope.$applyAsync();
 														};
+														console.log("subscribeForEvent", $scope.brick, characteristic.uuid);
+														subscribeForEvent($scope.brick, characteristic.uuid, null, cb);
 													}
-													$scope.$apply();
 											  } );
 								}
 								this.readCharacteristic		= function(characteristic) {

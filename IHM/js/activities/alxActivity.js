@@ -12,6 +12,13 @@ require( "./alxActivity.css" );
 					  , users	: {}
 					  }
 */
+var pipo = {
+	title		: "End-User DomiCube",
+	components	: [],
+	inputs		: [],
+	outputs		: [],
+	logic		: null
+};
 
 module.exports = function(app) {
 	app.directive	( "alxActivity"
@@ -19,12 +26,12 @@ module.exports = function(app) {
 						return {
 							  restrict	: 'E'
 							, controller	: function($scope) {
-								 this.activity = $scope.activity;
-								 
+								 $scope.activity = pipo;
+								 //$scope.$apply();
 								}
 							, controllerAs	: 'ctrl'
 							, templateUrl	: "/IHM/js/activities/alxActivity.html"
-							, scope			: { activity	: "=activity"
+							, scope			: { //activity	: "=activity"
 											  }
 							, link			: function(scope, element, attr, controller) {}
 						};

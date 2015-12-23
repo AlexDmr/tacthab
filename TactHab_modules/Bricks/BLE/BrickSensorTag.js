@@ -2,12 +2,12 @@ var BrickBLE	= require( './BrickBLE.js' )
   ;
   
   
-var BrickSensorTag = function(id, peripheral, sensorTag) {
+var BrickSensorTag = function(id, sensorTag) {
 	var self = this;
 
-	BrickBLE.apply(this, [id, peripheral]);
+	BrickBLE.apply(this, [id, sensorTag]);
 	
-	this.peripheral		= peripheral;
+	this.peripheral		=
 	this.sensorTag 		= sensorTag;
 	this.isConnected	= true;
 	
@@ -57,6 +57,19 @@ BrickSensorTag.prototype.dispose	= function() {
 	}
 	BrickBLE.prototype.apply(this, []);
 }
+
+BrickSensorTag.prototype.connectAndSetUp	= function() {
+	var brick = this;
+	var sensorTag = this.sensorTag;
+	sensorTag.connectAndSetUp( function(error) {
+		if(error) {console.error("sensorTag connectAndSetUp error", error); return;}
+		sensorTag.readDeviceName( function(error, deviceName) {
+			if(error) {console.error(error); return;}
+			brick.emit("updateDescription", brick.getDescription());
+		});
+	});
+}
+
 
 function generatePromise_mtd(mtdName, mtdParams, cbParams) {
 	var i;
