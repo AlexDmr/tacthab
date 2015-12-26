@@ -9,14 +9,13 @@ var BrickSensorTag = function(id, sensorTag) {
 	
 	this.peripheral		=
 	this.sensorTag 		= sensorTag;
-	this.isConnected	= true;
-	
-	this.emit("connected", {value: true});
+	//this.isConnected	= true;
+	//this.emit("connected", {value: true});
 
 	// Accelerometer
 	sensorTag.on('accelerometerChange', function(x, y, z) {
 		//console.log("accelerometerChange", id, x, y, z);
-		self.emit("accelerometerChange", {x:4*x, y:4*y, z:4*z});
+		self.emit("accelerometerChange", {x:x, y:y, z:z});
 	});
 	sensorTag.on('gyroscopeChange', function(x, y, z) {
 		self.emit("gyroscopeChange", {x:x, y:y, z:z});
@@ -56,6 +55,21 @@ BrickSensorTag.prototype.dispose	= function() {
 		
 	}
 	BrickBLE.prototype.apply(this, []);
+}
+
+BrickSensorTag.prototype.connect 		= function() {
+	var brick = this;
+	var sensorTag = this.sensorTag;
+	return new Promise( function(resolve, reject) {
+		sensorTag.connectAndSetUp( function(error) {
+			if(error) {console.error("sensorTag connectAndSetUp error", error); return;}
+			sensorTag.readDeviceName( function(error, deviceName) {
+				if(error) {reject(error); return;}
+				brick.isConnected = true;
+				resolve( brick.getDescription() );
+			}); // sensorTag.readDeviceName
+		}); // sensorTag.connectAndSetUp
+	}); // Promise
 }
 
 BrickSensorTag.prototype.connectAndSetUp	= function() {

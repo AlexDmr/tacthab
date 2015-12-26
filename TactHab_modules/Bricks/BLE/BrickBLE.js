@@ -41,7 +41,7 @@ BrickBLE.prototype.connect 		= function() {
 		console.log( "connecting to", peripheral.id);
 		peripheral.connect( function(error) {
 			console.log("\tconnected to", peripheral.id);
-			if(error) {reject(error);} else {resolve(true);}
+			if(error) {reject(error);} else {brick.isConnected = true; resolve(true);}
 			if(brick.gotAllServicesAndCharacteristics === false) {
 				peripheral.discoverAllServicesAndCharacteristics( function(error, services, characteristics) {
 					if(error) {console.error("Error BLE", peripheral.id, ":", error); return;}

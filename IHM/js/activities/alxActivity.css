@@ -19,3 +19,20 @@ alx-activity section.components.candrop.overdrop {
 	background-color	: lightgreen;
 	transition			: background-color 0.5s;
 }
+
+alx-activity section.components > section {
+	display 			: flex;
+	flex-flow			: row;
+	flex-wrap			: wrap;
+	align-items 		: stretch;
+}
+
+alx-activity section.components > section > * {
+	display 			: flex;
+	flex-flow			: column;
+	flex				: 1 1 200px;
+}
+
+alx-activity section.components > section > * > * {
+	flex				: 1 1 auto;
+}

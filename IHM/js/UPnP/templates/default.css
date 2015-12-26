@@ -1,0 +1,7 @@
+brick-upnp md-card.BrickUPnP_MediaServer {
+	background 		: cyan; 
+}
+
+brick-upnp md-card.BrickUPnP_MediaRenderer {
+	background 		: lightgreen; 
+}

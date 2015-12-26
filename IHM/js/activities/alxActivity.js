@@ -28,6 +28,11 @@ module.exports = function(app) {
 							, controller	: function($scope) {
 								 $scope.activity = pipo;
 								 //$scope.$apply();
+								 this.appendBrick	= function(data) {
+								 	console.log( "appendBrick", data );
+								 	$scope.activity.components.push( data.draggedData );
+								 	$scope.$applyAsync();
+								 }
 								}
 							, controllerAs	: 'ctrl'
 							, templateUrl	: "/IHM/js/activities/alxActivity.html"

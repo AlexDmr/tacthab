@@ -2,7 +2,16 @@
 	<md-card-title>
 		<md-card-title-text>
 			<span class="md-headline">{{brick.name}}</span>
-			<span class="md-subhead">{{brick.type | json}}</span>
+			<span class="md-subhead">
+				<md-button 	class	= "md-raised md-primary" 
+							ng-show	= "!ctrl.isConnecting && !brick.isConnected"
+							ng-click= "ctrl.connect()"
+							>Connect</md-button>
+				<md-button 	class	= "md-raised md-primary" 
+							ng-show	= "!ctrl.isConnecting &&  brick.isConnected"
+							ng-click= "ctrl.disconnect()"
+							>Disconnect</md-button>
+			</span>
 		</md-card-title-text>
 		<md-card-title-media>
 			<div class="md-media-sm card-media">
@@ -11,8 +20,8 @@
 		</md-card-title-media>
 	</md-card-title>
 	<md-content class="graphers">
-<!-- 		<p>Acceleration: {{ctrl.acceleration | json}}</p>
- -->
+		<p>Last data: {{lastData | json}}</p>
+
  	<md-tabs>
 		<md-tab label="Accelerometer">
 			<alx-grapher title 				= "Accelerometer"

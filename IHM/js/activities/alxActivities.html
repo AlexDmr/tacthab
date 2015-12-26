@@ -15,14 +15,11 @@
 			<md-list>
 				<md-list-item flex ng-repeat="brick in context.bricks | toArray:flase | filter:{type: 'Brick'}">
 					<section alx-draggable="brick" 
-							 class="Brick" 
+							 class="Brick UPnP" 
 							 alx-drag-start="ctrl.closeBricks()"
 							 alx-drag-end="ctrl.openBricks()"
 							 flex>
-						<md-card>
-							{{brick.name}}
-							<brick-upnp data="brick"></brick-upnp>
-						</md-card>
+						<brick-upnp data="brick"></brick-upnp>
 					</section>
 				</<md-list-item>
 			</md-list>
@@ -31,7 +28,7 @@
 				<md-subheader class="md-no-sticky">OpenHab</md-subheader>
 				<md-list-item flex ng-repeat="brick in context.bricks | toArray:flase | filter:{type: 'BrickOpenHAB_item'}">
 					<section alx-draggable="brick" 
-							 class="Brick" 
+							 class="Brick openHab" 
 							 alx-drag-start="ctrl.closeBricks()"
 							 alx-drag-end="ctrl.openBricks()"
 							 flex>

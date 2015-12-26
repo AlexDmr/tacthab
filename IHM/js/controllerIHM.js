@@ -55,6 +55,7 @@ require( "../templates/mediaSelector.js" )(app);
 require( "./alxDragDrop.js" )(app);
 require( "./activities/alxActivities.js" )(app);
 require( "./activities/alxActivity.js" )(app);
+require( "./UPnP/UPnP.js" )(app);
 require( "./openHab/openHab.js" )(app);
 require( "./BLE/BLE.js" )(app);
 

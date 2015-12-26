@@ -11,7 +11,7 @@ module.exports = function(app) {
 						restrict	: 'E',
 						scope		: {brick	: "="},
 						controller	: function($http, $scope) {
-							//var ctrl = this;
+							var ctrl = this;
 							this.acc   = { data: [], period: 100, maxSize: 200, enabled: false
 										 , name 		: "Accelerometer"};
 							this.gyro  = { data: [], period: 100, maxSize: 200, enabled: false
@@ -27,6 +27,38 @@ module.exports = function(app) {
 							this.Luxometer = { data: [], period: 1000, maxSize: 200, enabled: false
 										 , name 		: "Luxometer"};
 
+							this.connect		= function() {
+								console.log( "connecting to", $scope.brick.id );
+								ctrl.isConnecting = true; $scope.$applyAsync();
+								utils.call( $scope.brick.id, "connect", [] 
+										  ).then( function(res) {
+													 $scope.brick.isConnected	= true;
+													}
+												, function(err) {
+													 console.error("error connecting to", $scope.brick.id, ":", err);
+													} 
+										  ).then( function() {
+													 ctrl.isConnecting = false;
+													 $scope.$applyAsync();
+													} 
+										  );
+							}
+							this.disconnect		= function() {
+								console.log( "disconnecting from", $scope.brick.id );
+								ctrl.isConnecting = true; $scope.$applyAsync();
+								utils.call( $scope.brick.id, "disconnect", [] 
+										  ).then( function(res) {
+													 $scope.brick.isConnected	= false;
+													}
+												, function(err) {
+													 console.error("error disconnecting from", $scope.brick.id, ":", err);
+													} 
+										  ).then( function() {
+													 ctrl.isConnecting = false;
+													 $scope.$applyAsync();
+													}
+										  );
+							}
 
 							this.setPeriodSensor		= function(sensor) {
 								if(sensor.enabled) {
@@ -58,6 +90,7 @@ module.exports = function(app) {
 									sensor.enabled = true;
 									sensor.data.push( event );
 									sensor.data.splice(0, sensor.data.length - sensor.maxSize);
+									scope.lastData = event;
 								});
 							}
 							subscribeForEvent( scope.brick, "accelerometerChange", element

@@ -10,9 +10,6 @@ module.exports = function(app) {
 								 this.toggleBricks	= function() {$mdSidenav("bricksList").toggle();};
 								 this.openBricks	= function() {$mdSidenav("bricksList").open();};
 								 this.closeBricks	= function() {$mdSidenav("bricksList").close();};
-								 $scope.newActivity = { name		: ""
-													  , description	: ""
-													  };
 								}
 							, controllerAs	: 'ctrl'
 							, templateUrl	: "/IHM/js/activities/alxActivities.html"
