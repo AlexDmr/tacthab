@@ -9180,7 +9180,8 @@
 
 	var bleSensorTag 	= __webpack_require__( 105 )
 	  , bleBrick		= __webpack_require__( 109 )
-	  , alxGrapher		= __webpack_require__( 110 )
+	  , bleMetawear		= __webpack_require__( 110 )
+	  , alxGrapher		= __webpack_require__( 113 )
 	  , utils			= __webpack_require__( 8 )
 	  ;
 
@@ -9188,6 +9189,7 @@
 		bleBrick	(app);
 		bleSensorTag(app);
 		alxGrapher	(app);
+		bleMetawear	(app);
 		app.directive( "bleServer"
 					 , function() {
 						 return {
@@ -9479,7 +9481,7 @@
 											  } );
 								}
 								this.writeCharacteristic	= function(characteristic, value) {
-									utils.call( $scope.brick.id, "writeCharacteristic", [characteristic.uuid, value]
+									utils.call( $scope.brick.id, "writeCharacteristic", [characteristic.uuid, value + "\r\n"]
 											  ).then( function(res) {
 												  console.log("writeCharacteristic =>", res);
 												  characteristic.stringInput = res.utf8;
@@ -9506,6 +9508,112 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__( 111 );
+
+	var utils				= __webpack_require__( 8 )
+	  , subscribeForEvent	= __webpack_require__( 108 )
+	  ;
+
+	module.exports = function(app) {
+		app.directive( "bleMetaWear"
+					 , function() {
+						 return {
+							restrict	: 'E',
+							scope		: {brick	: "="},
+							controller	: function($http, $scope) {
+								var ctrl = this;
+								this.isConnecting	= false;
+								this.acc   = { data: [], period: 100, maxSize: 200, enabled: false
+											 , name 		: "Accelerometer"};
+								this.gyro  = { data: [], period: 100, maxSize: 200, enabled: false
+											 , name 		: "Gyroscope"};
+
+								this.connect		= function() {
+									console.log( "connecting to", $scope.brick.id );
+									ctrl.isConnecting = true; $scope.$applyAsync();
+									utils.call( $scope.brick.id, "connect", [] 
+											  ).then( function(res) {
+														 $scope.brick.isConnected	= true;
+														}
+													, function(err) {
+														 console.error("error connecting to", $scope.brick.id, ":", err);
+														} 
+											  ).then( function() {
+														 ctrl.isConnecting = false;
+														 $scope.$applyAsync();
+														} 
+											  );
+								}
+								this.disconnect		= function() {
+									console.log( "disconnecting from", $scope.brick.id );
+									ctrl.isConnecting = true; $scope.$applyAsync();
+									utils.call( $scope.brick.id, "disconnect", [] 
+											  ).then( function(res) {
+														 $scope.brick.isConnected	= false;
+														}
+													, function(err) {
+														 console.error("error disconnecting from", $scope.brick.id, ":", err);
+														} 
+											  ).then( function() {
+														 ctrl.isConnecting = false;
+														 $scope.$applyAsync();
+														}
+											  );
+								}
+
+								this.setPeriodSensor		= function(sensor) {
+									/*if(sensor.enabled) {
+										var ms = sensor.period;
+										utils.call($scope.brick.id, "set"+sensor.name+"Period", [ms]).then(
+											function() {console.log(sensor.name, "<-", ms);}
+											);
+									}*/
+								};
+								this.enableSensor	= function(sensor) {
+									console.log("enable"+sensor.name, $scope.brick.id);
+									utils.call	($scope.brick.id, "enable"+sensor.name, []
+												).then( function() {return utils.call($scope.brick.id, "notify"+sensor.name, []);} )
+									  			 .then( function() {return utils.call($scope.brick.id, "set"+sensor.name+"Period", [sensor.period]);} )
+									  			 .then( function() {sensor.enabled = true; $scope.$apply();})
+								};
+								this.disableSensor	= function(sensor) {
+									utils.call	($scope.brick.id, "disable"+sensor.name, []
+												).then( function() {sensor.enabled = false; $scope.$apply();})
+								};
+							},
+							controllerAs: "ctrl",
+							templateUrl	: "/IHM/js/BLE/templates/bleMetaWear.html",
+							//templateNamespace: "svg",
+							link		: function(scope, element, attr, controller) {
+								// console.log("create bleSensorTag HTML");
+								var processEvent = function(event, sensor) {
+									scope.$applyAsync( function() {
+										sensor.enabled = true;
+										sensor.data.push( event );
+										sensor.data.splice(0, sensor.data.length - sensor.maxSize);
+										scope.lastData = event;
+									});
+								}
+								subscribeForEvent( scope.brick, "accelerometerChange", element
+												 , function(event) {processEvent(event, controller.acc);} );
+								subscribeForEvent( scope.brick, "gyroscopeChange", element
+												 , function(event) {processEvent(event, controller.gyro);} );
+							}
+						 };
+					 });
+	}
+
+/***/ },
+/* 111 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 112 */,
+/* 113 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__( 114 );
 	//var resizeDetector = require( "../../../js/resizeDetector.js" );
 
 
@@ -9572,7 +9680,7 @@
 
 
 /***/ },
-/* 111 */
+/* 114 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

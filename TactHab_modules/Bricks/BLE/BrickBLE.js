@@ -20,7 +20,7 @@ var BrickBLE = function(id, peripheral) {
 		brick.emit("connected", {value: false});
 	});
 	
-	this.characteristics = {};
+	this.characteristics 	= {};
 	this.cb_characterisitcs = {};
 
 	this.getDescription();	
@@ -32,21 +32,40 @@ BrickBLE.prototype.getTypeName	= function() {return "BrickBLE";}
 BrickBLE.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickBLE.prototype.getTypeName()); return L;}
 BrickBLE.prototype.registerType('BrickBLE', BrickBLE.prototype);
 
+BrickBLE.prototype.dispose	= function() {
+	var brick = this;
+	if(this.isConnected) {
+		this.disconnect().then( function() {brick.dispose();}
+							  , function() {brick.dispose();}
+							  );
+	} else {
+		this.peripheral = null;
+		Brick.prototype.apply(this, []);
+	}
+}
+
+
 BrickBLE.prototype.connect 		= function() {
 	var brick = this;
-	if(this.isConnected) {return true;}
+	if(this.isConnected) {return Promise.resolve(true);}
 	var peripheral = this.peripheral;
 	
 	return new Promise( function(resolve, reject) {
 		console.log( "connecting to", peripheral.id);
 		peripheral.connect( function(error) {
 			console.log("\tconnected to", peripheral.id);
-			if(error) {reject(error);} else {brick.isConnected = true; resolve(true);}
+			if(error) {reject(error);} 
 			if(brick.gotAllServicesAndCharacteristics === false) {
 				peripheral.discoverAllServicesAndCharacteristics( function(error, services, characteristics) {
-					if(error) {console.error("Error BLE", peripheral.id, ":", error); return;}
-					brick.gotAllServicesAndCharacteristics = true;
-					brick.emit("updateDescription", brick.getDescription());
+					if(error) {
+						console.error("Error BLE", peripheral.id, ":", error); 
+						reject( "Error BLE", peripheral.id, ":", error );
+						return;
+					} else {
+						brick.gotAllServicesAndCharacteristics = true;
+						brick.emit("updateDescription", brick.getDescription());
+						resolve();
+					}
 				});
 			}
 		}); // peripheral.connect
@@ -56,7 +75,7 @@ BrickBLE.prototype.connect 		= function() {
 BrickBLE.prototype.disconnect	= function() {
 	// var brick = this;
 	var peripheral = this.peripheral;
-	if(this.isConnected === false) {return true;}
+	if(this.isConnected === false) {return Promise.resolve(true);}
 	return new Promise( function(resolve, reject) {
 		peripheral.disconnect( function(error) {
 			if(error) {reject(error);} else {resolve(true);}
@@ -118,23 +137,28 @@ BrickBLE.prototype.readCharacteristic	= function(uuid) {
 					res = 	{ data	: data
 							, length: data.length
 							, utf8	: data.toString('ascii')
-							}
+							};
 					console.log(res);
 					resolve( res );
 				}
 			});
 		});
 	}
-	return false;
+	return Promise.reject( "no such characteristic" );
 }
 	
 BrickBLE.prototype.writeCharacteristic	= function(uuid, value) {
 	var characteristic = this.characteristics[uuid];
 	console.log( this.brickId, "writeCharacteristic", uuid, value );
 	if( characteristic ) {
-		var buffer = new Buffer( Buffer.byteLength(value, 'utf8') );
-		buffer.write(value, 0);
-		console.log( "\tbuffer:", buffer);
+		var buffer;
+		if(value.constructor === Buffer) {
+			buffer = value;
+		} else {
+			buffer = new Buffer( Buffer.byteLength(value, 'utf8') );
+			buffer.write(value, 0);
+		}
+		// console.log( "\tbuffer:", buffer);
 		return new Promise( function(resolve, reject) {
 			characteristic.write(buffer, false, function(error) {
 				console.log( "error:", error );
@@ -142,7 +166,7 @@ BrickBLE.prototype.writeCharacteristic	= function(uuid, value) {
 			});
 		});
 	}
-	return false;
+	return Promise.reject( "no such characteristic" );
 }
 
 BrickBLE.prototype.notifyCharacteristic = function(uuid, notify) {
@@ -176,7 +200,7 @@ BrickBLE.prototype.notifyCharacteristic = function(uuid, notify) {
 			}
 		});
 	}
-	return false;
+	return Promise.reject( "no such characteristic" );
 }
 
 

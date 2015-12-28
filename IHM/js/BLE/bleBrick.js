@@ -71,7 +71,7 @@ module.exports = function(app) {
 										  } );
 							}
 							this.writeCharacteristic	= function(characteristic, value) {
-								utils.call( $scope.brick.id, "writeCharacteristic", [characteristic.uuid, value]
+								utils.call( $scope.brick.id, "writeCharacteristic", [characteristic.uuid, value + "\r\n"]
 										  ).then( function(res) {
 											  console.log("writeCharacteristic =>", res);
 											  characteristic.stringInput = res.utf8;

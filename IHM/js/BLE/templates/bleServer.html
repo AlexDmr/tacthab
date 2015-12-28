@@ -6,6 +6,11 @@
 <hr/>
 <!--context: {{context | json}}
 <hr/> -->
+<ble-meta-wear brick="brick" 
+				ng-repeat = "brick in context.bricks | toArray:false | filter:{type:'BrickMetaWear'}">
+</ble-meta-wear>
+<hr/>
+
 <ble-sensor-tag brick="brick" 
 				ng-repeat = "brick in context.bricks | toArray:false | filter:{type:'BrickSensorTag'}">
 </ble-sensor-tag>

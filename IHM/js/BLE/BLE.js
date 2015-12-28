@@ -1,5 +1,6 @@
 var bleSensorTag 	= require( "./bleSensorTag.js" )
   , bleBrick		= require( "./bleBrick.js" )
+  , bleMetawear		= require( "./bleMetawear.js" )
   , alxGrapher		= require( "./alxGrapher.js" )
   , utils			= require( "../../../js/utils.js" )
   ;
@@ -8,6 +9,7 @@ module.exports = function(app) {
 	bleBrick	(app);
 	bleSensorTag(app);
 	alxGrapher	(app);
+	bleMetawear	(app);
 	app.directive( "bleServer"
 				 , function() {
 					 return {

@@ -2,6 +2,7 @@ var noble			= require('noble')
   , SensorTag		= require('sensortag')
   , BrickBLE		= require("./BrickBLE.js")
   , BrickSensorTag	= require("./BrickSensorTag.js")
+  , BrickMetaWear	= require("./BrickMetaWear.js")
   ;
 
 var L_CB_Discover	= [];
@@ -9,6 +10,7 @@ var initDone		= false;
 
 var L_types			= [ {nobleType	: SensorTag.CC2540, brickType	: BrickSensorTag}
 					  , {nobleType	: SensorTag.CC2650, brickType	: BrickSensorTag}
+					  , {nobleType	: BrickMetaWear, 	brickType	: BrickMetaWear}
 					  ];
 
 function init() {
@@ -54,7 +56,9 @@ function init() {
 						nobleType = L_types[i].nobleType;
 						brickType = L_types[i].brickType;
 						if(nobleType.is(peripheral)) {
-							object 	= new nobleType(peripheral);
+							if(nobleType !== brickType) {
+								object = new nobleType(peripheral);
+							} else {object = peripheral;}
 							brick 	= new brickType(peripheral.id, object);
 						}
 					}
