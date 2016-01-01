@@ -1,5 +1,5 @@
 
-var UpnpControlPoint = require('node-upnp-controlpoint').UpnpControlPoint;
+var UpnpControlPoint = require('../node-upnp-controlpoint/lib/upnp-controlpoint.js').UpnpControlPoint;
 
 var UpnpServer = {
 	  controlpoint		: new UpnpControlPoint()

@@ -21,6 +21,16 @@ function byteLength(str) {
 
 var TRACE = true;
 var DETAIL = false;
+
+
+/* ---------------------------------------------------------------------------------- */
+const SOAP_ENV_PRE = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<s:Envelope \
+s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" \
+xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" \>\n<s:Body>\n";
+
+const SOAP_ENV_POST = "</s:Body>\n</s:Envelope>";
+
+
 /* XXX DEBUG
 var UpnpAction = function(desc) {
 	this.name = desc.name;
@@ -28,12 +38,73 @@ var UpnpAction = function(desc) {
 }
 */
 
+//____________________________________________________________________________________________________
+/**
+ * A subscription
+ */
+//____________________________________________________________________________________________________
+var Subscription = function(service, sid, timeout) {
+	var self = this;
+	this.service = service;
+	this.sid = sid;		// subscrioption id
+	this.timeout = timeout;	// timeout in seconds
+	
+	this.timer = setTimeout(function() { 
+		self._resubscribe();
+	}, (this.timeout*1000)-5000);
+}
+
+Subscription.prototype._resubscribe = function() {
+	var self = this;
+	this.service._resubscribe(this.sid, function(err, buf) {
+		if (typeof err !== 'undefined' && err !== null && err !== '') {
+			console.error("ERROR:  problem re-subscribing: " + err + "\n" + buf);
+			// remove from eventhandler
+			self.service.device.controlPoint.eventHandler.removeSubscription(self);
+			clearTimeout(self.timer);
+			
+			// TODO maybe try a new subscription ???
+			self.service.subscribe( function(err, buf) {
+										 if(err) {
+											 console.error("Cancel all hope for", self.service.serviceType, self.service.device.friendlyName);
+											} else {//console.log("New subscription done for", self.service.serviceType, self.service.device.friendlyName);
+												    self.service.emit('newSubscription', {"old": self, "new": buf});
+												   }
+										}
+								  );
+		}
+		else {
+			// cool
+            // console.log("Resubscription done for", self.service.serviceType, self.service.device.friendlyName);
+			self.timer = setTimeout(function() { 
+				self._resubscribe();
+			}, (self.timeout*1000)-5000);
+		}
+	});
+}
+
+Subscription.prototype.unsubscribe = function() {
+	clearTimeout(this.timer);
+	this.service.unsubscribe(this.sid);
+}
+
+Subscription.prototype.handleEvent = function(event) {
+	if (TRACE && DETAIL) {
+		console.log("subscription event: " + JSON.stringify(event));
+	}
+	try {this.service.emit("stateChange", event);
+		} catch(err) {console.error("ERROR when calling service.emit for UPnP event:", err);}
+}
+
+
+//____________________________________________________________________________________________________
 /**
  * A UPnP service.
  *
  * device: the device offering the service
  * desc: an object containing details of the service.
  */
+//____________________________________________________________________________________________________
 var UpnpService = function(device, desc) {
     EventEmitter.call(this);
 
@@ -337,70 +408,9 @@ UpnpService.prototype._getServiceDesc = function(callback) {
 	req.end("");
 }
 
-/**
- * A subscription
- */
-var Subscription = function(service, sid, timeout) {
-	var self = this;
-	this.service = service;
-	this.sid = sid;		// subscrioption id
-	this.timeout = timeout;	// timeout in seconds
-	
-	this.timer = setTimeout(function() { 
-		self._resubscribe();
-	}, (this.timeout*1000)-5000);
-}
 
-Subscription.prototype._resubscribe = function() {
-	var self = this;
-	this.service._resubscribe(this.sid, function(err, buf) {
-		if (typeof err !== 'undefined' && err !== null && err !== '') {
-			console.error("ERROR:  problem re-subscribing: " + err + "\n" + buf);
-			// remove from eventhandler
-			self.service.device.controlPoint.eventHandler.removeSubscription(self);
-			clearTimeout(self.timer);
-			
-			// TODO maybe try a new subscription ???
-			self.service.subscribe( function(err, buf) {
-										 if(err) {
-											 console.error("Cancel all hope for", self.service.serviceType, self.service.device.friendlyName);
-											} else {//console.log("New subscription done for", self.service.serviceType, self.service.device.friendlyName);
-												    self.service.emit('newSubscription', {"old": self, "new": buf});
-												   }
-										}
-								  );
-		}
-		else {
-			// cool
-            // console.log("Resubscription done for", self.service.serviceType, self.service.device.friendlyName);
-			self.timer = setTimeout(function() { 
-				self._resubscribe();
-			}, (self.timeout*1000)-5000);
-		}
-	});
-}
-
-Subscription.prototype.unsubscribe = function() {
-	clearTimeout(this.timer);
-	this.service.unsubscribe(this.sid);
-}
-
-Subscription.prototype.handleEvent = function(event) {
-	if (TRACE && DETAIL) {
-		console.log("subscription event: " + JSON.stringify(event));
-	}
-	try {this.service.emit("stateChange", event);
-		} catch(err) {console.error("ERROR when calling service.emit for UPnP event:", err);}
-}
 
 exports.UpnpService = UpnpService;
 
-
-/* ---------------------------------------------------------------------------------- */
-const SOAP_ENV_PRE = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<s:Envelope \
-s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" \
-xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" \>\n<s:Body>\n";
-
-const SOAP_ENV_POST = "</s:Body>\n</s:Envelope>";
 
 

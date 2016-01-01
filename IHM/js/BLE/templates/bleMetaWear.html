@@ -21,6 +21,15 @@
 	<md-content class="graphers">
 		<p>Last data: {{lastData | json}}</p>
 	 	<md-tabs>
+			<md-tab label="Button">
+				<alx-grapher title 				= "Button"
+							 description-data	= "ctrl.button"
+							 on-enable 			= "ctrl.enableSensor   (ctrl.button)"
+							 on-disable 		= "ctrl.disableSensor  (ctrl.button)"
+							 periods			= "[]"
+							 >
+				</alx-grapher>
+			</md-tab>
 			<md-tab label="Accelerometer">
 				<alx-grapher title 				= "Accelerometer"
 							 description-data	= "ctrl.acc"

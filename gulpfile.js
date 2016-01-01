@@ -16,6 +16,7 @@ var gulp				= require('gulp')
 							"devel"		: true,
 							"latedef"	: true,
 							"undef"		: true,
+							"multistr"	: true,
 							"unused"	: "vars",
 							"globals"	: { "document"		: false
 										  , "$"				: false

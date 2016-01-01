@@ -3,25 +3,141 @@ var upnp			= require("./upnp"),
 	util			= require('util'),
 	EventEmitter	= require('events').EventEmitter,
 	http			= require("http"),
-	Url				= require("url"),
+	// Url				= require("url"),
 	xml2js			= require('xml2js'),
 	UpnpDevice		= require("./upnp-device").UpnpDevice,
-	ipPackage		= require('ip')
+	ipPackage		= require('ip'),
 	request			= require('request')
 	;
 	
-// Some debug... ________________________________
-var network	= require('network');
-// console.log("IP¨adress :", ipPackage.address());
-// network.get_active_interface( function(err, obj) {console.log('get_active_interface:', obj || err);} );
-// network.get_interfaces_list ( function(err, obj) {console.log('get_interfaces_list :', obj || err);} );
-// ______________________________________________
-
 var TRACE = false;
 var DETAIL = false;
 var TLS_SSL;
 
 
+
+//____________________________________________________________________________________________________
+/* ----------------------------------- utility functions ------------------------------------- */
+//____________________________________________________________________________________________________
+
+if (typeof String.prototype.startsWith != 'function') {
+  // see below for better implementation!
+  String.prototype.startsWith = function (str){
+    return this.indexOf(str) === 0;
+  };
+}
+
+function getUUID(usn) {
+	var udn = usn;
+	var s = usn.split("::");
+	if (s.length > 0) {
+		udn = s[0];
+	}
+
+	if (udn.startsWith("uuid:")) {
+		udn = udn.substring(5);
+	}
+	
+	return udn;
+}
+
+
+//____________________________________________________________________________________________________
+//____________________________________________________________________________________________________
+//____________________________________________________________________________________________________
+var EventHandler = function() {
+	var self = this;
+
+	this.serverPort = 6767;
+	this.responseCount = 1;		// not sure if this is supposed to be per-subscription
+	this.server = http.createServer(function(req, res) {
+		self._serviceCallbackHandler(req, res);
+	});
+
+	this.server.listen(this.serverPort);
+	
+	this.subscriptions = {};
+};
+
+EventHandler.prototype.addSubscription = function(subscription) {
+	this.subscriptions[subscription.sid] = subscription;
+};
+
+EventHandler.prototype.removeSubscription = function(sid) {
+	delete this.subscriptions[sid];
+};
+
+/**
+ "host":"192.168.0.122:6767","content-type":"text/xml","content-length":"140","nt":"upnp:event","nts":"upnp:propchange","sid":"uuid:7edd52ba-1dd2-11b2-8d34-bb2eba00fd46","seq":"0"
+ 
+ * @param {Object} req
+ * @param {Object} res
+ */
+EventHandler.prototype._serviceCallbackHandler = function(req, res) {
+	// console.log("got request: " + JSON.stringify(req.headers));
+
+	var self = this;
+	var reqContent = "";	
+	req.on("data", function(buf) {
+		reqContent += buf;
+		// var sid = req.headers.sid;
+		// console.log("data for", sid);
+	});
+	req.on("end", function EventReceived(nbTimes) {
+		if(typeof nbTimes === 'undefined') {nbTimes = 3}
+		if(nbTimes === 0)  {console.log("stop retrying for", req.headers.sid);
+							return;}
+		// console.log("callback content: " + reqContent);
+		try {//console.log("_serviceCallbackHandler");
+			var sid = req.headers.sid;
+			var subscription = self.subscriptions[sid];
+			if (subscription) {
+				 // console.log( "\tsubscription" );
+				 if (TRACE && DETAIL) {
+					console.log("event for", req.headers.host ,"sid " + sid, 'with seq', req.headers.seq, 'and length', req.headers['content-length']);
+				 }
+				// acknowledge the event notification					
+				 res.writeHead(200, { "Extended-Response" : self.responseCount + " ; comment=\"Notification Acknowledged\"" });
+				 res.end("");
+				 self.responseCount++;
+				 // console.log( "\tsubscription.handleEvent", subscription.handleEvent);
+				 subscription.handleEvent( {textXML : reqContent} );
+				} else {//console.log("Event but no subscription for", sid);
+						// console.error( "\tno subscription with nbTimes=", nbTimes );
+						if(nbTimes > 1) {
+							 // console.log("\tretrying in 1 second ("+nbTimes+" times left)...");
+							 setTimeout	( (function(nbTimes) {
+											 return function() {EventReceived(nbTimes);}
+											})(nbTimes - 1)
+										, 1000);
+							} //else {console.error("\taborting after 3 trials...", req.headers);}
+					   }
+
+		}
+		catch (ex) {
+			if (ex.toString().startsWith("Error: Text data outside of root node.")) {
+				// ignore
+			}
+			else {
+				 console.error("exception: " + ex);
+			}
+		}
+	});
+};
+
+
+//____________________________________________________________________________________________________
+// Some debug... ________________________________
+// var network	= require('network');
+// console.log("IP¨adress :", ipPackage.address());
+// network.get_active_interface( function(err, obj) {console.log('get_active_interface:', obj || err);} );
+// network.get_interfaces_list ( function(err, obj) {console.log('get_interfaces_list :', obj || err);} );
+// ______________________________________________
+
+
+//____________________________________________________________________________________________________
+//____________________________________________________________________________________________________
+//____________________________________________________________________________________________________
 var UpnpControlPoint = function( TLS_SSL_json ) {
 	TLS_SSL = TLS_SSL_json;
 	
@@ -132,7 +248,7 @@ var UpnpControlPoint = function( TLS_SSL_json ) {
 	 * Device has been updated
 	 */
 	this.ssdp.on("DeviceUpdate", function(device) {
-		var udn = getUUID(device.usn);
+		// var udn = getUUID(device.usn);
 			
 		if (TRACE) {
 			console.log("DeviceUpdate");
@@ -173,7 +289,7 @@ UpnpControlPoint.prototype._getDeviceDetails = function(udn, location, callback)
 	if (TRACE) {
 		console.log("getting device details from " + location);
 	}
-	var options = Url.parse(location);
+	// var options = Url.parse(location);
 	console.log("getting device details from ", location);
 	var objRequest = {uri: location}
 	if( TLS_SSL && location.indexOf("https://") === 0) {
@@ -260,109 +376,6 @@ UpnpControlPoint.prototype._getDeviceDetails = function(udn, location, callback)
 
 
 
-var EventHandler = function() {
-	var self = this;
-
-	this.serverPort = 6767;
-	this.responseCount = 1;		// not sure if this is supposed to be per-subscription
-	this.server = http.createServer(function(req, res) {
-		self._serviceCallbackHandler(req, res);
-	});
-
-	this.server.listen(this.serverPort);
-	
-	this.subscriptions = {};
-};
-
-EventHandler.prototype.addSubscription = function(subscription) {
-	this.subscriptions[subscription.sid] = subscription;
-};
-
-EventHandler.prototype.removeSubscription = function(sid) {
-	delete this.subscriptions[sid];
-};
-
-/**
- "host":"192.168.0.122:6767","content-type":"text/xml","content-length":"140","nt":"upnp:event","nts":"upnp:propchange","sid":"uuid:7edd52ba-1dd2-11b2-8d34-bb2eba00fd46","seq":"0"
- 
- * @param {Object} req
- * @param {Object} res
- */
-EventHandler.prototype._serviceCallbackHandler = function(req, res) {
-	// console.log("got request: " + JSON.stringify(req.headers));
-
-	var self = this;
-	var reqContent = "";	
-	req.on("data", function(buf) {
-		reqContent += buf;
-		var sid = req.headers.sid;
-		// console.log("data for", sid);
-	});
-	req.on("end", function EventReceived(nbTimes) {
-		if(typeof nbTimes === 'undefined') {nbTimes = 3};
-		if(nbTimes === 0)  {console.log("stop retrying for", req.headers.sid);
-							return;}
-		// console.log("callback content: " + reqContent);
-		try {//console.log("_serviceCallbackHandler");
-			var sid = req.headers.sid;
-			var subscription = self.subscriptions[sid];
-			if (subscription) {
-				 // console.log( "\tsubscription" );
-				 if (TRACE && DETAIL) {
-					console.log("event for", req.headers.host ,"sid " + sid, 'with seq', req.headers.seq, 'and length', req.headers['content-length']);
-				 }
-				// acknowledge the event notification					
-				 res.writeHead(200, { "Extended-Response" : self.responseCount + " ; comment=\"Notification Acknowledged\"" });
-				 res.end("");
-				 self.responseCount++;
-				 // console.log( "\tsubscription.handleEvent", subscription.handleEvent);
-				 subscription.handleEvent( {textXML : reqContent} );
-				} else {//console.log("Event but no subscription for", sid);
-						// console.error( "\tno subscription with nbTimes=", nbTimes );
-						if(nbTimes > 1) {
-							 // console.log("\tretrying in 1 second ("+nbTimes+" times left)...");
-							 setTimeout	( (function(nbTimes) {
-											 return function() {EventReceived(nbTimes);}
-											})(nbTimes - 1)
-										, 1000);
-							} //else {console.error("\taborting after 3 trials...", req.headers);}
-					   }
-
-		}
-		catch (ex) {
-			if (ex.toString().startsWith("Error: Text data outside of root node.")) {
-				// ignore
-			}
-			else {
-				 console.error("exception: " + ex);
-			}
-		}
-	});
-};
-
 exports.UpnpControlPoint = UpnpControlPoint;
 
-
-/* ----------------------------------- utility functions ------------------------------------- */
-
-if (typeof String.prototype.startsWith != 'function') {
-  // see below for better implementation!
-  String.prototype.startsWith = function (str){
-    return this.indexOf(str) === 0;
-  };
-}
-
-function getUUID(usn) {
-	var udn = usn;
-	var s = usn.split("::");
-	if (s.length > 0) {
-		udn = s[0];
-	}
-
-	if (udn.startsWith("uuid:")) {
-		udn = udn.substring(5);
-	}
-	
-	return udn;
-}
 

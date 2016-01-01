@@ -9522,6 +9522,8 @@
 							controller	: function($http, $scope) {
 								var ctrl = this;
 								this.isConnecting	= false;
+								this.button= { data: [], period: 100, maxSize: 200, enabled: false
+											 , name 		: "Button/Switch"};
 								this.acc   = { data: [], period: 100, maxSize: 200, enabled: false
 											 , name 		: "Accelerometer"};
 								this.gyro  = { data: [], period: 100, maxSize: 200, enabled: false
@@ -9590,9 +9592,11 @@
 										sensor.enabled = true;
 										sensor.data.push( event );
 										sensor.data.splice(0, sensor.data.length - sensor.maxSize);
-										scope.lastData = event;
+										// scope.lastData = event;
 									});
 								}
+								subscribeForEvent( scope.brick, "buttonChange", element
+												 , function(event) {processEvent(event, controller.button);} );
 								subscribeForEvent( scope.brick, "accelerometerChange", element
 												 , function(event) {processEvent(event, controller.acc);} );
 								subscribeForEvent( scope.brick, "gyroscopeChange", element

@@ -177,23 +177,23 @@ BrickBLE.prototype.notifyCharacteristic = function(uuid, notify) {
 		console.log( this.brickId, "notifyCharacteristic", uuid, notify );
 		return new Promise( function(resolve, reject) {
 			characteristic.notify(notify, function(error) {
-				console.log( "\tnotification response has error", error);
-				if(error) {reject(error);} else {resolve(true);}
-				console.log("\terror", error);
+				// console.log( "\tnotification response has error", error);
+				if(error) {console.error("error:", error); reject(error);} else {resolve(true);}
+				// console.log("\terror", error);
 			});
-			console.log("subscribing sent...")
+			// console.log("subscribing sent...")
 			var cb = brick.cb_characterisitcs[ uuid ];
 			if(!cb) {
 				cb = function(data, isNotification) {
-					console.log("\tnotification for", uuid, "<<", data, isNotification);
+					// console.log("\tnotification for", uuid, "<<", data, isNotification);
 					if( !isNotification ) {return;}
-					var res = 	{ data	: data
+/*					var res = 	{ data	: data
 								, length: data.length
 								, utf8	: data.toString('ascii')
 								};
 					console.log("Emiting", uuid, res);
-					brick.emit(uuid, res);
-					console.log("\tdone...");
+*/					brick.emit(uuid, data);
+					// console.log("\tdone...");
 				}
 				characteristic.on('data', cb);
 				resolve(true); // DEBUG
