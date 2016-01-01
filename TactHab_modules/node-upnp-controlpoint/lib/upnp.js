@@ -179,9 +179,10 @@ function ControlPoint() {
   //XXX this._initParsers();
   this.server.bind( SSDP_PORT
 				  , function () {
-						this.server.addMembership(BROADCAST_ADDR); //fixed issue #2
+						this.server.addMembership       (BROADCAST_ADDR); //fixed issue #2
 						this.server.setMulticastLoopback(true);
-						this.server.setMulticastTTL(128);
+            			this.server.setBroadcast        (true);
+						// this.server.setMulticastTTL(128);
 						console.log('UDP4 server addMembership ' + BROADCAST_ADDR);
 						// self.search('upnp:rootdevice');
 					   }.bind(this)
@@ -274,25 +275,32 @@ ControlPoint.prototype.onResponseMessage = function(msg, rinfo){
  *  The search target for the request (optional, defaults to "ssdp:all"). 
  */
 ControlPoint.prototype.search = function(st, targetAddress) {
-  console.log("ControlPoint::search", st);
-  if (typeof st !== 'string') {
-    st = SSDP_ALL;
-  }
-  var message = new Buffer(SSDP_MSEARCH.replace('%st', st), "ascii");
-  var client = dgram.createSocket("udp4");
-  var self = this;
-  client.on('message', function(msg, rinfo) { self.onResponseMessage(msg, rinfo); });
-  // So that we get a port so we can listen before sending
-  client.bind( function() {
-		 var address = targetAddress || client.address();
-		 console.log('\tsearch address: ', address.address, ' and port: ', address.port);
-		 client.send(message, 0, message.length, SSDP_PORT, BROADCAST_ADDR);	  // Broadcast request
-		});
+	console.log("ControlPoint::search", st, targetAddress);
+	if (typeof st !== 'string') {st = SSDP_ALL;}
+	var message 	= new Buffer(SSDP_MSEARCH.replace('%st', st), "ascii");
+	var client 		= dgram.createSocket( { type: 'udp4' } );
+	var self 		= this;
+	client.on('message', function(msg, rinfo) { 
+		console.log( "new messgae received..." );
+		self.onResponseMessage(msg, rinfo); 
+	});
+	// So that we get a port so we can listen before sending
+	client.bind( function() {
+		// var address = targetAddress || client.address();
+		// console.log('\tsearch address: ', address.address, ' and port: ', address.port);
+		// client.addMembership       (BROADCAST_ADDR); //fixed issue #2
+		// client.setMulticastLoopback(true);
+        client.setBroadcast        (true);
+		client.send(message, 0, message.length, SSDP_PORT, BROADCAST_ADDR);	  // Broadcast request
+	});
 
-  debug('REQUEST SEARCH ' + st);
+	debug('REQUEST SEARCH ' + st);
 
   // MX is set to 3, wait for 1 additional sec. before closing the client
-  setTimeout( function(){client.close();}
+  setTimeout( function(){
+  				 client.close();
+  				 console.log( "close multicast UDP client...")
+  				}
 			, 4000);
 };
 

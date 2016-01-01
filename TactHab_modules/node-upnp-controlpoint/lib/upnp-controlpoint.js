@@ -268,14 +268,12 @@ util.inherits(UpnpControlPoint, EventEmitter);
 
 
 UpnpControlPoint.prototype.search = function(s) {
-	if (s) {
-		//ssdp.search('urn:schemas-upnp-org:device:InternetGatewayDevice:1');
-		//ssdp.search('ssdp:all');
-		this.ssdp.search(s);
-	}
-	else {
-		this.ssdp.search('upnp:rootdevice');
-	}
+	var self = this;
+	s = s || 'upnp:rootdevice'; //'ssdp:all';
+	self.ssdp.search(s);
+/*	setTimeout	( function() {self.ssdp.search(s);}
+				, 10000
+				);*/
 };
 
 /**
