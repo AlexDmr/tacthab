@@ -1,6 +1,6 @@
 var bleSensorTag 	= require( "./bleSensorTag.js" )
   , bleBrick		= require( "./bleBrick.js" )
-  , bleMetawear		= require( "./bleMetawear.js" )
+  , bleMetawear		= require( "./bleMetaWear.js" )
   , alxGrapher		= require( "./alxGrapher.js" )
   , utils			= require( "../../../js/utils.js" )
   ;
