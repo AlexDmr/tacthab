@@ -1,0 +1,17 @@
+FROM ubuntu
+
+RUN apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade
+RUN apt-get -y install curl
+# Basic stuff
+RUN apt-get update
+RUN apt-get install -y make
+RUN apt-get install -y gcc
+RUN apt-get install -y libxslt-dev libxml2-dev
+RUN apt-get install -y wget git-core
+RUN apt-get install -y python
+
+# NodeJS stuff
+RUN curl -sL https://deb.nodesource.com/setup_5.x | sudo bash -
+RUN apt-get -y install nodejs
+RUN npm install -g bower
+RUN npm install -g gulp
