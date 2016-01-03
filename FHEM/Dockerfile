@@ -26,6 +26,7 @@ RUN cpanm JSON
 
 
 # INSTALL FHEM
+RUN usermod -a -G tty fhem
 RUN wget http://fhem.de/fhem-5.7.tar.gz
 RUN cd opt ; tar xvf ../fhem-5.7.tar.gz
 
