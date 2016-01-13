@@ -30,7 +30,7 @@ module.exports = function(app) {
 															  }
 															);
 									 // ctrl.volume = 0;
-									 console.log( "new mediaPlayer getMediasStates", $scope.brick );
+									 // console.log( "new mediaPlayer getMediasStates", $scope.brick );
 									 utils.call	( $scope.brick.id, "getMediasStates", []
 												).then( function(state) {
 															// console.log( "getMediasStates", state);
@@ -82,7 +82,7 @@ module.exports = function(app) {
 												);
 								 utils.io.on	( cbEventName
 												, eventCB = function(eventData) {
-													 console.log("brickOpenhab eventUPnP:", eventData);
+													 // console.log("brickOpenhab eventUPnP:", eventData);
 													 var event = eventData.data;
 													 controller.state[event.serviceType] = controller.state[event.serviceType] || {};
 													 try {

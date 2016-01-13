@@ -1,3 +1,4 @@
+var BrickOpenHAB = require( "./BrickOpenHAB.js" );
 var convert = require( "../../colorConverter.js" );
 
 function toHex(d) {
@@ -5,6 +6,7 @@ function toHex(d) {
 }
 
 module.exports = function(scope, utils) {
+	BrickOpenHAB.apply(this, [scope, utils]);
 	// console.log( "Create a color controller", this, scope );
 	this.userSetColor = function(e) {
 		// console.log(e, this.color);
@@ -13,7 +15,7 @@ module.exports = function(scope, utils) {
 		  , b = parseInt( this.color.slice(5,7), 16 )
 		  ;
 		// console.log(this.color, "=>", r, g, b);
-		utils.call	( scope.brick.id
+		utils.call	( this.brick.id
 					, "setColor_RGB"
 					, [r, g, b]
 					);
@@ -30,8 +32,8 @@ module.exports = function(scope, utils) {
 		// console.log(this.color);
 		if(noUpdate !== true) {scope.$apply();}
 	}
-	console.log( "color init with", scope.brick.state ); 
-	this.updateState( {data: scope.brick.state}
+	console.log( "color init with", this.brick.state ); 
+	this.updateState( {data: this.brick.state}
 					, true 
 					);
 }

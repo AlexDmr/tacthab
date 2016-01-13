@@ -1,7 +1,7 @@
 var BrickOpenHAB_item = require( './BrickOpenHAB_item.js' )
 
-var BrickOpenHAB_DateTime = function() {
-	BrickOpenHAB_item.apply(this, []);
+var BrickOpenHAB_DateTime = function(id) {
+	BrickOpenHAB_item.apply(this, [id]);
 	return this;
 }
 

@@ -1,7 +1,7 @@
 var BrickOpenHAB_item = require( './BrickOpenHAB_item.js' )
 
-var BrickOpenHAB_Dimmer = function() {
-	BrickOpenHAB_item.apply(this, []);
+var BrickOpenHAB_Dimmer = function(id) {
+	BrickOpenHAB_item.apply(this, [id]);
 	return this;
 }
 

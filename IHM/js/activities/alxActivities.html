@@ -11,7 +11,42 @@
 
 	<md-sidenav class="md-sidenav-right md-whiteframe-z2 bricks" md-component-id="bricksList">
 		<md-content>
-			<h4>UPnP</h4>
+			<h4>
+				<a 	href 		= "#" 
+					ng-repeat 	= "type in ctrl.breadcrumb"
+					ng-click 	= "ctrl.gotoType(type)"
+					> / {{type}}</a>
+			</h4>
+
+			<md-list class="specializations">
+				<!-- Specializations -->
+				<md-list-item flex ng-repeat= "type in ctrl.context.brickTypes[ctrl.brickTypeName].specializations">
+					<section alx-draggable 	= "brick" 
+							 ng-class 		= "type" 
+							 alx-drag-start = "ctrl.closeBricks()"
+							 alx-drag-end 	= "ctrl.openBricks()"
+							 ng-click 		= "ctrl.gotoType(type)"
+							 flex>
+						{{type}}
+						<!-- <brick data="brick"></brick> -->
+					</section>
+				</md-list-item>
+			</md-list>
+			<md-list class="instances">
+				<!-- Instances -->
+				<md-list-item flex ng-repeat="brickId in ctrl.context.brickTypes[ctrl.brickTypeName].instances">
+					<section alx-draggable 	="brick" 
+							 ng-class="brick.type" 
+							 alx-drag-start="ctrl.closeBricks()"
+							 alx-drag-end="ctrl.openBricks()"
+							 flex>
+						<!-- {{brickId}} -->
+						<brick data="ctrl.context.bricks[brickId]"></brick>
+					</section>
+				</md-list-item>
+			</md-list>
+
+				<!--
 			<md-list>
 				<md-list-item flex ng-repeat="brick in context.bricks | toArray:flase | filter:{type: 'Brick'}">
 					<section alx-draggable="brick" 
@@ -38,6 +73,7 @@
 					</section>
 				</<md-list-item>
 			</md-list>
+			-->
 		</md-content>
 	</md-sidenav>
 

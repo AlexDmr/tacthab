@@ -11,7 +11,7 @@ var templates	=	{ BrickOpenHAB_Switch			: require( "./templates/BrickOpenHAB_Swi
 					, BrickOpenHAB_Color			: require( "./templates/BrickOpenHAB_Color.html"		)
 					};
 
-var controllers	=	{BrickOpenHAB_Switch			: require( "./templates/BrickOpenHAB_Switch.js"			)
+var controllers	=	{ BrickOpenHAB_Switch			: require( "./templates/BrickOpenHAB_Switch.js"			)
 					, BrickOpenHAB_String			: require( "./templates/BrickOpenHAB_String.js"			)
 					, BrickOpenHAB_RollerShutter	: require( "./templates/BrickOpenHAB_RollerShutter.js"	)
 					, BrickOpenHAB_Number			: require( "./templates/BrickOpenHAB_Number.js"			)
@@ -77,8 +77,8 @@ module.exports = function(app) {
 							}
 					 } 
 					}
-				) 
-	.directive	( "brickOpenhab"
+				)
+	/*.directive	( "brickOpenhab"
 				, function($compile) {
 					 return {
 						   restrict		: 'E'
@@ -121,5 +121,5 @@ module.exports = function(app) {
 							}
 					 };
 					}
-				)
+				)*/
 }

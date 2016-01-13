@@ -1,7 +1,7 @@
 var BrickOpenHAB_item = require( './BrickOpenHAB_item.js' )
 
-var BrickOpenHAB_RollerShutter = function() {
-	BrickOpenHAB_item.apply(this, []);
+var BrickOpenHAB_RollerShutter = function(id) {
+	BrickOpenHAB_item.apply(this, [id]);
 	// this.infos = {command: ''};
 	return this;
 }

@@ -1,7 +1,7 @@
 var BrickOpenHAB_item = require( './BrickOpenHAB_item.js' )
 
-var BrickOpenHAB_Color							= function() {
-	BrickOpenHAB_item.apply(this, []);
+var BrickOpenHAB_Color							= function(id) {
+	BrickOpenHAB_item.apply(this, [id]);
 	/*this.color = { hue			: 0
 				 , saturation	: 0
 				 , brightness	: 0

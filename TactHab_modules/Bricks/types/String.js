@@ -1,7 +1,7 @@
 var BrickOpenHAB_item = require( './BrickOpenHAB_item.js' )
 
-var BrickOpenHAB_String = function() {
-	BrickOpenHAB_item.apply(this, []);
+var BrickOpenHAB_String = function(id) {
+	BrickOpenHAB_item.apply(this, [id]);
 	this.state = "";
 	return this;
 }

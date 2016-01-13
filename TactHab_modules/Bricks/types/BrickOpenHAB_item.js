@@ -3,8 +3,8 @@ var Brick		= require( '../Brick.js' )
   , openHabTypes= require( '../../../js/openHabTypes.js' )
   ;
 
-var BrickOpenHAB_item = function() {
-	Brick.apply(this, []);
+var BrickOpenHAB_item = function(id) {
+	Brick.apply(this, [id]);
 	this.state = "";
 	return this;
 }

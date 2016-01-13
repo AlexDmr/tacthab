@@ -1,8 +1,11 @@
+var BrickOpenHAB = require( "./BrickOpenHAB.js" );
+
 module.exports = function(scope, utils) {
+	BrickOpenHAB.apply(this, [scope, utils]);
 	// console.log( "Create a Dimmer controller", scope.brick.state, this );
 	this.userSetNumber = function(e) {
 		// console.log(e, this.value);
-		utils.call	( scope.brick.id
+		utils.call	( this.brick.id
 					, "setNumber"
 					, [this.value]
 					);
@@ -13,6 +16,6 @@ module.exports = function(scope, utils) {
 		// console.log(this.color);
 		if(noUpdate !== true) {scope.$apply();}
 	}
-	if(typeof scope.brick.state !== "number") {scope.brick.state = 0;}
-	this.updateState( {data: {value: scope.brick.state}}, true );
+	if(typeof this.brick.state !== "number") {this.brick.state = 0;}
+	this.updateState( {data: {value: this.brick.state}}, true );
 }

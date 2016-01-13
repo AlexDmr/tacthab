@@ -1,3 +1,6 @@
+var Brick = require( "../Bricks/Brick.js" )
+  ; 
+
 var states		= {0:'stopped', 1:'started'};
 var id			= 0;
 var D_nodes		= {};
@@ -155,14 +158,32 @@ Pnode.prototype.call = function(call) {
 
 Pnode.prototype.getContextDescription = function() {
 	var context = this.getContext();
-	var json = {bricks:{}, variables:{}};
-	var i;
+	var json = {bricks:{}, variables:{}, brickTypes: {}};
+	var i, type, brick;
+
+	// Add types
+	for(type in Brick.D_brickTypes) {
+		json.brickTypes[type] = {
+			specializations : Brick.D_brickTypes[type].specializations, 
+			generalization 	: Brick.D_brickTypes[type].generalization, 
+			instances		: [] } ;
+	}
+	// Add bricks
 	for(i in context.bricks) {
-		 json.bricks[i] = context.bricks[i].getDescription();
-		}
+		brick 			= context.bricks[i];
+		json.bricks[i] 	= brick.getDescription();
+		if(brick.getTypeName) {
+			type 			= brick.getTypeName();
+			// console.log( "add instance", brick.brickId, "to", type );
+			if(json.brickTypes[type]) {
+				json.brickTypes[type].instances.push( brick.brickId );
+			} else {console.error("-------> Pnode::getContextDescription::ERROR -------> no type", type);}
+		} // else {console.error("no types for brick", brick.brickId);}
+	}
+	// Add variabes
 	for(i in context.variables) {
-		 json.variables[i] = context.variables[i].getDescription();
-		}
+		json.variables[i] = context.variables[i].getDescription();
+	}
 	return json;
 }
 

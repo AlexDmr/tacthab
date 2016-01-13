@@ -6,6 +6,12 @@ var brickId = 0;
 var D_brickTypes	= {};
 var D_brick			= {};
 
+// Logs object contains one entry for each brick
+// On each entry, there is an object having attribute representing data sources
+// Each data source is an array of time stamped events.
+var logs			= {};
+
+
 var ProtoBrick = D_brick.ProtoBrick = { brickId			: 'ProtoBrick'
 									  , getDescription	: function() {return {type:'ProtoBrick', id:'ProtoBrick',name:'ProtoBrick'};}
 									  };
@@ -13,6 +19,10 @@ var Brick = function(id) {
 	 var brick = this;
 	 this.brickId	= id || ('Brick' + (brickId++));
 		D_brick[this.brickId] = this;
+	 logs[this.brickId] = logs[this.brickId] || {};
+	 this.logEvents("state");
+	 this.log("state", "construction");
+
 	 // this.types		= [ 'Brick' ];
 	 this.Actions	= [];
 	 this.Events	= [];
@@ -24,10 +34,19 @@ var Brick = function(id) {
 
 Brick.D_brick		= D_brick;
 Brick.ProtoBrick	= ProtoBrick;
+Brick.D_brickTypes	= D_brickTypes;
 
 Brick.prototype = Object.create( {} );
 Brick.prototype.registerType	= function(name, proto) {
-	 D_brickTypes[name] = proto;
+	 D_brickTypes[name] 		= {proto: proto, specializations: [], generalization: null};
+	 var protoBrickHerited 		= Object.getPrototypeOf( proto )
+	   , protoBrickHeritedName 	= protoBrickHerited.getTypeName?protoBrickHerited.getTypeName():""
+	   ;
+	 if( D_brickTypes[protoBrickHeritedName] ) {
+	 	console.log( name, "inherits from", protoBrickHeritedName);
+		D_brickTypes[protoBrickHeritedName].specializations.push( name );
+		D_brickTypes[name].generalization = protoBrickHeritedName;
+	 }
 	}
 Brick.prototype.getTypesFromName= function(name) {
 	 var type = D_brickTypes[name];
@@ -41,6 +60,7 @@ Brick.prototype.dispose			= function() {
 	 // ProtoBrick.emit('disappear', {brickId: this.brickId});
 	 this.disposeAlxEvent();
 	 this.unreference();
+	 this.log("state", "destruction");
 	}	
 AlxEvents(Brick);
 
@@ -52,10 +72,39 @@ Brick.prototype.getESA			= function() {
 		   , actions: this.Actions
 		   };
 }
+
+//____________________________________________________________________________________________________
+// Data logs
+//____________________________________________________________________________________________________
+Brick.prototype.logEvents		= function(eventName) {
+	logs[this.brickId][eventName]	= logs[this.brickId][eventName] || [];
+	return this;
+}
+
+Brick.prototype.log 			= function(eventName, data, ms) {
+	ms = ms || Date.now();
+	logs[this.brickId][eventName].push( {ms:ms, data:data} );
+	return this;
+}
+
+Brick.prototype.filter			= function(eventName, fct) {
+	return logs[this.brickId][eventName].filter(fct);
+}
+
+Brick.prototype.filterTime		= function(eventName, t0, t1) {
+	return logs[this.brickId][eventName].filter( function(e) {
+		return e.ms >= t0 
+		    && e.ms <= t1 ;
+	});		
+}
+
+//____________________________________________________________________________________________________
+// 
+//____________________________________________________________________________________________________
 Brick.prototype.getTypeName		= function() {return "Brick";}
 Brick.prototype.getBrickFromId	= function(id) {return D_brick[id];}
 Brick.prototype.unreference		= function() {
-	 ProtoBrick.emit('disappear', {brickId: this.brickId});
+	 ProtoBrick.emit('disappear', {brickId: this.brickId, class: this.getTypeName()});
 	 delete D_brick[this.brickId];		
 	 return this;
 	}
@@ -73,6 +122,7 @@ Brick.prototype.getDescription	= function() {
 	return	{ type	: this.getTypes()
 			, id	: this.brickId
 			, name	: this.name || this.brickId
+			, class : this.getTypeName()
 			};
 	}
 Brick.prototype.getBricks		= function( filter ) {

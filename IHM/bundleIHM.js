@@ -54,11 +54,6 @@
 
 	utils.initIO( location.hostname + ":" + location.port + "/m2m" );
 	// utils.initIO(  );
-	var timer;
-	function refresh(scope, dt) {
-		if(timer) {clearTimeout( timer );}
-		timer = setTimeout( function() {scope.$apply(); timer = null;}, dt );
-	}
 
 	var app =
 	angular	.module( "ihmActivity", ["ngMaterial", "ui.router", "angular-toArrayFilter", "ngDraggable"] )
@@ -78,32 +73,41 @@
 										console.log("ctrl.context:", ctrl.context);
 										utils.io.on	( "brickAppears"
 													, function(data) {
-														// console.log( "brickAppears", data );
-														ctrl.context.bricks[data.id] = data;
-														// $scope.$apply();
-														refresh($scope, 100);
+														// console.log( "brickAppears", data);
+														$scope.$applyAsync( function() {
+															ctrl.context.bricks[data.id] = data;
+															var L = ctrl.context.brickTypes[ data.class ].instances;
+															if(L.indexOf(data.id) !== -1) {
+																console.error("brick", data.id, "already present in instances of", data.class, L);
+															} else {L.push( data.id );}
+														});
 													});
 										utils.io.on	( "brickDisappears"
 													, function(data) {
-														// console.log( "brickDisappears", data );
-														delete ctrl.context.bricks[data.brickId];
-														// $scope.$apply();
-														refresh($scope, 100);
+														// console.log("brick brickDisappears", data);
+														$scope.$applyAsync( function() {
+															delete ctrl.context.bricks[data.brickId];
+															var L 	= ctrl.context.brickTypes[ data.class ].instances
+															  , pos = L.indexOf( data.brickId )
+															  ;
+															if(pos>=0) {L.splice(pos, 1);}
+														});
 													});
 									});
 							}
 						)
 			;
 
+	console.log( "Loading directives" );
 	__webpack_require__( 59 )(app);
-	__webpack_require__( 62 )(app);
-	__webpack_require__( 67 )(app);
-	__webpack_require__( 70 )(app);
-	__webpack_require__( 73 )(app);
-	__webpack_require__( 76 )(app);
-	__webpack_require__( 79 )(app);
-	__webpack_require__( 86 )(app);
-	__webpack_require__( 104 )(app);
+	__webpack_require__( 85 )(app);
+	__webpack_require__( 90 )(app);
+	__webpack_require__( 93 )(app);
+	__webpack_require__( 96 )(app);
+	__webpack_require__( 99 )(app);
+	__webpack_require__( 102 )(app);
+	__webpack_require__( 105 )(app);
+	__webpack_require__( 106 )(app);
 
 
 
@@ -859,7 +863,7 @@
 
 	var url = __webpack_require__(11);
 	var parser = __webpack_require__(14);
-	var Manager = __webpack_require__(21);
+	var Manager = __webpack_require__(22);
 	var debug = __webpack_require__(13)('socket.io-client');
 
 	/**
@@ -937,7 +941,7 @@
 	 * @api public
 	 */
 
-	exports.Manager = __webpack_require__(21);
+	exports.Manager = __webpack_require__(22);
 	exports.Socket = __webpack_require__(53);
 
 
@@ -1204,12 +1208,12 @@
 	 * Module dependencies.
 	 */
 
-	var debug = __webpack_require__(13)('socket.io-parser');
-	var json = __webpack_require__(15);
-	var isArray = __webpack_require__(17);
-	var Emitter = __webpack_require__(18);
-	var binary = __webpack_require__(19);
-	var isBuf = __webpack_require__(20);
+	var debug = __webpack_require__(15)('socket.io-parser');
+	var json = __webpack_require__(16);
+	var isArray = __webpack_require__(18);
+	var Emitter = __webpack_require__(19);
+	var binary = __webpack_require__(20);
+	var isBuf = __webpack_require__(21);
 
 	/**
 	 * Protocol version.
@@ -1603,6 +1607,149 @@
 
 /***/ },
 /* 15 */
+/***/ function(module, exports) {
+
+	
+	/**
+	 * Expose `debug()` as the module.
+	 */
+
+	module.exports = debug;
+
+	/**
+	 * Create a debugger with the given `name`.
+	 *
+	 * @param {String} name
+	 * @return {Type}
+	 * @api public
+	 */
+
+	function debug(name) {
+	  if (!debug.enabled(name)) return function(){};
+
+	  return function(fmt){
+	    fmt = coerce(fmt);
+
+	    var curr = new Date;
+	    var ms = curr - (debug[name] || curr);
+	    debug[name] = curr;
+
+	    fmt = name
+	      + ' '
+	      + fmt
+	      + ' +' + debug.humanize(ms);
+
+	    // This hackery is required for IE8
+	    // where `console.log` doesn't have 'apply'
+	    window.console
+	      && console.log
+	      && Function.prototype.apply.call(console.log, console, arguments);
+	  }
+	}
+
+	/**
+	 * The currently active debug mode names.
+	 */
+
+	debug.names = [];
+	debug.skips = [];
+
+	/**
+	 * Enables a debug mode by name. This can include modes
+	 * separated by a colon and wildcards.
+	 *
+	 * @param {String} name
+	 * @api public
+	 */
+
+	debug.enable = function(name) {
+	  try {
+	    localStorage.debug = name;
+	  } catch(e){}
+
+	  var split = (name || '').split(/[\s,]+/)
+	    , len = split.length;
+
+	  for (var i = 0; i < len; i++) {
+	    name = split[i].replace('*', '.*?');
+	    if (name[0] === '-') {
+	      debug.skips.push(new RegExp('^' + name.substr(1) + '$'));
+	    }
+	    else {
+	      debug.names.push(new RegExp('^' + name + '$'));
+	    }
+	  }
+	};
+
+	/**
+	 * Disable debug output.
+	 *
+	 * @api public
+	 */
+
+	debug.disable = function(){
+	  debug.enable('');
+	};
+
+	/**
+	 * Humanize the given `ms`.
+	 *
+	 * @param {Number} m
+	 * @return {String}
+	 * @api private
+	 */
+
+	debug.humanize = function(ms) {
+	  var sec = 1000
+	    , min = 60 * 1000
+	    , hour = 60 * min;
+
+	  if (ms >= hour) return (ms / hour).toFixed(1) + 'h';
+	  if (ms >= min) return (ms / min).toFixed(1) + 'm';
+	  if (ms >= sec) return (ms / sec | 0) + 's';
+	  return ms + 'ms';
+	};
+
+	/**
+	 * Returns true if the given mode name is enabled, false otherwise.
+	 *
+	 * @param {String} name
+	 * @return {Boolean}
+	 * @api public
+	 */
+
+	debug.enabled = function(name) {
+	  for (var i = 0, len = debug.skips.length; i < len; i++) {
+	    if (debug.skips[i].test(name)) {
+	      return false;
+	    }
+	  }
+	  for (var i = 0, len = debug.names.length; i < len; i++) {
+	    if (debug.names[i].test(name)) {
+	      return true;
+	    }
+	  }
+	  return false;
+	};
+
+	/**
+	 * Coerce `val`.
+	 */
+
+	function coerce(val) {
+	  if (val instanceof Error) return val.stack || val.message;
+	  return val;
+	}
+
+	// persist
+
+	try {
+	  if (window.localStorage) debug.enable(localStorage.debug);
+	} catch(e){}
+
+
+/***/ },
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*! JSON v3.2.6 | http://bestiejs.github.io/json3 | Copyright 2012-2013, Kit Cambridge | http://kit.mit-license.org */
@@ -1612,7 +1759,7 @@
 
 	  // Detect the `define` function exposed by asynchronous module loaders. The
 	  // strict `define` check is necessary for compatibility with `r.js`.
-	  var isLoader = "function" === "function" && __webpack_require__(16);
+	  var isLoader = "function" === "function" && __webpack_require__(17);
 
 	  // Detect native implementations.
 	  var nativeJSON = typeof JSON == "object" && JSON;
@@ -2469,7 +2616,7 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
@@ -2477,7 +2624,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 	module.exports = Array.isArray || function (arr) {
@@ -2486,7 +2633,7 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports) {
 
 	
@@ -2656,7 +2803,7 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/*global Blob,File*/
@@ -2665,8 +2812,8 @@
 	 * Module requirements
 	 */
 
-	var isArray = __webpack_require__(17);
-	var isBuf = __webpack_require__(20);
+	var isArray = __webpack_require__(18);
+	var isBuf = __webpack_require__(21);
 
 	/**
 	 * Replaces every Buffer | ArrayBuffer in packet with a numbered placeholder.
@@ -2804,7 +2951,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -2824,7 +2971,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -2833,9 +2980,9 @@
 	 */
 
 	var url = __webpack_require__(11);
-	var eio = __webpack_require__(22);
+	var eio = __webpack_require__(23);
 	var Socket = __webpack_require__(53);
-	var Emitter = __webpack_require__(18);
+	var Emitter = __webpack_require__(19);
 	var parser = __webpack_require__(14);
 	var on = __webpack_require__(55);
 	var bind = __webpack_require__(56);
@@ -3333,19 +3480,19 @@
 
 
 /***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	module.exports =  __webpack_require__(23);
-
-
-/***/ },
 /* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
-	module.exports = __webpack_require__(24);
+	module.exports =  __webpack_require__(24);
+
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	module.exports = __webpack_require__(25);
 
 	/**
 	 * Exports parser
@@ -3353,22 +3500,22 @@
 	 * @api public
 	 *
 	 */
-	module.exports.parser = __webpack_require__(32);
+	module.exports.parser = __webpack_require__(33);
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 
-	var transports = __webpack_require__(25);
-	var Emitter = __webpack_require__(18);
+	var transports = __webpack_require__(26);
+	var Emitter = __webpack_require__(19);
 	var debug = __webpack_require__(44)('engine.io-client:socket');
 	var index = __webpack_require__(50);
-	var parser = __webpack_require__(32);
+	var parser = __webpack_require__(33);
 	var parseuri = __webpack_require__(51);
 	var parsejson = __webpack_require__(52);
 	var parseqs = __webpack_require__(42);
@@ -3486,9 +3633,9 @@
 	 */
 
 	Socket.Socket = Socket;
-	Socket.Transport = __webpack_require__(31);
-	Socket.transports = __webpack_require__(25);
-	Socket.parser = __webpack_require__(32);
+	Socket.Transport = __webpack_require__(32);
+	Socket.transports = __webpack_require__(26);
+	Socket.parser = __webpack_require__(33);
 
 	/**
 	 * Creates transport of the given type.
@@ -4069,15 +4216,15 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies
 	 */
 
-	var XMLHttpRequest = __webpack_require__(26);
-	var XHR = __webpack_require__(29);
+	var XMLHttpRequest = __webpack_require__(27);
+	var XHR = __webpack_require__(30);
 	var JSONP = __webpack_require__(47);
 	var websocket = __webpack_require__(48);
 
@@ -4129,11 +4276,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// browser shim for xmlhttprequest module
-	var hasCORS = __webpack_require__(27);
+	var hasCORS = __webpack_require__(28);
 
 	module.exports = function(opts) {
 	  var xdomain = opts.xdomain;
@@ -4171,7 +4318,7 @@
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -4179,7 +4326,7 @@
 	 * Module dependencies.
 	 */
 
-	var global = __webpack_require__(28);
+	var global = __webpack_require__(29);
 
 	/**
 	 * Module exports.
@@ -4200,7 +4347,7 @@
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports) {
 
 	
@@ -4214,16 +4361,16 @@
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module requirements.
 	 */
 
-	var XMLHttpRequest = __webpack_require__(26);
-	var Polling = __webpack_require__(30);
-	var Emitter = __webpack_require__(18);
+	var XMLHttpRequest = __webpack_require__(27);
+	var Polling = __webpack_require__(31);
+	var Emitter = __webpack_require__(19);
 	var inherit = __webpack_require__(43);
 	var debug = __webpack_require__(44)('engine.io-client:polling-xhr');
 
@@ -4605,16 +4752,16 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var Transport = __webpack_require__(31);
+	var Transport = __webpack_require__(32);
 	var parseqs = __webpack_require__(42);
-	var parser = __webpack_require__(32);
+	var parser = __webpack_require__(33);
 	var inherit = __webpack_require__(43);
 	var debug = __webpack_require__(44)('engine.io-client:polling');
 
@@ -4629,7 +4776,7 @@
 	 */
 
 	var hasXHR2 = (function() {
-	  var XMLHttpRequest = __webpack_require__(26);
+	  var XMLHttpRequest = __webpack_require__(27);
 	  var xhr = new XMLHttpRequest({ xdomain: false });
 	  return null != xhr.responseType;
 	})();
@@ -4856,15 +5003,15 @@
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module dependencies.
 	 */
 
-	var parser = __webpack_require__(32);
-	var Emitter = __webpack_require__(18);
+	var parser = __webpack_require__(33);
+	var Emitter = __webpack_require__(19);
 
 	/**
 	 * Module exports.
@@ -5021,15 +5168,15 @@
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
 	 * Module dependencies.
 	 */
 
-	var keys = __webpack_require__(33);
-	var hasBinary = __webpack_require__(34);
+	var keys = __webpack_require__(34);
+	var hasBinary = __webpack_require__(35);
 	var sliceBuffer = __webpack_require__(36);
 	var base64encoder = __webpack_require__(37);
 	var after = __webpack_require__(38);
@@ -5622,7 +5769,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports) {
 
 	
@@ -5647,7 +5794,7 @@
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {
@@ -5655,7 +5802,7 @@
 	 * Module requirements.
 	 */
 
-	var isArray = __webpack_require__(35);
+	var isArray = __webpack_require__(18);
 
 	/**
 	 * Module exports.
@@ -5710,15 +5857,6 @@
 	}
 
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 35 */
-/***/ function(module, exports) {
-
-	module.exports = Array.isArray || function (arr) {
-	  return Object.prototype.toString.call(arr) == '[object Array]';
-	};
-
 
 /***/ },
 /* 36 */
@@ -6759,7 +6897,7 @@
 	 * Module requirements.
 	 */
 
-	var Polling = __webpack_require__(30);
+	var Polling = __webpack_require__(31);
 	var inherit = __webpack_require__(43);
 
 	/**
@@ -6998,8 +7136,8 @@
 	 * Module dependencies.
 	 */
 
-	var Transport = __webpack_require__(31);
-	var parser = __webpack_require__(32);
+	var Transport = __webpack_require__(32);
+	var parser = __webpack_require__(33);
 	var parseqs = __webpack_require__(42);
 	var inherit = __webpack_require__(43);
 	var debug = __webpack_require__(44)('engine.io-client:websocket');
@@ -7391,12 +7529,12 @@
 	 */
 
 	var parser = __webpack_require__(14);
-	var Emitter = __webpack_require__(18);
+	var Emitter = __webpack_require__(19);
 	var toArray = __webpack_require__(54);
 	var on = __webpack_require__(55);
 	var bind = __webpack_require__(56);
 	var debug = __webpack_require__(13)('socket.io-client:socket');
-	var hasBin = __webpack_require__(34);
+	var hasBin = __webpack_require__(35);
 
 	/**
 	 * Module exports.
@@ -8035,20 +8173,61 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__( 60 );
+	var utils = __webpack_require__( 8 );
+
+	var controllers 	= {
+		Brick 						: function() {},
+		BrickUPnP					: __webpack_require__( 62 ),
+		BrickOpenHAB_Switch			: __webpack_require__( 65			),
+		BrickOpenHAB_String			: __webpack_require__( 67			),
+		BrickOpenHAB_RollerShutter	: __webpack_require__( 68		),
+		BrickOpenHAB_Number			: __webpack_require__( 69			),
+		BrickOpenHAB_Dimmer			: __webpack_require__( 70			),
+		BrickOpenHAB_DateTime		: __webpack_require__( 71			),
+		BrickOpenHAB_Contact		: __webpack_require__( 72			),
+		BrickOpenHAB_Color			: __webpack_require__( 73				)
+	};
+
+	var templates	 	= {
+		Brick 						: __webpack_require__( 75 ),
+		BrickUPnP					: __webpack_require__( 76 ),
+		BrickOpenHAB_Switch			: __webpack_require__( 77			),
+		BrickOpenHAB_String			: __webpack_require__( 78			),
+		BrickOpenHAB_RollerShutter	: __webpack_require__( 79	),
+		BrickOpenHAB_Number			: __webpack_require__( 80			),
+		BrickOpenHAB_Dimmer			: __webpack_require__( 81			),
+		BrickOpenHAB_DateTime		: __webpack_require__( 82		),
+		BrickOpenHAB_Contact		: __webpack_require__( 83			),
+		BrickOpenHAB_Color			: __webpack_require__( 84			)
+	};
 
 	module.exports = function(app) {
-		app.directive	( "brickItem"
-						, function() {
-							 return { restrict		: 'A'
-									, controller	: function() {
-										 console.log( "new brick" );
+		app.directive	( "brick"
+						, function($compile) {
+							 return { restrict			: 'E'
+									, controller		: function($scope) {
+										// console.log( "new brick", this.brick, $scope );
+										var types = this.brick.type
+										  , i, constr;
+										for(i=types.length-1; i>=0; i--) {
+											constr = controllers[ types[i] ];
+											if(constr) {
+												constr.apply(this, [$scope, utils]);
+												this.type = types[i];
+												break;
+											}
 										}
-									, controllerAs	: 'brickItemController'
-									, templateUrl	: "/IHM/js/brick/brick.html"
-									, scope			: { brick	: "=brick"
-													  }
-									, link			: function(scope, element, attr, controller) {
-										}
+									}
+									, bindToController 	: true
+									, controllerAs		: 'ctrl'
+									, templateUrl		: "/IHM/js/brick/brick.html"
+									, scope				: { brick	: "=data"
+														  }
+									, link				: function(scope, element, attr, controller) {
+										// console.log( "link:", templates[controller.type] );
+										element.html( templates[controller.type] );
+								 		$compile(element.contents())(scope);
+									}
 									};
 							}
 						);
@@ -8068,6 +8247,447 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__( 63 );
+
+	module.exports = function($scope, utils) {
+		
+	}
+
+
+
+/***/ },
+/* 63 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 64 */,
+/* 65 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BrickOpenHAB = __webpack_require__( 66 );
+
+	module.exports = function(scope, utils) {
+		BrickOpenHAB.apply(this, [scope, utils]);
+		// console.log( "Create a switch controller", this.brick.state, this );
+		this.userSetSwitch = function() {
+			// console.log(e, this.value);
+			utils.call	( this.brick.id
+						, "setState"
+						, [this.value?"ON":"OFF"]
+						);
+		}
+		this.updateState = function(event, noUpdate) {
+			// console.log( "Switch event", event);
+			this.value = event.data.value === "ON";
+			// console.log(this.color);
+			if(noUpdate !== true) {scope.$apply();}
+		}
+		this.updateState( {data: {value: this.brick.state}}, true );
+		
+	}
+
+
+/***/ },
+/* 66 */
+/***/ function(module, exports) {
+
+	// var utils = require( "../../../../js/utils.js" );
+
+	module.exports = function($scope, utils) {
+		var ctrl = this;
+		var cbEventName = this.brick.id + "::state";
+		utils.io.emit	( "subscribeBrick"
+						, { brickId		: this.brick.id
+						  , eventName	: "state"
+						  , cbEventName	: cbEventName
+						} 
+						);
+		this.updateState = function(event) {
+			this.brick.state = event.data.value;
+			$scope.$applyAsync();
+		}
+		utils.io.on	( cbEventName
+					, function(event) {
+						 // console.log("brickOpenhab event:", event);
+						 ctrl.updateState(event);
+						}
+					);
+		this.setState = function() {
+			// console.log( "state", this.brick.state);
+			utils.call	( this.brick.id
+						, "setState"
+						, [this.brick.state]
+						);
+		}
+	}
+
+/***/ },
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BrickOpenHAB = __webpack_require__( 66 );
+
+	module.exports = function(scope, utils) {
+		BrickOpenHAB.apply(this, [scope, utils]);
+		// console.log( "Create a color controller", this, scope );
+		this.userSetText = function() {
+			utils.call	( this.brick.id
+						, "setString"
+						, [this.brick.state]
+						);
+		}
+		this.updateState = function(event, noUpdate) {
+			console.log( "string update", event.data.value );
+			this.brick.state = event.data.value;
+			if(noUpdate !== true) {scope.$apply();}
+		}
+		
+		this.updateState( {data: {value: this.brick.state}}
+						, true 
+						);
+	}
+
+
+/***/ },
+/* 68 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by Alexandre on 24/11/2015.
+	 */
+
+
+/***/ },
+/* 69 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BrickOpenHAB = __webpack_require__( 66 );
+
+	module.exports = function(scope, utils) {
+		BrickOpenHAB.apply(this, [scope, utils]);
+		// console.log( "Create a Dimmer controller", scope.brick.state, this );
+		this.userSetNumber = function(e) {
+			// console.log(e, this.value);
+			utils.call	( this.brick.id
+						, "setNumber"
+						, [this.value]
+						);
+		}
+		this.updateState = function(event, noUpdate) {
+			// console.log( "Number event", event);
+			this.value = event.data.value;
+			// console.log(this.color);
+			if(noUpdate !== true) {scope.$apply();}
+		}
+		if(typeof this.brick.state !== "number") {this.brick.state = 0;}
+		this.updateState( {data: {value: this.brick.state}}, true );
+	}
+
+
+/***/ },
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BrickOpenHAB = __webpack_require__( 66 );
+
+	module.exports = function(scope, utils) {
+		BrickOpenHAB.apply(this, [scope, utils]);
+		// console.log( "Create a Dimmer controller", scope.brick.state, this );
+		this.userSetDimmer = function() {
+			// console.log("userSetDimmer", this.value);
+			utils.call	( this.brick.id
+						, "setValue"
+						, [this.value]
+						);
+		}
+		this.updateState = function(event, noUpdate) {
+			// console.log( "Dimmer event", event.data.value);
+			this.value = event.data.value;
+			// console.log(this.color);
+			if(noUpdate !== true) {scope.$apply();}
+		}
+		if(typeof this.brick.state === "string") {this.brick.state = parseInt(this.brick.state) || 0;}
+		this.updateState( {data: {value: this.brick.state}}, true );
+		
+	}
+
+
+/***/ },
+/* 71 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by Alexandre on 24/11/2015.
+	 */
+
+
+/***/ },
+/* 72 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by Alexandre on 24/11/2015.
+	 */
+
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BrickOpenHAB = __webpack_require__( 66 );
+	var convert = __webpack_require__( 74 );
+
+	function toHex(d) {
+		return  ("0"+(Number(d).toString(16))).slice(-2).toLowerCase()
+	}
+
+	module.exports = function(scope, utils) {
+		BrickOpenHAB.apply(this, [scope, utils]);
+		// console.log( "Create a color controller", this, scope );
+		this.userSetColor = function(e) {
+			// console.log(e, this.color);
+			var r = parseInt( this.color.slice(1,3), 16 )
+			  , g = parseInt( this.color.slice(3,5), 16 )
+			  , b = parseInt( this.color.slice(5,7), 16 )
+			  ;
+			// console.log(this.color, "=>", r, g, b);
+			utils.call	( this.brick.id
+						, "setColor_RGB"
+						, [r, g, b]
+						);
+		}
+		this.updateState = function(event, noUpdate) {
+			// console.log( "Color event", event);
+			var rgb  = convert.hsvToRgb ( event.data.hue / 360
+										, event.data.saturation / 100
+										, event.data.brightness / 100
+										);
+			// console.log(rgb);
+			var str = "#" + toHex(rgb[0]) + toHex(rgb[1]) + toHex(rgb[2]);
+			this.color = str;
+			// console.log(this.color);
+			if(noUpdate !== true) {scope.$apply();}
+		}
+		console.log( "color init with", this.brick.state ); 
+		this.updateState( {data: this.brick.state}
+						, true 
+						);
+	}
+
+
+/***/ },
+/* 74 */
+/***/ function(module, exports) {
+
+	/**
+	 * Created by Alexandre on 24/11/2015.
+	 */
+	/* Converts an RGB color value to HSL. Conversion formula
+	* adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+	    * Assumes r, g, and b are contained in the set [0, 255] and
+	* returns h, s, and l in the set [0, 1].
+	*
+	* @param   Number  r       The red color value
+	* @param   Number  g       The green color value
+	* @param   Number  b       The blue color value
+	* @return  Array           The HSL representation
+	*/
+
+	function rgbToHsl(r, g, b){
+	    r /= 255; g /= 255; b /= 255;
+	    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+	    var h, s, l = (max + min) / 2;
+
+	    if(max == min){
+	        h = s = 0; // achromatic
+	    }else{
+	        var d = max - min;
+	        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+	        switch(max){
+	            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+	            case g: h = (b - r) / d + 2; break;
+	            case b: h = (r - g) / d + 4; break;
+	        }
+	        h /= 6;
+	    }
+
+	    return [h, s, l];
+	}
+
+	/**
+	 * Converts an HSL color value to RGB. Conversion formula
+	 * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+	 * Assumes h, s, and l are contained in the set [0, 1] and
+	 * returns r, g, and b in the set [0, 255].
+	 *
+	 * @param   Number  h       The hue
+	 * @param   Number  s       The saturation
+	 * @param   Number  l       The lightness
+	 * @return  Array           The RGB representation
+	 */
+	function hue2rgb(p, q, t){
+	    if(t < 0) t += 1;
+	    if(t > 1) t -= 1;
+	    if(t < 1/6) return p + (q - p) * 6 * t;
+	    if(t < 1/2) return q;
+	    if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+	    return p;
+	}
+	function hslToRgb(h, s, l){
+	    var r, g, b;
+
+	    if(s === 0){
+	        r = g = b = l; // achromatic
+	    }else{
+
+	        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+	        var p = 2 * l - q;
+	        r = hue2rgb(p, q, h + 1/3);
+	        g = hue2rgb(p, q, h);
+	        b = hue2rgb(p, q, h - 1/3);
+	    }
+
+	    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+	}
+
+	/**
+	 * Converts an RGB color value to HSV. Conversion formula
+	 * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+	 * Assumes r, g, and b are contained in the set [0, 255] and
+	 * returns h, s, and v in the set [0, 1].
+	 *
+	 * @param   Number  r       The red color value
+	 * @param   Number  g       The green color value
+	 * @param   Number  b       The blue color value
+	 * @return  Array           The HSV representation
+	 */
+	function rgbToHsv(r, g, b){
+	    r = r/255; g = g/255; b = b/255;
+	    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+	    var h, s, v = max;
+
+	    var d = max - min;
+	    s = max === 0 ? 0 : d / max;
+
+	    if(max === min){
+	        h = 0; // achromatic
+	    }else{
+	        switch(max){
+	            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+	            case g: h = (b - r) / d + 2; break;
+	            case b: h = (r - g) / d + 4; break;
+	        }
+	        h /= 6;
+	    }
+
+	    return [h, s, v];
+	}
+
+	/**
+	 * Converts an HSV color value to RGB. Conversion formula
+	 * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
+	 * Assumes h, s, and v are contained in the set [0, 1] and
+	 * returns r, g, and b in the set [0, 255].
+	 *
+	 * @param   Number  h       The hue
+	 * @param   Number  s       The saturation
+	 * @param   Number  v       The value
+	 * @return  Array           The RGB representation
+	 */
+	function hsvToRgb(h, s, v){
+	    var r, g, b;
+
+	    var i = Math.floor(h * 6);
+	    var f = h * 6 - i;
+	    var p = v * (1 - s);
+	    var q = v * (1 - f * s);
+	    var t = v * (1 - (1 - f) * s);
+
+	    switch(i % 6){
+	        case 0: r = v; g = t; b = p; break;
+	        case 1: r = q; g = v; b = p; break;
+	        case 2: r = p; g = v; b = t; break;
+	        case 3: r = p; g = q; b = v; break;
+	        case 4: r = t; g = p; b = v; break;
+	        case 5: r = v; g = p; b = q; break;
+	    }
+
+	    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+	}
+
+	module.exports = {
+	    rgbToHsl    : rgbToHsl,
+	    hslToRgb    : hslToRgb,
+	    rgbToHsv    : rgbToHsv,
+	    hsvToRgb    : hsvToRgb
+	};
+
+/***/ },
+/* 75 */
+/***/ function(module, exports) {
+
+	module.exports = "\t<md-card-content>\r\n\t\t<img ng-src\t\t= \"{{brick.iconURL}}\" \r\n\t\t\t class\t\t= \"md-card-image iconURL\" \r\n\t\t\t alt\t\t= \"{{brick.iconURL}}\"\r\n\t\t\t />\r\n\t\t{{brick.name}}\r\n\t</md-card-content>\r\n\t<md-card-footer>\r\n\t</md-card-footer>\r\n"
+
+/***/ },
+/* 76 */
+/***/ function(module, exports) {
+
+	module.exports = "<md-card ng-class=\"ctrl.brick.type\">\r\n\t<md-card-title>\r\n\t\t<md-card-title-text>\r\n\t\t\t<span class=\"md-headline\" ng-bind=\"ctrl.brick.name\"></span>\r\n\t\t\t<!-- <span class=\"md-subhead\">{{ctrl.brick.type | json}}</span> -->\r\n\t\t</md-card-title-text>\r\n\t\t<md-card-title-media>\r\n\t\t\t<div class=\"md-media-sm card-media\">\r\n\t\t\t\t<img ng-src=\"{{ctrl.brick.iconURL}}\"></img>\r\n\t\t\t</div>\r\n\t\t</md-card-title-media>\r\n\t</md-card-title>\r\n<!-- \r\n\t<md-card-actions layout=\"row\" layout-align=\"end center\">\r\n\t\t<md-button>Action 1</md-button>\r\n\t\t<md-button>Action 2</md-button>\r\n\t</md-card-actions>\r\n\t -->\r\n</md-card>"
+
+/***/ },
+/* 77 */
+/***/ function(module, exports) {
+
+	module.exports = "<md-switch\tng-model \t= \"ctrl.value\" \r\n\t\t\taria-label \t= \"ctrl.brick.name\" \r\n\t\t\tclass \t\t= \"md-block\" \r\n\t\t\tng-change \t= \"ctrl.userSetSwitch()\"\r\n\t\t\t>\r\n{{ctrl.brick.name}}\r\n</md-switch>"
+
+/***/ },
+/* 78 */
+/***/ function(module, exports) {
+
+	module.exports = "\r\n<md-input-container>\r\n    <label>{{ctrl.brick.name}}</label>\r\n    <input\tng-model \t= \"ctrl.brick.state\" \r\n\t\t\ttype \t\t= \"text\"\r\n\t\t\tng-change \t= \"ctrl.userSetText()\"\r\n\t\t\t/>\r\n</md-input-container>\r\n"
+
+/***/ },
+/* 79 */
+/***/ function(module, exports) {
+
+	module.exports = "\r\nRollerShutter"
+
+/***/ },
+/* 80 */
+/***/ function(module, exports) {
+
+	module.exports = "\r\n<md-input-container class=\"md-block\" flex>\r\n\t<label>{{ctrl.brick.name}}</label>\r\n\t<!--<md-icon md-svg-src=\"img/icons/ic_card_giftcard_24px.svg\"></md-icon>-->\r\n\t<input\tng-model \t= \"ctrl.value\" \r\n\t\t\ttype \t\t= \"number\" \r\n\t\t\tng-change \t= \"ctrl.userSetNumber()\"\r\n\t\t\tflex \r\n\t\t\t/>\r\n</md-input-container>"
+
+/***/ },
+/* 81 */
+/***/ function(module, exports) {
+
+	module.exports = "<md-content layout=\"column\">\r\n\t<p>{{ctrl.brick.name}}</p>\r\n\t<md-slider\tflex \r\n\t\t\t\tmd-discrete \r\n\t\t\t\tng-model \t= \"ctrl.value\" \r\n\t\t\t\tstep=\"1\" min=\"0\" max=\"100\" \r\n\t\t\t\taria-label \t= \"{{ctrl.brick.name}}\"\r\n\t\t\t\tng-change \t= \"ctrl.userSetDimmer()\"\r\n\t\t\t\t>\r\n\t</md-slider>\r\n</md-content>\r\n"
+
+/***/ },
+/* 82 */
+/***/ function(module, exports) {
+
+	module.exports = "\r\nDateTime"
+
+/***/ },
+/* 83 */
+/***/ function(module, exports) {
+
+	module.exports = "Contact {{ctrl.brick.name}}: {{ctrl.brick.state}}"
+
+/***/ },
+/* 84 */
+/***/ function(module, exports) {
+
+	module.exports = "<md-content class=\"md-block color\">\r\n\t<input \t\taria-label \t= \"{{ctrl.brick.name}}\"\r\n\t\t\t\tng-model \t= \"ctrl.color\"\r\n\t\t\t\ttype \t\t= \"color\"\r\n\t\t\t\tng-change \t= \"ctrl.userSetColor()\"\r\n\t\t\t\t/>\r\n\t{{ctrl.brick.name}}\r\n</md-content>"
+
+/***/ },
+/* 85 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__( 86 );
 	var utils = __webpack_require__( 8 );
 
 	module.exports = function(app) {
@@ -8099,7 +8719,7 @@
 																  }
 																);
 										 // ctrl.volume = 0;
-										 console.log( "new mediaPlayer getMediasStates", $scope.brick );
+										 // console.log( "new mediaPlayer getMediasStates", $scope.brick );
 										 utils.call	( $scope.brick.id, "getMediasStates", []
 													).then( function(state) {
 																// console.log( "getMediasStates", state);
@@ -8151,7 +8771,7 @@
 													);
 									 utils.io.on	( cbEventName
 													, eventCB = function(eventData) {
-														 console.log("brickOpenhab eventUPnP:", eventData);
+														 // console.log("brickOpenhab eventUPnP:", eventData);
 														 var event = eventData.data;
 														 controller.state[event.serviceType] = controller.state[event.serviceType] || {};
 														 try {
@@ -8195,19 +8815,19 @@
 
 
 /***/ },
-/* 63 */
+/* 86 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */
+/* 87 */,
+/* 88 */,
+/* 89 */,
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 68 );
+	__webpack_require__( 91 );
 	var utils		= __webpack_require__( 8 )
 	  , parser		= new DOMParser()
 	  ;
@@ -8300,17 +8920,17 @@
 
 
 /***/ },
-/* 68 */
+/* 91 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 69 */,
-/* 70 */
+/* 92 */,
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 71 );
+	__webpack_require__( 94 );
 
 	var draggingPointers	= {}
 	  , dropZones			= {}
@@ -8502,17 +9122,17 @@
 
 
 /***/ },
-/* 71 */
+/* 94 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 72 */,
-/* 73 */
+/* 95 */,
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 74 );
+	__webpack_require__( 97 );
 	// var utils = require( "../../../js/utils.js" );
 
 	module.exports = function(app) {
@@ -8521,10 +9141,37 @@
 							return {
 								  restrict	: 'E'
 								, controller	: function($scope, $mdSidenav) {
-									 this.toggleBricks	= function() {$mdSidenav("bricksList").toggle();};
-									 this.openBricks	= function() {$mdSidenav("bricksList").open();};
-									 this.closeBricks	= function() {$mdSidenav("bricksList").close();};
+									 this.toggleBricks		= function() {$mdSidenav("bricksList").toggle();};
+									 this.openBricks		= function() {$mdSidenav("bricksList").open();};
+									 this.closeBricks		= function() {$mdSidenav("bricksList").close();};
+
+									 this.brickTypeName 	= "Brick";
+									 this.breadcrumb 		= [ this.brickTypeName ];
+
+									 this.updateBreadcrumb 	= function() {
+										 this.brickTypeName 	= this.breadcrumb[ this.breadcrumb.length-1 ];
+										 // this.specializations 	= this.context.brickTypes[brickTypeName].specializations;
+										 // console.log( "Display", brickTypeName, this.context.brickTypes[brickTypeName]);
+										 // this.instances 		= [];
+										 // this.brickTypeName 	= brickTypeName;
+										 // this.instances 		= this.context.brickTypes[brickTypeName].instances;
+										 // for(i=0; i<L.length; i++) {
+										 // 	this.instances.push( this.context.bricks[ L[i] ] );
+										 // }
+									 };
+									 this.updateBreadcrumb();
+
+									 this.gotoType 			= function(type) {
+									 	var pos = this.breadcrumb.indexOf(type);
+									 	if(pos >= 0) {
+									 		this.breadcrumb.splice(pos, this.breadcrumb.length);
+									 	}
+									 	this.breadcrumb.push(type);
+									 	// console.log( "breadcrumb:", this.breadcrumb );
+									 	this.updateBreadcrumb();
+									 }
 									}
+								, bindToController 	: true
 								, controllerAs	: 'ctrl'
 								, templateUrl	: "/IHM/js/activities/alxActivities.html"
 								, scope			: { activities	: "=activities"
@@ -8542,17 +9189,17 @@
 	}
 
 /***/ },
-/* 74 */
+/* 97 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 75 */,
-/* 76 */
+/* 98 */,
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 77 );
+	__webpack_require__( 100 );
 	// var utils = require( "../../../js/utils.js" );
 
 	/* Activity :
@@ -8599,23 +9246,23 @@
 
 
 /***/ },
-/* 77 */
+/* 100 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 78 */,
-/* 79 */
+/* 101 */,
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 80 );
+	__webpack_require__( 103 );
 
 	var utils = __webpack_require__( 8 );
-	var templates	=	{ default		: __webpack_require__( 82 )
+	var templates	=	{ default		: __webpack_require__( 76 )
 						};
 
-	var controllers	=	{ default		: __webpack_require__( 83 )
+	var controllers	=	{ default		: __webpack_require__( 62 )
 						};
 						
 	// Subscribe to openHab messages
@@ -8650,62 +9297,37 @@
 
 
 /***/ },
-/* 80 */
+/* 103 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 81 */,
-/* 82 */
-/***/ function(module, exports) {
-
-	module.exports = "<md-card ng-class=\"brick.type\">\r\n\t<md-card-title>\r\n\t\t<md-card-title-text>\r\n\t\t\t<span class=\"md-headline\" ng-bind=\"brick.name\"></span>\r\n\t\t\t<!-- <span class=\"md-subhead\">{{brick.type | json}}</span> -->\r\n\t\t</md-card-title-text>\r\n\t\t<md-card-title-media>\r\n\t\t\t<div class=\"md-media-sm card-media\">\r\n\t\t\t\t<img ng-src=\"{{brick.iconURL}}\"></img>\r\n\t\t\t</div>\r\n\t\t</md-card-title-media>\r\n\t</md-card-title>\r\n<!-- \r\n\t<md-card-actions layout=\"row\" layout-align=\"end center\">\r\n\t\t<md-button>Action 1</md-button>\r\n\t\t<md-button>Action 2</md-button>\r\n\t</md-card-actions>\r\n\t -->\r\n</md-card>"
-
-/***/ },
-/* 83 */
-/***/ function(module, exports, __webpack_require__) {
-
-	__webpack_require__( 84 );
-
-	module.exports = function($scope, utils) {
-		
-	}
-
-
-
-/***/ },
-/* 84 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 85 */,
-/* 86 */
+/* 104 */,
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__( 5 );
 
 	var utils = __webpack_require__( 8 );
-	var templates	=	{ BrickOpenHAB_Switch			: __webpack_require__( 87		)
-						, BrickOpenHAB_String			: __webpack_require__( 88		)
-						, BrickOpenHAB_RollerShutter	: __webpack_require__( 89)
-						, BrickOpenHAB_Number			: __webpack_require__( 90		)
-						, BrickOpenHAB_Dimmer			: __webpack_require__( 91		)
-						, BrickOpenHAB_DateTime			: __webpack_require__( 92		)
-						, BrickOpenHAB_Contact			: __webpack_require__( 93		)
-						, BrickOpenHAB_Color			: __webpack_require__( 94		)
+	var templates	=	{ BrickOpenHAB_Switch			: __webpack_require__( 77		)
+						, BrickOpenHAB_String			: __webpack_require__( 78		)
+						, BrickOpenHAB_RollerShutter	: __webpack_require__( 79)
+						, BrickOpenHAB_Number			: __webpack_require__( 80		)
+						, BrickOpenHAB_Dimmer			: __webpack_require__( 81		)
+						, BrickOpenHAB_DateTime			: __webpack_require__( 82		)
+						, BrickOpenHAB_Contact			: __webpack_require__( 83		)
+						, BrickOpenHAB_Color			: __webpack_require__( 84		)
 						};
 
-	var controllers	=	{BrickOpenHAB_Switch			: __webpack_require__( 95			)
-						, BrickOpenHAB_String			: __webpack_require__( 96			)
-						, BrickOpenHAB_RollerShutter	: __webpack_require__( 97	)
-						, BrickOpenHAB_Number			: __webpack_require__( 98			)
-						, BrickOpenHAB_Dimmer			: __webpack_require__( 99			)
-						, BrickOpenHAB_DateTime			: __webpack_require__( 100		)
-						, BrickOpenHAB_Contact			: __webpack_require__( 101		)
-						, BrickOpenHAB_Color			: __webpack_require__( 102			)
+	var controllers	=	{ BrickOpenHAB_Switch			: __webpack_require__( 65			)
+						, BrickOpenHAB_String			: __webpack_require__( 67			)
+						, BrickOpenHAB_RollerShutter	: __webpack_require__( 68	)
+						, BrickOpenHAB_Number			: __webpack_require__( 69			)
+						, BrickOpenHAB_Dimmer			: __webpack_require__( 70			)
+						, BrickOpenHAB_DateTime			: __webpack_require__( 71		)
+						, BrickOpenHAB_Contact			: __webpack_require__( 72		)
+						, BrickOpenHAB_Color			: __webpack_require__( 73			)
 						};
 						
 	// Subscribe to openHab messages
@@ -8764,8 +9386,8 @@
 								}
 						 } 
 						}
-					) 
-		.directive	( "brickOpenhab"
+					)
+		/*.directive	( "brickOpenhab"
 					, function($compile) {
 						 return {
 							   restrict		: 'E'
@@ -8808,380 +9430,18 @@
 								}
 						 };
 						}
-					)
+					)*/
 	}
 
 
 /***/ },
-/* 87 */
-/***/ function(module, exports) {
-
-	module.exports = "<md-switch\tng-model=\"ctrl.value\" \r\n\t\t\taria-label=\"brick.name\" \r\n\t\t\tclass=\"md-block\" \r\n\t\t\tng-change=\"ctrl.userSetSwitch()\"\r\n\t\t\t>\r\n{{brick.name}}\r\n</md-switch>"
-
-/***/ },
-/* 88 */
-/***/ function(module, exports) {
-
-	module.exports = "\r\n<md-input-container>\r\n    <label>{{brick.name}}</label>\r\n    <input\tng-model=\"brick.state\" \r\n\t\t\ttype=\"text\"\r\n\t\t\tng-change=\"ctrl.userSetText()\"\r\n\t\t\t/>\r\n</md-input-container>\r\n"
-
-/***/ },
-/* 89 */
-/***/ function(module, exports) {
-
-	module.exports = "\r\nRollerShutter"
-
-/***/ },
-/* 90 */
-/***/ function(module, exports) {
-
-	module.exports = "\r\n<md-input-container class=\"md-block\" flex>\r\n\t<label>{{brick.name}}</label>\r\n\t<!--<md-icon md-svg-src=\"img/icons/ic_card_giftcard_24px.svg\"></md-icon>-->\r\n\t<input\tng-model=\"ctrl.value\" \r\n\t\t\ttype=\"number\" \r\n\t\t\tng-change=\"ctrl.userSetNumber()\"\r\n\t\t\tflex \r\n\t\t\t/>\r\n</md-input-container>"
-
-/***/ },
-/* 91 */
-/***/ function(module, exports) {
-
-	module.exports = "<md-content layout=\"column\">\r\n\t<p>{{brick.name}}</p>\r\n\t<md-slider\tflex \r\n\t\t\t\tmd-discrete \r\n\t\t\t\tng-model=\"ctrl.value\" \r\n\t\t\t\tstep=\"1\" min=\"0\" max=\"100\" \r\n\t\t\t\taria-label=\"{{brick.name}}\"\r\n\t\t\t\tng-change=\"ctrl.userSetDimmer()\"\r\n\t\t\t\t>\r\n\t</md-slider>\r\n</md-content>\r\n"
-
-/***/ },
-/* 92 */
-/***/ function(module, exports) {
-
-	module.exports = "\r\nDateTime"
-
-/***/ },
-/* 93 */
-/***/ function(module, exports) {
-
-	module.exports = "Contact {{brick.name}}: {{brick.state}}"
-
-/***/ },
-/* 94 */
-/***/ function(module, exports) {
-
-	module.exports = "<md-content class=\"md-block color\">\r\n\t<input \t\taria-label=\"{{brick.name}}\"\r\n\t\t\t\tng-model=\"ctrl.color\"\r\n\t\t\t\ttype=\"color\"\r\n\t\t\t\tng-change=\"ctrl.userSetColor()\"\r\n\t\t\t\t/>\r\n\t{{brick.name}}\r\n</md-content>"
-
-/***/ },
-/* 95 */
-/***/ function(module, exports) {
-
-	module.exports = function(scope, utils) {
-		// console.log( "Create a switch controller", scope.brick.state, this );
-		this.userSetSwitch = function() {
-			// console.log(e, this.value);
-			utils.call	( scope.brick.id
-						, "setState"
-						, [this.value?"ON":"OFF"]
-						);
-		}
-		this.updateState = function(event, noUpdate) {
-			// console.log( "Switch event", event);
-			this.value = event.data.value === "ON";
-			// console.log(this.color);
-			if(noUpdate !== true) {scope.$apply();}
-		}
-		this.updateState( {data: {value: scope.brick.state}}, true );
-		
-	}
-
-
-/***/ },
-/* 96 */
-/***/ function(module, exports) {
-
-	module.exports = function(scope, utils) {
-		// console.log( "Create a color controller", this, scope );
-		this.userSetText = function() {
-			utils.call	( scope.brick.id
-						, "setString"
-						, [scope.brick.state]
-						);
-		}
-		this.updateState = function(event, noUpdate) {
-			console.log( "string update", event.data.value );
-			scope.brick.state = event.data.value;
-			if(noUpdate !== true) {scope.$apply();}
-		}
-		
-		this.updateState( {data: {value: scope.brick.state}}
-						, true 
-						);
-	}
-
-
-/***/ },
-/* 97 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by Alexandre on 24/11/2015.
-	 */
-
-
-/***/ },
-/* 98 */
-/***/ function(module, exports) {
-
-	module.exports = function(scope, utils) {
-		// console.log( "Create a Dimmer controller", scope.brick.state, this );
-		this.userSetNumber = function(e) {
-			// console.log(e, this.value);
-			utils.call	( scope.brick.id
-						, "setNumber"
-						, [this.value]
-						);
-		}
-		this.updateState = function(event, noUpdate) {
-			// console.log( "Number event", event);
-			this.value = event.data.value;
-			// console.log(this.color);
-			if(noUpdate !== true) {scope.$apply();}
-		}
-		if(typeof scope.brick.state !== "number") {scope.brick.state = 0;}
-		this.updateState( {data: {value: scope.brick.state}}, true );
-	}
-
-
-/***/ },
-/* 99 */
-/***/ function(module, exports) {
-
-	module.exports = function(scope, utils) {
-		// console.log( "Create a Dimmer controller", scope.brick.state, this );
-		this.userSetDimmer = function() {
-			// console.log("userSetDimmer", this.value);
-			utils.call	( scope.brick.id
-						, "setValue"
-						, [this.value]
-						);
-		}
-		this.updateState = function(event, noUpdate) {
-			// console.log( "Dimmer event", event.data.value);
-			this.value = event.data.value;
-			// console.log(this.color);
-			if(noUpdate !== true) {scope.$apply();}
-		}
-		if(typeof scope.brick.state === "string") {scope.brick.state = parseInt(scope.brick.state) || 0;}
-		this.updateState( {data: {value: scope.brick.state}}, true );
-		
-	}
-
-
-/***/ },
-/* 100 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by Alexandre on 24/11/2015.
-	 */
-
-
-/***/ },
-/* 101 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by Alexandre on 24/11/2015.
-	 */
-
-
-/***/ },
-/* 102 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var convert = __webpack_require__( 103 );
-
-	function toHex(d) {
-		return  ("0"+(Number(d).toString(16))).slice(-2).toLowerCase()
-	}
-
-	module.exports = function(scope, utils) {
-		// console.log( "Create a color controller", this, scope );
-		this.userSetColor = function(e) {
-			// console.log(e, this.color);
-			var r = parseInt( this.color.slice(1,3), 16 )
-			  , g = parseInt( this.color.slice(3,5), 16 )
-			  , b = parseInt( this.color.slice(5,7), 16 )
-			  ;
-			// console.log(this.color, "=>", r, g, b);
-			utils.call	( scope.brick.id
-						, "setColor_RGB"
-						, [r, g, b]
-						);
-		}
-		this.updateState = function(event, noUpdate) {
-			// console.log( "Color event", event);
-			var rgb  = convert.hsvToRgb ( event.data.hue / 360
-										, event.data.saturation / 100
-										, event.data.brightness / 100
-										);
-			// console.log(rgb);
-			var str = "#" + toHex(rgb[0]) + toHex(rgb[1]) + toHex(rgb[2]);
-			this.color = str;
-			// console.log(this.color);
-			if(noUpdate !== true) {scope.$apply();}
-		}
-		console.log( "color init with", scope.brick.state ); 
-		this.updateState( {data: scope.brick.state}
-						, true 
-						);
-	}
-
-
-/***/ },
-/* 103 */
-/***/ function(module, exports) {
-
-	/**
-	 * Created by Alexandre on 24/11/2015.
-	 */
-	/* Converts an RGB color value to HSL. Conversion formula
-	* adapted from http://en.wikipedia.org/wiki/HSL_color_space.
-	    * Assumes r, g, and b are contained in the set [0, 255] and
-	* returns h, s, and l in the set [0, 1].
-	*
-	* @param   Number  r       The red color value
-	* @param   Number  g       The green color value
-	* @param   Number  b       The blue color value
-	* @return  Array           The HSL representation
-	*/
-
-	function rgbToHsl(r, g, b){
-	    r /= 255; g /= 255; b /= 255;
-	    var max = Math.max(r, g, b), min = Math.min(r, g, b);
-	    var h, s, l = (max + min) / 2;
-
-	    if(max == min){
-	        h = s = 0; // achromatic
-	    }else{
-	        var d = max - min;
-	        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-	        switch(max){
-	            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-	            case g: h = (b - r) / d + 2; break;
-	            case b: h = (r - g) / d + 4; break;
-	        }
-	        h /= 6;
-	    }
-
-	    return [h, s, l];
-	}
-
-	/**
-	 * Converts an HSL color value to RGB. Conversion formula
-	 * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
-	 * Assumes h, s, and l are contained in the set [0, 1] and
-	 * returns r, g, and b in the set [0, 255].
-	 *
-	 * @param   Number  h       The hue
-	 * @param   Number  s       The saturation
-	 * @param   Number  l       The lightness
-	 * @return  Array           The RGB representation
-	 */
-	function hue2rgb(p, q, t){
-	    if(t < 0) t += 1;
-	    if(t > 1) t -= 1;
-	    if(t < 1/6) return p + (q - p) * 6 * t;
-	    if(t < 1/2) return q;
-	    if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-	    return p;
-	}
-	function hslToRgb(h, s, l){
-	    var r, g, b;
-
-	    if(s === 0){
-	        r = g = b = l; // achromatic
-	    }else{
-
-	        var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-	        var p = 2 * l - q;
-	        r = hue2rgb(p, q, h + 1/3);
-	        g = hue2rgb(p, q, h);
-	        b = hue2rgb(p, q, h - 1/3);
-	    }
-
-	    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-	}
-
-	/**
-	 * Converts an RGB color value to HSV. Conversion formula
-	 * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
-	 * Assumes r, g, and b are contained in the set [0, 255] and
-	 * returns h, s, and v in the set [0, 1].
-	 *
-	 * @param   Number  r       The red color value
-	 * @param   Number  g       The green color value
-	 * @param   Number  b       The blue color value
-	 * @return  Array           The HSV representation
-	 */
-	function rgbToHsv(r, g, b){
-	    r = r/255; g = g/255; b = b/255;
-	    var max = Math.max(r, g, b), min = Math.min(r, g, b);
-	    var h, s, v = max;
-
-	    var d = max - min;
-	    s = max === 0 ? 0 : d / max;
-
-	    if(max === min){
-	        h = 0; // achromatic
-	    }else{
-	        switch(max){
-	            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-	            case g: h = (b - r) / d + 2; break;
-	            case b: h = (r - g) / d + 4; break;
-	        }
-	        h /= 6;
-	    }
-
-	    return [h, s, v];
-	}
-
-	/**
-	 * Converts an HSV color value to RGB. Conversion formula
-	 * adapted from http://en.wikipedia.org/wiki/HSV_color_space.
-	 * Assumes h, s, and v are contained in the set [0, 1] and
-	 * returns r, g, and b in the set [0, 255].
-	 *
-	 * @param   Number  h       The hue
-	 * @param   Number  s       The saturation
-	 * @param   Number  v       The value
-	 * @return  Array           The RGB representation
-	 */
-	function hsvToRgb(h, s, v){
-	    var r, g, b;
-
-	    var i = Math.floor(h * 6);
-	    var f = h * 6 - i;
-	    var p = v * (1 - s);
-	    var q = v * (1 - f * s);
-	    var t = v * (1 - (1 - f) * s);
-
-	    switch(i % 6){
-	        case 0: r = v; g = t; b = p; break;
-	        case 1: r = q; g = v; b = p; break;
-	        case 2: r = p; g = v; b = t; break;
-	        case 3: r = p; g = q; b = v; break;
-	        case 4: r = t; g = p; b = v; break;
-	        case 5: r = v; g = p; b = q; break;
-	    }
-
-	    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-	}
-
-	module.exports = {
-	    rgbToHsl    : rgbToHsl,
-	    hslToRgb    : hslToRgb,
-	    rgbToHsv    : rgbToHsv,
-	    hsvToRgb    : hsvToRgb
-	};
-
-/***/ },
-/* 104 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var bleSensorTag 	= __webpack_require__( 105 )
-	  , bleBrick		= __webpack_require__( 109 )
-	  , bleMetawear		= __webpack_require__( 110 )
-	  , alxGrapher		= __webpack_require__( 113 )
+	var bleSensorTag 	= __webpack_require__( 107 )
+	  , bleBrick		= __webpack_require__( 111 )
+	  , bleMetawear		= __webpack_require__( 112 )
+	  , alxGrapher		= __webpack_require__( 115 )
 	  , utils			= __webpack_require__( 8 )
 	  ;
 
@@ -9236,13 +9496,13 @@
 	}
 
 /***/ },
-/* 105 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 106 );
+	__webpack_require__( 108 );
 
 	var utils				= __webpack_require__( 8 )
-	  , subscribeForEvent	= __webpack_require__( 108 )
+	  , subscribeForEvent	= __webpack_require__( 110 )
 	  ;
 
 	module.exports = function(app) {
@@ -9356,14 +9616,14 @@
 	}
 
 /***/ },
-/* 106 */
+/* 108 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 107 */,
-/* 108 */
+/* 109 */,
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 8 );
@@ -9405,11 +9665,11 @@
 
 
 /***/ },
-/* 109 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils				= __webpack_require__( 8 )
-	  , subscribeForEvent	= __webpack_require__( 108 )
+	  , subscribeForEvent	= __webpack_require__( 110 )
 	  ;
 
 	module.exports = function(app) {
@@ -9504,13 +9764,13 @@
 	}
 
 /***/ },
-/* 110 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 111 );
+	__webpack_require__( 113 );
 
 	var utils				= __webpack_require__( 8 )
-	  , subscribeForEvent	= __webpack_require__( 108 )
+	  , subscribeForEvent	= __webpack_require__( 110 )
 	  ;
 
 	module.exports = function(app) {
@@ -9607,17 +9867,17 @@
 	}
 
 /***/ },
-/* 111 */
+/* 113 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 112 */,
-/* 113 */
+/* 114 */,
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 114 );
+	__webpack_require__( 116 );
 	//var resizeDetector = require( "../../../js/resizeDetector.js" );
 
 
@@ -9684,7 +9944,7 @@
 
 
 /***/ },
-/* 114 */
+/* 116 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

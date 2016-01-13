@@ -8,11 +8,6 @@ var utils	= require( "../../js/utils.js" )
 
 utils.initIO( location.hostname + ":" + location.port + "/m2m" );
 // utils.initIO(  );
-var timer;
-function refresh(scope, dt) {
-	if(timer) {clearTimeout( timer );}
-	timer = setTimeout( function() {scope.$apply(); timer = null;}, dt );
-}
 
 var app =
 angular	.module( "ihmActivity", ["ngMaterial", "ui.router", "angular-toArrayFilter", "ngDraggable"] )
@@ -32,23 +27,32 @@ angular	.module( "ihmActivity", ["ngMaterial", "ui.router", "angular-toArrayFilt
 									console.log("ctrl.context:", ctrl.context);
 									utils.io.on	( "brickAppears"
 												, function(data) {
-													// console.log( "brickAppears", data );
-													ctrl.context.bricks[data.id] = data;
-													// $scope.$apply();
-													refresh($scope, 100);
+													// console.log( "brickAppears", data);
+													$scope.$applyAsync( function() {
+														ctrl.context.bricks[data.id] = data;
+														var L = ctrl.context.brickTypes[ data.class ].instances;
+														if(L.indexOf(data.id) !== -1) {
+															console.error("brick", data.id, "already present in instances of", data.class, L);
+														} else {L.push( data.id );}
+													});
 												});
 									utils.io.on	( "brickDisappears"
 												, function(data) {
-													// console.log( "brickDisappears", data );
-													delete ctrl.context.bricks[data.brickId];
-													// $scope.$apply();
-													refresh($scope, 100);
+													// console.log("brick brickDisappears", data);
+													$scope.$applyAsync( function() {
+														delete ctrl.context.bricks[data.brickId];
+														var L 	= ctrl.context.brickTypes[ data.class ].instances
+														  , pos = L.indexOf( data.brickId )
+														  ;
+														if(pos>=0) {L.splice(pos, 1);}
+													});
 												});
 								});
 						}
 					)
 		;
 
+console.log( "Loading directives" );
 require( "./brick/brick.js" )(app);
 require( "./brick/mediaPlayer.js" )(app);
 require( "../templates/mediaSelector.js" )(app);

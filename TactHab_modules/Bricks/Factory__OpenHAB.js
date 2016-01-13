@@ -57,6 +57,7 @@ BrickOpenHAB.prototype = Object.create(BrickUPnP.prototype); //new BrickUPnP(); 
 BrickOpenHAB.prototype.constructor = BrickOpenHAB;
 BrickOpenHAB.prototype.getTypeName = function() {return "BrickOpenHAB";}
 BrickOpenHAB.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickOpenHAB.prototype.getTypeName()); return L;}
+BrickOpenHAB.prototype.registerType("BrickOpenHAB", BrickOpenHAB.prototype);
 
 BrickOpenHAB.prototype.getDescription	= function() {
 	 var json	= BrickUPnP.prototype.getDescription.apply(this, []);
@@ -121,7 +122,8 @@ BrickOpenHAB.prototype.processItem	= function(item) {
 	var constr = openHab_types[item.type];
 	if(constr) {
 		 //console.log("--- openHAB item:", item.type, item.name);
-		 /*var brick =*/ new constr().changeIdTo( this.getIdFromName(item.name) ).init(item).setFactory(this);
+		 var brick = new constr( this.getIdFromName(item.name) );
+		 brick.init(item).setFactory(this);
 		} else {console.log("!!! openHAB unsupported item:", item.type);}
 }
 	

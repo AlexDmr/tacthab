@@ -36,7 +36,7 @@ module.exports = function(webServer) {
 									 || pipoPgRoot;
 							if(node) {
 								 try {var context			= node.getContextDescription()
-										, contextFiltered	= {bricks: {}, variables: context.variables};
+										, contextFiltered	= {bricks: {}, variables: context.variables, brickTypes: context.brickTypes};
 									  for(var i in context.bricks) {
 										 if( context.bricks[i].id !== "ProtoBrick"
 										   &&context.bricks[i].id !== "webServer"

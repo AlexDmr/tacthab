@@ -13,8 +13,8 @@ md-toolbar {
 
 md-tabs.menu {
 	flex							: 1 1 auto;
-	background						: rgb(63,81,181);
-	border							: 1px solid #e1e1e1;
+	/*background						: rgb(63,81,181);
+	border							: 1px solid #e1e1e1;*/
 }
 
 
@@ -68,6 +68,13 @@ brick-openhab md-input-container.color input {
 	display			: inline-flex;
 }md-card.Brick {
 	/*background-color	: blue;*/
+}
+brick-upnp md-card.BrickUPnP_MediaServer {
+	background 		: cyan; 
+}
+
+brick-upnp md-card.BrickUPnP_MediaRenderer {
+	background 		: lightgreen; 
 }
 media-player {
 
@@ -221,13 +228,6 @@ brick-upnp h4 {
     margin-bottom	: 0.75em;
 }
 
-brick-upnp md-card.BrickUPnP_MediaServer {
-	background 		: cyan; 
-}
-
-brick-upnp md-card.BrickUPnP_MediaRenderer {
-	background 		: lightgreen; 
-}
 alx-grapher {
 	padding-left	: 1em;
 	padding-right	: 1em;

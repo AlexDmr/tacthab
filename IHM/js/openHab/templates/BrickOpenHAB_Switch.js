@@ -1,8 +1,11 @@
+var BrickOpenHAB = require( "./BrickOpenHAB.js" );
+
 module.exports = function(scope, utils) {
-	// console.log( "Create a switch controller", scope.brick.state, this );
+	BrickOpenHAB.apply(this, [scope, utils]);
+	// console.log( "Create a switch controller", this.brick.state, this );
 	this.userSetSwitch = function() {
 		// console.log(e, this.value);
-		utils.call	( scope.brick.id
+		utils.call	( this.brick.id
 					, "setState"
 					, [this.value?"ON":"OFF"]
 					);
@@ -13,6 +16,6 @@ module.exports = function(scope, utils) {
 		// console.log(this.color);
 		if(noUpdate !== true) {scope.$apply();}
 	}
-	this.updateState( {data: {value: scope.brick.state}}, true );
+	this.updateState( {data: {value: this.brick.state}}, true );
 	
 }
