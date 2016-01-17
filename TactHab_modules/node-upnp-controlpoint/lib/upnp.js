@@ -281,7 +281,7 @@ ControlPoint.prototype.search = function(st, targetAddress) {
 	var client 		= dgram.createSocket( { type: 'udp4' } );
 	var self 		= this;
 	client.on('message', function(msg, rinfo) { 
-		console.log( "new messgae received..." );
+		// console.log( "new messgae received..." );
 		self.onResponseMessage(msg, rinfo); 
 	});
 	// So that we get a port so we can listen before sending
@@ -297,7 +297,7 @@ ControlPoint.prototype.search = function(st, targetAddress) {
 	debug('REQUEST SEARCH ' + st);
 
   // MX is set to 3, wait for 1 additional sec. before closing the client
-  setTimeout( function(){
+  setTimeout( function() {
   				 client.close();
   				 console.log( "close multicast UDP client...")
   				}

@@ -176,9 +176,9 @@ var UpnpControlPoint = function( TLS_SSL_json ) {
 	this.ssdp.on("DeviceFound", function(device) {
 		var udn = getUUID(device.usn);
 			
-		// if (TRACE) {
+		if (TRACE) {
 			console.log("DeviceFound: " + udn);
-		// }
+		}
 		
 		if (self.devices[udn]) {	
 			// already got this device

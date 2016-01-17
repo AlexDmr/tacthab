@@ -22,11 +22,6 @@ var Brick = function(id) {
 	 logs[this.brickId] = logs[this.brickId] || {};
 	 this.logEvents("state");
 	 this.log("state", "construction");
-
-	 // this.types		= [ 'Brick' ];
-	 this.Actions	= [];
-	 this.Events	= [];
-	 this.States	= [];
 	 setTimeout	( function() {ProtoBrick.emit('appear', brick.getDescription());}
 				, 100 );
 	 return this;
@@ -67,9 +62,9 @@ AlxEvents(Brick);
 Brick.prototype.registerType('Brick', Brick.prototype);
 
 Brick.prototype.getESA			= function() {
-	return { events	: this.Events
-		   , states	: this.States
-		   , actions: this.Actions
+	return { events	: this.getEvents ()
+		   , states	: this.getStates ()
+		   , actions: this.getActions()
 		   };
 }
 
@@ -135,13 +130,11 @@ Brick.prototype.getBricks		= function( filter ) {
 	}
 
 Brick.prototype.getTypes	= function() {return [ 'Brick' ];}
-Brick.prototype.getActions	= function() {return this.Actions}
-Brick.prototype.getEvents	= function() {return this.Events }
-Brick.prototype.getStates	= function() {return this.States }
+Brick.prototype.getActions	= function() {return [];}
+Brick.prototype.getEvents	= function() {return [];}
+Brick.prototype.getStates	= function() {return [];}
 
-Brick.prototype.init		= function(obj) {
-	 return this;
-	}
+Brick.prototype.init		= function(obj) {return this;}
 Brick.prototype.serialize	= function() {
 	 var json = { brickId	: this.brickId
 				, classe	: 'Brick'

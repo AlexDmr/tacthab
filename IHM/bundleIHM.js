@@ -104,10 +104,10 @@
 	__webpack_require__( 90 )(app);
 	__webpack_require__( 93 )(app);
 	__webpack_require__( 96 )(app);
-	__webpack_require__( 99 )(app);
-	__webpack_require__( 102 )(app);
-	__webpack_require__( 105 )(app);
-	__webpack_require__( 106 )(app);
+	__webpack_require__( 110 )(app);
+	__webpack_require__( 113 )(app);
+	__webpack_require__( 116 )(app);
+	__webpack_require__( 117 )(app);
 
 
 
@@ -8175,33 +8175,34 @@
 	__webpack_require__( 60 );
 	var utils = __webpack_require__( 8 );
 
-	var controllers 	= {
-		Brick 						: function() {},
-		BrickUPnP					: __webpack_require__( 62 ),
-		BrickOpenHAB_Switch			: __webpack_require__( 65			),
-		BrickOpenHAB_String			: __webpack_require__( 67			),
-		BrickOpenHAB_RollerShutter	: __webpack_require__( 68		),
-		BrickOpenHAB_Number			: __webpack_require__( 69			),
-		BrickOpenHAB_Dimmer			: __webpack_require__( 70			),
-		BrickOpenHAB_DateTime		: __webpack_require__( 71			),
-		BrickOpenHAB_Contact		: __webpack_require__( 72			),
-		BrickOpenHAB_Color			: __webpack_require__( 73				)
-	};
-
-	var templates	 	= {
-		Brick 						: __webpack_require__( 75 ),
-		BrickUPnP					: __webpack_require__( 76 ),
-		BrickOpenHAB_Switch			: __webpack_require__( 77			),
-		BrickOpenHAB_String			: __webpack_require__( 78			),
-		BrickOpenHAB_RollerShutter	: __webpack_require__( 79	),
-		BrickOpenHAB_Number			: __webpack_require__( 80			),
-		BrickOpenHAB_Dimmer			: __webpack_require__( 81			),
-		BrickOpenHAB_DateTime		: __webpack_require__( 82		),
-		BrickOpenHAB_Contact		: __webpack_require__( 83			),
-		BrickOpenHAB_Color			: __webpack_require__( 84			)
-	};
 
 	module.exports = function(app) {
+		var controllers 	= {
+			Brick 						: function() {},
+			BrickUPnP					: __webpack_require__( 62 ),
+			BrickOpenHAB_Switch			: __webpack_require__( 65			),
+			BrickOpenHAB_String			: __webpack_require__( 67			),
+			BrickOpenHAB_RollerShutter	: __webpack_require__( 68		),
+			BrickOpenHAB_Number			: __webpack_require__( 69			),
+			BrickOpenHAB_Dimmer			: __webpack_require__( 70			),
+			BrickOpenHAB_DateTime		: __webpack_require__( 71			),
+			BrickOpenHAB_Contact		: __webpack_require__( 72			),
+			BrickOpenHAB_Color			: __webpack_require__( 73				)
+		};
+
+		var templates	 	= {
+			Brick 						: __webpack_require__( 75 ),
+			BrickUPnP					: __webpack_require__( 76 ),
+			BrickOpenHAB_Switch			: __webpack_require__( 77			),
+			BrickOpenHAB_String			: __webpack_require__( 78			),
+			BrickOpenHAB_RollerShutter	: __webpack_require__( 79	),
+			BrickOpenHAB_Number			: __webpack_require__( 80			),
+			BrickOpenHAB_Dimmer			: __webpack_require__( 81			),
+			BrickOpenHAB_DateTime		: __webpack_require__( 82		),
+			BrickOpenHAB_Contact		: __webpack_require__( 83			),
+			BrickOpenHAB_Color			: __webpack_require__( 84			)
+		};
+
 		app.directive	( "brick"
 						, function($compile) {
 							 return { restrict			: 'E'
@@ -8998,7 +8999,7 @@
 			dropZone = dropZones[i];
 			if(dropZone.scope.acceptFeedback && dropZone.scope.accept) {
 				nodes = Array.prototype.slice.call( document.querySelectorAll( dropZone.scope.accept ) );
-				if( nodes.indexOf(event.currentTarget) ) {
+				if( nodes.indexOf(event.currentTarget) >= 0 ) {
 					dropZone.canReceivePointers.push( idPointer );
 					dropZone.element.classList.add( dropZone.scope.acceptFeedback );
 				}
@@ -9134,34 +9135,32 @@
 
 	__webpack_require__( 97 );
 	// var utils = require( "../../../js/utils.js" );
+	var instructionDir = __webpack_require__( 99 );
 
 	module.exports = function(app) {
+		instructionDir(app);
 		app.directive	( "alxActivities"
 						, function() {
 							return {
 								  restrict	: 'E'
 								, controller	: function($scope, $mdSidenav) {
-									 this.toggleBricks		= function() {$mdSidenav("bricksList").toggle();};
-									 this.openBricks		= function() {$mdSidenav("bricksList").open();};
-									 this.closeBricks		= function() {$mdSidenav("bricksList").close();};
+									this.toggleBricks		= function() {$mdSidenav("bricksList"		).toggle();};
+									this.openBricks			= function() {$mdSidenav("bricksList"		).open  ();};
+									this.closeBricks		= function() {$mdSidenav("bricksList"		).close ();};
 
-									 this.brickTypeName 	= "Brick";
-									 this.breadcrumb 		= [ this.brickTypeName ];
+									this.toggleInstructions	= function() {$mdSidenav("instructionsList"	).toggle();}
+									this.openInstructions	= function() {$mdSidenav("instructionsList"	).open  ();};
+									this.closeInstructions	= function() {$mdSidenav("instructionsList"	).close ();};
 
-									 this.updateBreadcrumb 	= function() {
-										 this.brickTypeName 	= this.breadcrumb[ this.breadcrumb.length-1 ];
-										 // this.specializations 	= this.context.brickTypes[brickTypeName].specializations;
-										 // console.log( "Display", brickTypeName, this.context.brickTypes[brickTypeName]);
-										 // this.instances 		= [];
-										 // this.brickTypeName 	= brickTypeName;
-										 // this.instances 		= this.context.brickTypes[brickTypeName].instances;
-										 // for(i=0; i<L.length; i++) {
-										 // 	this.instances.push( this.context.bricks[ L[i] ] );
-										 // }
-									 };
-									 this.updateBreadcrumb();
+									this.brickTypeName 		= "Brick";
+									this.breadcrumb 		= [ this.brickTypeName ];
 
-									 this.gotoType 			= function(type) {
+									this.updateBreadcrumb 	= function() {
+										this.brickTypeName 	= this.breadcrumb[ this.breadcrumb.length-1 ];
+									};
+									this.updateBreadcrumb();
+
+									this.gotoType 			= function(type) {
 									 	var pos = this.breadcrumb.indexOf(type);
 									 	if(pos >= 0) {
 									 		this.breadcrumb.splice(pos, this.breadcrumb.length);
@@ -9169,8 +9168,19 @@
 									 	this.breadcrumb.push(type);
 									 	// console.log( "breadcrumb:", this.breadcrumb );
 									 	this.updateBreadcrumb();
-									 }
 									}
+
+									// Update instructions
+									this.instructions = [];
+									var i;
+									for(i=0; i<instructionDir.instructions.length; i++) {
+										this.instructions.push( {
+											className	: instructionDir.instructions[i],
+											children	: []
+										});
+									}
+									console.log( "Instructions:", this.instructions);
+								}
 								, bindToController 	: true
 								, controllerAs	: 'ctrl'
 								, templateUrl	: "/IHM/js/activities/alxActivities.html"
@@ -9179,10 +9189,6 @@
 												  , title		: "@title"
 												  }
 								, link			: function(scope, element, attr, controller) {
-									// element[0].ontouchstart = function(e) {
-										// e.preventDefault();
-										// console.log( "e.preventDefault()" );
-									// }
 								}
 							};
 						});
@@ -9199,7 +9205,128 @@
 /* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 100 );
+	
+
+	var controllers 	= {
+		ParallelNode 				: __webpack_require__( 100	),
+		ActionNode					: __webpack_require__( 105		)
+	};
+
+	var templates	 	= {
+		ParallelNode 				: __webpack_require__( 108	),
+		ActionNode					: __webpack_require__( 109	)
+	};
+
+	var instructionFct = function(app) {
+		/* Pnode serialization
+			  className: this.className
+			, PnodeID: this.id
+			, children: []
+		*/
+		app.directive	(
+			"instruction",
+			function($compile) {
+				return {
+					  restrict			: 'E'
+					, controller		: function($scope) {
+						// console.log( "Create an instruction controller", this);
+						var className = this.instruction.className;
+						if(controllers[className]) {
+							controllers[className].apply(this, [$scope]);
+						} else {
+							console.error( "className", className, "is currently not supported as controller..." );
+						}
+					}
+					, bindToController 	: true
+					, controllerAs		: 'ctrl'
+					, scope				: { instruction	: "=data"
+										  }
+					, link				: function(scope, element, attr, controller) {
+						var className = controller.instruction.className;
+						if(templates[className]) {
+							// console.log( "Link instruction", className, templates[className]);
+							element.html( templates[className] );
+					 		$compile(element.contents())(scope);
+						} else {
+							console.error( "className", className, "is currently not supported for templating..." );
+						}
+					}
+				};
+			}
+			);
+	}
+
+	instructionFct.instructions = Object.keys( controllers );
+
+	module.exports = instructionFct;
+
+/***/ },
+/* 100 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__( 101		);
+	__webpack_require__( 103	);
+	// require( "./ActionNode.css"		);
+
+	module.exports = function(scope) {
+		/*var pipoChild = {className: 'pipoNode', children: []};
+		this.instruction.children.push( pipoChild );*/
+		this.appendChild	= function(data) {
+			console.log( "Append child", data );
+		}
+	}
+
+
+/***/ },
+/* 101 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 102 */,
+/* 103 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 104 */,
+/* 105 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__( 106		);
+
+	module.exports = function(scope) {
+		
+	}
+
+
+/***/ },
+/* 106 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 107 */,
+/* 108 */
+/***/ function(module, exports) {
+
+	module.exports = "<section class=\"NChildNode ParallelNode\">\r\n\t<div class=\"prefix\"></div>\r\n\t<div class=\"content\">\r\n\t\t<div class \t\t= \"child\"\r\n\t\t\t ng-repeat\t= \"instruction in ctrl.instruction.children\"\r\n\t\t\t>\r\n\t\t\t<div class=\"separator\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\"></div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<instruction data=\"instruction\"></instruction>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"separator suffix\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\">\r\n\t\t\t\t\t<div class=\"left\"></div><div class=\"right\"></div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t<!-- <div class=\"content\">\r\n\t\t<div class=\"lastOne Pnode ActionNodePresentation\">Drop node</div>\r\n\t</div> -->\r\n\t</div>\r\n\t<div class=\"suffix\"></div>\r\n</section>"
+
+/***/ },
+/* 109 */
+/***/ function(module, exports) {
+
+	module.exports = "<section class=\"Pnode ActionNode\">\r\n\t{{ctrl.instruction.label}}\r\n</section>"
+
+/***/ },
+/* 110 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__( 111 );
+
 	// var utils = require( "../../../js/utils.js" );
 
 	/* Activity :
@@ -9225,38 +9352,52 @@
 		app.directive	( "alxActivity"
 						, function() {
 							return {
-								  restrict	: 'E'
-								, controller	: function($scope) {
-									 $scope.activity = pipo;
-									 //$scope.$apply();
+								  restrict			: 'E'
+								, controller		: function($scope) {
+									 var ctrl 		= this;
+									 this.activity 	= pipo;
+									 this.dataProgram = {
+									 	className: "ParallelNode",
+										children: [{ 
+											className	: 'ActionNode',
+											label		: 'some actions'
+											}
+										]
+									 };
 									 this.appendBrick	= function(data) {
-									 	console.log( "appendBrick", data );
-									 	$scope.activity.components.push( data.draggedData );
-									 	$scope.$applyAsync();
+									 	$scope.$applyAsync( function() {
+									 		ctrl.activity.components.push( data.draggedData );
+									 	});
 									 }
 									}
-								, controllerAs	: 'ctrl'
-								, templateUrl	: "/IHM/js/activities/alxActivity.html"
-								, scope			: { //activity	: "=activity"
-												  }
-								, link			: function(scope, element, attr, controller) {}
+								, bindToController	: true
+								, controllerAs		: 'ctrl'
+								, templateUrl		: "/IHM/js/activities/alxActivity.html"
+								, scope				: { //activity	: "=activity"
+													  }
+								, link				: function(scope, element, attr, controller) {
+									// Get the program node
+									// var HTML_program 	= element[0].querySelector("section.mechanisms > section.program");
+									// controller.program 	= new ProgramNode();
+									// HTML_program.appendChild( controller.program.init('').Render() );
+								}
 							};
 						});
 	}
 
 
 /***/ },
-/* 100 */
+/* 111 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 101 */,
-/* 102 */
+/* 112 */,
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 103 );
+	__webpack_require__( 114 );
 
 	var utils = __webpack_require__( 8 );
 	var templates	=	{ default		: __webpack_require__( 76 )
@@ -9297,14 +9438,14 @@
 
 
 /***/ },
-/* 103 */
+/* 114 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 104 */,
-/* 105 */
+/* 115 */,
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__( 5 );
@@ -9435,13 +9576,13 @@
 
 
 /***/ },
-/* 106 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bleSensorTag 	= __webpack_require__( 107 )
-	  , bleBrick		= __webpack_require__( 111 )
-	  , bleMetawear		= __webpack_require__( 112 )
-	  , alxGrapher		= __webpack_require__( 115 )
+	var bleSensorTag 	= __webpack_require__( 118 )
+	  , bleBrick		= __webpack_require__( 122 )
+	  , bleMetawear		= __webpack_require__( 123 )
+	  , alxGrapher		= __webpack_require__( 126 )
 	  , utils			= __webpack_require__( 8 )
 	  ;
 
@@ -9496,13 +9637,13 @@
 	}
 
 /***/ },
-/* 107 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 108 );
+	__webpack_require__( 119 );
 
 	var utils				= __webpack_require__( 8 )
-	  , subscribeForEvent	= __webpack_require__( 110 )
+	  , subscribeForEvent	= __webpack_require__( 121 )
 	  ;
 
 	module.exports = function(app) {
@@ -9616,14 +9757,14 @@
 	}
 
 /***/ },
-/* 108 */
+/* 119 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 109 */,
-/* 110 */
+/* 120 */,
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 8 );
@@ -9665,11 +9806,11 @@
 
 
 /***/ },
-/* 111 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils				= __webpack_require__( 8 )
-	  , subscribeForEvent	= __webpack_require__( 110 )
+	  , subscribeForEvent	= __webpack_require__( 121 )
 	  ;
 
 	module.exports = function(app) {
@@ -9764,13 +9905,13 @@
 	}
 
 /***/ },
-/* 112 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 113 );
+	__webpack_require__( 124 );
 
 	var utils				= __webpack_require__( 8 )
-	  , subscribeForEvent	= __webpack_require__( 110 )
+	  , subscribeForEvent	= __webpack_require__( 121 )
 	  ;
 
 	module.exports = function(app) {
@@ -9867,17 +10008,17 @@
 	}
 
 /***/ },
-/* 113 */
+/* 124 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 114 */,
-/* 115 */
+/* 125 */,
+/* 126 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 116 );
+	__webpack_require__( 127 );
 	//var resizeDetector = require( "../../../js/resizeDetector.js" );
 
 
@@ -9944,7 +10085,7 @@
 
 
 /***/ },
-/* 116 */
+/* 127 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

@@ -7,25 +7,25 @@
 				alx-accept-feedback	= "candrop"
 				alx-hover-feedback	= "overdrop"
 				drop-action			= "ctrl.appendBrick(draggedInfo)"
+				flex 				= "50%"
 				>
-		<section class="openHab">
-			<brick-openhab data="brick" ng-repeat="brick in activity.components | filter:filterBrickOpenHAB"></brick-openhab>
-		</section>
-		<section class="UPnP" flex="50%">
-			<brick-upnp data="brick" ng-repeat="brick in activity.components | filter:{type:'BrickUPnP'}"></brick-upnp>
-		</section>
+		<h4>Components</h4>
+		<brick data="brick" ng-repeat="brick in activity.components"></brick>
 	</section>
 
 	<section class="inputs">
-	<
+		<h4>Inputs</h4>
 	</section>
 
 	<section class="outputs">
-
+		<h4>Outputs</h4>
 	</section>
 
 	<section class="mechanisms">
-
+		<h4>Mechanisms</h4>
+		<section class="program">
+			<instruction data="ctrl.dataProgram"></instruction>
+		</section>
 	</section>
 
 </md-content>

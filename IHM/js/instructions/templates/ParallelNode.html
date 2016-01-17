@@ -1,0 +1,28 @@
+<section class="NChildNode ParallelNode">
+	<div class="prefix"></div>
+	<div class="content">
+		<div class 		= "child"
+			 ng-repeat	= "instruction in ctrl.instruction.children"
+			>
+			<div class="separator">
+				<div class="top"></div>
+				<div class="middle"></div>
+				<div class="bottom"></div>
+			</div>
+			<div class="container">
+				<instruction data="instruction"></instruction>
+			</div>
+			<div class="separator suffix">
+				<div class="top"></div>
+				<div class="middle">
+					<div class="left"></div><div class="right"></div>
+				</div>
+				<div class="bottom"></div>
+			</div>
+		</div>
+	<!-- <div class="content">
+		<div class="lastOne Pnode ActionNodePresentation">Drop node</div>
+	</div> -->
+	</div>
+	<div class="suffix"></div>
+</section>

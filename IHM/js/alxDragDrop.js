@@ -66,7 +66,7 @@ function dragStart(event, idPointer, info, draggedData) {
 		dropZone = dropZones[i];
 		if(dropZone.scope.acceptFeedback && dropZone.scope.accept) {
 			nodes = Array.prototype.slice.call( document.querySelectorAll( dropZone.scope.accept ) );
-			if( nodes.indexOf(event.currentTarget) ) {
+			if( nodes.indexOf(event.currentTarget) >= 0 ) {
 				dropZone.canReceivePointers.push( idPointer );
 				dropZone.element.classList.add( dropZone.scope.acceptFeedback );
 			}

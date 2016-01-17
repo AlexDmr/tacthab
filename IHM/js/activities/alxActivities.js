@@ -1,33 +1,31 @@
 require( "./alxActivities.css" );
 // var utils = require( "../../../js/utils.js" );
+var instructionDir = require( "../instructions/instruction.js" );
 
 module.exports = function(app) {
+	instructionDir(app);
 	app.directive	( "alxActivities"
 					, function() {
 						return {
 							  restrict	: 'E'
 							, controller	: function($scope, $mdSidenav) {
-								 this.toggleBricks		= function() {$mdSidenav("bricksList").toggle();};
-								 this.openBricks		= function() {$mdSidenav("bricksList").open();};
-								 this.closeBricks		= function() {$mdSidenav("bricksList").close();};
+								this.toggleBricks		= function() {$mdSidenav("bricksList"		).toggle();};
+								this.openBricks			= function() {$mdSidenav("bricksList"		).open  ();};
+								this.closeBricks		= function() {$mdSidenav("bricksList"		).close ();};
 
-								 this.brickTypeName 	= "Brick";
-								 this.breadcrumb 		= [ this.brickTypeName ];
+								this.toggleInstructions	= function() {$mdSidenav("instructionsList"	).toggle();}
+								this.openInstructions	= function() {$mdSidenav("instructionsList"	).open  ();};
+								this.closeInstructions	= function() {$mdSidenav("instructionsList"	).close ();};
 
-								 this.updateBreadcrumb 	= function() {
-									 this.brickTypeName 	= this.breadcrumb[ this.breadcrumb.length-1 ];
-									 // this.specializations 	= this.context.brickTypes[brickTypeName].specializations;
-									 // console.log( "Display", brickTypeName, this.context.brickTypes[brickTypeName]);
-									 // this.instances 		= [];
-									 // this.brickTypeName 	= brickTypeName;
-									 // this.instances 		= this.context.brickTypes[brickTypeName].instances;
-									 // for(i=0; i<L.length; i++) {
-									 // 	this.instances.push( this.context.bricks[ L[i] ] );
-									 // }
-								 };
-								 this.updateBreadcrumb();
+								this.brickTypeName 		= "Brick";
+								this.breadcrumb 		= [ this.brickTypeName ];
 
-								 this.gotoType 			= function(type) {
+								this.updateBreadcrumb 	= function() {
+									this.brickTypeName 	= this.breadcrumb[ this.breadcrumb.length-1 ];
+								};
+								this.updateBreadcrumb();
+
+								this.gotoType 			= function(type) {
 								 	var pos = this.breadcrumb.indexOf(type);
 								 	if(pos >= 0) {
 								 		this.breadcrumb.splice(pos, this.breadcrumb.length);
@@ -35,8 +33,19 @@ module.exports = function(app) {
 								 	this.breadcrumb.push(type);
 								 	// console.log( "breadcrumb:", this.breadcrumb );
 								 	this.updateBreadcrumb();
-								 }
 								}
+
+								// Update instructions
+								this.instructions = [];
+								var i;
+								for(i=0; i<instructionDir.instructions.length; i++) {
+									this.instructions.push( {
+										className	: instructionDir.instructions[i],
+										children	: []
+									});
+								}
+								console.log( "Instructions:", this.instructions);
+							}
 							, bindToController 	: true
 							, controllerAs	: 'ctrl'
 							, templateUrl	: "/IHM/js/activities/alxActivities.html"
@@ -45,10 +54,6 @@ module.exports = function(app) {
 											  , title		: "@title"
 											  }
 							, link			: function(scope, element, attr, controller) {
-								// element[0].ontouchstart = function(e) {
-									// e.preventDefault();
-									// console.log( "e.preventDefault()" );
-								// }
 							}
 						};
 					});

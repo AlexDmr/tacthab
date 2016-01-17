@@ -1,0 +1,78 @@
+instruction > section.NChildNode {
+	background			: none;
+	display				: inline-flex;
+	flex-flow			: row nowrap;
+}
+
+instruction > section.NChildNode > .content {
+	flex				: 0 0 auto;
+	display				: inline-flex;
+	flex-flow			: row  nowrap;
+}
+
+instruction > section.NChildNode > .content > .child {
+	flex				: 0 0 auto;
+	display				: inline-flex;
+	flex-flow			: row nowrap;
+}
+
+instruction > section.NChildNode > .content > .child:nth-last-child(1) {
+	flex				: 0 0 auto;
+}
+
+instruction > section.NChildNode > .content > .child > .separator.suffix {
+	display				: none;
+}
+
+instruction > section.NChildNode > .content > .child > .separator  {
+	position			: relative;
+	width				: 11px;
+	height				: 15px;
+	display				: inline-flex;
+	flex-flow			: column;
+	align-self			: center;
+	background			: lightblue;
+	border-top			: solid black 1px;
+	border-bottom		: solid black 1px;
+	flex				: 0 0 11px;
+}
+
+instruction > section.NChildNode > .content > .child > .separator .top {
+	border-top			: solid black 1px;
+	box-shadow			: 0 0.2em 0.2em 0.05em black inset;
+	width				: 12px;
+	height				: 0.25em;
+	/*transform			: scale(1.2,1) translate(1.5px);*/
+	/*background			: linear-gradient(to bottom, #000000 0%,lightblue 100%);*/
+	position			: absolute;
+	left				: -1px;
+	flex				: 0 0 5px;
+}
+
+instruction > section.NChildNode > .content > .child > .separator .middle {
+	flex				: 0 1 15px;
+	width				: 23px;
+	height				: 10px;
+	/*transform			: scale(1.4,1) translate(2.5px);*/
+	background			: lightblue;
+	position			: absolute;
+	left				: -2px;
+	top					: 5px;
+}
+
+instruction > section.NChildNode > .content > .child > .separator .bottom {
+	flex				: 0 0 auto;
+}
+
+instruction > section.NChildNode > .content > .child > .container  {
+	flex				: 0 0 auto;
+	display				: inline-flex;
+}
+
+instruction > section.NChildNode > .content > .child  > .container > .lastOne.Pnode.ActionNodePresentation {
+	flex				: 1 0 3em;
+	width				: 3em;
+	display				: inline-flex;
+	border-radius		: 0px;
+	padding-left		: 0.5em;
+}

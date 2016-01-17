@@ -49,12 +49,12 @@ Pnode.prototype.dispose		= function() {
 	return this;
 }
 
-Pnode.prototype.getProgram		= function() {if(this.parent) {return this.parent.getProgram();} else {return null;}}
-Pnode.prototype.evalSelector	= function() {return [];}
-Pnode.prototype.updateType		= function() {return [];}
+Pnode.prototype.getProgram		= function( ) {if(this.parent) {return this.parent.getProgram();} else {return null;}}
+Pnode.prototype.evalSelector	= function( ) {return [];}
+Pnode.prototype.updateType		= function( ) {return [];}
 Pnode.prototype.isTypedAs		= function(t) {return this.updateType().indexOf(t) >= 0;}
-Pnode.prototype.getClasses		= function() {return [Pnode.prototype.className];}
-Pnode.prototype.getD_classes	= function() {return D_classes;}
+Pnode.prototype.getClasses		= function( ) {return [Pnode.prototype.className];}
+Pnode.prototype.getD_classes	= function( ) {return D_classes;}
 Pnode.prototype.appendClass		= function(classe) {D_classes[classe.prototype.className] = classe;}
 
 // API for starting, stopping the instruction
@@ -165,7 +165,8 @@ Pnode.prototype.getContextDescription = function() {
 	for(type in Brick.D_brickTypes) {
 		json.brickTypes[type] = {
 			specializations : Brick.D_brickTypes[type].specializations, 
-			generalization 	: Brick.D_brickTypes[type].generalization, 
+			generalization 	: Brick.D_brickTypes[type].generalization,
+			ESA 			: Brick.D_brickTypes[type].proto.getESA(),
 			instances		: [] } ;
 	}
 	// Add bricks

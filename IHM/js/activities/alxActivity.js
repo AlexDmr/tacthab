@@ -1,4 +1,5 @@
 require( "./alxActivity.css" );
+
 // var utils = require( "../../../js/utils.js" );
 
 /* Activity :
@@ -24,21 +25,35 @@ module.exports = function(app) {
 	app.directive	( "alxActivity"
 					, function() {
 						return {
-							  restrict	: 'E'
-							, controller	: function($scope) {
-								 $scope.activity = pipo;
-								 //$scope.$apply();
+							  restrict			: 'E'
+							, controller		: function($scope) {
+								 var ctrl 		= this;
+								 this.activity 	= pipo;
+								 this.dataProgram = {
+								 	className: "ParallelNode",
+									children: [{ 
+										className	: 'ActionNode',
+										label		: 'some actions'
+										}
+									]
+								 };
 								 this.appendBrick	= function(data) {
-								 	console.log( "appendBrick", data );
-								 	$scope.activity.components.push( data.draggedData );
-								 	$scope.$applyAsync();
+								 	$scope.$applyAsync( function() {
+								 		ctrl.activity.components.push( data.draggedData );
+								 	});
 								 }
 								}
-							, controllerAs	: 'ctrl'
-							, templateUrl	: "/IHM/js/activities/alxActivity.html"
-							, scope			: { //activity	: "=activity"
-											  }
-							, link			: function(scope, element, attr, controller) {}
+							, bindToController	: true
+							, controllerAs		: 'ctrl'
+							, templateUrl		: "/IHM/js/activities/alxActivity.html"
+							, scope				: { //activity	: "=activity"
+												  }
+							, link				: function(scope, element, attr, controller) {
+								// Get the program node
+								// var HTML_program 	= element[0].querySelector("section.mechanisms > section.program");
+								// controller.program 	= new ProgramNode();
+								// HTML_program.appendChild( controller.program.init('').Render() );
+							}
 						};
 					});
 }

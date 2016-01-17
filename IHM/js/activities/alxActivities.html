@@ -1,14 +1,37 @@
-<section md-swipe-left ="ctrl.openBricks()" 
-		 md-swipe-right="ctrl.closeBricks()"
-		 class="no-select" >
-	<h3>
-		<span>{{title}}</span>
-		<span class="flex"></span>
-		<md-button class="md-icon-button md-primary" aria-label="Settings" ng-click="ctrl.toggleBricks()">
-			<md-icon md-svg-icon="/IHM/images/Menu_Hamburger_Round.svg"></md-icon>
-		</md-button>
-	</h3>
+<h3>
+	<!-- <span>{{ctrl.title}}</span> -->
+	<md-button class="md-primary md-hue-1" aria-label="Instructions" ng-click="ctrl.toggleInstructions()">
+		Instructions
+	</md-button>
+	<span class="flex"></span>
+	<md-button class="md-primary md-hue-1" aria-label="Bricks" 		 ng-click="ctrl.toggleBricks()">
+		Bricks
+	</md-button>
+</h3>
 
+Par ici les sections...
+<section layout="row" flex>
+	<!-- Instructions -->
+	<md-sidenav class="md-sidenav-left md-whiteframe-z2 instruction" md-component-id="instructionsList">
+		<md-content>
+			<section ng-repeat		= "instruction in ctrl.instructions"
+					 alx-draggable	= "instruction"
+					 ng-class 		= "instruction.type"
+					 alx-drag-start = "ctrl.closeInstructions()"
+					 alx-drag-end 	= "ctrl.openInstructions()"
+					>
+				<instruction data="instruction"></instruction>
+			</section>
+		</md-content>
+	</md-sidenav>
+
+	<!-- Activities -->
+	<section class="activities">
+		<alx-activity ng-repeat="activity in activities" activity="activity"></alx-activity>
+		<alx-activity></alx-activity>
+	</section>
+
+	<!-- Bricks -->
 	<md-sidenav class="md-sidenav-right md-whiteframe-z2 bricks" md-component-id="bricksList">
 		<md-content>
 			<h4>
@@ -28,71 +51,23 @@
 							 ng-click 		= "ctrl.gotoType(type)"
 							 flex>
 						{{type}}
-						<!-- <brick data="brick"></brick> -->
 					</section>
 				</md-list-item>
 			</md-list>
 			<md-list class="instances">
 				<!-- Instances -->
 				<md-list-item flex ng-repeat="brickId in ctrl.context.brickTypes[ctrl.brickTypeName].instances">
-					<section alx-draggable 	="brick" 
-							 ng-class="brick.type" 
-							 alx-drag-start="ctrl.closeBricks()"
-							 alx-drag-end="ctrl.openBricks()"
+					<section alx-draggable 	= "ctrl.context.bricks[brickId]" 
+							 ng-class 		= "ctrl.context.bricks[brickId].type" 
+							 alx-drag-start = "ctrl.closeBricks()"
+							 alx-drag-end 	= "ctrl.openBricks()"
 							 flex>
 						<!-- {{brickId}} -->
 						<brick data="ctrl.context.bricks[brickId]"></brick>
 					</section>
 				</md-list-item>
 			</md-list>
-
-				<!--
-			<md-list>
-				<md-list-item flex ng-repeat="brick in context.bricks | toArray:flase | filter:{type: 'Brick'}">
-					<section alx-draggable="brick" 
-							 class="Brick UPnP" 
-							 alx-drag-start="ctrl.closeBricks()"
-							 alx-drag-end="ctrl.openBricks()"
-							 flex>
-						<brick-upnp data="brick"></brick-upnp>
-					</section>
-				</<md-list-item>
-			</md-list>
-			<h4>Bricks</h4>
-			<md-list>
-				<md-subheader class="md-no-sticky">OpenHab</md-subheader>
-				<md-list-item flex ng-repeat="brick in context.bricks | toArray:flase | filter:{type: 'BrickOpenHAB_item'}">
-					<section alx-draggable="brick" 
-							 class="Brick openHab" 
-							 alx-drag-start="ctrl.closeBricks()"
-							 alx-drag-end="ctrl.openBricks()"
-							 flex>
-						<md-card>
-							<brick-openhab data="brick"></brick-openhab>
-						</md-card>
-					</section>
-				</<md-list-item>
-			</md-list>
-			-->
 		</md-content>
 	</md-sidenav>
 
-	<section class="activities">
-		<!-- <form layout="column">
-			<md-content class="addActivity" layout-padding layout="raw">
-				<md-input-container class="md-block">
-					<label>Name</label>
-					<input ng-model="newActivity.name" type="text">
-				</md-input-container>
-				<md-input-container class="md-block">
-					<label>Description</label>
-					<textarea ng-model="newActivity.description" columns="1" md-maxlength="150"></textarea>
-				</md-input-container>
-			</md-content>
-			<alx-activity activity="newActivity"></alx-activity>
-		</form> -->
-		Les activités sont là :
-		<alx-activity ng-repeat="activity in activities" activity="activity"></alx-activity>
-		<alx-activity></alx-activity>
-	</section>
 </section>

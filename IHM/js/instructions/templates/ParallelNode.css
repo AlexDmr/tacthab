@@ -1,0 +1,73 @@
+instruction > section.NChildNode.ParallelNode {
+	background			: none;
+	display				: inline-flex;
+	flex-flow			: row nowrap;
+}
+
+instruction > section.NChildNode.ParallelNode > .content > .child {
+	margin-bottom		: 10px;
+}
+
+
+instruction > section.NChildNode.ParallelNode > .prefix, 
+instruction > section.NChildNode.ParallelNode > .suffix {
+	background			: lightblue;
+	box-shadow			: 0.2em 0.2em 0.2em 0.05em black inset;
+    border				: solid black 1px;
+    /*margin-left			: 0.5em;*/
+    border-radius		: 10px;
+	width				: 20px;
+	flex				: 0 0 20px;
+	min-height			: 50px;
+}
+
+instruction > section.NChildNode.ParallelNode > .suffix {
+    margin-left			: 0;
+}
+
+instruction > section.NChildNode.ParallelNode > .content {
+	flex-flow			: column nowrap;
+	flex				: 0 0 auto;
+}
+
+instruction > section.NChildNode.ParallelNode > .content > .child > .separator.suffix {
+	display				: inline-flex;
+	flex				: 1 1 13px;
+	width				: 13px;
+}
+
+instruction > section.NChildNode.ParallelNode > .content > .child > .separator.suffix .top {
+	width				: auto;
+	position			: static;
+	background			: none;
+}
+
+instruction > section.NChildNode.ParallelNode > .content > .child > .separator.suffix .middle {
+	width				: auto;
+	position			: relative;
+	display				: inline-flex;
+	flex-flow			: row;
+	background			: none;
+	left				: 0;
+	top					: 0;
+}
+
+instruction > section.NChildNode.ParallelNode > .content > .child > .separator.suffix .middle > .left {
+	background			: lightblue;
+	position			: relative;
+	flex				: 0 0 3px;
+	left				: -2px;
+}
+
+instruction > section.NChildNode.ParallelNode > .content > .child > .separator.suffix .middle > .right {
+	background			: lightblue;
+	position			: relative;
+	flex				: 1 1 10px;
+	left				: 9px;
+}
+
+instruction > section.NChildNode.ParallelNode > .content > .child > .separator.suffix .bottom {
+	width				: auto;
+	position			: static;
+}
+

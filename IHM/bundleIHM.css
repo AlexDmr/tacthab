@@ -181,7 +181,225 @@ alx-activities {
 
 alx-activities button.bricks {
 	transform			: rotate(90deg);
-}alx-activity .root {
+}instruction > section.NChildNode {
+	background			: none;
+	display				: inline-flex;
+	flex-flow			: row nowrap;
+}
+
+instruction > section.NChildNode > .content {
+	flex				: 0 0 auto;
+	display				: inline-flex;
+	flex-flow			: row  nowrap;
+}
+
+instruction > section.NChildNode > .content > .child {
+	flex				: 0 0 auto;
+	display				: inline-flex;
+	flex-flow			: row nowrap;
+}
+
+instruction > section.NChildNode > .content > .child:nth-last-child(1) {
+	flex				: 0 0 auto;
+}
+
+instruction > section.NChildNode > .content > .child > .separator.suffix {
+	display				: none;
+}
+
+instruction > section.NChildNode > .content > .child > .separator  {
+	position			: relative;
+	width				: 11px;
+	height				: 15px;
+	display				: inline-flex;
+	flex-flow			: column;
+	align-self			: center;
+	background			: lightblue;
+	border-top			: solid black 1px;
+	border-bottom		: solid black 1px;
+	flex				: 0 0 11px;
+}
+
+instruction > section.NChildNode > .content > .child > .separator .top {
+	border-top			: solid black 1px;
+	box-shadow			: 0 0.2em 0.2em 0.05em black inset;
+	width				: 12px;
+	height				: 0.25em;
+	/*transform			: scale(1.2,1) translate(1.5px);*/
+	/*background			: linear-gradient(to bottom, #000000 0%,lightblue 100%);*/
+	position			: absolute;
+	left				: -1px;
+	flex				: 0 0 5px;
+}
+
+instruction > section.NChildNode > .content > .child > .separator .middle {
+	flex				: 0 1 15px;
+	width				: 23px;
+	height				: 10px;
+	/*transform			: scale(1.4,1) translate(2.5px);*/
+	background			: lightblue;
+	position			: absolute;
+	left				: -2px;
+	top					: 5px;
+}
+
+instruction > section.NChildNode > .content > .child > .separator .bottom {
+	flex				: 0 0 auto;
+}
+
+instruction > section.NChildNode > .content > .child > .container  {
+	flex				: 0 0 auto;
+	display				: inline-flex;
+}
+
+instruction > section.NChildNode > .content > .child  > .container > .lastOne.Pnode.ActionNodePresentation {
+	flex				: 1 0 3em;
+	width				: 3em;
+	display				: inline-flex;
+	border-radius		: 0px;
+	padding-left		: 0.5em;
+}instruction > section.NChildNode.ParallelNode {
+	background			: none;
+	display				: inline-flex;
+	flex-flow			: row nowrap;
+}
+
+instruction > section.NChildNode.ParallelNode > .content > .child {
+	margin-bottom		: 10px;
+}
+
+
+instruction > section.NChildNode.ParallelNode > .prefix, 
+instruction > section.NChildNode.ParallelNode > .suffix {
+	background			: lightblue;
+	box-shadow			: 0.2em 0.2em 0.2em 0.05em black inset;
+    border				: solid black 1px;
+    /*margin-left			: 0.5em;*/
+    border-radius		: 10px;
+	width				: 20px;
+	flex				: 0 0 20px;
+	min-height			: 50px;
+}
+
+instruction > section.NChildNode.ParallelNode > .suffix {
+    margin-left			: 0;
+}
+
+instruction > section.NChildNode.ParallelNode > .content {
+	flex-flow			: column nowrap;
+	flex				: 0 0 auto;
+}
+
+instruction > section.NChildNode.ParallelNode > .content > .child > .separator.suffix {
+	display				: inline-flex;
+	flex				: 1 1 13px;
+	width				: 13px;
+}
+
+instruction > section.NChildNode.ParallelNode > .content > .child > .separator.suffix .top {
+	width				: auto;
+	position			: static;
+	background			: none;
+}
+
+instruction > section.NChildNode.ParallelNode > .content > .child > .separator.suffix .middle {
+	width				: auto;
+	position			: relative;
+	display				: inline-flex;
+	flex-flow			: row;
+	background			: none;
+	left				: 0;
+	top					: 0;
+}
+
+instruction > section.NChildNode.ParallelNode > .content > .child > .separator.suffix .middle > .left {
+	background			: lightblue;
+	position			: relative;
+	flex				: 0 0 3px;
+	left				: -2px;
+}
+
+instruction > section.NChildNode.ParallelNode > .content > .child > .separator.suffix .middle > .right {
+	background			: lightblue;
+	position			: relative;
+	flex				: 1 1 10px;
+	left				: 9px;
+}
+
+instruction > section.NChildNode.ParallelNode > .content > .child > .separator.suffix .bottom {
+	width				: auto;
+	position			: static;
+}
+
+.Pnode.ActionNode {
+	border			: solid black 1px;
+	border-radius	: 1em;
+	padding			: 0.4em;
+	background		: lightblue;
+	display			: inline-flex;
+	flex-flow		: row nowrap;
+	vertical-align	: top;
+	box-shadow		: 0.2em 0.2em 0.2em 0.05em black inset;
+	flex			: 0 0 auto;
+}
+
+.ActionNode > .action_symbol {
+	flex			: 0 0 32px;
+	width			: 32px;
+	height			: 32px;
+	vertical-align	: top;
+	position		: relative;
+}
+
+.ActionNode > .action_description {
+	flex			: 0 0 auto;
+	display			: inline-flex;
+	flex-flow		: column nowrap;
+}
+
+.ActionNode  p {
+	margin			: 0px;
+	padding			: 0px;
+}
+
+.ActionNode > .action_description > * {
+	flex			: 0 0 auto;
+}
+
+.ActionNode .actionName {
+	border-bottom	: dashed black 1px;
+	background		: lightblue;
+	display			: inline-flex;
+}
+
+.ActionNode .actionName > * {
+	flex			: 0 0 auto;
+}
+
+.ActionNode .selector {
+	background		: #B9B9FF;
+	display			: inline-flex;
+	white-space		: nowrap;
+}
+
+@keyframes ActionNodePresentation_droppable {
+	0%				 {background	: #B9B9FF;}
+	50%				   {transform		: scale(1.2);
+					   background	: lightgreen;
+					  }
+	100%			   {background: #B9B9FF;}
+}
+
+.ActionNode .selector.possible2drop {
+	animation		: ActionNodePresentation_droppable 1s ease-in-out infinite;
+}
+
+.ActionNode .selector.possible2drop.ready2drop {
+	transform		: scale(1.2);
+	background		: lightgreen;
+	animation		: initial;
+}
+alx-activity .root {
 	margin 				: 0.3em;
 	word-break			: break-word;
 }
@@ -195,12 +413,12 @@ alx-activity section.components {
 
 alx-activity section.components.candrop {
 	box-shadow			: inset 6px 6px 10px 0px #656565;
-	transition			: box-shadow 0.5s;
+	transition			: box-shadow 0.5s, background-color 0.5s;
 }
 
 alx-activity section.components.candrop.overdrop {
 	background-color	: lightgreen;
-	transition			: background-color 0.5s;
+	transition			: background-color 0s;
 }
 
 alx-activity section.components > section {

@@ -20,6 +20,28 @@ BrickUPnP_MediaRenderer.prototype.constructor	= BrickUPnP_MediaRenderer;
 BrickUPnP_MediaRenderer.prototype.getTypeName	= function() {return "BrickUPnP_MediaRenderer";}
 BrickUPnP_MediaRenderer.prototype.getTypes		= function() {var L=BrickUPnP.prototype.getTypes(); L.push(BrickUPnP_MediaRenderer.prototype.getTypeName()); return L;}
 
+var actions = BrickUPnP.prototype.getActions()
+  , states 	= BrickUPnP.prototype.getStates ()
+  , events 	= BrickUPnP.prototype.getEvents ()
+  ;
+actions.push( {name: 'loadMedia', params: ['mediaServerId', 'itemId']} );
+actions.push( {name: 'loadURI'	, params: ['uri', 'metadata']} );
+actions.push( {name: 'Play' 	, params: []} );
+actions.push( {name: 'Pause' 	, params: []} );
+actions.push( {name: 'Stop' 	, params: []} );
+
+states.push	( {name: 'PLAYING'			, type: 'boolean'}
+			, {name: 'STOPPED'			, type: 'boolean'}
+			, {name: 'PAUSED_PLAYBACK'	, type: 'boolean'}
+			, {name: 'VOLUME'			, type: 'percent'}
+			);
+
+events.push( 'PLAYING', 'STOPPED', 'PAUSED_PLAYBACK', 'VOLUME' );
+
+BrickUPnP_MediaRenderer.prototype.getActions= function() {return actions;}
+BrickUPnP_MediaRenderer.prototype.getStates	= function() {return states ;}
+BrickUPnP_MediaRenderer.prototype.getEvents	= function() {return events ;}
+
 AlxEvents	(BrickUPnP_MediaRenderer);
 
 BrickUPnP_MediaRenderer.prototype.init		= function(device) {
@@ -67,149 +89,146 @@ BrickUPnP_MediaRenderer.prototype.init		= function(device) {
 	 return this;
 	}
 
-BrickUPnP_MediaRenderer.prototype.getESA			= function() {
-	 var esa = BrickUPnP.prototype.getESA();
-	 esa.actions	= this.automatePlay.automate.actions;
-	 esa.events		= this.automatePlay.automate.events ;		 
-	 esa.states		= this.automatePlay.automate.states ;
-	 return esa;
-	}
-
 BrickUPnP_MediaRenderer.prototype.getMediasStates	= function() {
 	 return this.MediasStates;
 	}
-BrickUPnP_MediaRenderer.prototype.loadMedia	= function(mediaServerId, itemId, cbSuccess, cbError) {
+BrickUPnP_MediaRenderer.prototype.loadMedia	= function(mediaServerId, itemId) {
 	 var self 		 = this;
 	 var mediaServer = this.getBrickFromId(mediaServerId);
 	 var service	 = mediaServer.UPnP.device.services['urn:upnp-org:serviceId:ContentDirectory'];
-	 service.callAction	( 'Browse'
-						, { ObjectID		: itemId
-						  , BrowseFlag		: 'BrowseMetadata'
-						  , Filter			: '*'
-						  , StartingIndex	: 0
-						  , RequestedCount	: 0
-						  , SortCriteria	: ''
-						  }
-						, function(err, buffer) {
-							 // console.log(self.brickId, "BrickUPnP_MediaRenderer::Browse", err || buffer);
-							 if(err) {
-								 console.error("Error :", JSON.stringify(err));
-								 cbError(err);
-								} else	{try	{var doc			= xmldomparser.parseFromString(buffer);
-												 var metadata		= doc.getElementsByTagName('Result')[0].textContent;
-												 var docMetadata	= xmldomparser.parseFromString( metadata );
-												 var res			= docMetadata.getElementsByTagName('res');
-												 if(res.length > 0) {
-													 // console.log("URI:", res[0].textContent);
-													 self.loadURI( res[0].textContent// uri
-																 , metadata
-																 , cbSuccess, cbError );
-													} else {console.error("loadMedia : no res : ", metadata);}
-												} catch(err2) {console.error(err2);
-															   cbError(err2);
-															  }
-										}
-							}
-						);		 
-	}
-BrickUPnP_MediaRenderer.prototype.loadURI	= function(uri, metadata, cbSuccess, cbError) {
-	 // var self = this; console.log("loadURI", uri, metadata);
-	 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
-	 service.callAction	( 'SetAVTransportURI'
-						, { InstanceID			: 0
-						  , CurrentURI			: uri
-						  , CurrentURIMetaData	: metadata
-						  }
-						, function(err, buffer) {
-							 // console.log(self.brickId, "BrickUPnP_MediaRenderer::loadMedia", err || buffer);
-							 if(err) {
-								 console.error("loadURI error :", err, buffer);
-								 if(metadata !== "") {
-									 console.log("retry");
-									 service.callAction	( 'SetAVTransportURI'
-														, { InstanceID			: 0
-														  , CurrentURI			: uri
-														  , CurrentURIMetaData	: ''
-														  }
-														, function(err2, buffer2) {
-															 if(err2) {
-																 if(cbError) {cbError(err2);}
-																} else {if(cbSuccess) {cbSuccess(buffer2);}}
-															}
-														);
-									} else {if(cbError) {cbError(err);}}
-								} else	{// Check SOAP response
-										 // console.log("loadURI OK");
-										 if(cbSuccess) {
-											 // console.log("cbSuccess");
-											 cbSuccess(buffer);
+	 return new Promise( function(resolve, reject) {
+		 service.callAction	( 'Browse'
+							, { ObjectID		: itemId
+							  , BrowseFlag		: 'BrowseMetadata'
+							  , Filter			: '*'
+							  , StartingIndex	: 0
+							  , RequestedCount	: 0
+							  , SortCriteria	: ''
+							  }
+							, function(err, buffer) {
+								 // console.log(self.brickId, "BrickUPnP_MediaRenderer::Browse", err || buffer);
+								 if(err) {
+									 console.error("Error :", JSON.stringify(err));
+									 reject(err);
+									} else	{try	{var doc			= xmldomparser.parseFromString(buffer);
+													 var metadata		= doc.getElementsByTagName('Result')[0].textContent;
+													 var docMetadata	= xmldomparser.parseFromString( metadata );
+													 var res			= docMetadata.getElementsByTagName('res');
+													 if(res.length > 0) {
+														 // console.log("URI:", res[0].textContent);
+														 self.loadURI( res[0].textContent// uri
+																	 , metadata
+																	 ).then(resolve, reject);
+														} else {console.error("loadMedia : no res : ", metadata);}
+													} catch(err2) {console.error(err2);
+																   reject(err2);
+																  }
 											}
-										}
-							}
-						);
-	}
-BrickUPnP_MediaRenderer.prototype.Play		= function(cb) {
-	 // var self = this;
-	 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
-	 service.callAction	( 'Play'
-						, { InstanceID		: 0
-						  , Speed			: '1'
-						  }
-						, function(err, buffer) {
-							 // console.log(self.brickId, "BrickUPnP_MediaRenderer::Play", err || buffer);
-							 if(cb) {cb(err || buffer);}
-							}
-						);
-	}
-BrickUPnP_MediaRenderer.prototype.Pause		= function(cb) {
-	 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
-	 service.callAction	( 'Pause'
-						, { InstanceID		: 0
-						  }
-						, function(err, buffer) {
-							 // console.log(this.brickId, "BrickUPnP_MediaRenderer::Pause", err || buffer);
-							 if(cb) {cb(err || buffer);}
-							}
-						);
-	}
-BrickUPnP_MediaRenderer.prototype.Stop		= function(cb) {
-	 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
-	 service.callAction	( 'Stop'
-						, { InstanceID		: 0
-						  }
-						, function(err, buffer) {
-							 // console.log(this.brickId, "BrickUPnP_MediaRenderer::Stop", err || buffer);
-							 if(cb) {cb(err || buffer);}
-							}
-						);
-	}
-BrickUPnP_MediaRenderer.prototype.getVolume	= function(callback) {
-	 var service = this.UPnP.device.services['urn:upnp-org:serviceId:RenderingControl'];
-	 service.callAction	( 'GetVolume'
-						, { InstanceID		: 0
-						  , Channel			: "Master"
-						  }
-						, function(err, buffer) {
-							 // console.log(this.brickId, "BrickUPnP_MediaRenderer::GetVolume", err || buffer);
-							 if(callback) {
-								 callback(err || buffer);
 								}
-							}
-						);
+							);
+
+	}); // Promise
+}
+BrickUPnP_MediaRenderer.prototype.loadURI	= function(uri, metadata) {
+	 // var self = this; console.log("loadURI", uri, metadata);
+	return new Promise( function(resolve, reject) {
+		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
+		 service.callAction	( 'SetAVTransportURI'
+							, { InstanceID			: 0
+							  , CurrentURI			: uri
+							  , CurrentURIMetaData	: metadata
+							  }
+							, function(err, buffer) {
+								 // console.log(self.brickId, "BrickUPnP_MediaRenderer::loadMedia", err || buffer);
+								 if(err) {
+									 console.error("loadURI error :", err, buffer);
+									 if(metadata !== "") {
+										 console.log("retry");
+										 service.callAction	( 'SetAVTransportURI'
+															, { InstanceID			: 0
+															  , CurrentURI			: uri
+															  , CurrentURIMetaData	: ''
+															  }
+															, function(err2, buffer2) {
+																 if(err2) {reject(err2);} else {resolve(buffer2);}
+																}
+															);
+										} else {reject(err);}
+									} else	{resolve(buffer);}
+								}
+							);
+		}); // Promise
 	}
-BrickUPnP_MediaRenderer.prototype.setVolume	= function(volume, cb) {
-	 volume = Math.min(100, Math.max(0, Math.round(volume)));
-	 var service = this.UPnP.device.services['urn:upnp-org:serviceId:RenderingControl'];
-	 service.callAction	( 'SetVolume'
-						, { InstanceID		: 0
-						  , Channel			: "Master"
-						  , DesiredVolume	: volume
-						  }
-						, function(err, buffer) {
-							 // console.log(this.brickId, "BrickUPnP_MediaRenderer::SetVolume", err || buffer);
-							 if(cb) {cb(err || buffer);}
-							}
-						);
+BrickUPnP_MediaRenderer.prototype.Play		= function() {
+	 // var self = this;
+	 return new Promise( function(resolve, reject) {
+	 	 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
+		 service.callAction	( 'Play'
+							, { InstanceID		: 0
+							  , Speed			: '1' }
+							, function(err, buffer) {
+								 // console.log(self.brickId, "BrickUPnP_MediaRenderer::Play", err || buffer);
+								 // if(cb) {cb(err || buffer);}
+								 if(err) {reject(err);} else {resolve(buffer);}
+								}
+							);
+		}); // Promise
+	}
+BrickUPnP_MediaRenderer.prototype.Pause		= function() {
+	 return new Promise( function(resolve, reject) {
+		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
+		 service.callAction	( 'Pause'
+							, { InstanceID		: 0
+							  }
+							, function(err, buffer) {
+								 // console.log(this.brickId, "BrickUPnP_MediaRenderer::Pause", err || buffer);
+								 if(err) {reject(err);} else {resolve(buffer);}
+								}
+							);
+		}); // Promise
+	}
+BrickUPnP_MediaRenderer.prototype.Stop		= function() {
+	 return new Promise( function(resolve, reject) {
+		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
+		 service.callAction	( 'Stop'
+							, { InstanceID		: 0
+							  }
+							, function(err, buffer) {
+								 // console.log(this.brickId, "BrickUPnP_MediaRenderer::Stop", err || buffer);
+								 if(err) {reject(err);} else {resolve(buffer);}
+								}
+							);
+		}); // Promise
+	}
+BrickUPnP_MediaRenderer.prototype.getVolume	= function() {
+	 return new Promise( function(resolve, reject) {
+		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:RenderingControl'];
+		 service.callAction	( 'GetVolume'
+							, { InstanceID		: 0
+							  , Channel			: "Master"
+							  }
+							, function(err, buffer) {
+								 // console.log(this.brickId, "BrickUPnP_MediaRenderer::GetVolume", err || buffer);
+								 if(err) {reject(err);} else {resolve(buffer);}
+								}
+							);
+		}); // Promise
+	}
+BrickUPnP_MediaRenderer.prototype.setVolume	= function(volume) {
+	 return new Promise( function(resolve, reject) {
+		 volume = Math.min(100, Math.max(0, Math.round(volume)));
+		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:RenderingControl'];
+		 service.callAction	( 'SetVolume'
+							, { InstanceID		: 0
+							  , Channel			: "Master"
+							  , DesiredVolume	: volume
+							  }
+							, function(err, buffer) {
+								 // console.log(this.brickId, "BrickUPnP_MediaRenderer::SetVolume", err || buffer);
+								 if(err) {reject(err);} else {resolve(buffer);}
+								}
+							);
+		}); // Promise
 	}
 BrickUPnP_MediaRenderer.prototype.goToTime	= function(time) {
 	 
@@ -252,13 +271,7 @@ BrickUPnP_MediaRenderer.prototype.UpdateEvent	= function(eventNode, service) {
 							  , attribut	: eventNode.tagName
 							  , value		: content
 							  }
-							)
-			// webServer.emit	( "eventForBrick_" + this.brickId
-							// , { serviceType	: service.serviceType
-							  // , attribut	: eventNode.tagName
-							  // , value		: content
-							  // }
-							// );
+							);
 		 break;
 		 default:
 			 if(eventNode.hasAttribute('val')) {
