@@ -3,7 +3,7 @@
 	<h3 ng-bind="activity.title"></h3>
 	
 	<section 	class				= "components"
-				alx-droppable		= ".Brick"
+				alx-droppable		= "draggedInfo.hasOneTypeIn(['Brick'])"
 				alx-accept-feedback	= "candrop"
 				alx-hover-feedback	= "overdrop"
 				drop-action			= "ctrl.appendBrick(draggedInfo)"

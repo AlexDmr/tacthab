@@ -181,10 +181,20 @@ alx-activities {
 
 alx-activities button.bricks {
 	transform			: rotate(90deg);
+}
+
+md-sidenav.instructions {
+	display				: flex;
+	flex-flow			: column; 
+}
+
+md-sidenav.instructions > * {
+	flex				: 1 1 auto;
 }instruction > section.NChildNode {
 	background			: none;
 	display				: inline-flex;
 	flex-flow			: row nowrap;
+	margin-top			: 4px;
 }
 
 instruction > section.NChildNode > .content {
@@ -218,6 +228,8 @@ instruction > section.NChildNode > .content > .child > .separator  {
 	border-top			: solid black 1px;
 	border-bottom		: solid black 1px;
 	flex				: 0 0 11px;
+	/*display				: flex;*/
+	/*flex-flow			: column;*/
 }
 
 instruction > section.NChildNode > .content > .child > .separator .top {
@@ -234,8 +246,8 @@ instruction > section.NChildNode > .content > .child > .separator .top {
 
 instruction > section.NChildNode > .content > .child > .separator .middle {
 	flex				: 0 1 15px;
-	width				: 23px;
-	height				: 10px;
+	width				: 20px;
+	height				:  8px;
 	/*transform			: scale(1.4,1) translate(2.5px);*/
 	background			: lightblue;
 	position			: absolute;
@@ -258,7 +270,20 @@ instruction > section.NChildNode > .content > .child  > .container > .lastOne.Pn
 	display				: inline-flex;
 	border-radius		: 0px;
 	padding-left		: 0.5em;
-}instruction > section.NChildNode.ParallelNode {
+}
+
+instruction > section.NChildNode.candrop > div.frameStructure,
+instruction > section.NChildNode.candrop > div.content > div.child > div.frameStructure > div.middle,
+instruction > section.NChildNode.candrop > .content > .child > .separator {
+	background-color 	: green;
+}
+
+instruction > section.NChildNode.candrop.overdrop > div.frameStructure,
+instruction > section.NChildNode.candrop.overdrop > div.content > div.child > div.frameStructure > div.middle,
+instruction > section.NChildNode.candrop.overdrop > .content > .child > .separator {
+	background-color 	: lightgreen;
+}
+instruction > section.NChildNode.ParallelNode {
 	background			: none;
 	display				: inline-flex;
 	flex-flow			: row nowrap;
@@ -329,6 +354,93 @@ instruction > section.NChildNode.ParallelNode > .content > .child > .separator.s
 instruction > section.NChildNode.ParallelNode > .content > .child > .separator.suffix .bottom {
 	width				: auto;
 	position			: static;
+}
+
+
+instruction > section.NChildNode.ParallelNode.candrop > .content > .child > .separator.suffix .middle > .left,
+instruction > section.NChildNode.ParallelNode.candrop > .content > .child > .separator.suffix .middle > .right {
+	background-color 	: green;
+}
+
+instruction > section.NChildNode.ParallelNode.candrop.overdrop > .content > .child > .separator.suffix .middle > .left,
+instruction > section.NChildNode.ParallelNode.candrop.overdrop > .content > .child > .separator.suffix .middle > .right {
+	background-color 	: lightgreen;
+}
+instruction > section.WhenNode > .arrow > .defwhen > .eventDrop > .ImplicitVariable {
+	display						: none;
+}
+
+instruction > section.WhenNode > .arrow > .defwhen > .eventDrop > .ImplicitVariable.display {
+	display						: block;
+}
+
+instruction > section.WhenNode > .arrow {
+	display						: inline-flex;
+	flex-flow					: row nowrap;
+}
+
+instruction > section.WhenNode > .arrow > .defwhen {
+	flex						: 0 0 auto;
+	border						: solid black 3px;
+	border-bottom-right-radius	: 2em;
+	border-top-right-radius		: 2em;
+	margin-left					: 0px;
+	padding						: 0.5em;
+	display						: inline-flex;
+	flex-flow					: row nowrap;
+	background					: linear-gradient(to bottom, #FDFDFD 0%,#C0E8F9 0.7em,#393b7c 95%,#022848 100%);
+}
+
+instruction > section.WhenNode > .arrow > .eventSymbol {
+	flex						: 0 0 30px;
+	width						: 30px;
+	/*background					: url("TriangleArrow-Left.svg");
+	background-size				: 100%;
+	background-repeat			: repeat;*/
+	margin						: 0px;
+	padding						: 0px;
+    border						: solid black 1px;
+    border-top-left-radius		: 50%;
+    border-bottom-left-radius	: 50%;
+    background					: lightblue;
+    box-shadow					: 0.2em 0.2em 0.2em 0.05em black inset;
+}
+
+instruction > section.WhenNode > .arrow > .defwhen > .eventDrop, .WhenNodePresentation > .arrow > .defwhen > .instructions {
+	border-radius				: 1em;
+	padding						: 0.25em;
+	padding-left				: 0.3em;
+	padding-top					: 0.3em;
+	border						: solid black 1px;
+	box-shadow					: 0.2em 0.2em 0.2em 0.05em black inset;
+	flex						: 0 0 auto;
+}
+
+instruction > section.WhenNode > .arrow > .defwhen > .eventDrop {
+	flex						: 0 0 auto;
+	background					: yellow;
+}
+
+instruction > section.WhenNode > .arrow > .defwhen > .instructions {
+	background-color			: darkcyan;
+	flex						: 0 0 auto;
+    border-top-right-radius		: 1em;
+    border-bottom-right-radius	: 1em;
+}
+
+instruction > section.WhenNode > .arrow > .defwhen > .instructions.candrop {
+	background-color			: cyan; 
+}
+
+instruction > section.WhenNode > .arrow > .defwhen > .instructions.candrop.overdrop {
+	background-color			: lightcyan; 
+}
+
+instruction > section.WhenNode > .arrow > .defwhen > img {
+	width						: 50px;
+	height						: 50px;
+    align-self					: center;
+	flex						: 0 0 auto;
 }
 
 .Pnode.ActionNode {

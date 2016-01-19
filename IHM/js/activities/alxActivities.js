@@ -40,7 +40,8 @@ module.exports = function(app) {
 								var i;
 								for(i=0; i<instructionDir.instructions.length; i++) {
 									this.instructions.push( {
-										className	: instructionDir.instructions[i],
+										className	: instructionDir.instructions[i].className,
+										type 		: instructionDir.instructions[i].type,
 										children	: []
 									});
 								}

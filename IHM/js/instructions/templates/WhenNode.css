@@ -1,0 +1,77 @@
+instruction > section.WhenNode > .arrow > .defwhen > .eventDrop > .ImplicitVariable {
+	display						: none;
+}
+
+instruction > section.WhenNode > .arrow > .defwhen > .eventDrop > .ImplicitVariable.display {
+	display						: block;
+}
+
+instruction > section.WhenNode > .arrow {
+	display						: inline-flex;
+	flex-flow					: row nowrap;
+}
+
+instruction > section.WhenNode > .arrow > .defwhen {
+	flex						: 0 0 auto;
+	border						: solid black 3px;
+	border-bottom-right-radius	: 2em;
+	border-top-right-radius		: 2em;
+	margin-left					: 0px;
+	padding						: 0.5em;
+	display						: inline-flex;
+	flex-flow					: row nowrap;
+	background					: linear-gradient(to bottom, #FDFDFD 0%,#C0E8F9 0.7em,#393b7c 95%,#022848 100%);
+}
+
+instruction > section.WhenNode > .arrow > .eventSymbol {
+	flex						: 0 0 30px;
+	width						: 30px;
+	/*background					: url("TriangleArrow-Left.svg");
+	background-size				: 100%;
+	background-repeat			: repeat;*/
+	margin						: 0px;
+	padding						: 0px;
+    border						: solid black 1px;
+    border-top-left-radius		: 50%;
+    border-bottom-left-radius	: 50%;
+    background					: lightblue;
+    box-shadow					: 0.2em 0.2em 0.2em 0.05em black inset;
+}
+
+instruction > section.WhenNode > .arrow > .defwhen > .eventDrop, .WhenNodePresentation > .arrow > .defwhen > .instructions {
+	border-radius				: 1em;
+	padding						: 0.25em;
+	padding-left				: 0.3em;
+	padding-top					: 0.3em;
+	border						: solid black 1px;
+	box-shadow					: 0.2em 0.2em 0.2em 0.05em black inset;
+	flex						: 0 0 auto;
+}
+
+instruction > section.WhenNode > .arrow > .defwhen > .eventDrop {
+	flex						: 0 0 auto;
+	background					: yellow;
+}
+
+instruction > section.WhenNode > .arrow > .defwhen > .instructions {
+	background-color			: darkcyan;
+	flex						: 0 0 auto;
+    border-top-right-radius		: 1em;
+    border-bottom-right-radius	: 1em;
+}
+
+instruction > section.WhenNode > .arrow > .defwhen > .instructions.candrop {
+	background-color			: cyan; 
+}
+
+instruction > section.WhenNode > .arrow > .defwhen > .instructions.candrop.overdrop {
+	background-color			: lightcyan; 
+}
+
+instruction > section.WhenNode > .arrow > .defwhen > img {
+	width						: 50px;
+	height						: 50px;
+    align-self					: center;
+	flex						: 0 0 auto;
+}
+

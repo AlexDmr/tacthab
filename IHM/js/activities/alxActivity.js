@@ -33,7 +33,11 @@ module.exports = function(app) {
 								 	className: "ParallelNode",
 									children: [{ 
 										className	: 'ActionNode',
-										label		: 'some actions'
+										label		: 'Action 1'
+										},
+										{ 
+										className	: 'WhenNode',
+										type		: ['WhenNode']
 										}
 									]
 								 };

@@ -5,3 +5,12 @@ alx-activities {
 alx-activities button.bricks {
 	transform			: rotate(90deg);
 }
+
+md-sidenav.instructions {
+	display				: flex;
+	flex-flow			: column; 
+}
+
+md-sidenav.instructions > * {
+	flex				: 1 1 auto;
+}

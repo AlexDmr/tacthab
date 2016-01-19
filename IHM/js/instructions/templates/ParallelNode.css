@@ -71,3 +71,13 @@ instruction > section.NChildNode.ParallelNode > .content > .child > .separator.s
 	position			: static;
 }
 
+
+instruction > section.NChildNode.ParallelNode.candrop > .content > .child > .separator.suffix .middle > .left,
+instruction > section.NChildNode.ParallelNode.candrop > .content > .child > .separator.suffix .middle > .right {
+	background-color 	: green;
+}
+
+instruction > section.NChildNode.ParallelNode.candrop.overdrop > .content > .child > .separator.suffix .middle > .left,
+instruction > section.NChildNode.ParallelNode.candrop.overdrop > .content > .child > .separator.suffix .middle > .right {
+	background-color 	: lightgreen;
+}

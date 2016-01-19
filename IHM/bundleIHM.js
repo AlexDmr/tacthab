@@ -104,10 +104,10 @@
 	__webpack_require__( 90 )(app);
 	__webpack_require__( 93 )(app);
 	__webpack_require__( 96 )(app);
-	__webpack_require__( 110 )(app);
-	__webpack_require__( 113 )(app);
-	__webpack_require__( 116 )(app);
-	__webpack_require__( 117 )(app);
+	__webpack_require__( 118 )(app);
+	__webpack_require__( 121 )(app);
+	__webpack_require__( 124 )(app);
+	__webpack_require__( 125 )(app);
 
 
 
@@ -8943,7 +8943,31 @@
 	//_________________________________________________________________________________________________________________
 	function dragEnter(event, idPointer, scope) {
 		if(draggingPointers[idPointer]) {
-			var acceptedNodes	= document.querySelectorAll( scope.accept || "*" )
+			event.stopPropagation();
+			// console.log( "dragEnter", scope.dropZone );
+			var fctAccept	= scope.accept
+			  // , draggedData	= draggingPointers[idPointer].draggedData
+			  , canDrop		= fctAccept(scope.angularScope, {draggedInfo: draggingPointers[idPointer]})?1:0
+			  ;
+
+			//
+			if(canDrop) {
+				event.preventDefault();
+			}
+
+			draggingPointers[idPointer].canDrop += canDrop;
+			scope.dropZone.pointersOver.push( idPointer );
+
+			if( scope.dropZone.pointersOver.length === 1 ) {
+				event.currentTarget.classList.add( scope.hoverFeedback );
+			}
+		}
+	}
+	/*function dragEnter(event, idPointer, scope) {
+		if(draggingPointers[idPointer]) {
+			event.stopPropagation();
+			console.log( "dragEnter", event, idPointer, scope );
+			var acceptedNodes	= document.querySelectorAll( scope.accept || "*" ) //XXX
 			  , draggedNode		= draggingPointers[idPointer].node
 			  , canDrop			= 0
 			  ;
@@ -8961,23 +8985,26 @@
 			}
 		}
 	}
+	*/
 	function getCB_dragEnter_mouse(scope) {return function(e) {dragEnter(e, "mouse", scope)};}
 
 	function dragOver(event, idPointer) {
+		event.stopPropagation();
 		if(  draggingPointers[idPointer]
 		  && draggingPointers[idPointer].canDrop )	{event.preventDefault();
 													}
 	}
 	function dragOver_mouse(e) {dragOver(e, "mouse");}
 
-	function dragLeave(e, idPointer, scope) {
+	function dragLeave(event, idPointer, scope) {
 		if(  draggingPointers[idPointer] ) {
+			event.stopPropagation();
+			var pos = scope.dropZone.pointersOver.indexOf(idPointer);
+			scope.dropZone.pointersOver.splice(pos, 1);
 			draggingPointers[idPointer].canDrop--;
-			if(draggingPointers[idPointer].canDrop === 0) {
-				scope.dropZone.pointersOver.splice( scope.dropZone.pointersOver.indexOf(idPointer), 1);
-				if(scope.dropZone.pointersOver.length === 0) {
-					e.currentTarget.classList.remove( scope.hoverFeedback );
-				}
+			// console.log( "dragLeave", event.currentTarget);
+			if(scope.dropZone.pointersOver.length === 0) {
+				event.currentTarget.classList.remove( scope.hoverFeedback );
 			}
 		}
 	}
@@ -8986,28 +9013,43 @@
 	//_________________________________________________________________________________________________________________
 	// Draggables -----------------------------------------------------------------------------------------------------
 	//_________________________________________________________________________________________________________________
-	function dragStart(event, idPointer, info, draggedData) {
+	function hasOneTypeIn(types) {
+		var i;
+		for(i=0; i<types.length; i++) {
+			if(this.draggedData.type.indexOf(types[i]) >= 0) {return true;}
+		}
+		return false;
+	}
+
+	function dragStart(event, idPointer, info, innerScope) {
 		// console.log( "->dragStart", idPointer, draggedData );
 		if(event.dataTransfer) {event.dataTransfer.setData("text/plain", "toto");}
 		draggingPointers[idPointer] = { node		: event.currentTarget
-									  , draggedData	: draggedData
+									  , draggedData	: innerScope.draggedData
 									  , canDrop		: 0
+									  , hasOneTypeIn: hasOneTypeIn
 									  };
 		// Update all dropzone that can handle that node...
-		var dropZone, i, nodes;
+		var dropZone, i; //, nodes;
 		for(i in dropZones) {
 			dropZone = dropZones[i];
-			if(dropZone.scope.acceptFeedback && dropZone.scope.accept) {
+			if( 	dropZone.scope.acceptFeedback 
+				&&	dropZone.scope.accept 
+				&&	dropZone.scope.accept(innerScope.scope, {draggedInfo: draggingPointers[idPointer]})
+				) {
+					dropZone.canReceivePointers.push( idPointer );
+					dropZone.element.classList.add( dropZone.scope.acceptFeedback );
+				/* OLD style when acceptation was based on HTML selector instead of data
 				nodes = Array.prototype.slice.call( document.querySelectorAll( dropZone.scope.accept ) );
 				if( nodes.indexOf(event.currentTarget) >= 0 ) {
 					dropZone.canReceivePointers.push( idPointer );
 					dropZone.element.classList.add( dropZone.scope.acceptFeedback );
-				}
+				}*/
 			}
 		}
 	}
 	function getCB_dragStart_mouse(innerScope) {
-		 return function(e) {dragStart(e, "mouse", e, innerScope.draggedData);
+		 return function(e) {dragStart(e, "mouse", e, innerScope);
 							 innerScope.alxDragStart( innerScope.scope
 													, { event	: e
 													  , data	: innerScope.draggedData
@@ -9023,7 +9065,7 @@
 			dropZone = dropZones[i];
 			pos = dropZone.canReceivePointers.indexOf(idPointer)
 			if( pos >= 0 ) {
-				dragLeave({currentTarget: dropZone.element}, idPointer, dropZone.scope);
+				dragLeave({currentTarget: dropZone.element, stopPropagation: function(){}}, idPointer, dropZone.scope);
 				dropZone.canReceivePointers.splice(pos, 1);
 				if(dropZone.canReceivePointers.length === 0) {
 					dropZone.element.classList.remove( dropZone.scope.acceptFeedback );
@@ -9086,10 +9128,11 @@
 									 var element = elements[0];
 									 var idDrop = idDropZone++;
 									 console.log( "alxDroppable", attrs);
-									 var innerScope = 	{ accept			: attrs.alxDroppable
+									 var innerScope = 	{ accept			: $parse( attrs.alxDroppable || 'false' )
 														, acceptFeedback	: attrs.alxAcceptFeedback
 														, hoverFeedback		: attrs.alxHoverFeedback
 														, dropAction		: $parse( attrs.dropAction )
+														, angularScope		: scope
 														}
 									   ;
 									 dropZones[idDrop]	= innerScope.dropZone 
@@ -9175,7 +9218,8 @@
 									var i;
 									for(i=0; i<instructionDir.instructions.length; i++) {
 										this.instructions.push( {
-											className	: instructionDir.instructions[i],
+											className	: instructionDir.instructions[i].className,
+											type 		: instructionDir.instructions[i].type,
 											children	: []
 										});
 									}
@@ -9209,12 +9253,16 @@
 
 	var controllers 	= {
 		ParallelNode 				: __webpack_require__( 100	),
-		ActionNode					: __webpack_require__( 105		)
+		SequenceNode				: __webpack_require__( 105	),
+		WhenNode					: __webpack_require__( 108		),
+		ActionNode					: __webpack_require__( 111		)
 	};
 
 	var templates	 	= {
-		ParallelNode 				: __webpack_require__( 108	),
-		ActionNode					: __webpack_require__( 109	)
+		ParallelNode 				: __webpack_require__( 114	),
+		SequenceNode				: __webpack_require__( 115	),
+		WhenNode					: __webpack_require__( 116		),
+		ActionNode					: __webpack_require__( 117	)
 	};
 
 	var instructionFct = function(app) {
@@ -9256,7 +9304,13 @@
 			);
 	}
 
-	instructionFct.instructions = Object.keys( controllers );
+	instructionFct.instructions = [];
+	var i, fct;
+	for(i in controllers) {
+		fct = controllers[i];
+		instructionFct.instructions.push( {className: i, type: fct.type} );
+	}
+
 
 	module.exports = instructionFct;
 
@@ -9268,14 +9322,22 @@
 	__webpack_require__( 103	);
 	// require( "./ActionNode.css"		);
 
-	module.exports = function(scope) {
-		/*var pipoChild = {className: 'pipoNode', children: []};
-		this.instruction.children.push( pipoChild );*/
+	var ParallelNode = function(scope) {
+		this.type = ParallelNode.type;
+		
+		var pipo = {className: "ActionNode", label: "Parrallel"};
+		if(this.instruction.children.length === 0) {
+			this.instruction.children.push( pipo );
+		}
 		this.appendChild	= function(data) {
-			console.log( "Append child", data );
+			console.log( "ParrallelNode append child", data );
+			this.instruction.children.push( data.draggedData );
 		}
 	}
 
+	ParallelNode.type = ['Pnode', 'ControlFlow', 'NChildNode', 'ParallelNode'];
+
+	module.exports = ParallelNode;
 
 /***/ },
 /* 101 */
@@ -9295,11 +9357,26 @@
 /* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 106		);
+	__webpack_require__( 101		);
+	__webpack_require__( 106	);
+	// require( "./ActionNode.css"		);
 
-	module.exports = function(scope) {
-		
+	var SequenceNode = function(scope) {
+		this.type = SequenceNode.type;
+
+		var pipo = {className: "ActionNode", label: "Sequence"};
+		if(this.instruction.children.length === 0) {
+			this.instruction.children.push( pipo );
+		}
+		this.appendChild	= function(data) {
+			console.log( "SequenceNode append child", data );
+			this.instruction.children.push( data.draggedData );
+		}
 	}
+
+	SequenceNode.type = ['Pnode', 'ControlFlow', 'NChildNode', 'SequenceNode'];
+
+	module.exports = SequenceNode;
 
 
 /***/ },
@@ -9311,21 +9388,97 @@
 /***/ },
 /* 107 */,
 /* 108 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = "<section class=\"NChildNode ParallelNode\">\r\n\t<div class=\"prefix\"></div>\r\n\t<div class=\"content\">\r\n\t\t<div class \t\t= \"child\"\r\n\t\t\t ng-repeat\t= \"instruction in ctrl.instruction.children\"\r\n\t\t\t>\r\n\t\t\t<div class=\"separator\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\"></div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<instruction data=\"instruction\"></instruction>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"separator suffix\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\">\r\n\t\t\t\t\t<div class=\"left\"></div><div class=\"right\"></div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t<!-- <div class=\"content\">\r\n\t\t<div class=\"lastOne Pnode ActionNodePresentation\">Drop node</div>\r\n\t</div> -->\r\n\t</div>\r\n\t<div class=\"suffix\"></div>\r\n</section>"
+	__webpack_require__( 109 );
+
+	/*{ childEvent	: null
+	, childReaction	: null
+	, varName		: 'brick'
+	, varType		: []
+	};*/
+
+	var WhenNode = function(scope) {
+		var ctrl = this;
+		this.type = WhenNode.type;
+		
+		this.appendEvent		= function(data) {
+			console.log( "WhenNode append event", data );
+			scope.$applyAsync(function() {
+				ctrl.instruction.childEvent		= data.draggedData;
+			});
+		}
+		this.appendInstruction	= function(data) {
+			console.log( "WhenNode append instruction", data );
+			scope.$applyAsync(function() {
+				ctrl.instruction.childReaction	= data.draggedData;		
+			});
+		}
+	}
+
+	WhenNode.type = ['Pnode', 'ControlFlow', 'WhenNode'];
+
+	module.exports = WhenNode;
 
 /***/ },
 /* 109 */
 /***/ function(module, exports) {
 
-	module.exports = "<section class=\"Pnode ActionNode\">\r\n\t{{ctrl.instruction.label}}\r\n</section>"
+	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 110 */
+/* 110 */,
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 111 );
+	__webpack_require__( 112		);
+
+	var ActionNode = function(scope) {
+		this.instruction.label	= this.instruction.label || "Action";
+		this.type				= ActionNode.type;
+	}
+
+	ActionNode.type = ['Pnode', 'ActionNode'];
+
+	module.exports = ActionNode;
+
+
+/***/ },
+/* 112 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 113 */,
+/* 114 */
+/***/ function(module, exports) {
+
+	module.exports = "<section ng-class \t\t\t\t= \"ctrl.type\"\r\n\t\t alx-droppable\t\t\t= \"draggedInfo.hasOneTypeIn(['ActionNode', 'ControlFlow'])\"\r\n\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t drop-action\t\t\t= \"ctrl.appendChild(draggedInfo)\"\r\n\t\t>\r\n\t<div class=\"prefix frameStructure\"></div>\r\n\t<div class=\"content\">\r\n\t\t<div class \t\t= \"child\"\r\n\t\t\t ng-repeat\t= \"instruction in ctrl.instruction.children track by $index\"\r\n\t\t\t>\r\n\t\t\t<div class=\"separator frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\"></div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<instruction data=\"instruction\"></instruction>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"separator suffix frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\">\r\n\t\t\t\t\t<div class=\"left\"></div><div class=\"right\"></div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t<!-- <div class=\"content\">\r\n\t\t<div class=\"lastOne Pnode ActionNodePresentation\">Drop node</div>\r\n\t</div> -->\r\n\t</div>\r\n\t<div class=\"suffix frameStructure\"></div>\r\n</section>\r\n\r\n"
+
+/***/ },
+/* 115 */
+/***/ function(module, exports) {
+
+	module.exports = "<section ng-class\t\t\t\t= \"ctrl.type\"\r\n\t\t alx-droppable\t\t\t= \"draggedInfo.hasOneTypeIn(['ActionNode', 'ControlFlow'])\"\r\n\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t drop-action\t\t\t= \"ctrl.appendChild(draggedInfo)\"\r\n\t\t>\r\n\t<div class=\"prefix frameStructure\"></div>\r\n\t<div class=\"content\">\r\n\t\t<div class \t\t= \"child\"\r\n\t\t\t ng-repeat\t= \"instruction in ctrl.instruction.children track by $index\"\r\n\t\t\t>\r\n\t\t\t<div class=\"separator frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\"></div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<instruction data=\"instruction\"></instruction>\r\n\t\t\t</div>\r\n\t\t\t<div class=\" frameStructure separator suffix\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\">\r\n\t\t\t\t\t<div class=\"left\"></div><div class=\"right\"></div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\t<div class=\"frameStructure suffix\"></div>\r\n</section>"
+
+/***/ },
+/* 116 */
+/***/ function(module, exports) {
+
+	module.exports = "<section ng-class=\"ctrl.instruction.type\">\r\n\t<div class=\"arrow\">\r\n\t\t<div class=\"eventSymbol\"></div>\r\n\t\t<div class=\"defwhen\">\r\n\t\t\t<div class=\"eventDrop\">\r\n\t\t\t\t<div class=\"ImplicitVariable\">\r\n\t\t\t\t\tLet's call the event source <div class=\"variableName Pnode Pselector_variable\">brick</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"event\"\r\n\t\t\t\t\t class=\"instructions\"\r\n\t\t\t\t\t alx-droppable\t\t\t= \"draggedInfo.hasOneTypeIn(['EventNode'])\"\r\n\t\t\t\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t\t\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t\t\t\t drop-action\t\t\t= \"ctrl.appendEvent(draggedInfo)\"\r\n\t\t\t\t\t>\r\n\t\t\t\t\t<p ng-hide=\"ctrl.instruction.childEvent\">Drop EVENT here</p>\r\n\t\t\t\t\t<div ng-if=\"ctrl.instruction.childEvent\">\r\n\t\t\t\t\t\t<instruction data=\"ctrl.instruction.childEvent\"></instruction>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t\t<img src=\"/js/Presentations/HTML_templates/implySymbol.svg\"></img>\r\n\t\t\t<div class=\"instructions\"\r\n\t\t\t\t alx-droppable\t\t\t= \"draggedInfo.hasOneTypeIn(['ActionNode', 'ControlFlow'])\"\r\n\t\t\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t\t\t drop-action\t\t\t= \"ctrl.appendInstruction(draggedInfo)\"\r\n\t\t\t\t>\r\n\t\t\t\t<p ng-hide=\"ctrl.instruction.childReaction\">Drop REACTION here</p>\r\n\t\t\t\t<div ng-if=\"ctrl.instruction.childReaction\">\r\n\t\t\t\t\t<instruction data=\"ctrl.instruction.childReaction\"></instruction>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n</section>\r\n"
+
+/***/ },
+/* 117 */
+/***/ function(module, exports) {
+
+	module.exports = "<section ng-class=\"ctrl.type\">\r\n\t{{ctrl.instruction.label}}\r\n</section>"
+
+/***/ },
+/* 118 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__( 119 );
 
 	// var utils = require( "../../../js/utils.js" );
 
@@ -9360,7 +9513,11 @@
 									 	className: "ParallelNode",
 										children: [{ 
 											className	: 'ActionNode',
-											label		: 'some actions'
+											label		: 'Action 1'
+											},
+											{ 
+											className	: 'WhenNode',
+											type		: ['WhenNode']
 											}
 										]
 									 };
@@ -9387,17 +9544,17 @@
 
 
 /***/ },
-/* 111 */
+/* 119 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 112 */,
-/* 113 */
+/* 120 */,
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 114 );
+	__webpack_require__( 122 );
 
 	var utils = __webpack_require__( 8 );
 	var templates	=	{ default		: __webpack_require__( 76 )
@@ -9438,14 +9595,14 @@
 
 
 /***/ },
-/* 114 */
+/* 122 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 115 */,
-/* 116 */
+/* 123 */,
+/* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__( 5 );
@@ -9576,13 +9733,13 @@
 
 
 /***/ },
-/* 117 */
+/* 125 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bleSensorTag 	= __webpack_require__( 118 )
-	  , bleBrick		= __webpack_require__( 122 )
-	  , bleMetawear		= __webpack_require__( 123 )
-	  , alxGrapher		= __webpack_require__( 126 )
+	var bleSensorTag 	= __webpack_require__( 126 )
+	  , bleBrick		= __webpack_require__( 130 )
+	  , bleMetawear		= __webpack_require__( 131 )
+	  , alxGrapher		= __webpack_require__( 134 )
 	  , utils			= __webpack_require__( 8 )
 	  ;
 
@@ -9637,13 +9794,13 @@
 	}
 
 /***/ },
-/* 118 */
+/* 126 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 119 );
+	__webpack_require__( 127 );
 
 	var utils				= __webpack_require__( 8 )
-	  , subscribeForEvent	= __webpack_require__( 121 )
+	  , subscribeForEvent	= __webpack_require__( 129 )
 	  ;
 
 	module.exports = function(app) {
@@ -9757,14 +9914,14 @@
 	}
 
 /***/ },
-/* 119 */
+/* 127 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 120 */,
-/* 121 */
+/* 128 */,
+/* 129 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 8 );
@@ -9806,11 +9963,11 @@
 
 
 /***/ },
-/* 122 */
+/* 130 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils				= __webpack_require__( 8 )
-	  , subscribeForEvent	= __webpack_require__( 121 )
+	  , subscribeForEvent	= __webpack_require__( 129 )
 	  ;
 
 	module.exports = function(app) {
@@ -9905,13 +10062,13 @@
 	}
 
 /***/ },
-/* 123 */
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 124 );
+	__webpack_require__( 132 );
 
 	var utils				= __webpack_require__( 8 )
-	  , subscribeForEvent	= __webpack_require__( 121 )
+	  , subscribeForEvent	= __webpack_require__( 129 )
 	  ;
 
 	module.exports = function(app) {
@@ -10008,17 +10165,17 @@
 	}
 
 /***/ },
-/* 124 */
+/* 132 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 125 */,
-/* 126 */
+/* 133 */,
+/* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 127 );
+	__webpack_require__( 135 );
 	//var resizeDetector = require( "../../../js/resizeDetector.js" );
 
 
@@ -10085,7 +10242,7 @@
 
 
 /***/ },
-/* 127 */
+/* 135 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

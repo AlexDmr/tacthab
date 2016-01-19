@@ -2,11 +2,15 @@
 
 var controllers 	= {
 	ParallelNode 				: require( "./templates/ParallelNode.js"	),
+	SequenceNode				: require( "./templates/SequenceNode.js"	),
+	WhenNode					: require( "./templates/WhenNode.js"		),
 	ActionNode					: require( "./templates/ActionNode.js"		)
 };
 
 var templates	 	= {
 	ParallelNode 				: require( "./templates/ParallelNode.html"	),
+	SequenceNode				: require( "./templates/SequenceNode.html"	),
+	WhenNode					: require( "./templates/WhenNode.html"		),
 	ActionNode					: require( "./templates/ActionNode.html"	)
 };
 
@@ -49,6 +53,12 @@ var instructionFct = function(app) {
 		);
 }
 
-instructionFct.instructions = Object.keys( controllers );
+instructionFct.instructions = [];
+var i, fct;
+for(i in controllers) {
+	fct = controllers[i];
+	instructionFct.instructions.push( {className: i, type: fct.type} );
+}
+
 
 module.exports = instructionFct;

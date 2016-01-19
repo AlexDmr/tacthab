@@ -2,6 +2,7 @@ instruction > section.NChildNode {
 	background			: none;
 	display				: inline-flex;
 	flex-flow			: row nowrap;
+	margin-top			: 4px;
 }
 
 instruction > section.NChildNode > .content {
@@ -35,6 +36,8 @@ instruction > section.NChildNode > .content > .child > .separator  {
 	border-top			: solid black 1px;
 	border-bottom		: solid black 1px;
 	flex				: 0 0 11px;
+	/*display				: flex;*/
+	/*flex-flow			: column;*/
 }
 
 instruction > section.NChildNode > .content > .child > .separator .top {
@@ -51,8 +54,8 @@ instruction > section.NChildNode > .content > .child > .separator .top {
 
 instruction > section.NChildNode > .content > .child > .separator .middle {
 	flex				: 0 1 15px;
-	width				: 23px;
-	height				: 10px;
+	width				: 20px;
+	height				:  8px;
 	/*transform			: scale(1.4,1) translate(2.5px);*/
 	background			: lightblue;
 	position			: absolute;
@@ -75,4 +78,16 @@ instruction > section.NChildNode > .content > .child  > .container > .lastOne.Pn
 	display				: inline-flex;
 	border-radius		: 0px;
 	padding-left		: 0.5em;
+}
+
+instruction > section.NChildNode.candrop > div.frameStructure,
+instruction > section.NChildNode.candrop > div.content > div.child > div.frameStructure > div.middle,
+instruction > section.NChildNode.candrop > .content > .child > .separator {
+	background-color 	: green;
+}
+
+instruction > section.NChildNode.candrop.overdrop > div.frameStructure,
+instruction > section.NChildNode.candrop.overdrop > div.content > div.child > div.frameStructure > div.middle,
+instruction > section.NChildNode.candrop.overdrop > .content > .child > .separator {
+	background-color 	: lightgreen;
 }

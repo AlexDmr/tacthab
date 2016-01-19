@@ -12,11 +12,10 @@
 Par ici les sections...
 <section layout="row" flex>
 	<!-- Instructions -->
-	<md-sidenav class="md-sidenav-left md-whiteframe-z2 instruction" md-component-id="instructionsList">
-		<md-content>
+	<md-sidenav class="md-sidenav-left md-whiteframe-z2 instructions" md-component-id="instructionsList">
+		<md-content flex>
 			<section ng-repeat		= "instruction in ctrl.instructions"
 					 alx-draggable	= "instruction"
-					 ng-class 		= "instruction.type"
 					 alx-drag-start = "ctrl.closeInstructions()"
 					 alx-drag-end 	= "ctrl.openInstructions()"
 					>
