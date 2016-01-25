@@ -104,10 +104,10 @@
 	__webpack_require__( 90 )(app);
 	__webpack_require__( 93 )(app);
 	__webpack_require__( 96 )(app);
-	__webpack_require__( 118 )(app);
-	__webpack_require__( 121 )(app);
-	__webpack_require__( 124 )(app);
-	__webpack_require__( 125 )(app);
+	__webpack_require__( 137 )(app);
+	__webpack_require__( 140 )(app);
+	__webpack_require__( 143 )(app);
+	__webpack_require__( 144 )(app);
 
 
 
@@ -9013,21 +9013,12 @@
 	//_________________________________________________________________________________________________________________
 	// Draggables -----------------------------------------------------------------------------------------------------
 	//_________________________________________________________________________________________________________________
-	function hasOneTypeIn(types) {
-		var i;
-		for(i=0; i<types.length; i++) {
-			if(this.draggedData.type.indexOf(types[i]) >= 0) {return true;}
-		}
-		return false;
-	}
-
 	function dragStart(event, idPointer, info, innerScope) {
 		// console.log( "->dragStart", idPointer, draggedData );
 		if(event.dataTransfer) {event.dataTransfer.setData("text/plain", "toto");}
 		draggingPointers[idPointer] = { node		: event.currentTarget
 									  , draggedData	: innerScope.draggedData
 									  , canDrop		: 0
-									  , hasOneTypeIn: hasOneTypeIn
 									  };
 		// Update all dropzone that can handle that node...
 		var dropZone, i; //, nodes;
@@ -9035,7 +9026,7 @@
 			dropZone = dropZones[i];
 			if( 	dropZone.scope.acceptFeedback 
 				&&	dropZone.scope.accept 
-				&&	dropZone.scope.accept(innerScope.scope, {draggedInfo: draggingPointers[idPointer]})
+				&&	dropZone.scope.accept(dropZone.scope.angularScope, {draggedInfo: draggingPointers[idPointer]})
 				) {
 					dropZone.canReceivePointers.push( idPointer );
 					dropZone.element.classList.add( dropZone.scope.acceptFeedback );
@@ -9127,7 +9118,7 @@
 								  link	: function(scope, elements, attrs, controller) {
 									 var element = elements[0];
 									 var idDrop = idDropZone++;
-									 console.log( "alxDroppable", attrs);
+									 // console.log( "alxDroppable", attrs);
 									 var innerScope = 	{ accept			: $parse( attrs.alxDroppable || 'false' )
 														, acceptFeedback	: attrs.alxAcceptFeedback
 														, hoverFeedback		: attrs.alxHoverFeedback
@@ -9214,16 +9205,8 @@
 									}
 
 									// Update instructions
-									this.instructions = [];
-									var i;
-									for(i=0; i<instructionDir.instructions.length; i++) {
-										this.instructions.push( {
-											className	: instructionDir.instructions[i].className,
-											type 		: instructionDir.instructions[i].type,
-											children	: []
-										});
-									}
-									console.log( "Instructions:", this.instructions);
+									this.instructionTypes = instructionDir.instructionTypes;
+									console.log( "instructionTypes:", this.instructionTypes);
 								}
 								, bindToController 	: true
 								, controllerAs	: 'ctrl'
@@ -9249,22 +9232,83 @@
 /* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
+	var actions = __webpack_require__( 100 ),
+		events	= __webpack_require__( 110 )
+		;
+
+	var i, json, ctrl;
 
 	var controllers 	= {
-		ParallelNode 				: __webpack_require__( 100	),
-		SequenceNode				: __webpack_require__( 105	),
-		WhenNode					: __webpack_require__( 108		),
-		ActionNode					: __webpack_require__( 111		)
+		ParallelNode 				: __webpack_require__( 119	),
+		SequenceNode				: __webpack_require__( 124	),
+		WhenNode					: __webpack_require__( 127		),
+		ActionNode					: __webpack_require__( 130		)
 	};
 
 	var templates	 	= {
-		ParallelNode 				: __webpack_require__( 114	),
-		SequenceNode				: __webpack_require__( 115	),
-		WhenNode					: __webpack_require__( 116		),
-		ActionNode					: __webpack_require__( 117	)
+		ParallelNode 				: __webpack_require__( 133	),
+		SequenceNode				: __webpack_require__( 134	),
+		WhenNode					: __webpack_require__( 135		),
+		ActionNode					: __webpack_require__( 136	)
 	};
 
+	// Register instructions classified with respect to their type (workflow, brick type, ...)
+	// instructionTypes
+	// 	name
+	// 	instructions
+	// 		|
+	// 		|
+	var workflow		 = {name: 'Workflow', instructions: []}
+	  , instructionTypes = {workflow: workflow};
+	for(i in controllers) {
+		console.log( "instruction", i);
+		// Instantiate : check if no problem with scope
+		ctrl = new controllers[i]();
+		// Implement a toJSON method for controller in order to serialize
+		json = ctrl.toJSON(); //JSON.stringify( ctrl );
+		// Save the JSON
+		workflow.instructions.push( json );
+	}
+
+	// Register instructions related to ACTIONS
+	var brickType, nodeType, id, instructionType;
+	for(brickType in actions) {
+		instructionType 	= {name: brickType, instructions: []};
+		instructionTypes[brickType] = instructionType;
+		for(nodeType in actions[brickType]) {
+			id = brickType + '/' + nodeType;
+			controllers [id] = ctrl = actions[brickType][nodeType].controller	;
+			templates	[id] = actions[brickType][nodeType].template	;
+			// Save in instructionsTypes
+			console.log( "instruction", id);
+			ctrl = new controllers[id]();
+			// Implement a toJSON method for controller in order to serialize
+			json = ctrl.toJSON(); //JSON.stringify( ctrl );
+			// Save the JSON
+			instructionType.instructions.push( json );
+		}
+	}
+
+	// Register instructions related to EVENTS
+	for(brickType in events) {
+		instructionType 	= instructionTypes[brickType] || {name: brickType, instructions: []};
+		instructionTypes[brickType] = instructionType;
+		for(nodeType in events[brickType]) {
+			id = brickType + '/' + nodeType;
+			controllers [id] = events[brickType][nodeType].controller	;
+			templates	[id] = events[brickType][nodeType].template	;
+			// Save in instructionsTypes
+			ctrl = new controllers[id]();
+			// Implement a toJSON method for controller in order to serialize
+			json = ctrl.toJSON(); //JSON.stringify( ctrl );
+			// Save the JSON
+			instructionType.instructions.push( json );
+		}
+	}
+
+	console.log( "instructionTypes:", instructionTypes);
+
+	// Register the instruction directive in Angular
 	var instructionFct = function(app) {
 		/* Pnode serialization
 			  className: this.className
@@ -9278,7 +9322,7 @@
 					  restrict			: 'E'
 					, controller		: function($scope) {
 						// console.log( "Create an instruction controller", this);
-						var className = this.instruction.className;
+						var className = this.instruction.subType || this.instruction.className;
 						if(controllers[className]) {
 							controllers[className].apply(this, [$scope]);
 						} else {
@@ -9290,7 +9334,7 @@
 					, scope				: { instruction	: "=data"
 										  }
 					, link				: function(scope, element, attr, controller) {
-						var className = controller.instruction.className;
+						var className = controller.instruction.subType || controller.instruction.className;
 						if(templates[className]) {
 							// console.log( "Link instruction", className, templates[className]);
 							element.html( templates[className] );
@@ -9305,12 +9349,13 @@
 	}
 
 	instructionFct.instructions = [];
-	var i, fct;
+	var fct;
 	for(i in controllers) {
 		fct = controllers[i];
 		instructionFct.instructions.push( {className: i, type: fct.type} );
 	}
 
+	instructionFct.instructionTypes = instructionTypes;
 
 	module.exports = instructionFct;
 
@@ -9318,14 +9363,372 @@
 /* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 101		);
-	__webpack_require__( 103	);
+	module.exports = {
+		BrickUPnP_MediaRenderer	: {
+			ActionNodePlay	: { controller	: __webpack_require__( 101	)
+							  , template	: __webpack_require__( 107 ) },
+			ActionNodePause	: { controller	: __webpack_require__( 108	)
+							  , template	: __webpack_require__( 107 ) },
+			ActionNodeStop	: { controller	: __webpack_require__( 109 	)
+							  , template	: __webpack_require__( 107 ) }
+		}
+	};
+
+
+/***/ },
+/* 101 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ActionNodeBrickUPnP_MediaRenderer = __webpack_require__( 102 );
+
+	var ActionNodePlay = function(scope) {
+		this.instruction	=  this.instruction	
+							||	{ className		: 'ActionNode'
+								, subType		: 'BrickUPnP_MediaRenderer/ActionNodePlay'
+								, actionLabel	: 'Play'
+								, actionIcon	: "/js/Presentations/UPnP/images/icon_PLAY.png"
+								, children		: []
+								};
+		ActionNodeBrickUPnP_MediaRenderer.apply(this, [scope]);
+		this.type			= ActionNodePlay.type;
+	}
+
+	ActionNodePlay.type = ActionNodeBrickUPnP_MediaRenderer.type.slice();
+	ActionNodePlay.type.push( 'ActionNodePlay' );
+
+	module.exports = ActionNodePlay;
+
+
+/***/ },
+/* 102 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ActionNode = __webpack_require__( 103 );
+
+	var ActionNodeBrickUPnP_MediaRenderer = function(scope) {
+		ActionNode.apply(this, [scope]);
+		this.actionLabel	= this.instruction.actionLabel	|| "Action";
+		this.actionIcon		= this.instruction.actionIcon	|| "/js/Presentations/UPnP/images/defaultMediaRenderer.png";
+		this.type			= ActionNodeBrickUPnP_MediaRenderer.type;
+		this.sources		= ['BrickUPnP_MediaRenderer'];
+	}
+
+	ActionNodeBrickUPnP_MediaRenderer.type = ActionNode.type.slice();
+	ActionNodeBrickUPnP_MediaRenderer.type.push( 'ActionNodeBrickUPnP_MediaRenderer' );
+
+	module.exports = ActionNodeBrickUPnP_MediaRenderer;
+
+
+/***/ },
+/* 103 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__( 104		);
+	var Pnode = __webpack_require__( 106 );
+
+	var ActionNode = function(scope) {
+		Pnode.apply(this, [scope]);
+		
+		this.instruction	= this.instruction				|| {children: [], className: "ActionNode"};
+		this.actionLabel	= this.instruction.actionLabel	|| "Action";
+		this.actionIcon		= this.instruction.actionIcon	|| "/js/Presentations/HTML_templates/event-icon.png";
+		this.type			= ActionNode.type;
+		this.sources		= ['Brick'];
+
+		this.toJSON	= this.toJSON_ActionNode = function() {
+			var json = this.toJSON_Pnode();
+			json.actionLabel	= this.instruction.actionLabel;
+			json.actionIcon 	= this.instruction.actionIcon;
+			return json;
+		}
+	}
+
+	ActionNode.type = ['Pnode', 'ActionNode'];
+
+	module.exports = ActionNode;
+
+
+/***/ },
+/* 104 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 105 */,
+/* 106 */
+/***/ function(module, exports) {
+
+	var id = 0;
+
+	var Pnode = function(scope) {
+		this.PnodeControllerId = id++;
+		if(scope) {scope.Pnode = Pnode;}
+		this.toJSON	= this.toJSON_Pnode = function() {
+			var json = {
+				className	: this.instruction.className,
+				children	: this.instruction.children
+			};
+			if(this.instruction.subType) {json.subType = this.instruction.subType;}
+			return json;
+		}
+	};
+
+	Pnode.hasOneType	= function(instruction, types) {
+			return types.indexOf( instruction.draggedData.className ) >= 0
+				|| types.indexOf( instruction.draggedData.subType	) >= 0 ;
+		}
+
+	module.exports = Pnode;
+
+/***/ },
+/* 107 */
+/***/ function(module, exports) {
+
+	module.exports = "<section ng-class=\"ctrl.type\">\r\n\t<img class=\"action_symbol\" ng-src=\"{{ctrl.actionIcon}}\"></img>\r\n\t<div class=\"action_description\">\r\n\t\t<p class=\"actionName\" ng-bind=\"ctrl.actionLabel\"></p>\r\n\t\t<p \tclass=\"selector\"\r\n\t\t\talx-droppable\t\t= \"draggedInfo.hasOneTypeIn(ctrl.sources)\"\r\n\t\t\talx-accept-feedback\t= \"candrop\"\r\n\t\t\talx-hover-feedback\t= \"overdrop\"\r\n\t\t\tdrop-action\t\t\t= \"ctrl.appendAction(draggedInfo)\"\r\n\t\t\t>\r\n\t\t\t<p ng-hide=\"ctrl.instruction.children.length === 0\">Drop ACTION here</p>\r\n\t\t\t<instruction ng-repeat\t= \"instruction in ctrl.instruction.children\"\r\n\t\t\t\t\t\t data\t\t= \"instruction\"\r\n\t\t\t\t\t\t>\r\n\t\t\t</instruction>\r\n\t\t</p>\r\n\t</div>\r\n</section>\r\n"
+
+/***/ },
+/* 108 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ActionNodeBrickUPnP_MediaRenderer = __webpack_require__( 102 );
+
+	var ActionNodePause = function(scope) {
+		this.instruction	=	this.instruction	
+							||	{ className		: 'ActionNode'
+								, subType		: 'BrickUPnP_MediaRenderer/ActionNodePause'
+								, actionLabel	: 'Pause'
+								, actionIcon	: "/js/Presentations/UPnP/images/icon_PAUSE.png"
+								, children		: []
+								};
+
+		ActionNodeBrickUPnP_MediaRenderer.apply(this, [scope]);
+		this.type			= ActionNodePause.type;
+	}
+
+	ActionNodePause.type = ActionNodeBrickUPnP_MediaRenderer.type.slice();
+	ActionNodePause.type.push( 'ActionNodePause' );
+
+	module.exports = ActionNodePause;
+
+
+/***/ },
+/* 109 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ActionNodeBrickUPnP_MediaRenderer = __webpack_require__( 102 );
+
+	var ActionNodeStop = function(scope) {
+		this.instruction	=  this.instruction	
+							||	{ className		: 'ActionNode'
+								, subType		: 'BrickUPnP_MediaRenderer/ActionNodeStop'
+								, actionLabel	: 'Stop'
+								, actionIcon	: "/js/Presentations/UPnP/images/icon_STOP.png"
+								, children		: []
+								};
+		ActionNodeBrickUPnP_MediaRenderer.apply(this, [scope]);
+		this.type			= ActionNodeStop.type;
+	}
+
+	ActionNodeStop.type = ActionNodeBrickUPnP_MediaRenderer.type.slice();
+	ActionNodeStop.type.push( 'ActionNodeStop' );
+
+	module.exports = ActionNodeStop;
+
+
+/***/ },
+/* 110 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = {
+		BrickUPnP_MediaRenderer	: {
+			EventNodePlay	: { controller	: __webpack_require__( 111	)
+							  , template	: __webpack_require__( 116 ) },
+			EventNodePause	: { controller	: __webpack_require__( 117)
+							  , template	: __webpack_require__( 116 ) },
+			EventNodeStop	: { controller	: __webpack_require__( 118 )
+							  , template	: __webpack_require__( 116 ) }
+		}
+	};
+
+
+/***/ },
+/* 111 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// require( "./EventNode.css"		);
+
+	var EventNodeBrickUPnP_MediaRenderer = __webpack_require__( 112 );
+
+
+	var EventNodePlay = function(scope) {
+		this.instruction	=	this.instruction	
+							||	{ className		: 'EventNode'
+								, subType		: 'BrickUPnP_MediaRenderer/EventNodePlay'
+								, eventLabel	: 'Play'
+								, eventIcon		: "/js/Presentations/UPnP/images/icon_PLAY.png"
+								, children		: []
+								};
+		EventNodeBrickUPnP_MediaRenderer.apply(this, [scope]);
+		this.type			= EventNodePlay.type;
+	}
+
+	EventNodePlay.type = EventNodeBrickUPnP_MediaRenderer.type.slice();
+	EventNodePlay.type.push( 'EventNodePlay' );
+
+	module.exports = EventNodePlay;
+
+
+/***/ },
+/* 112 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// require( "./EventNode.css"		);
+
+	var EventNode	= __webpack_require__( 113 );
+
+	var EventNodeBrickUPnP_MediaRenderer = function(scope) {
+		EventNode.apply(this, [scope]);
+		this.eventLabel		= this.instruction.eventLabel	|| "Event";
+		this.eventIcon		= this.instruction.eventIcon	|| "/js/Presentations/UPnP/images/defaultMediaRenderer.png";
+		this.type			= EventNodeBrickUPnP_MediaRenderer.type;
+		this.sources		= ['BrickUPnP_MediaRenderer'];
+	}
+
+	EventNodeBrickUPnP_MediaRenderer.type = EventNode.type.slice();
+	EventNodeBrickUPnP_MediaRenderer.type.push( 'EventNodeBrickUPnP_MediaRenderer' );
+
+	module.exports = EventNodeBrickUPnP_MediaRenderer;
+
+
+
+
+
+
+
+/***/ },
+/* 113 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__( 114		);
+	var Pnode = __webpack_require__( 106 );
+
+	var EventNode = function(scope) {
+		var ctrl = this;
+		Pnode.apply(this, [scope]);
+
+		this.instruction	= this.instruction				|| {children: [], className: "EventNode"};
+		this.eventLabel		= this.instruction.eventLabel	|| "Event";
+		this.eventIcon		= this.instruction.eventIcon	|| "/js/Presentations/HTML_templates/event-icon.png";
+		this.type			= EventNode.type;
+		this.sources		= ['Brick'];
+
+		this.toJSON	= this.toJSON_EventNode = function() {
+			var json = this.toJSON_Pnode();
+			json.eventLabel	= this.instruction.eventLabel;
+			json.eventIcon 		= this.instruction.eventIcon;
+			return json;
+		}
+
+		this.appendEvent	= function(data) {
+			console.log( "appendEvent", data );
+			scope.$applyAsync(function() {
+				ctrl.instruction.children.push( data.draggedData );
+			});
+		}
+	}
+
+	EventNode.type = ['Pnode', 'EventNode'];
+
+	module.exports = EventNode;
+
+
+/***/ },
+/* 114 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 115 */,
+/* 116 */
+/***/ function(module, exports) {
+
+	module.exports = "<section ng-class=\"ctrl.type\">\r\n\t<img class=\"event_symbol\" ng-src=\"{{ctrl.eventIcon}}\"></img>\r\n\t<div class=\"event_description event\">\r\n\t\t<p class=\"eventName\" ng-bind=\"ctrl.eventLabel\"></p>\r\n\t\t<p \tclass=\"selector\"\r\n\t\t\talx-droppable\t\t= \"draggedInfo.hasOneTypeIn(ctrl.sources)\"\r\n\t\t\talx-accept-feedback\t= \"candrop\"\r\n\t\t\talx-hover-feedback\t= \"overdrop\"\r\n\t\t\tdrop-action\t\t\t= \"ctrl.appendEvent(draggedInfo)\"\r\n\t\t\t>\r\n\t\t\t<p ng-hide=\"ctrl.instruction.children.length === 0\">Drop EVENT here</p>\r\n\t\t\t<instruction ng-repeat\t= \"instruction in ctrl.instruction.children\"\r\n\t\t\t\t\t\t data\t\t= \"instruction\"\r\n\t\t\t\t\t\t>\r\n\t\t\t</instruction>\r\n\t\t</p>\r\n\t</div>\r\n\t<img class=\"eventThunder\" src=\"/js/Presentations/HTML_templates/event-icon.png\"></img>\r\n</section>"
+
+/***/ },
+/* 117 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// require( "./EventNode.css"		);
+
+	var EventNodeBrickUPnP_MediaRenderer = __webpack_require__( 112 );
+
+
+	var EventNodePause = function(scope) {
+		this.instruction	=	this.instruction	
+							||	{ className		: 'EventNode'
+								, subType		: 'BrickUPnP_MediaRenderer/EventNodePause'
+								, eventLabel	: 'Pause'
+								, eventIcon		: "/js/Presentations/UPnP/images/icon_PAUSE.png"
+								, children		: []
+								};
+		EventNodeBrickUPnP_MediaRenderer.apply(this, [scope]);
+		this.type			= EventNodePause.type;
+	}
+
+	EventNodePause.type = EventNodeBrickUPnP_MediaRenderer.type.slice();
+	EventNodePause.type.push( 'EventNodePause' );
+
+	module.exports = EventNodePause;
+
+
+/***/ },
+/* 118 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// require( "./EventNode.css"		);
+
+	var EventNodeBrickUPnP_MediaRenderer = __webpack_require__( 112 );
+
+
+	var EventNodeStop = function(scope) {
+		this.instruction	=	this.instruction	
+							||	{ className		: 'EventNode'
+								, subType		: 'BrickUPnP_MediaRenderer/EventNodeStop'
+								, eventLabel	: 'Stop'
+								, eventIcon		: "/js/Presentations/UPnP/images/icon_STOP.png"
+								, children		: []
+								};
+		EventNodeBrickUPnP_MediaRenderer.apply(this, [scope]);
+		this.type			= EventNodeStop.type;
+		console.log( "EventNodeStop", this);
+	}
+
+	EventNodeStop.type = EventNodeBrickUPnP_MediaRenderer.type.slice();
+	EventNodeStop.type.push( 'EventNodeStop' );
+
+	module.exports = EventNodeStop;
+
+
+/***/ },
+/* 119 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__( 120		);
+	__webpack_require__( 122	);
 	// require( "./ActionNode.css"		);
 
+	var Pnode = __webpack_require__( 106 );
+
+
 	var ParallelNode = function(scope) {
+		Pnode.apply(this, [scope]);
+		
+		this.instruction	= this.instruction	|| {className: 'ParallelNode', children: []};
 		this.type = ParallelNode.type;
 		
-		var pipo = {className: "ActionNode", label: "Parrallel"};
+		var pipo = {className: "ActionNode", label: "Parallel"};
 		if(this.instruction.children.length === 0) {
 			this.instruction.children.push( pipo );
 		}
@@ -9340,29 +9743,35 @@
 	module.exports = ParallelNode;
 
 /***/ },
-/* 101 */
+/* 120 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 102 */,
-/* 103 */
+/* 121 */,
+/* 122 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 104 */,
-/* 105 */
+/* 123 */,
+/* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 101		);
-	__webpack_require__( 106	);
+	__webpack_require__( 120		);
+	__webpack_require__( 125	);
 	// require( "./ActionNode.css"		);
 
+	var Pnode = __webpack_require__( 106 );
+
+
 	var SequenceNode = function(scope) {
-		this.type = SequenceNode.type;
+		Pnode.apply(this, [scope]);
+		
+		this.instruction	= this.instruction	|| {className: 'SequenceNode', children: []};
+		this.type			= SequenceNode.type;
 
 		var pipo = {className: "ActionNode", label: "Sequence"};
 		if(this.instruction.children.length === 0) {
@@ -9380,17 +9789,19 @@
 
 
 /***/ },
-/* 106 */
+/* 125 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 107 */,
-/* 108 */
+/* 126 */,
+/* 127 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 109 );
+	__webpack_require__( 128 );
+
+	var Pnode = __webpack_require__( 106 );
 
 	/*{ childEvent	: null
 	, childReaction	: null
@@ -9400,7 +9811,10 @@
 
 	var WhenNode = function(scope) {
 		var ctrl = this;
+		Pnode.apply(this, [scope]);
+
 		this.type = WhenNode.type;
+		this.instruction	= this.instruction	|| {className: 'WhenNode', children: []};
 		
 		this.appendEvent		= function(data) {
 			console.log( "WhenNode append event", data );
@@ -9414,6 +9828,12 @@
 				ctrl.instruction.childReaction	= data.draggedData;		
 			});
 		}
+		this.toJSON	= this.toJSON_WhenNode = function() {
+			var json = this.toJSON_Pnode();
+			json.childEvent		= this.instruction.childEvent;
+			json.childReaction	= this.instruction.childReaction;
+			return json;
+		}
 	}
 
 	WhenNode.type = ['Pnode', 'ControlFlow', 'WhenNode'];
@@ -9421,19 +9841,24 @@
 	module.exports = WhenNode;
 
 /***/ },
-/* 109 */
+/* 128 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 110 */,
-/* 111 */
+/* 129 */,
+/* 130 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 112		);
+	__webpack_require__( 131		);
+
+	var Pnode = __webpack_require__( 106 );
 
 	var ActionNode = function(scope) {
+		Pnode.apply(this, [scope]);
+
+		this.instruction		= this.instruction	|| {className: 'ActionNode', children: []};
 		this.instruction.label	= this.instruction.label || "Action";
 		this.type				= ActionNode.type;
 	}
@@ -9444,41 +9869,41 @@
 
 
 /***/ },
-/* 112 */
+/* 131 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 113 */,
-/* 114 */
+/* 132 */,
+/* 133 */
 /***/ function(module, exports) {
 
-	module.exports = "<section ng-class \t\t\t\t= \"ctrl.type\"\r\n\t\t alx-droppable\t\t\t= \"draggedInfo.hasOneTypeIn(['ActionNode', 'ControlFlow'])\"\r\n\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t drop-action\t\t\t= \"ctrl.appendChild(draggedInfo)\"\r\n\t\t>\r\n\t<div class=\"prefix frameStructure\"></div>\r\n\t<div class=\"content\">\r\n\t\t<div class \t\t= \"child\"\r\n\t\t\t ng-repeat\t= \"instruction in ctrl.instruction.children track by $index\"\r\n\t\t\t>\r\n\t\t\t<div class=\"separator frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\"></div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<instruction data=\"instruction\"></instruction>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"separator suffix frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\">\r\n\t\t\t\t\t<div class=\"left\"></div><div class=\"right\"></div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t<!-- <div class=\"content\">\r\n\t\t<div class=\"lastOne Pnode ActionNodePresentation\">Drop node</div>\r\n\t</div> -->\r\n\t</div>\r\n\t<div class=\"suffix frameStructure\"></div>\r\n</section>\r\n\r\n"
+	module.exports = "<section ng-class \t\t\t\t= \"ctrl.type\"\r\n\t\t alx-droppable\t\t\t= \"Pnode.hasOneType(draggedInfo, ['ActionNode', 'ControlFlow'])\"\r\n\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t drop-action\t\t\t= \"ctrl.appendChild(draggedInfo)\"\r\n\t\t>\r\n\t<div class=\"prefix frameStructure\"></div>\r\n\t<div class=\"content\">\r\n\t\t<div class \t\t= \"child\"\r\n\t\t\t ng-repeat\t= \"instruction in ctrl.instruction.children track by $index\"\r\n\t\t\t>\r\n\t\t\t<div class=\"separator frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\"></div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<instruction data=\"instruction\"></instruction>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"separator suffix frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\">\r\n\t\t\t\t\t<div class=\"left\"></div><div class=\"right\"></div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t<!-- <div class=\"content\">\r\n\t\t<div class=\"lastOne Pnode ActionNodePresentation\">Drop node</div>\r\n\t</div> -->\r\n\t</div>\r\n\t<div class=\"suffix frameStructure\"></div>\r\n</section>\r\n\r\n"
 
 /***/ },
-/* 115 */
+/* 134 */
 /***/ function(module, exports) {
 
-	module.exports = "<section ng-class\t\t\t\t= \"ctrl.type\"\r\n\t\t alx-droppable\t\t\t= \"draggedInfo.hasOneTypeIn(['ActionNode', 'ControlFlow'])\"\r\n\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t drop-action\t\t\t= \"ctrl.appendChild(draggedInfo)\"\r\n\t\t>\r\n\t<div class=\"prefix frameStructure\"></div>\r\n\t<div class=\"content\">\r\n\t\t<div class \t\t= \"child\"\r\n\t\t\t ng-repeat\t= \"instruction in ctrl.instruction.children track by $index\"\r\n\t\t\t>\r\n\t\t\t<div class=\"separator frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\"></div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<instruction data=\"instruction\"></instruction>\r\n\t\t\t</div>\r\n\t\t\t<div class=\" frameStructure separator suffix\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\">\r\n\t\t\t\t\t<div class=\"left\"></div><div class=\"right\"></div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\t<div class=\"frameStructure suffix\"></div>\r\n</section>"
+	module.exports = "<section ng-class\t\t\t\t= \"ctrl.type\"\r\n\t\t alx-droppable\t\t\t= \"Pnode.hasOneType(draggedInfo, ['ActionNode', 'ControlFlow'])\"\r\n\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t drop-action\t\t\t= \"ctrl.appendChild(draggedInfo)\"\r\n\t\t>\r\n\t<div class=\"prefix frameStructure\"></div>\r\n\t<div class=\"content\">\r\n\t\t<div class \t\t= \"child\"\r\n\t\t\t ng-repeat\t= \"instruction in ctrl.instruction.children track by $index\"\r\n\t\t\t>\r\n\t\t\t<div class=\"separator frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\"></div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<instruction data=\"instruction\"></instruction>\r\n\t\t\t</div>\r\n\t\t\t<div class=\" frameStructure separator suffix\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\">\r\n\t\t\t\t\t<div class=\"left\"></div><div class=\"right\"></div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\t<div class=\"frameStructure suffix\"></div>\r\n</section>"
 
 /***/ },
-/* 116 */
+/* 135 */
 /***/ function(module, exports) {
 
-	module.exports = "<section ng-class=\"ctrl.instruction.type\">\r\n\t<div class=\"arrow\">\r\n\t\t<div class=\"eventSymbol\"></div>\r\n\t\t<div class=\"defwhen\">\r\n\t\t\t<div class=\"eventDrop\">\r\n\t\t\t\t<div class=\"ImplicitVariable\">\r\n\t\t\t\t\tLet's call the event source <div class=\"variableName Pnode Pselector_variable\">brick</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"event\"\r\n\t\t\t\t\t class=\"instructions\"\r\n\t\t\t\t\t alx-droppable\t\t\t= \"draggedInfo.hasOneTypeIn(['EventNode'])\"\r\n\t\t\t\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t\t\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t\t\t\t drop-action\t\t\t= \"ctrl.appendEvent(draggedInfo)\"\r\n\t\t\t\t\t>\r\n\t\t\t\t\t<p ng-hide=\"ctrl.instruction.childEvent\">Drop EVENT here</p>\r\n\t\t\t\t\t<div ng-if=\"ctrl.instruction.childEvent\">\r\n\t\t\t\t\t\t<instruction data=\"ctrl.instruction.childEvent\"></instruction>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t\t<img src=\"/js/Presentations/HTML_templates/implySymbol.svg\"></img>\r\n\t\t\t<div class=\"instructions\"\r\n\t\t\t\t alx-droppable\t\t\t= \"draggedInfo.hasOneTypeIn(['ActionNode', 'ControlFlow'])\"\r\n\t\t\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t\t\t drop-action\t\t\t= \"ctrl.appendInstruction(draggedInfo)\"\r\n\t\t\t\t>\r\n\t\t\t\t<p ng-hide=\"ctrl.instruction.childReaction\">Drop REACTION here</p>\r\n\t\t\t\t<div ng-if=\"ctrl.instruction.childReaction\">\r\n\t\t\t\t\t<instruction data=\"ctrl.instruction.childReaction\"></instruction>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n</section>\r\n"
+	module.exports = "<section ng-class=\"ctrl.type\">\r\n\t<div class=\"arrow\">\r\n\t\t<div class=\"eventSymbol\"></div>\r\n\t\t<div class=\"defwhen\">\r\n\t\t\t<div class=\"eventDrop\">\r\n\t\t\t\t<div class=\"ImplicitVariable\">\r\n\t\t\t\t\tLet's call the event source <div class=\"variableName Pnode Pselector_variable\">brick</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"event\"\r\n\t\t\t\t\t class=\"instructions\"\r\n\t\t\t\t\t alx-droppable\t\t\t= \"ctrl.hasOneType(draggedInfo, ['EventNode'])\"\r\n\t\t\t\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t\t\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t\t\t\t drop-action\t\t\t= \"Pnode.appendEvent(draggedInfo)\"\r\n\t\t\t\t\t>\r\n\t\t\t\t\t<p ng-hide=\"ctrl.instruction.childEvent\">Drop EVENT here</p>\r\n\t\t\t\t\t<div ng-if=\"ctrl.instruction.childEvent\">\r\n\t\t\t\t\t\t<instruction data=\"ctrl.instruction.childEvent\"></instruction>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t\t<img src=\"/js/Presentations/HTML_templates/implySymbol.svg\"></img>\r\n\t\t\t<div class=\"instructions\"\r\n\t\t\t\t alx-droppable\t\t\t= \"Pnode.hasOneType(draggedInfo, ['ActionNode', 'ControlFlow'])\"\r\n\t\t\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t\t\t drop-action\t\t\t= \"ctrl.appendInstruction(draggedInfo)\"\r\n\t\t\t\t>\r\n\t\t\t\t<p ng-hide=\"ctrl.instruction.childReaction\">Drop REACTION here</p>\r\n\t\t\t\t<div ng-if=\"ctrl.instruction.childReaction\">\r\n\t\t\t\t\t<instruction data=\"ctrl.instruction.childReaction\"></instruction>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n</section>\r\n"
 
 /***/ },
-/* 117 */
+/* 136 */
 /***/ function(module, exports) {
 
 	module.exports = "<section ng-class=\"ctrl.type\">\r\n\t{{ctrl.instruction.label}}\r\n</section>"
 
 /***/ },
-/* 118 */
+/* 137 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 119 );
+	__webpack_require__( 138 );
 
 	// var utils = require( "../../../js/utils.js" );
 
@@ -9544,17 +9969,17 @@
 
 
 /***/ },
-/* 119 */
+/* 138 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 120 */,
-/* 121 */
+/* 139 */,
+/* 140 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 122 );
+	__webpack_require__( 141 );
 
 	var utils = __webpack_require__( 8 );
 	var templates	=	{ default		: __webpack_require__( 76 )
@@ -9595,39 +10020,40 @@
 
 
 /***/ },
-/* 122 */
+/* 141 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 123 */,
-/* 124 */
+/* 142 */,
+/* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__( 5 );
 
 	var utils = __webpack_require__( 8 );
-	var templates	=	{ BrickOpenHAB_Switch			: __webpack_require__( 77		)
-						, BrickOpenHAB_String			: __webpack_require__( 78		)
-						, BrickOpenHAB_RollerShutter	: __webpack_require__( 79)
-						, BrickOpenHAB_Number			: __webpack_require__( 80		)
-						, BrickOpenHAB_Dimmer			: __webpack_require__( 81		)
-						, BrickOpenHAB_DateTime			: __webpack_require__( 82		)
-						, BrickOpenHAB_Contact			: __webpack_require__( 83		)
-						, BrickOpenHAB_Color			: __webpack_require__( 84		)
+	/*
+	var templates	=	{ BrickOpenHAB_Switch			: require( "./templates/BrickOpenHAB_Switch.html"		)
+						, BrickOpenHAB_String			: require( "./templates/BrickOpenHAB_String.html"		)
+						, BrickOpenHAB_RollerShutter	: require( "./templates/BrickOpenHAB_RollerShutter.html")
+						, BrickOpenHAB_Number			: require( "./templates/BrickOpenHAB_Number.html"		)
+						, BrickOpenHAB_Dimmer			: require( "./templates/BrickOpenHAB_Dimmer.html"		)
+						, BrickOpenHAB_DateTime			: require( "./templates/BrickOpenHAB_DateTime.html"		)
+						, BrickOpenHAB_Contact			: require( "./templates/BrickOpenHAB_Contact.html"		)
+						, BrickOpenHAB_Color			: require( "./templates/BrickOpenHAB_Color.html"		)
 						};
 
-	var controllers	=	{ BrickOpenHAB_Switch			: __webpack_require__( 65			)
-						, BrickOpenHAB_String			: __webpack_require__( 67			)
-						, BrickOpenHAB_RollerShutter	: __webpack_require__( 68	)
-						, BrickOpenHAB_Number			: __webpack_require__( 69			)
-						, BrickOpenHAB_Dimmer			: __webpack_require__( 70			)
-						, BrickOpenHAB_DateTime			: __webpack_require__( 71		)
-						, BrickOpenHAB_Contact			: __webpack_require__( 72		)
-						, BrickOpenHAB_Color			: __webpack_require__( 73			)
+	var controllers	=	{ BrickOpenHAB_Switch			: require( "./templates/BrickOpenHAB_Switch.js"			)
+						, BrickOpenHAB_String			: require( "./templates/BrickOpenHAB_String.js"			)
+						, BrickOpenHAB_RollerShutter	: require( "./templates/BrickOpenHAB_RollerShutter.js"	)
+						, BrickOpenHAB_Number			: require( "./templates/BrickOpenHAB_Number.js"			)
+						, BrickOpenHAB_Dimmer			: require( "./templates/BrickOpenHAB_Dimmer.js"			)
+						, BrickOpenHAB_DateTime			: require( "./templates/BrickOpenHAB_DateTime.js"		)
+						, BrickOpenHAB_Contact			: require( "./templates/BrickOpenHAB_Contact.js"		)
+						, BrickOpenHAB_Color			: require( "./templates/BrickOpenHAB_Color.js"			)
 						};
-						
+	*/					
 	// Subscribe to openHab messages
 	// 		openHab_state
 	// 		openHab_update
@@ -9733,13 +10159,13 @@
 
 
 /***/ },
-/* 125 */
+/* 144 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bleSensorTag 	= __webpack_require__( 126 )
-	  , bleBrick		= __webpack_require__( 130 )
-	  , bleMetawear		= __webpack_require__( 131 )
-	  , alxGrapher		= __webpack_require__( 134 )
+	var bleSensorTag 	= __webpack_require__( 145 )
+	  , bleBrick		= __webpack_require__( 149 )
+	  , bleMetawear		= __webpack_require__( 150 )
+	  , alxGrapher		= __webpack_require__( 153 )
 	  , utils			= __webpack_require__( 8 )
 	  ;
 
@@ -9794,13 +10220,13 @@
 	}
 
 /***/ },
-/* 126 */
+/* 145 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 127 );
+	__webpack_require__( 146 );
 
 	var utils				= __webpack_require__( 8 )
-	  , subscribeForEvent	= __webpack_require__( 129 )
+	  , subscribeForEvent	= __webpack_require__( 148 )
 	  ;
 
 	module.exports = function(app) {
@@ -9914,14 +10340,14 @@
 	}
 
 /***/ },
-/* 127 */
+/* 146 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 128 */,
-/* 129 */
+/* 147 */,
+/* 148 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 8 );
@@ -9963,11 +10389,11 @@
 
 
 /***/ },
-/* 130 */
+/* 149 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils				= __webpack_require__( 8 )
-	  , subscribeForEvent	= __webpack_require__( 129 )
+	  , subscribeForEvent	= __webpack_require__( 148 )
 	  ;
 
 	module.exports = function(app) {
@@ -10062,13 +10488,13 @@
 	}
 
 /***/ },
-/* 131 */
+/* 150 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 132 );
+	__webpack_require__( 151 );
 
 	var utils				= __webpack_require__( 8 )
-	  , subscribeForEvent	= __webpack_require__( 129 )
+	  , subscribeForEvent	= __webpack_require__( 148 )
 	  ;
 
 	module.exports = function(app) {
@@ -10165,17 +10591,17 @@
 	}
 
 /***/ },
-/* 132 */
+/* 151 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 133 */,
-/* 134 */
+/* 152 */,
+/* 153 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 135 );
+	__webpack_require__( 154 );
 	//var resizeDetector = require( "../../../js/resizeDetector.js" );
 
 
@@ -10242,7 +10668,7 @@
 
 
 /***/ },
-/* 135 */
+/* 154 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin

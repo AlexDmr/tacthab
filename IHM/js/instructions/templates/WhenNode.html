@@ -1,4 +1,4 @@
-<section ng-class="ctrl.instruction.type">
+<section ng-class="ctrl.type">
 	<div class="arrow">
 		<div class="eventSymbol"></div>
 		<div class="defwhen">
@@ -8,10 +8,10 @@
 				</div>
 				<div class="event"
 					 class="instructions"
-					 alx-droppable			= "draggedInfo.hasOneTypeIn(['EventNode'])"
+					 alx-droppable			= "ctrl.hasOneType(draggedInfo, ['EventNode'])"
 					 alx-accept-feedback	= "candrop"
 					 alx-hover-feedback		= "overdrop"
-					 drop-action			= "ctrl.appendEvent(draggedInfo)"
+					 drop-action			= "Pnode.appendEvent(draggedInfo)"
 					>
 					<p ng-hide="ctrl.instruction.childEvent">Drop EVENT here</p>
 					<div ng-if="ctrl.instruction.childEvent">
@@ -21,7 +21,7 @@
 			</div>
 			<img src="/js/Presentations/HTML_templates/implySymbol.svg"></img>
 			<div class="instructions"
-				 alx-droppable			= "draggedInfo.hasOneTypeIn(['ActionNode', 'ControlFlow'])"
+				 alx-droppable			= "Pnode.hasOneType(draggedInfo, ['ActionNode', 'ControlFlow'])"
 				 alx-accept-feedback	= "candrop"
 				 alx-hover-feedback		= "overdrop"
 				 drop-action			= "ctrl.appendInstruction(draggedInfo)"

@@ -2,8 +2,14 @@ require( "./NChildNode.css"		);
 require( "./SequenceNode.css"	);
 // require( "./ActionNode.css"		);
 
+var Pnode = require( "../Pnode.js" );
+
+
 var SequenceNode = function(scope) {
-	this.type = SequenceNode.type;
+	Pnode.apply(this, [scope]);
+	
+	this.instruction	= this.instruction	|| {className: 'SequenceNode', children: []};
+	this.type			= SequenceNode.type;
 
 	var pipo = {className: "ActionNode", label: "Sequence"};
 	if(this.instruction.children.length === 0) {

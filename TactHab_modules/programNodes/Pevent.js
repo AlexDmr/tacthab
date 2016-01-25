@@ -66,7 +66,7 @@ EventNode.prototype.getRelatedTypes	= function() {
 EventNode.prototype.serialize		= function() {
 	var json = Pnode.prototype.serialize.apply(this, []);
 	// Describe event here
-	json.subType = this.subType;
+	json.subType	= this.subType;
 	if(this.implicitVariableId) {json.implicitVariableId = this.implicitVariableId;}
 	return json;
 }

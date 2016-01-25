@@ -1,0 +1,18 @@
+<section ng-class="ctrl.type">
+	<img class="action_symbol" ng-src="{{ctrl.actionIcon}}"></img>
+	<div class="action_description">
+		<p class="actionName" ng-bind="ctrl.actionLabel"></p>
+		<p 	class="selector"
+			alx-droppable		= "draggedInfo.hasOneTypeIn(ctrl.sources)"
+			alx-accept-feedback	= "candrop"
+			alx-hover-feedback	= "overdrop"
+			drop-action			= "ctrl.appendAction(draggedInfo)"
+			>
+			<p ng-hide="ctrl.instruction.children.length === 0">Drop ACTION here</p>
+			<instruction ng-repeat	= "instruction in ctrl.instruction.children"
+						 data		= "instruction"
+						>
+			</instruction>
+		</p>
+	</div>
+</section>

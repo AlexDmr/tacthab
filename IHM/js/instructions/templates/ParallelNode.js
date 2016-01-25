@@ -2,10 +2,16 @@ require( "./NChildNode.css"		);
 require( "./ParallelNode.css"	);
 // require( "./ActionNode.css"		);
 
+var Pnode = require( "../Pnode.js" );
+
+
 var ParallelNode = function(scope) {
+	Pnode.apply(this, [scope]);
+	
+	this.instruction	= this.instruction	|| {className: 'ParallelNode', children: []};
 	this.type = ParallelNode.type;
 	
-	var pipo = {className: "ActionNode", label: "Parrallel"};
+	var pipo = {className: "ActionNode", label: "Parallel"};
 	if(this.instruction.children.length === 0) {
 		this.instruction.children.push( pipo );
 	}

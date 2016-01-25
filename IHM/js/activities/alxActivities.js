@@ -36,16 +36,8 @@ module.exports = function(app) {
 								}
 
 								// Update instructions
-								this.instructions = [];
-								var i;
-								for(i=0; i<instructionDir.instructions.length; i++) {
-									this.instructions.push( {
-										className	: instructionDir.instructions[i].className,
-										type 		: instructionDir.instructions[i].type,
-										children	: []
-									});
-								}
-								console.log( "Instructions:", this.instructions);
+								this.instructionTypes = instructionDir.instructionTypes;
+								console.log( "instructionTypes:", this.instructionTypes);
 							}
 							, bindToController 	: true
 							, controllerAs	: 'ctrl'

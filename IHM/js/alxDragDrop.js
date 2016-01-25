@@ -80,21 +80,12 @@ function getCB_dragLeave_mouse(scope) {return function(e) {dragLeave(e, "mouse",
 //_________________________________________________________________________________________________________________
 // Draggables -----------------------------------------------------------------------------------------------------
 //_________________________________________________________________________________________________________________
-function hasOneTypeIn(types) {
-	var i;
-	for(i=0; i<types.length; i++) {
-		if(this.draggedData.type.indexOf(types[i]) >= 0) {return true;}
-	}
-	return false;
-}
-
 function dragStart(event, idPointer, info, innerScope) {
 	// console.log( "->dragStart", idPointer, draggedData );
 	if(event.dataTransfer) {event.dataTransfer.setData("text/plain", "toto");}
 	draggingPointers[idPointer] = { node		: event.currentTarget
 								  , draggedData	: innerScope.draggedData
 								  , canDrop		: 0
-								  , hasOneTypeIn: hasOneTypeIn
 								  };
 	// Update all dropzone that can handle that node...
 	var dropZone, i; //, nodes;
@@ -102,7 +93,7 @@ function dragStart(event, idPointer, info, innerScope) {
 		dropZone = dropZones[i];
 		if( 	dropZone.scope.acceptFeedback 
 			&&	dropZone.scope.accept 
-			&&	dropZone.scope.accept(innerScope.scope, {draggedInfo: draggingPointers[idPointer]})
+			&&	dropZone.scope.accept(dropZone.scope.angularScope, {draggedInfo: draggingPointers[idPointer]})
 			) {
 				dropZone.canReceivePointers.push( idPointer );
 				dropZone.element.classList.add( dropZone.scope.acceptFeedback );
@@ -194,7 +185,7 @@ module.exports = function(app) {
 							  link	: function(scope, elements, attrs, controller) {
 								 var element = elements[0];
 								 var idDrop = idDropZone++;
-								 console.log( "alxDroppable", attrs);
+								 // console.log( "alxDroppable", attrs);
 								 var innerScope = 	{ accept			: $parse( attrs.alxDroppable || 'false' )
 													, acceptFeedback	: attrs.alxAcceptFeedback
 													, hoverFeedback		: attrs.alxHoverFeedback

@@ -1,6 +1,7 @@
 require( "./openHab.css" );
 
 var utils = require( "../../../js/utils.js" );
+/*
 var templates	=	{ BrickOpenHAB_Switch			: require( "./templates/BrickOpenHAB_Switch.html"		)
 					, BrickOpenHAB_String			: require( "./templates/BrickOpenHAB_String.html"		)
 					, BrickOpenHAB_RollerShutter	: require( "./templates/BrickOpenHAB_RollerShutter.html")
@@ -20,7 +21,7 @@ var controllers	=	{ BrickOpenHAB_Switch			: require( "./templates/BrickOpenHAB_S
 					, BrickOpenHAB_Contact			: require( "./templates/BrickOpenHAB_Contact.js"		)
 					, BrickOpenHAB_Color			: require( "./templates/BrickOpenHAB_Color.js"			)
 					};
-					
+*/					
 // Subscribe to openHab messages
 // 		openHab_state
 // 		openHab_update
