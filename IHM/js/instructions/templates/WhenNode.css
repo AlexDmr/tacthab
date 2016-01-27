@@ -61,11 +61,11 @@ instruction > section.WhenNode > .arrow > .defwhen > .instructions {
 }
 
 instruction > section.WhenNode > .arrow > .defwhen > .instructions.candrop {
-	background-color			: cyan; 
+	animation					: WhenNode_candrop 0.5s ease-in-out infinite;
 }
 
 instruction > section.WhenNode > .arrow > .defwhen > .instructions.candrop.overdrop {
-	background-color			: lightcyan; 
+	background-color			: WhenNode_candrop_overdrop 0.5s ease-in-out infinite;
 }
 
 instruction > section.WhenNode > .arrow > .defwhen > img {
@@ -75,3 +75,14 @@ instruction > section.WhenNode > .arrow > .defwhen > img {
 	flex						: 0 0 auto;
 }
 
+@keyframes WhenNode_candrop {
+	0%		{background-color	: initial;}
+	50%		{background-color	: green;}
+	100%	{background-color	: initial;}
+}
+
+@keyframes WhenNode_candrop_overdrop {
+	0%		{background-color	: green;}
+	50%		{background-color	: lightgreen;}
+	100%	{background-color	: green;}
+}

@@ -15,7 +15,7 @@ BrickUPnP_MediaServer.prototype.getTypeName = function() {return "BrickUPnP_Medi
 BrickUPnP_MediaServer.prototype.registerType('BrickUPnP_MediaServer', BrickUPnP_MediaServer.prototype);
 BrickUPnP_MediaServer.prototype.getTypes		= function() {var L=BrickUPnP.prototype.getTypes(); L.push(BrickUPnP_MediaServer.prototype.getTypeName()); return L;}
 
-BrickUPnP_MediaServer.prototype.getMetaData	= function(ObjectID, callback) {
+BrickUPnP_MediaServer.prototype.getMetaData	= function(ObjectID) {
 	 var service = this.UPnP.device.services['urn:upnp-org:serviceId:ContentDirectory'];
 	 return new Promise( function(resolve, reject) {
 		 service.callAction	( 'Browse'
@@ -28,13 +28,12 @@ BrickUPnP_MediaServer.prototype.getMetaData	= function(ObjectID, callback) {
 							  }
 							, function(err, buffer) {
 								 // console.log('BrickUPnP_MediaServer::getMetaData', err || buffer);
-								 if(callback) {callback(err || buffer);}
 								 if(err) {reject(err);} else {resolve(buffer);}
 								}
 							);
 	 });
 	}
-BrickUPnP_MediaServer.prototype.Browse	= function(ObjectID, callback) {
+BrickUPnP_MediaServer.prototype.Browse	= function(ObjectID) {
 	 var service = this.UPnP.device.services['urn:upnp-org:serviceId:ContentDirectory'];
 	 return new Promise( function(resolve, reject) {
 		 service.callAction	( 'Browse'
@@ -47,7 +46,6 @@ BrickUPnP_MediaServer.prototype.Browse	= function(ObjectID, callback) {
 							  }
 							, function(err, buffer) {
 								 if(err) {console.error("Error:", err);}
-								 if(callback) {callback(err || buffer);}
 								 if(err) {reject(err);} else {resolve(buffer);}
 								}
 							);
