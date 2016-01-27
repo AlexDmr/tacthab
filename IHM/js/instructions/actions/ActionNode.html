@@ -6,7 +6,7 @@
 			alx-droppable		= "draggedInfo.hasOneTypeIn(ctrl.sources)"
 			alx-accept-feedback	= "candrop"
 			alx-hover-feedback	= "overdrop"
-			drop-action			= "ctrl.appendAction(draggedInfo)"
+			alx-drop-action		= "ctrl.appendAction(draggedInfo)"
 			>
 			<p ng-hide="ctrl.instruction.children.length === 0">Drop ACTION here</p>
 			<instruction ng-repeat	= "instruction in ctrl.instruction.children"

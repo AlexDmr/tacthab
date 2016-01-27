@@ -8695,8 +8695,8 @@
 		app.directive	( "mediaPlayer"
 						, function() {
 							return {
-								  restrict	: 'E'
-								, controller	: function($scope) {
+								  restrict			: 'E'
+								, controller		: function($scope) {
 										 var ctrl = this;
 										 this.state = {};
 										 ctrl.playState = "";
@@ -8720,8 +8720,8 @@
 																  }
 																);
 										 // ctrl.volume = 0;
-										 // console.log( "new mediaPlayer getMediasStates", $scope.brick );
-										 utils.call	( $scope.brick.id, "getMediasStates", []
+										 // console.log( "new mediaPlayer getMediasStates", ctrl.brick );
+										 utils.call	( ctrl.brick.id, "getMediasStates", []
 													).then( function(state) {
 																// console.log( "getMediasStates", state);
 																ctrl.state = state;
@@ -8735,19 +8735,19 @@
 											 $scope.$apply();
 										 }
 										 this.setVolume	= function(volume) {
-											 return utils.call	( $scope.brick.id, "setVolume", [volume] );
+											 return utils.call	( ctrl.brick.id, "setVolume", [volume] );
 										 }
 										 this.Play	= function() {
-											 return utils.call	( $scope.brick.id, "Play", [] );
+											 return utils.call	( ctrl.brick.id, "Play", [] );
 										 }
 										 this.Stop	= function() {
-											 return utils.call	( $scope.brick.id, "Stop", [] );										 
+											 return utils.call	( ctrl.brick.id, "Stop", [] );										 
 										 }
 										 this.Pause	= function() {
-											 return utils.call	( $scope.brick.id, "Pause", [] );
+											 return utils.call	( ctrl.brick.id, "Pause", [] );
 										 }
 										 this.Load	= function(serverId, mediaId) {
-											 return utils.call	( $scope.brick.id, "loadMedia", [serverId, mediaId] );
+											 return utils.call	( ctrl.brick.id, "loadMedia", [serverId, mediaId] );
 										 }
 										 this.dropMedia	= function(event, draggedInfo) {
 											 // console.log( "dropMedia", event, draggedInfo);
@@ -8756,16 +8756,17 @@
 															 ).then( function(res) {ctrl.Play()} );
 										 }
 										}
-								, controllerAs	: 'mpc'
-								, templateUrl	: "/IHM/js/brick/mediaPlayer.html"
-								, scope			: { brick	: "=brick"
-												  }
-								, link			: function(scope, element, attr, controller) {
+								, bindToController 	: true
+								, controllerAs		: 'ctrl'
+								, templateUrl		: "/IHM/js/brick/mediaPlayer.html"
+								, scope				: { brick	: "=brick"
+													  }
+								, link				: function(scope, element, attr, controller) {
 									 // Subscribe to socket.io events
 									 var eventCB
-									   , cbEventName = scope.brick.id + "->eventUPnP";
+									   , cbEventName = controller.brick.id + "->eventUPnP";
 									 utils.io.emit	( "subscribeBrick"
-													, { brickId		: scope.brick.id
+													, { brickId		: controller.brick.id
 													  , eventName	: "eventUPnP"
 													  , cbEventName	: cbEventName
 													  } 
@@ -8787,27 +8788,13 @@
 													, function() {
 														 utils.io.off( cbEventName, eventCB);
 														 utils.io.emit	( "unSubscribeBrick"
-																		, { brickId		: scope.brick.brickId
+																		, { brickId		: controller.brick.brickId
 																		  , eventName	: "eventUPnP"
 																		  , cbEventName	: cbEventName
 																		  }
 																		);
 														} 
 													);
-									/* OLD
-									 var eventCB = function(data) {
-											 console.log(data);
-											 controller.state[data.serviceType] = controller.state[data.serviceType] || {};
-											 try {
-												 controller.state[data.serviceType][data.attribut] = data.value;
-												 controller.updateFromUPnP();
-												} catch(error) {
-													console.error(error);
-												}
-											}
-									 element.on	( "$destroy", function() {utils.io.off( "eventForBrick_" + scope.brick.id, eventCB);} );
-									 utils.io.on( "eventForBrick_" + scope.brick.id, eventCB);
-									 */
 									}
 								};
 							}
@@ -9122,7 +9109,7 @@
 									 var innerScope = 	{ accept			: $parse( attrs.alxDroppable || 'false' )
 														, acceptFeedback	: attrs.alxAcceptFeedback
 														, hoverFeedback		: attrs.alxHoverFeedback
-														, dropAction		: $parse( attrs.dropAction )
+														, dropAction		: $parse( attrs.alxDropAction )
 														, angularScope		: scope
 														}
 									   ;
@@ -9485,7 +9472,7 @@
 /* 107 */
 /***/ function(module, exports) {
 
-	module.exports = "<section ng-class=\"ctrl.type\">\r\n\t<img class=\"action_symbol\" ng-src=\"{{ctrl.actionIcon}}\"></img>\r\n\t<div class=\"action_description\">\r\n\t\t<p class=\"actionName\" ng-bind=\"ctrl.actionLabel\"></p>\r\n\t\t<p \tclass=\"selector\"\r\n\t\t\talx-droppable\t\t= \"draggedInfo.hasOneTypeIn(ctrl.sources)\"\r\n\t\t\talx-accept-feedback\t= \"candrop\"\r\n\t\t\talx-hover-feedback\t= \"overdrop\"\r\n\t\t\tdrop-action\t\t\t= \"ctrl.appendAction(draggedInfo)\"\r\n\t\t\t>\r\n\t\t\t<p ng-hide=\"ctrl.instruction.children.length === 0\">Drop ACTION here</p>\r\n\t\t\t<instruction ng-repeat\t= \"instruction in ctrl.instruction.children\"\r\n\t\t\t\t\t\t data\t\t= \"instruction\"\r\n\t\t\t\t\t\t>\r\n\t\t\t</instruction>\r\n\t\t</p>\r\n\t</div>\r\n</section>\r\n"
+	module.exports = "<section ng-class=\"ctrl.type\">\r\n\t<img class=\"action_symbol\" ng-src=\"{{ctrl.actionIcon}}\"></img>\r\n\t<div class=\"action_description\">\r\n\t\t<p class=\"actionName\" ng-bind=\"ctrl.actionLabel\"></p>\r\n\t\t<p \tclass=\"selector\"\r\n\t\t\talx-droppable\t\t= \"draggedInfo.hasOneTypeIn(ctrl.sources)\"\r\n\t\t\talx-accept-feedback\t= \"candrop\"\r\n\t\t\talx-hover-feedback\t= \"overdrop\"\r\n\t\t\talx-drop-action\t\t= \"ctrl.appendAction(draggedInfo)\"\r\n\t\t\t>\r\n\t\t\t<p ng-hide=\"ctrl.instruction.children.length === 0\">Drop ACTION here</p>\r\n\t\t\t<instruction ng-repeat\t= \"instruction in ctrl.instruction.children\"\r\n\t\t\t\t\t\t data\t\t= \"instruction\"\r\n\t\t\t\t\t\t>\r\n\t\t\t</instruction>\r\n\t\t</p>\r\n\t</div>\r\n</section>\r\n"
 
 /***/ },
 /* 108 */
@@ -9654,7 +9641,7 @@
 /* 116 */
 /***/ function(module, exports) {
 
-	module.exports = "<section ng-class=\"ctrl.type\">\r\n\t<img class=\"event_symbol\" ng-src=\"{{ctrl.eventIcon}}\"></img>\r\n\t<div class=\"event_description event\">\r\n\t\t<p class=\"eventName\" ng-bind=\"ctrl.eventLabel\"></p>\r\n\t\t<p \tclass=\"selector\"\r\n\t\t\talx-droppable\t\t= \"draggedInfo.hasOneTypeIn(ctrl.sources)\"\r\n\t\t\talx-accept-feedback\t= \"candrop\"\r\n\t\t\talx-hover-feedback\t= \"overdrop\"\r\n\t\t\tdrop-action\t\t\t= \"ctrl.appendEvent(draggedInfo)\"\r\n\t\t\t>\r\n\t\t\t<p ng-hide=\"ctrl.instruction.children.length === 0\">Drop EVENT here</p>\r\n\t\t\t<instruction ng-repeat\t= \"instruction in ctrl.instruction.children\"\r\n\t\t\t\t\t\t data\t\t= \"instruction\"\r\n\t\t\t\t\t\t>\r\n\t\t\t</instruction>\r\n\t\t</p>\r\n\t</div>\r\n\t<img class=\"eventThunder\" src=\"/js/Presentations/HTML_templates/event-icon.png\"></img>\r\n</section>"
+	module.exports = "<section ng-class=\"ctrl.type\">\r\n\t<img class=\"event_symbol\" ng-src=\"{{ctrl.eventIcon}}\"></img>\r\n\t<div class=\"event_description event\">\r\n\t\t<p class=\"eventName\" ng-bind=\"ctrl.eventLabel\"></p>\r\n\t\t<p \tclass=\"selector\"\r\n\t\t\talx-droppable\t\t= \"draggedInfo.hasOneTypeIn(ctrl.sources)\"\r\n\t\t\talx-accept-feedback\t= \"candrop\"\r\n\t\t\talx-hover-feedback\t= \"overdrop\"\r\n\t\t\talx-drop-action\t\t= \"ctrl.appendEvent(draggedInfo)\"\r\n\t\t\t>\r\n\t\t\t<p ng-hide=\"ctrl.instruction.children.length === 0\">Drop EVENT here</p>\r\n\t\t\t<instruction ng-repeat\t= \"instruction in ctrl.instruction.children\"\r\n\t\t\t\t\t\t data\t\t= \"instruction\"\r\n\t\t\t\t\t\t>\r\n\t\t\t</instruction>\r\n\t\t</p>\r\n\t</div>\r\n\t<img class=\"eventThunder\" src=\"/js/Presentations/HTML_templates/event-icon.png\"></img>\r\n</section>"
 
 /***/ },
 /* 117 */
@@ -9879,19 +9866,19 @@
 /* 133 */
 /***/ function(module, exports) {
 
-	module.exports = "<section ng-class \t\t\t\t= \"ctrl.type\"\r\n\t\t alx-droppable\t\t\t= \"Pnode.hasOneType(draggedInfo, ['ActionNode', 'ControlFlow'])\"\r\n\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t drop-action\t\t\t= \"ctrl.appendChild(draggedInfo)\"\r\n\t\t>\r\n\t<div class=\"prefix frameStructure\"></div>\r\n\t<div class=\"content\">\r\n\t\t<div class \t\t= \"child\"\r\n\t\t\t ng-repeat\t= \"instruction in ctrl.instruction.children track by $index\"\r\n\t\t\t>\r\n\t\t\t<div class=\"separator frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\"></div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<instruction data=\"instruction\"></instruction>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"separator suffix frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\">\r\n\t\t\t\t\t<div class=\"left\"></div><div class=\"right\"></div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t<!-- <div class=\"content\">\r\n\t\t<div class=\"lastOne Pnode ActionNodePresentation\">Drop node</div>\r\n\t</div> -->\r\n\t</div>\r\n\t<div class=\"suffix frameStructure\"></div>\r\n</section>\r\n\r\n"
+	module.exports = "<section ng-class \t\t\t\t= \"ctrl.type\"\r\n\t\t alx-droppable\t\t\t= \"Pnode.hasOneType(draggedInfo, ['ActionNode', 'ControlFlow'])\"\r\n\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t alx-drop-action\t\t\t= \"ctrl.appendChild(draggedInfo)\"\r\n\t\t>\r\n\t<div class=\"prefix frameStructure\"></div>\r\n\t<div class=\"content\">\r\n\t\t<div class \t\t= \"child\"\r\n\t\t\t ng-repeat\t= \"instruction in ctrl.instruction.children track by $index\"\r\n\t\t\t>\r\n\t\t\t<div class=\"separator frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\"></div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<instruction data=\"instruction\"></instruction>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"separator suffix frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\">\r\n\t\t\t\t\t<div class=\"left\"></div><div class=\"right\"></div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t<!-- <div class=\"content\">\r\n\t\t<div class=\"lastOne Pnode ActionNodePresentation\">Drop node</div>\r\n\t</div> -->\r\n\t</div>\r\n\t<div class=\"suffix frameStructure\"></div>\r\n</section>\r\n\r\n"
 
 /***/ },
 /* 134 */
 /***/ function(module, exports) {
 
-	module.exports = "<section ng-class\t\t\t\t= \"ctrl.type\"\r\n\t\t alx-droppable\t\t\t= \"Pnode.hasOneType(draggedInfo, ['ActionNode', 'ControlFlow'])\"\r\n\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t drop-action\t\t\t= \"ctrl.appendChild(draggedInfo)\"\r\n\t\t>\r\n\t<div class=\"prefix frameStructure\"></div>\r\n\t<div class=\"content\">\r\n\t\t<div class \t\t= \"child\"\r\n\t\t\t ng-repeat\t= \"instruction in ctrl.instruction.children track by $index\"\r\n\t\t\t>\r\n\t\t\t<div class=\"separator frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\"></div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<instruction data=\"instruction\"></instruction>\r\n\t\t\t</div>\r\n\t\t\t<div class=\" frameStructure separator suffix\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\">\r\n\t\t\t\t\t<div class=\"left\"></div><div class=\"right\"></div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\t<div class=\"frameStructure suffix\"></div>\r\n</section>"
+	module.exports = "<section ng-class\t\t\t\t= \"ctrl.type\"\r\n\t\t alx-droppable\t\t\t= \"Pnode.hasOneType(draggedInfo, ['ActionNode', 'ControlFlow'])\"\r\n\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t alx-drop-action\t\t= \"ctrl.appendChild(draggedInfo)\"\r\n\t\t>\r\n\t<div class=\"prefix frameStructure\"></div>\r\n\t<div class=\"content\">\r\n\t\t<div class \t\t= \"child\"\r\n\t\t\t ng-repeat\t= \"instruction in ctrl.instruction.children track by $index\"\r\n\t\t\t>\r\n\t\t\t<div class=\"separator frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\"></div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<instruction data=\"instruction\"></instruction>\r\n\t\t\t</div>\r\n\t\t\t<div class=\" frameStructure separator suffix\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\">\r\n\t\t\t\t\t<div class=\"left\"></div><div class=\"right\"></div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\t<div class=\"frameStructure suffix\"></div>\r\n</section>"
 
 /***/ },
 /* 135 */
 /***/ function(module, exports) {
 
-	module.exports = "<section ng-class=\"ctrl.type\">\r\n\t<div class=\"arrow\">\r\n\t\t<div class=\"eventSymbol\"></div>\r\n\t\t<div class=\"defwhen\">\r\n\t\t\t<div class=\"eventDrop\">\r\n\t\t\t\t<div class=\"ImplicitVariable\">\r\n\t\t\t\t\tLet's call the event source <div class=\"variableName Pnode Pselector_variable\">brick</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"event\"\r\n\t\t\t\t\t class=\"instructions\"\r\n\t\t\t\t\t alx-droppable\t\t\t= \"ctrl.hasOneType(draggedInfo, ['EventNode'])\"\r\n\t\t\t\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t\t\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t\t\t\t drop-action\t\t\t= \"Pnode.appendEvent(draggedInfo)\"\r\n\t\t\t\t\t>\r\n\t\t\t\t\t<p ng-hide=\"ctrl.instruction.childEvent\">Drop EVENT here</p>\r\n\t\t\t\t\t<div ng-if=\"ctrl.instruction.childEvent\">\r\n\t\t\t\t\t\t<instruction data=\"ctrl.instruction.childEvent\"></instruction>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t\t<img src=\"/js/Presentations/HTML_templates/implySymbol.svg\"></img>\r\n\t\t\t<div class=\"instructions\"\r\n\t\t\t\t alx-droppable\t\t\t= \"Pnode.hasOneType(draggedInfo, ['ActionNode', 'ControlFlow'])\"\r\n\t\t\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t\t\t drop-action\t\t\t= \"ctrl.appendInstruction(draggedInfo)\"\r\n\t\t\t\t>\r\n\t\t\t\t<p ng-hide=\"ctrl.instruction.childReaction\">Drop REACTION here</p>\r\n\t\t\t\t<div ng-if=\"ctrl.instruction.childReaction\">\r\n\t\t\t\t\t<instruction data=\"ctrl.instruction.childReaction\"></instruction>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n</section>\r\n"
+	module.exports = "<section ng-class=\"ctrl.type\">\r\n\t<div class=\"arrow\">\r\n\t\t<div class=\"eventSymbol\"></div>\r\n\t\t<div class=\"defwhen\">\r\n\t\t\t<div class=\"eventDrop\">\r\n\t\t\t\t<div class=\"ImplicitVariable\">\r\n\t\t\t\t\tLet's call the event source <div class=\"variableName Pnode Pselector_variable\">brick</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"event\"\r\n\t\t\t\t\t class=\"instructions\"\r\n\t\t\t\t\t alx-droppable\t\t\t= \"ctrl.hasOneType(draggedInfo, ['EventNode'])\"\r\n\t\t\t\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t\t\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t\t\t\t alx-drop-action\t\t= \"Pnode.appendEvent(draggedInfo)\"\r\n\t\t\t\t\t>\r\n\t\t\t\t\t<p ng-hide=\"ctrl.instruction.childEvent\">Drop EVENT here</p>\r\n\t\t\t\t\t<div ng-if=\"ctrl.instruction.childEvent\">\r\n\t\t\t\t\t\t<instruction data=\"ctrl.instruction.childEvent\"></instruction>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t\t<img src=\"/js/Presentations/HTML_templates/implySymbol.svg\"></img>\r\n\t\t\t<div class=\"instructions\"\r\n\t\t\t\t alx-droppable\t\t\t= \"Pnode.hasOneType(draggedInfo, ['ActionNode', 'ControlFlow'])\"\r\n\t\t\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t\t\t alx-drop-action\t\t= \"ctrl.appendInstruction(draggedInfo)\"\r\n\t\t\t\t>\r\n\t\t\t\t<p ng-hide=\"ctrl.instruction.childReaction\">Drop REACTION here</p>\r\n\t\t\t\t<div ng-if=\"ctrl.instruction.childReaction\">\r\n\t\t\t\t\t<instruction data=\"ctrl.instruction.childReaction\"></instruction>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n</section>\r\n"
 
 /***/ },
 /* 136 */

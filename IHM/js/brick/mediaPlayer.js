@@ -5,8 +5,8 @@ module.exports = function(app) {
 	app.directive	( "mediaPlayer"
 					, function() {
 						return {
-							  restrict	: 'E'
-							, controller	: function($scope) {
+							  restrict			: 'E'
+							, controller		: function($scope) {
 									 var ctrl = this;
 									 this.state = {};
 									 ctrl.playState = "";
@@ -30,8 +30,8 @@ module.exports = function(app) {
 															  }
 															);
 									 // ctrl.volume = 0;
-									 // console.log( "new mediaPlayer getMediasStates", $scope.brick );
-									 utils.call	( $scope.brick.id, "getMediasStates", []
+									 // console.log( "new mediaPlayer getMediasStates", ctrl.brick );
+									 utils.call	( ctrl.brick.id, "getMediasStates", []
 												).then( function(state) {
 															// console.log( "getMediasStates", state);
 															ctrl.state = state;
@@ -45,19 +45,19 @@ module.exports = function(app) {
 										 $scope.$apply();
 									 }
 									 this.setVolume	= function(volume) {
-										 return utils.call	( $scope.brick.id, "setVolume", [volume] );
+										 return utils.call	( ctrl.brick.id, "setVolume", [volume] );
 									 }
 									 this.Play	= function() {
-										 return utils.call	( $scope.brick.id, "Play", [] );
+										 return utils.call	( ctrl.brick.id, "Play", [] );
 									 }
 									 this.Stop	= function() {
-										 return utils.call	( $scope.brick.id, "Stop", [] );										 
+										 return utils.call	( ctrl.brick.id, "Stop", [] );										 
 									 }
 									 this.Pause	= function() {
-										 return utils.call	( $scope.brick.id, "Pause", [] );
+										 return utils.call	( ctrl.brick.id, "Pause", [] );
 									 }
 									 this.Load	= function(serverId, mediaId) {
-										 return utils.call	( $scope.brick.id, "loadMedia", [serverId, mediaId] );
+										 return utils.call	( ctrl.brick.id, "loadMedia", [serverId, mediaId] );
 									 }
 									 this.dropMedia	= function(event, draggedInfo) {
 										 // console.log( "dropMedia", event, draggedInfo);
@@ -66,16 +66,17 @@ module.exports = function(app) {
 														 ).then( function(res) {ctrl.Play()} );
 									 }
 									}
-							, controllerAs	: 'mpc'
-							, templateUrl	: "/IHM/js/brick/mediaPlayer.html"
-							, scope			: { brick	: "=brick"
-											  }
-							, link			: function(scope, element, attr, controller) {
+							, bindToController 	: true
+							, controllerAs		: 'ctrl'
+							, templateUrl		: "/IHM/js/brick/mediaPlayer.html"
+							, scope				: { brick	: "=brick"
+												  }
+							, link				: function(scope, element, attr, controller) {
 								 // Subscribe to socket.io events
 								 var eventCB
-								   , cbEventName = scope.brick.id + "->eventUPnP";
+								   , cbEventName = controller.brick.id + "->eventUPnP";
 								 utils.io.emit	( "subscribeBrick"
-												, { brickId		: scope.brick.id
+												, { brickId		: controller.brick.id
 												  , eventName	: "eventUPnP"
 												  , cbEventName	: cbEventName
 												  } 
@@ -97,27 +98,13 @@ module.exports = function(app) {
 												, function() {
 													 utils.io.off( cbEventName, eventCB);
 													 utils.io.emit	( "unSubscribeBrick"
-																	, { brickId		: scope.brick.brickId
+																	, { brickId		: controller.brick.brickId
 																	  , eventName	: "eventUPnP"
 																	  , cbEventName	: cbEventName
 																	  }
 																	);
 													} 
 												);
-								/* OLD
-								 var eventCB = function(data) {
-										 console.log(data);
-										 controller.state[data.serviceType] = controller.state[data.serviceType] || {};
-										 try {
-											 controller.state[data.serviceType][data.attribut] = data.value;
-											 controller.updateFromUPnP();
-											} catch(error) {
-												console.error(error);
-											}
-										}
-								 element.on	( "$destroy", function() {utils.io.off( "eventForBrick_" + scope.brick.id, eventCB);} );
-								 utils.io.on( "eventForBrick_" + scope.brick.id, eventCB);
-								 */
 								}
 							};
 						}

@@ -84,6 +84,7 @@ module.exports = function(webServer) {
 			 try {
 				 params.push(fctCB);
 				 res = obj[mtd].apply(obj, params);
+				 console.log( "Call done => ", res);
 				} catch(err) {console.error('  error', err);
 							  res = {error : err};
 							 }

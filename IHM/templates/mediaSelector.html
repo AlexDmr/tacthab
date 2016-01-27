@@ -31,10 +31,11 @@
 	<!-- Medias -->
 	<md-card ng-repeat		= "media in ms.medias"
 			 class			= "UPnP media"
-			 >
+			 ><!-- {{media | json}} -->
 		<img ng-src="{{media.iconURL}}" class="md-card-image UPnP media" alt="{{media.name}}" alx-draggable="media"/>
 		<md-card-content>
 			<p ng-bind="media.name"></p>
+			}
 		</md-card-content>
 	</md-card>
 

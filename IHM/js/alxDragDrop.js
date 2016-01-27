@@ -189,7 +189,7 @@ module.exports = function(app) {
 								 var innerScope = 	{ accept			: $parse( attrs.alxDroppable || 'false' )
 													, acceptFeedback	: attrs.alxAcceptFeedback
 													, hoverFeedback		: attrs.alxHoverFeedback
-													, dropAction		: $parse( attrs.dropAction )
+													, dropAction		: $parse( attrs.alxDropAction )
 													, angularScope		: scope
 													}
 								   ;

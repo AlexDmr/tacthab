@@ -130,9 +130,9 @@ BrickUPnP_MediaRenderer.prototype.loadMedia	= function(mediaServerId, itemId) {
 	}); // Promise
 }
 BrickUPnP_MediaRenderer.prototype.loadURI	= function(uri, metadata) {
-	 // var self = this; console.log("loadURI", uri, metadata);
+	 var self = this;// console.log("loadURI", uri, metadata);
 	return new Promise( function(resolve, reject) {
-		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
+		 var service = self.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
 		 service.callAction	( 'SetAVTransportURI'
 							, { InstanceID			: 0
 							  , CurrentURI			: uri
@@ -160,9 +160,9 @@ BrickUPnP_MediaRenderer.prototype.loadURI	= function(uri, metadata) {
 		}); // Promise
 	}
 BrickUPnP_MediaRenderer.prototype.Play		= function() {
-	 // var self = this;
+	 var self = this;
 	 return new Promise( function(resolve, reject) {
-	 	 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
+	 	 var service = self.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
 		 service.callAction	( 'Play'
 							, { InstanceID		: 0
 							  , Speed			: '1' }
@@ -175,8 +175,9 @@ BrickUPnP_MediaRenderer.prototype.Play		= function() {
 		}); // Promise
 	}
 BrickUPnP_MediaRenderer.prototype.Pause		= function() {
+	 var self = this;
 	 return new Promise( function(resolve, reject) {
-		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
+		 var service = self.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
 		 service.callAction	( 'Pause'
 							, { InstanceID		: 0
 							  }
@@ -188,8 +189,9 @@ BrickUPnP_MediaRenderer.prototype.Pause		= function() {
 		}); // Promise
 	}
 BrickUPnP_MediaRenderer.prototype.Stop		= function() {
+	 var self = this;
 	 return new Promise( function(resolve, reject) {
-		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
+		 var service = self.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
 		 service.callAction	( 'Stop'
 							, { InstanceID		: 0
 							  }
@@ -201,8 +203,9 @@ BrickUPnP_MediaRenderer.prototype.Stop		= function() {
 		}); // Promise
 	}
 BrickUPnP_MediaRenderer.prototype.getVolume	= function() {
+	 var self = this;
 	 return new Promise( function(resolve, reject) {
-		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:RenderingControl'];
+		 var service = self.UPnP.device.services['urn:upnp-org:serviceId:RenderingControl'];
 		 service.callAction	( 'GetVolume'
 							, { InstanceID		: 0
 							  , Channel			: "Master"
@@ -215,9 +218,10 @@ BrickUPnP_MediaRenderer.prototype.getVolume	= function() {
 		}); // Promise
 	}
 BrickUPnP_MediaRenderer.prototype.setVolume	= function(volume) {
+	 var self = this;
 	 return new Promise( function(resolve, reject) {
 		 volume = Math.min(100, Math.max(0, Math.round(volume)));
-		 var service = this.UPnP.device.services['urn:upnp-org:serviceId:RenderingControl'];
+		 var service = self.UPnP.device.services['urn:upnp-org:serviceId:RenderingControl'];
 		 service.callAction	( 'SetVolume'
 							, { InstanceID		: 0
 							  , Channel			: "Master"
