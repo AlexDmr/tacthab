@@ -17,37 +17,41 @@ BrickUPnP_MediaServer.prototype.getTypes		= function() {var L=BrickUPnP.prototyp
 
 BrickUPnP_MediaServer.prototype.getMetaData	= function(ObjectID, callback) {
 	 var service = this.UPnP.device.services['urn:upnp-org:serviceId:ContentDirectory'];
-	 service.callAction	( 'Browse'
-						, { ObjectID		: ObjectID
-						  , BrowseFlag		: 'BrowseMetadata'
-						  , Filter			: '*'
-						  , StartingIndex	: 0
-						  , RequestedCount	: 0
-						  , SortCriteria	: ''
-						  }
-						, function(err, buffer) {
-							 // console.log('BrickUPnP_MediaServer::getMetaData', err || buffer);
-							 callback(err || buffer);
-							}
-						);
-	 return undefined;
+	 return new Promise( function(resolve, reject) {
+		 service.callAction	( 'Browse'
+							, { ObjectID		: ObjectID
+							  , BrowseFlag		: 'BrowseMetadata'
+							  , Filter			: '*'
+							  , StartingIndex	: 0
+							  , RequestedCount	: 0
+							  , SortCriteria	: ''
+							  }
+							, function(err, buffer) {
+								 // console.log('BrickUPnP_MediaServer::getMetaData', err || buffer);
+								 if(callback) {callback(err || buffer);}
+								 if(err) {reject(err);} else {resolve(buffer);}
+								}
+							);
+	 });
 	}
 BrickUPnP_MediaServer.prototype.Browse	= function(ObjectID, callback) {
 	 var service = this.UPnP.device.services['urn:upnp-org:serviceId:ContentDirectory'];
-	 service.callAction	( 'Browse'
-						, { ObjectID		: ObjectID
-						  , BrowseFlag		: 'BrowseDirectChildren'
-						  , Filter			: '*'
-						  , StartingIndex	: 0
-						  , RequestedCount	: 0
-						  , SortCriteria	: ''
-						  }
-						, function(err, buffer) {
-							 if(err) {console.error("Error:", err);}
-							 callback(err || buffer);
-							}
-						);
-	 return undefined;
+	 return new Promise( function(resolve, reject) {
+		 service.callAction	( 'Browse'
+							, { ObjectID		: ObjectID
+							  , BrowseFlag		: 'BrowseDirectChildren'
+							  , Filter			: '*'
+							  , StartingIndex	: 0
+							  , RequestedCount	: 0
+							  , SortCriteria	: ''
+							  }
+							, function(err, buffer) {
+								 if(err) {console.error("Error:", err);}
+								 if(callback) {callback(err || buffer);}
+								 if(err) {reject(err);} else {resolve(buffer);}
+								}
+							);
+	 });
 	}
 BrickUPnP_MediaServer.prototype.init		= function(device) {
 	 // var self = this;

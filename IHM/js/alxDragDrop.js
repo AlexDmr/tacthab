@@ -4,56 +4,61 @@ var draggingPointers	= {}
   , dropZones			= {}
   , idDropZone			= 0
   ;
+/* dropZone:
+{ element				: element
+, scope					: innerScope
+, canReceivePointers	: []
+, pointersOver			: []
+, removePointer			: removePointer
+};
+*/
+function removePointer(idPointer) {
+	var pos;
+	while(true) {
+		pos = this.pointersOver.indexOf( idPointer );
+		if(pos >= 0) {
+			this.pointersOver.splice(pos, 1);
+		} else {break;}
+	}
+}
 
 //_________________________________________________________________________________________________________________
 // Drop zones -----------------------------------------------------------------------------------------------------
 //_________________________________________________________________________________________________________________
-function dragEnter(event, idPointer, scope) {
+function dragEnter(event, idPointer, dropZone) {
 	if(draggingPointers[idPointer]) {
 		event.stopPropagation();
 		// console.log( "dragEnter", scope.dropZone );
-		var fctAccept	= scope.accept
-		  // , draggedData	= draggingPointers[idPointer].draggedData
-		  , canDrop		= fctAccept(scope.angularScope, {draggedInfo: draggingPointers[idPointer]})?1:0
+		var fctAccept	= dropZone.scope.accept
+		  , canDrop		= dropZone.canReceivePointers.indexOf(idPointer)>=0?1:0
 		  ;
-
-		//
-		if(canDrop) {
-			event.preventDefault();
+		// Change the dropzone over wish the pointer is positionned
+		var prevDropZone = draggingPointers[idPointer].overDropZone;
+		if(prevDropZone !== dropZone) {
+			if(prevDropZone) {
+				prevDropZone.removePointer( idPointer );
+				prevDropZone.element.classList.remove( prevDropZone.scope.hoverFeedback );
+			}
+			draggingPointers[idPointer].overDropZone = null;
 		}
 
+		if(canDrop) {
+			event.preventDefault();
+			dropZone.pointersOver.push( idPointer );
+			draggingPointers[idPointer].overDropZone = dropZone;
+			event.currentTarget.classList.add( dropZone.scope.hoverFeedback );
+		}
 		draggingPointers[idPointer].canDrop += canDrop;
+
+		/*draggingPointers[idPointer].canDrop += canDrop;
 		scope.dropZone.pointersOver.push( idPointer );
 
 		if( scope.dropZone.pointersOver.length === 1 ) {
 			event.currentTarget.classList.add( scope.hoverFeedback );
-		}
+		}*/
 	}
 }
-/*function dragEnter(event, idPointer, scope) {
-	if(draggingPointers[idPointer]) {
-		event.stopPropagation();
-		console.log( "dragEnter", event, idPointer, scope );
-		var acceptedNodes	= document.querySelectorAll( scope.accept || "*" ) //XXX
-		  , draggedNode		= draggingPointers[idPointer].node
-		  , canDrop			= 0
-		  ;
-		for(var i=0; i<acceptedNodes.length; i++) {
-			if(draggedNode === acceptedNodes.item(i)) {canDrop = 1; break;}
-		}
-		if(canDrop) {
-			event.preventDefault();
-			// console.log( "over -> adding class", scope.hoverFeedback );
-			event.currentTarget.classList.add( scope.hoverFeedback );
-		}
-		draggingPointers[idPointer].canDrop += canDrop;
-		if( draggingPointers[idPointer].canDrop === 1 ) {
-			scope.dropZone.pointersOver.push( idPointer );
-		}
-	}
-}
-*/
-function getCB_dragEnter_mouse(scope) {return function(e) {dragEnter(e, "mouse", scope)};}
+function getCB_dragEnter_mouse(dropZone) {return function(e) {dragEnter(e, "mouse", dropZone)};}
 
 function dragOver(event, idPointer) {
 	event.stopPropagation();
@@ -63,19 +68,19 @@ function dragOver(event, idPointer) {
 }
 function dragOver_mouse(e) {dragOver(e, "mouse");}
 
-function dragLeave(event, idPointer, scope) {
+function dragLeave(event, idPointer, dropZone) {
 	if(  draggingPointers[idPointer] ) {
 		event.stopPropagation();
-		var pos = scope.dropZone.pointersOver.indexOf(idPointer);
-		scope.dropZone.pointersOver.splice(pos, 1);
+		var pos = dropZone.pointersOver.indexOf(idPointer);
+		dropZone.pointersOver.splice(pos, 1);
 		draggingPointers[idPointer].canDrop--;
 		// console.log( "dragLeave", event.currentTarget);
-		if(scope.dropZone.pointersOver.length === 0) {
-			event.currentTarget.classList.remove( scope.hoverFeedback );
+		if(dropZone.pointersOver.length === 0) {
+			event.currentTarget.classList.remove( dropZone.scope.hoverFeedback );
 		}
 	}
 }
-function getCB_dragLeave_mouse(scope) {return function(e) {dragLeave(e, "mouse", scope);}}
+function getCB_dragLeave_mouse(dropZone) {return function(e) {dragLeave(e, "mouse", dropZone);}}
 
 //_________________________________________________________________________________________________________________
 // Draggables -----------------------------------------------------------------------------------------------------
@@ -123,7 +128,11 @@ function dragEnd(event, idPointer) {
 		dropZone = dropZones[i];
 		pos = dropZone.canReceivePointers.indexOf(idPointer)
 		if( pos >= 0 ) {
-			dragLeave({currentTarget: dropZone.element, stopPropagation: function(){}}, idPointer, dropZone.scope);
+			dragLeave( {
+					currentTarget		: dropZone.element, 
+					stopPropagation		: function(){}				
+				}, 
+				idPointer, dropZone);
 			dropZone.canReceivePointers.splice(pos, 1);
 			if(dropZone.canReceivePointers.length === 0) {
 				dropZone.element.classList.remove( dropZone.scope.acceptFeedback );
@@ -198,10 +207,11 @@ module.exports = function(app) {
 													  , scope				: innerScope
 													  , canReceivePointers	: []
 													  , pointersOver		: []
+													  , removePointer		: removePointer
 													  };
-								 element.ondragenter	= getCB_dragEnter_mouse(innerScope);
+								 element.ondragenter	= getCB_dragEnter_mouse(dropZones[idDrop]);
 								 element.ondragover		= dragOver_mouse;
-								 element.ondragleave	= getCB_dragLeave_mouse(innerScope);
+								 element.ondragleave	= getCB_dragLeave_mouse(dropZones[idDrop]);
 								 element.ondrop			= function(e) {
 															 var idPointer = e.identifier || "mouse";
 															 innerScope.dropAction(scope, {event: e, draggedInfo: draggingPointers[idPointer]});
