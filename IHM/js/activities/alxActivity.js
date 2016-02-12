@@ -43,7 +43,7 @@ module.exports = function(app) {
 								 };
 								 this.appendBrick	= function(data) {
 								 	$scope.$applyAsync( function() {
-								 		ctrl.activity.components.push( data.draggedData );
+								 		ctrl.activity.components.push( data );
 								 	});
 								 }
 								}

@@ -1,4 +1,4 @@
-require( "./alxDragDrop.css" );
+ require( "./alxDragDrop.css" );
 
 var draggingPointers	= {}
   , dropZones			= {}
@@ -29,8 +29,7 @@ function dragEnter(event, idPointer, dropZone) {
 	if(draggingPointers[idPointer]) {
 		event.stopPropagation();
 		// console.log( "dragEnter", scope.dropZone );
-		var fctAccept	= dropZone.scope.accept
-		  , canDrop		= dropZone.canReceivePointers.indexOf(idPointer)>=0?1:0
+		var canDrop		= dropZone.canReceivePointers.indexOf(idPointer)>=0?1:0
 		  ;
 		// Change the dropzone over wish the pointer is positionned
 		var prevDropZone = draggingPointers[idPointer].overDropZone;
@@ -42,13 +41,15 @@ function dragEnter(event, idPointer, dropZone) {
 			draggingPointers[idPointer].overDropZone = null;
 		}
 
+
 		if(canDrop) {
 			event.preventDefault();
 			dropZone.pointersOver.push( idPointer );
 			draggingPointers[idPointer].overDropZone = dropZone;
 			event.currentTarget.classList.add( dropZone.scope.hoverFeedback );
 		}
-		draggingPointers[idPointer].canDrop += canDrop;
+		// draggingPointers[idPointer].canDrop += canDrop;
+		// console.log(idPointer, "canDrop", draggingPointers[idPointer].canDrop);
 
 		/*draggingPointers[idPointer].canDrop += canDrop;
 		scope.dropZone.pointersOver.push( idPointer );
@@ -60,20 +61,21 @@ function dragEnter(event, idPointer, dropZone) {
 }
 function getCB_dragEnter_mouse(dropZone) {return function(e) {dragEnter(e, "mouse", dropZone)};}
 
-function dragOver(event, idPointer) {
+function dragOver(event, idPointer, dropZone) {
 	event.stopPropagation();
-	if(  draggingPointers[idPointer]
-	  && draggingPointers[idPointer].canDrop )	{event.preventDefault();
-												}
+	if(  dropZone.pointersOver.indexOf(idPointer) >= 0 )	{
+		event.preventDefault();
+	}
 }
-function dragOver_mouse(e) {dragOver(e, "mouse");}
+
+function getCB_dragHover_mouse(dropZone) {return function(e) {dragOver(e, "mouse", dropZone);}}
 
 function dragLeave(event, idPointer, dropZone) {
 	if(  draggingPointers[idPointer] ) {
 		event.stopPropagation();
 		var pos = dropZone.pointersOver.indexOf(idPointer);
 		dropZone.pointersOver.splice(pos, 1);
-		draggingPointers[idPointer].canDrop--;
+		// if(draggingPointers[idPointer].canDrop > 0) {draggingPointers[idPointer].canDrop--;}
 		// console.log( "dragLeave", event.currentTarget);
 		if(dropZone.pointersOver.length === 0) {
 			event.currentTarget.classList.remove( dropZone.scope.hoverFeedback );
@@ -210,7 +212,7 @@ module.exports = function(app) {
 													  , removePointer		: removePointer
 													  };
 								 element.ondragenter	= getCB_dragEnter_mouse(dropZones[idDrop]);
-								 element.ondragover		= dragOver_mouse;
+								 element.ondragover		= getCB_dragHover_mouse(dropZones[idDrop]);
 								 element.ondragleave	= getCB_dragLeave_mouse(dropZones[idDrop]);
 								 element.ondrop			= function(e) {
 															 var idPointer = e.identifier || "mouse";

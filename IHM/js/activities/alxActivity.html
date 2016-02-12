@@ -1,16 +1,16 @@
 <!-- {{activity | json}} -->
 <md-content class="root md-whiteframe-20dp">
-	<h3 ng-bind="activity.title"></h3>
+	<h3 ng-bind="ctrl.activity.title"></h3>
 	
 	<section 	class				= "components"
-				alx-droppable		= "draggedInfo.hasOneTypeIn(['Brick'])"
+				alx-droppable		= "draggedInfo.draggedData.type.indexOf('Brick') >= 0"
 				alx-accept-feedback	= "candrop"
 				alx-hover-feedback	= "overdrop"
-				alx-drop-action		= "ctrl.appendBrick(draggedInfo)"
+				alx-drop-action		= "ctrl.appendBrick(draggedInfo.draggedData)"
 				flex 				= "50%"
 				>
 		<h4>Components</h4>
-		<brick data="brick" ng-repeat="brick in activity.components"></brick>
+		<brick data="brick" ng-repeat="brick in ctrl.activity.components"></brick>
 	</section>
 
 	<section class="inputs">

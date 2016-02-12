@@ -54,7 +54,7 @@ Par ici les sections...
 			<md-list class="specializations">
 				<!-- Specializations -->
 				<md-list-item flex ng-repeat= "type in ctrl.context.brickTypes[ctrl.brickTypeName].specializations">
-					<section alx-draggable 	= "brick" 
+					<section alx-draggable 	= "{brickType: type}" 
 							 ng-class 		= "type" 
 							 alx-drag-start = "ctrl.closeBricks()"
 							 alx-drag-end 	= "ctrl.openBricks()"
