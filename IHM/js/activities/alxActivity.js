@@ -31,9 +31,11 @@ module.exports = function(app) {
 								 this.activity 	= pipo;
 								 this.dataProgram = {
 								 	className: "ParallelNode",
+								 	type	 : ["Pnode", "ControlFlow", "NChildNode", "ParallelNode"], 
 									children: [{ 
 										className	: 'ActionNode',
-										label		: 'Action 1'
+										label		: 'Action 1',
+										type		: ['Pnode', 'ActionNode']
 										},
 										{ 
 										className	: 'WhenNode',

@@ -8,14 +8,14 @@ var controllers 	= {
 	ParallelNode 				: require( "./templates/ParallelNode.js"	),
 	SequenceNode				: require( "./templates/SequenceNode.js"	),
 	WhenNode					: require( "./templates/WhenNode.js"		),
-	ActionNode					: require( "./templates/ActionNode.js"		)
+	ActionNode					: require( "./actions/ActionNode.js" 		)
 };
 
 var templates	 	= {
 	ParallelNode 				: require( "./templates/ParallelNode.html"	),
 	SequenceNode				: require( "./templates/SequenceNode.html"	),
 	WhenNode					: require( "./templates/WhenNode.html"		),
-	ActionNode					: require( "./templates/ActionNode.html"	)
+	ActionNode					: require( "./actions/ActionNode.html" 		)
 };
 
 // Register instructions classified with respect to their type (workflow, brick type, ...)

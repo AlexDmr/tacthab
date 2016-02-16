@@ -9,10 +9,12 @@ var ActionNodePlay = function(scope) {
 							, children		: []
 							};
 	ActionNodeBrickUPnP_MediaRenderer.apply(this, [scope]);
-	this.type			= ActionNodePlay.type;
+	Object.setPrototypeOf(this, ActionNodePlay.prototype);
 }
 
-ActionNodePlay.type = ActionNodeBrickUPnP_MediaRenderer.type.slice();
-ActionNodePlay.type.push( 'ActionNodePlay' );
+ActionNodePlay.prototype 		= Object.create( ActionNodeBrickUPnP_MediaRenderer.prototype );
+ActionNodePlay.prototype.type 	= ActionNodeBrickUPnP_MediaRenderer.prototype.type.slice();
+ActionNodePlay.prototype.type.push( 'ActionNodePlay' );
 
+ActionNodePlay.prototype.constructor = ActionNodePlay;
 module.exports = ActionNodePlay;

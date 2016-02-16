@@ -216,6 +216,7 @@ module.exports = function(app) {
 								 element.ondragleave	= getCB_dragLeave_mouse(dropZones[idDrop]);
 								 element.ondrop			= function(e) {
 															 var idPointer = e.identifier || "mouse";
+															 // console.log( attrs.alxDropAction, scope, {event: e, draggedInfo: draggingPointers[idPointer]} );
 															 innerScope.dropAction(scope, {event: e, draggedInfo: draggingPointers[idPointer]});
 															 e.preventDefault();
 															 e.stopPropagation();

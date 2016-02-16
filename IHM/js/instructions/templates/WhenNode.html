@@ -1,4 +1,4 @@
-<section ng-class="ctrl.type">
+<section ng-class="ctrl.instruction.type">
 	<div class="arrow">
 		<div class="eventSymbol"></div>
 		<div class="defwhen">
@@ -7,27 +7,27 @@
 					Let's call the event source <div class="variableName Pnode Pselector_variable">brick</div>
 				</div>
 				<div class="event"
-					 alx-droppable			= "ctrl.hasOneType(draggedInfo, ['EventNode'])"
+					 alx-droppable			= "Pnode.hasOneType(draggedInfo.draggedData, ['EventNode'])"
 					 alx-accept-feedback	= "candrop"
 					 alx-hover-feedback		= "overdrop"
-					 alx-drop-action		= "Pnode.appendEvent(draggedInfo)"
+					 alx-drop-action		= "ctrl.appendEvent(draggedInfo.draggedData)"
 					>
-					<p ng-hide="ctrl.instruction.childEvent">Drop EVENT here</p>
-					<div ng-if="ctrl.instruction.childEvent">
-						<instruction data="ctrl.instruction.childEvent"></instruction>
+					<p ng-hide="ctrl.childEvent.length">Drop EVENT here</p>
+					<div>
+						<instruction ng-repeat="inst in ctrl.childEvent" data="inst"></instruction>
 					</div>
 				</div>
 			</div>
 			<img src="/js/Presentations/HTML_templates/implySymbol.svg"></img>
 			<div class="instructions"
-				 alx-droppable			= "Pnode.hasOneType(draggedInfo, ['ActionNode', 'ControlFlow'])"
+				 alx-droppable			= "Pnode.hasOneType(draggedInfo.draggedData, ['ActionNode', 'ControlFlow'])"
 				 alx-accept-feedback	= "candrop"
 				 alx-hover-feedback		= "overdrop"
-				 alx-drop-action		= "ctrl.appendInstruction(draggedInfo)"
+				 alx-drop-action		= "ctrl.appendInstruction(draggedInfo.draggedData)"
 				>
-				<p ng-hide="ctrl.instruction.childReaction">Drop REACTION here</p>
-				<div ng-if="ctrl.instruction.childReaction">
-					<instruction data="ctrl.instruction.childReaction"></instruction>
+				<p ng-hide="ctrl.childReaction.length">Drop REACTION here</p>
+				<div>
+					<instruction ng-repeat="inst in ctrl.childReaction" data="inst"></instruction>
 				</div>
 			</div>
 		</div>

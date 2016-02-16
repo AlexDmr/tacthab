@@ -6,18 +6,21 @@ var ActionNode = function(scope) {
 	
 	this.instruction	= this.instruction				|| {children: [], className: "ActionNode"};
 	this.actionLabel	= this.instruction.actionLabel	|| "Action";
-	this.actionIcon		= this.instruction.actionIcon	|| "/js/Presentations/HTML_templates/event-icon.png";
-	this.type			= ActionNode.type;
+	this.actionIcon		= this.instruction.actionIcon	|| "/js/Presentations/HTML_templates/action-icon.png";
 	this.sources		= ['Brick'];
-
-	this.toJSON	= this.toJSON_ActionNode = function() {
-		var json = this.toJSON_Pnode();
-		json.actionLabel	= this.instruction.actionLabel;
-		json.actionIcon 	= this.instruction.actionIcon;
-		return json;
-	}
+	Object.setPrototypeOf(this, ActionNode.prototype);
 }
 
-ActionNode.type = ['Pnode', 'ActionNode'];
+ActionNode.prototype 				= Object.create( Pnode.prototype );
+ActionNode.prototype.constructor 	= ActionNode;
+ActionNode.prototype.type 			= Pnode.prototype.type.slice();
+ActionNode.prototype.type.push( 'ActionNode' );
+ActionNode.prototype.toJSON 		= function() {
+	var json = Pnode.prototype.toJSON.apply(this, []);
+	json.actionLabel	= this.instruction.actionLabel;
+	json.actionIcon 	= this.instruction.actionIcon;
+	return json;
+}
 
+ActionNode.prototype.constructor = ActionNode;
 module.exports = ActionNode;

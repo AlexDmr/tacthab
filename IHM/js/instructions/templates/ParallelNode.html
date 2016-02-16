@@ -1,13 +1,13 @@
-<section ng-class 				= "ctrl.type"
-		 alx-droppable			= "Pnode.hasOneType(draggedInfo, ['ActionNode', 'ControlFlow'])"
+<section ng-class 				= "ctrl.instruction.type"
+		 alx-droppable			= "Pnode.hasOneType(draggedInfo.draggedData, ['ActionNode', 'ControlFlow'])"
 		 alx-accept-feedback	= "candrop"
 		 alx-hover-feedback		= "overdrop"
-		 alx-drop-action		= "ctrl.appendChild(draggedInfo)"
+		 alx-drop-action		= "ctrl.appendChild(draggedInfo.draggedData)"
 		>
 	<div class="prefix frameStructure"></div>
 	<div class="content">
 		<div class 		= "child"
-			 ng-repeat	= "instruction in ctrl.instruction.children track by $index"
+			 ng-repeat	= "instruction in ctrl.instruction.children"
 			>
 			<div class="separator frameStructure">
 				<div class="top"></div>

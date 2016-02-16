@@ -9,18 +9,30 @@ var SequenceNode = function(scope) {
 	Pnode.apply(this, [scope]);
 	
 	this.instruction	= this.instruction	|| {className: 'SequenceNode', children: []};
-	this.type			= SequenceNode.type;
 
-	var pipo = {className: "ActionNode", label: "Sequence"};
+	var pipo = {pipo: true, className: "ActionNode", label: "Sequence", type: ['Pnode', 'ActionNode']};
 	if(this.instruction.children.length === 0) {
 		this.instruction.children.push( pipo );
 	}
-	this.appendChild	= function(data) {
-		console.log( "SequenceNode append child", data );
-		this.instruction.children.push( data.draggedData );
-	}
+	Object.setPrototypeOf(this, SequenceNode.prototype);
 }
 
-SequenceNode.type = ['Pnode', 'ControlFlow', 'NChildNode', 'SequenceNode'];
+SequenceNode.prototype 			= Object.create( Pnode.prototype );
+SequenceNode.prototype.type		= Pnode.prototype.type.slice();
+SequenceNode.prototype.type.push( 'ControlFlow' 	);
+SequenceNode.prototype.type.push( 'NChildNode' 		);
+SequenceNode.prototype.type.push( 'SequenceNode' 	);
+SequenceNode.prototype.appendChild	= function(instruction) {
+	// console.log( "ParrallelNode append child", instruction );
+	var ctrl = this;
+	if(ctrl.instruction.children[0] && ctrl.instruction.children[0].pipo) {
+		ctrl.instruction.children.splice(0,1);
+		this.scope.$apply();
+	}
+	this.scope.$applyAsync(function() {
+		ctrl.instruction.children.push( ctrl.copyInstruction(instruction) );
+	});
+}
 
+SequenceNode.prototype.constructor = SequenceNode;
 module.exports = SequenceNode;
