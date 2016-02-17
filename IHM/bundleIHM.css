@@ -129,10 +129,16 @@ media-player > md-card.Brick md-card-footer {
 *[media-selector] > section.elements > * {
 	flex					: 0 1 auto;
 	width					: 150px;
+	height					: auto;
 }
 
 *[media-selector] > section.elements md-card.UPnP {
 	position				: relative;
+}
+
+md-card.UPnP > img {
+	width					: 150px;
+	height					: auto; 
 }
 
 *[media-selector] > section.elements md-card-content {

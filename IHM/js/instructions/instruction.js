@@ -25,7 +25,7 @@ var templates	 	= {
 // 		|
 // 		|
 var workflow		 = {name: 'Workflow', instructions: []}
-  , instructionTypes = {workflow: workflow};
+  , instructionTypes = {name: "Instruction", types: {workflow: workflow}};
 for(i in controllers) {
 	console.log( "instruction", i);
 	// Instantiate : check if no problem with scope
@@ -40,7 +40,7 @@ for(i in controllers) {
 var brickType, nodeType, id, instructionType;
 for(brickType in actions) {
 	instructionType 	= {name: brickType, instructions: []};
-	instructionTypes[brickType] = instructionType;
+	instructionTypes.types[brickType] = instructionType;
 	for(nodeType in actions[brickType]) {
 		id = brickType + '/' + nodeType;
 		controllers [id] = ctrl = actions[brickType][nodeType].controller	;
@@ -57,8 +57,8 @@ for(brickType in actions) {
 
 // Register instructions related to EVENTS
 for(brickType in events) {
-	instructionType 	= instructionTypes[brickType] || {name: brickType, instructions: []};
-	instructionTypes[brickType] = instructionType;
+	instructionType 	= instructionTypes.types[brickType] || {name: brickType, instructions: []};
+	instructionTypes.types[brickType] = instructionType;
 	for(nodeType in events[brickType]) {
 		id = brickType + '/' + nodeType;
 		controllers [id] = events[brickType][nodeType].controller	;
@@ -114,12 +114,12 @@ var instructionFct = function(app) {
 		);
 }
 
-instructionFct.instructions = [];
+/*instructionFct.instructions = {className: "Instructions", type: [], subClasses: []};
 var fct;
 for(i in controllers) {
 	fct = controllers[i];
-	instructionFct.instructions.push( {className: i, type: fct.type} );
-}
+	instructionFct.instructions.push( {className: i, type: fct.type, subClasses: []} );
+}*/
 
 instructionFct.instructionTypes = instructionTypes;
 

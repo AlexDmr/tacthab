@@ -31,7 +31,7 @@ Pnode.prototype.copyInstruction = function(instruction) {
 Pnode.hasOneType	= function(instruction, types) {
 		var t;
 		for(t=0; t<types.length; t++) {
-			if( instruction.type.indexOf(types[t]) >= 0) {return true;}
+			if( instruction.type && instruction.type.indexOf(types[t]) >= 0) {return true;}
 		}
 		return false;
 	}

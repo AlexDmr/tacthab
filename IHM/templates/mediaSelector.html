@@ -10,7 +10,7 @@
 			 class="UPnP directory"
 			 ng-click="ms.navigateTo(server)"
 			 >
-		<img ng-src="{{server.iconURL}}" class="md-card-image" alt="{{server.name}}">
+		<div><img ng-src="{{server.iconURL}}" class="md-card-image" alt="{{server.name}}"/></div>
 		<md-card-content>
 			<p ng-bind="server.name"></p>
 		</md-card-content>
@@ -21,7 +21,7 @@
 			 class="UPnP directory"
 			 ng-click="ms.navigateTo(dir)"
 			 >
-		<img ng-src="{{dir.iconURL}}" class="md-card-image" alt="{{dir.name}}" draggable="false">
+		<div><img ng-src="{{dir.iconURL}}" class="md-card-image" alt="{{dir.name}}" draggable="false"></div>
 		<md-card-content>
 			<p ng-bind="dir.name"></p>
 		</md-card-content>
@@ -32,10 +32,9 @@
 	<md-card ng-repeat		= "media in ms.medias"
 			 class			= "UPnP media"
 			 ><!-- {{media | json}} -->
-		<img ng-src="{{media.iconURL}}" class="md-card-image UPnP media" alt="{{media.name}}" alx-draggable="media"/>
+		<div><img ng-src="{{media.iconURL}}" class="md-card-image UPnP media" alt="{{media.name}}" alx-draggable="media"/></div>
 		<md-card-content>
 			<p ng-bind="media.name"></p>
-			}
 		</md-card-content>
 	</md-card>
 

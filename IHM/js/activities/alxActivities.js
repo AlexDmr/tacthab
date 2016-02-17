@@ -36,7 +36,19 @@ module.exports = function(app) {
 								}
 
 								// Update instructions
-								this.instructionTypes = instructionDir.instructionTypes;
+								this.instructionsType 		= instructionDir.instructionTypes;
+								this.breadcrumbInstructions	= [ this.instructionsType ];
+
+								this.gotoInstructionsType	= function(type) {
+									var pos = this.breadcrumbInstructions.indexOf(type);
+								 	if(pos >= 0) {
+								 		this.breadcrumbInstructions.splice(pos, this.breadcrumbInstructions.length);
+								 	}
+								 	this.breadcrumbInstructions.push(type);
+								 	this.instructionsType = this.breadcrumbInstructions[ this.breadcrumbInstructions.length - 1 ];
+								}
+
+								// this.instructionTypes = instructionDir.instructionTypes;
 								console.log( "instructionTypes:", this.instructionTypes);
 							}
 							, bindToController 	: true

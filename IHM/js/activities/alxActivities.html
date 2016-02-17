@@ -14,24 +14,29 @@ Par ici les sections...
 	<!-- Instructions -->
 	<md-sidenav class="md-sidenav-left md-whiteframe-z2 instructions" md-component-id="instructionsList">
 		<md-content flex>
+			<h4>
+				<a 	href 		= "#" 
+					ng-repeat 	= "type in ctrl.breadcrumbInstructions"
+					ng-click 	= "ctrl.gotoInstructionsType(type)"
+					> / {{type.name}}</a>
+			</h4>
 			<md-list class="instructionTypes">
-				<md-list-item flex ng-repeat= "type in ctrl.instructionTypes">
-					<p ng-bind="type.name"></p>
-					<md-list class="instructions">
-						<md-list-item flex ng-repeat= "instruction in type.instructions">
-							<!-- {{instruction | json}} -->
-							<section alx-draggable	= "instruction"
-									 alx-drag-start = "ctrl.closeInstructions()"
-								w	 alx-drag-end 	= "ctrl.openInstructions()"
-									>
-								<instruction data="instruction"></instruction>
-							</section>
-						</md-list-item>
-					</md-list>
+				<md-list-item flex ng-repeat= "type in ctrl.instructionsType.types">
+					<section ng-class 		= "type" 
+							 ng-click 		= "ctrl.gotoInstructionsType(type)"
+							 flex>
+						{{type.name}}
+					</section>
+				</md-list-item>
+				<md-list-item flex ng-repeat= "instruction in ctrl.instructionsType.instructions">
+					<section alx-draggable	= "instruction"
+							 alx-drag-start = "ctrl.closeInstructions()"
+							 alx-drag-end 	= "ctrl.openInstructions()"
+							>
+						<instruction data="instruction"></instruction>
+					</section>
 				</md-list-item>
 			</md-list>
-			
-
 		</md-content>
 	</md-sidenav>
 

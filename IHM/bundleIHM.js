@@ -9205,7 +9205,19 @@
 									}
 
 									// Update instructions
-									this.instructionTypes = instructionDir.instructionTypes;
+									this.instructionsType 		= instructionDir.instructionTypes;
+									this.breadcrumbInstructions	= [ this.instructionsType ];
+
+									this.gotoInstructionsType	= function(type) {
+										var pos = this.breadcrumbInstructions.indexOf(type);
+									 	if(pos >= 0) {
+									 		this.breadcrumbInstructions.splice(pos, this.breadcrumbInstructions.length);
+									 	}
+									 	this.breadcrumbInstructions.push(type);
+									 	this.instructionsType = this.breadcrumbInstructions[ this.breadcrumbInstructions.length - 1 ];
+									}
+
+									// this.instructionTypes = instructionDir.instructionTypes;
 									console.log( "instructionTypes:", this.instructionTypes);
 								}
 								, bindToController 	: true
@@ -9259,7 +9271,7 @@
 	// 		|
 	// 		|
 	var workflow		 = {name: 'Workflow', instructions: []}
-	  , instructionTypes = {workflow: workflow};
+	  , instructionTypes = {name: "Instruction", types: {workflow: workflow}};
 	for(i in controllers) {
 		console.log( "instruction", i);
 		// Instantiate : check if no problem with scope
@@ -9274,7 +9286,7 @@
 	var brickType, nodeType, id, instructionType;
 	for(brickType in actions) {
 		instructionType 	= {name: brickType, instructions: []};
-		instructionTypes[brickType] = instructionType;
+		instructionTypes.types[brickType] = instructionType;
 		for(nodeType in actions[brickType]) {
 			id = brickType + '/' + nodeType;
 			controllers [id] = ctrl = actions[brickType][nodeType].controller	;
@@ -9291,8 +9303,8 @@
 
 	// Register instructions related to EVENTS
 	for(brickType in events) {
-		instructionType 	= instructionTypes[brickType] || {name: brickType, instructions: []};
-		instructionTypes[brickType] = instructionType;
+		instructionType 	= instructionTypes.types[brickType] || {name: brickType, instructions: []};
+		instructionTypes.types[brickType] = instructionType;
 		for(nodeType in events[brickType]) {
 			id = brickType + '/' + nodeType;
 			controllers [id] = events[brickType][nodeType].controller	;
@@ -9348,12 +9360,12 @@
 			);
 	}
 
-	instructionFct.instructions = [];
+	/*instructionFct.instructions = {className: "Instructions", type: [], subClasses: []};
 	var fct;
 	for(i in controllers) {
 		fct = controllers[i];
-		instructionFct.instructions.push( {className: i, type: fct.type} );
-	}
+		instructionFct.instructions.push( {className: i, type: fct.type, subClasses: []} );
+	}*/
 
 	instructionFct.instructionTypes = instructionTypes;
 
@@ -9499,7 +9511,7 @@
 	Pnode.hasOneType	= function(instruction, types) {
 			var t;
 			for(t=0; t<types.length; t++) {
-				if( instruction.type.indexOf(types[t]) >= 0) {return true;}
+				if( instruction.type && instruction.type.indexOf(types[t]) >= 0) {return true;}
 			}
 			return false;
 		}
