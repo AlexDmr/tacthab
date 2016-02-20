@@ -8207,7 +8207,7 @@
 						, function($compile) {
 							 return { restrict			: 'E'
 									, controller		: function($scope) {
-										// console.log( "new brick", this.brick, $scope );
+										console.log( "new brick", this.brick, $scope );
 										var types = this.brick.type
 										  , i, constr;
 										for(i=types.length-1; i>=0; i--) {
@@ -8628,7 +8628,7 @@
 /* 75 */
 /***/ function(module, exports) {
 
-	module.exports = "\t<md-card-content>\r\n\t\t<img ng-src\t\t= \"{{brick.iconURL}}\" \r\n\t\t\t class\t\t= \"md-card-image iconURL\" \r\n\t\t\t alt\t\t= \"{{brick.iconURL}}\"\r\n\t\t\t />\r\n\t\t{{brick.name}}\r\n\t</md-card-content>\r\n\t<md-card-footer>\r\n\t</md-card-footer>\r\n"
+	module.exports = "<md-card>\r\n\t<md-card-content>\r\n\t\t<img ng-src\t\t= \"{{ctrl.brick.iconURL}}\" \r\n\t\t\t class\t\t= \"md-card-image iconURL\" \r\n\t\t\t alt\t\t= \"{{ctrl.brick.iconURL}}\"\r\n\t\t\t />\r\n\t\t{{ctrl.brick.name}}\r\n\t</md-card-content>\r\n\t<md-card-footer>\r\n\t</md-card-footer>\r\n</md-card>"
 
 /***/ },
 /* 76 */

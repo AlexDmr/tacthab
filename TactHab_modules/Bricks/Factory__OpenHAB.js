@@ -63,8 +63,8 @@ BrickOpenHAB.prototype.getDescription	= function() {
 	 var json	= BrickUPnP.prototype.getDescription.apply(this, []);
 	 json.name	= this.UPnP.friendlyName || "OpenHab";
 	 json.config= { mqtt	: this.config.mqtt
-				  , host	: this.openHabServer.host
-				  , port	: this.openHabServer.port
+				  , host	: this.openHabServer?this.openHabServer.host:""
+				  , port	: this.openHabServer?this.openHabServer.port:0
 				  };
 	 return json;
 	}

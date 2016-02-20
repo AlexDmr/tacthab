@@ -10,7 +10,7 @@ var BrickUPnP = function(id) {
 	 Brick.apply(this, [id]);
 	 //console.log( "BrickUPnP", this.brickId);
 	 this.subscriptions	= [];
-	 this.UPnP			= {};
+	 this.UPnP			= {icons: []};
 	 this.UPnP_states	= {};
 	 return this;
 	}
@@ -33,8 +33,8 @@ BrickUPnP.prototype.UPnP_call		= function() {
 	}
 BrickUPnP.prototype.getDescription	= function() {
 	 var json = Brick.prototype.getDescription.apply(this, []);
-	 json.name = this.UPnP.friendlyName;
-	 if(this.UPnP.icons[0]) {
+	 json.name = this.UPnP.friendlyName || this.name;
+	 if(this.UPnP.icons.length) {
 		 var url = this.UPnP.icons[0].url[0];
 		 if(url[0] !== '/') {url = '/' + url;}
 		 json.iconURL = 'http://' + this.UPnP.device.host + ':' + this.UPnP.device.port + url;

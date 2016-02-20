@@ -167,6 +167,7 @@ Pnode.prototype.getContextDescription = function() {
 			specializations : Brick.D_brickTypes[type].specializations, 
 			generalization 	: Brick.D_brickTypes[type].generalization,
 			ESA 			: Brick.D_brickTypes[type].proto.getESA(),
+			json			: Brick.D_brickTypes[type].json,
 			instances		: [] } ;
 	}
 	// Add bricks

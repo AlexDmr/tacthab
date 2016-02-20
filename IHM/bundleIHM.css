@@ -402,6 +402,7 @@ instruction > section.NChildNode > .content > .child > .separator .bottom {
 instruction > section.NChildNode > .content > .child > .container  {
 	flex				: 0 0 auto;
 	display				: inline-flex;
+	align-items			: center;
 }
 
 instruction > section.NChildNode > .content > .child  > .container > .lastOne.Pnode.ActionNodePresentation {

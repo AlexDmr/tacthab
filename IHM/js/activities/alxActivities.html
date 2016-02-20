@@ -65,7 +65,7 @@ Par ici les sections...
 							 alx-drag-end 	= "ctrl.openBricks()"
 							 ng-click 		= "ctrl.gotoType(type)"
 							 flex>
-						{{type}}
+						<brick data="ctrl.context.brickTypes[type].json"></brick>
 					</section>
 				</md-list-item>
 			</md-list>

@@ -33,7 +33,7 @@ module.exports = function(app) {
 					, function($compile) {
 						 return { restrict			: 'E'
 								, controller		: function($scope) {
-									// console.log( "new brick", this.brick, $scope );
+									console.log( "new brick", this.brick, $scope );
 									var types = this.brick.type
 									  , i, constr;
 									for(i=types.length-1; i>=0; i--) {

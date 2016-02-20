@@ -36,11 +36,16 @@ Brick.prototype.registerType	= function(name, proto) {
 	 D_brickTypes[name] 		= {proto: proto, specializations: [], generalization: null};
 	 var protoBrickHerited 		= Object.getPrototypeOf( proto )
 	   , protoBrickHeritedName 	= protoBrickHerited.getTypeName?protoBrickHerited.getTypeName():""
+	   , exemple
 	   ;
 	 if( D_brickTypes[protoBrickHeritedName] ) {
+	 	exemple = new proto.constructor();
+	 	exemple.name = name;
 	 	console.log( name, "inherits from", protoBrickHeritedName);
 		D_brickTypes[protoBrickHeritedName].specializations.push( name );
-		D_brickTypes[name].generalization = protoBrickHeritedName;
+		D_brickTypes[name].generalization 	= protoBrickHeritedName;
+		D_brickTypes[name].json				= exemple.getDescription();
+		exemple.dispose();
 	 }
 	}
 Brick.prototype.getTypesFromName= function(name) {
