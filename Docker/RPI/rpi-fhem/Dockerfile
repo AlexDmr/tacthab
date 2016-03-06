@@ -1,4 +1,4 @@
-FROM alexd2/ubuntu
+FROM alexd2/rpi-raspbian
 
 # Install perl packages
 RUN apt-get -y --force-yes install libalgorithm-merge-perl \
