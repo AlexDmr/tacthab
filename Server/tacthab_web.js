@@ -26,6 +26,8 @@ module.exports = function(webServer) {
 		}
 	 webServer.app.post	( '/thacthab_login'
 						, function(req, res) {
+							 console.log("/thacthab_login", req);
+							 res.end();
 							}
 						);
 	 // Init a socket.IO client to http://thacthab.herokuapp.com

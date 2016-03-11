@@ -49,7 +49,7 @@ module.exports = function(webServer) {
 																		 , logPath	: __dirname.replace(/\\/g, '/')
 																		 };
 															}
-								  openHAB.init( json ).then	 ( function(devices) {res.json( openHAB.getDescription() );} 
+								  openHAB.init( json ).then	 ( function(/*devices*/) {res.json( openHAB.getDescription() );} 
 													  ).catch( function(reasons) {res.writeHead(400, {'Content-type': 'text/plain; charset=utf-8'});
 																				  res.end( "Error intializing openHab:\n" + reasons );
 																				 }

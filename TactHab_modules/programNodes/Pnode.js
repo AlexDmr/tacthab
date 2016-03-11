@@ -147,7 +147,7 @@ Pnode.prototype.setState = function(state) {
 Pnode.prototype.on_setState = function(cb) {this.cb_setState = cb;}
 Pnode.prototype.CB_setState = null;
 
-Pnode.prototype.childStateChanged = function(child, prevState, newState) {}
+Pnode.prototype.childStateChanged = function(/*child, prevState, newState*/) {}
 
 Pnode.prototype.call = function(call) {
 	// Propagate an action call if it is not forbidden

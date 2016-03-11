@@ -159,7 +159,7 @@ Presentation.prototype.removeChild = function(c) {
 	 if(c.root && c.root.parentElement) {c.root.parentElement.removeChild(c.root);}
 	 return this;
 	}
- Presentation.prototype.setName			= function(name) {}
+ Presentation.prototype.setName			= function(name) {this.name = name;}
 /**
  * List all the descendants Presentation nodes.
  * @returns {Presentation[]} Array of all {@link Presentation} that have this node for ancestor.

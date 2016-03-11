@@ -1,18 +1,12 @@
 var PnodePresentation	= require( './PnodePresentation.js' )
   // , DragDrop			= require( '../DragDrop.js' )
-  , utils				= require( '../utils.js' )
+  // , utils				= require( '../utils.js' )
   , AlxTextEditor		= require( './widgets/AlxTextEditor.js' )
   ;
 
 // XXX Try direct loading
-var htmlTemplate;
-utils.XHR( 'GET', 'js/Presentations/HTML_templates/Pselector_TextPresentation.html'
-		 , function() {htmlTemplate = this.responseText;}
-		 );
-var css = document.createElement('link');
-	css.setAttribute('rel' , 'stylesheet');
-	css.setAttribute('href', 'js/Presentations/HTML_templates/Pselector_TextPresentation.css');
-	document.head.appendChild( css );
+// var htmlTemplate = require( "./HTML_templates/Pselector_TextPresentation.html" );
+require( "./HTML_templates/Pselector_TextPresentation.css" );
 
 var Pselector_TextPresentation = function() {
 	// console.log(this);

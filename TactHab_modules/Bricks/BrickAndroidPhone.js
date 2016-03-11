@@ -1,10 +1,11 @@
 var IFTTTBrick = require( './IFTTTBrick.js' );
 
 function CB_subscribe(user, pass, title, categs) {
-			 
+		console.log("CB_subscribe", user, pass, title, categs);
 }
 
 var IFTTTBrickAndroidPhone = function(user, pass, androidID) {
+	console.log("IFTTTBrickAndroidPhone", user, pass, androidID);
 	 IFTTTBrick.apply(this, [user, pass]);
 	 console.log( "IFTTTBrickAndroidPhone", this.brickId);
 	 this.webServer.subscribe_to_wordPressEvent( 
@@ -20,7 +21,7 @@ IFTTTBrickAndroidPhone.prototype.serialize	= function() {
 	 var json = IFTTTBrick.prototype.serialize();
 	 return json;
 	}
-IFTTTBrickAndroidPhone.prototype.unserialize	= function(json) {
+IFTTTBrickAndroidPhone.prototype.unserialize	= function(/*json*/) {
 	 return this;
 	}
 

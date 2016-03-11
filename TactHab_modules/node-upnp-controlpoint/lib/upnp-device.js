@@ -128,20 +128,20 @@ UpnpDevice.prototype._handleDeviceInfo = function(desc) {
 		}
 	}
 };
-
+/*
 UpnpDevice.prototype._callAction = function(serviceId, actionName, args, callback) {
 	// TODO lookup service and call action
-};
+};*/
 
 
 UpnpDevice.prototype._getServiceDesc = function(service) {
 	var options = {
 		host : this.host,
 		port : this.port,
-		path : service.scpdUrl,
+		path : service.scpdUrl
 	};
 	options.headers = {
-		"host"     : this.host + ":" + this.port,
+		"host"     : this.host + ":" + this.port
 	};
 	
 	var req = http.request(options, function(res) {

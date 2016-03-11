@@ -102,7 +102,7 @@ PeventBrick.prototype.synchronizeWithTargets	= function(targets) {
 		
 }
 
-PeventBrick.prototype.syncWithBrick = function(brickId, eventName, filters) {
+PeventBrick.prototype.syncWithBrick = function(brickId, eventName/*, filters*/) {
 	// var self = this;
 	var brick = Brick.prototype.getBrickFromId(brickId);
 	if(brick) {

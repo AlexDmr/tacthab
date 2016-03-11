@@ -1,135 +1,135 @@
 var gulp				= require('gulp')
-  , gutil				= require("gulp-util")
+  , webpack				= require("gulp-webpack")
+  , named				= require('vinyl-named')
   , eslint				= require('gulp-eslint')
-  , webpack				= require("webpack")
   , ExtractTextPlugin	= require("extract-text-webpack-plugin")
   , uglify				= require('gulp-uglify')
-  , watch				= require('gulp-watch')
-  , cached				= require('gulp-cached')
-  , remember			= require('gulp-remember')
-  , jshint				= require('gulp-jshint')
-  , stylish				= require('jshint-stylish-ex')
-  , jshintOptions		= {	"laxbreak"	: true,
-							"laxcomma"	: true,
-							"asi"		: true,
-							"esnext"	: true,
-							"devel"		: true,
-							"latedef"	: true,
-							"undef"		: true,
-							"multistr"	: true,
-							"unused"	: "vars",
-							"globals"	: { "document"		: false
-										  , "$"				: false
-										  , "angular"		: false
-										  , "__dirname"		: false
-										  , "require"		: false
-										  , "setTimeout"	: false
-										  , "clearTimeout"	: false
-										  , "clearInterval"	: false
-										  , "exports"		: false
-										  , "DOMParser"		: false
-										  , "process"		: false
-										  , "module"		: true
-										  , "XMLHttpRequest": false
-										  , "FormData"		: false
-										  , "setInterval"	: false
-										  , "Int8Array"		: false
-										  , "google"		: false
-										  , "window"		: false
-										  , "Buffer"		: false
-										  , "webkitSpeechRecognition"	: false
-										  , "SpeechSynthesisUtterance"	: false
-										  , "speechSynthesis"			: false
-										  }
-							}
+  , filter				= require('gulp-filter')
+  , autoprefixer		= require('gulp-autoprefixer')
+  , cleanCSS 			= require('gulp-clean-css')
+  , gzip				= require('gulp-gzip')
+  , through				= require('through-gulp')
+  , upath				= require("upath")
   ;
 
-function swallowError (error) {
-	console.error("ESLINT:", error.toString());
-	this.emit('end');
+var webpackEntries	=	[ './test/testEditor.js'
+						]
+var filesToLint 	=	[ 'js/**/*.js'
+						, 'TactHab_modules/**/*.js'
+						, 'Server/**/*.js'
+						, '!./js/domReady.js'
+						, '!./js/async.js'
+						];
+
+var problemFiles	=	filesToLint.slice();
+function appendProblemFiles(fName) {
+	if(problemFiles.indexOf(fName) === -1) {
+		problemFiles.push(fName);
+	}
+}
+function removeProblemFiles(fName) {
+	var pos = problemFiles.indexOf(fName)
+	if(pos !== -1) {
+		problemFiles.splice(problemFiles.indexOf(fName), 1);
+	}
 }
 
-gulp.task('lint', function () {
-    return gulp.src	( [ 'js/**/*.js'
-					  , 'TactHab_modules/**/*.js'
-					  , 'Server/**/*.js'
-					  , '!./js/domReady.js'
-					  , '!./js/async.js'
-					  ]
-					)
-		.pipe(cached('scripts'))
-		.pipe(jshint(jshintOptions))
-		.pipe(jshint.reporter(stylish))
-        // .pipe(eslint())
-		// .on('error', swallowError)
-        // .pipe(eslint.format())
-        // .pipe(eslint.failOnError())
-		.pipe(remember('scripts'))
-		;
+function listLinted() {
+	return stream = through(function(file, encoding,callback) {
+		this.push(file);
+		if(file.eslint) {
+			var fName = upath.normalizeSafe( file.cwd + '/' + file.eslint.filePath );
+			// console.log( "\t", fName );
+			var pos = problemFiles.indexOf(fName);
+			if( file.eslint.errorCount || file.eslint.warningCount) {
+				appendProblemFiles(fName);
+			} else {
+				removeProblemFiles(fName);
+			}
+		}
+		callback();
+		}, function(callback) {callback();});
+}
+
+function linterPipeline() {
+	// console.log( "linterPipeline", problemFiles );
+    return gulp	.src ( problemFiles		)
+				.pipe( eslint() 		)
+				.pipe( listLinted() 	)
+				.pipe( eslint.format("stylish", process.stdout) 	)
+				;
+}
+
+gulp.task('lint', function () {return linterPipeline();});
+
+gulp.task('watch', ['lint'], function () {
+	// console.log("Task lint")
+	problemFiles.splice(0, filesToLint.length);
+	// console.log( "problemFiles:", problemFiles);
+	gulp.watch( filesToLint, function(event) {
+		var fName = upath.normalizeSafe( event.path );
+		// console.log( event );
+		if (event.type !== 'deleted') {
+	  			appendProblemFiles(fName);
+				console.log( "__________________________________________________________________________" );
+				console.log( "------------------------------- CODE LINT --------------------------------" );
+				console.log( "--------------------------------------------------------------------------" );
+				return linterPipeline();
+			}
+  });
 });
 
+
 gulp.task("webpack", function(callback) {
-    // run webpack
-    webpack({
-			entry	: {
-				bundleEditor			: "./test/testEditor.js"
-			},
-			output	: {
-				path			: "./test/",
-				filename		: "[name].js",
-			},
-			progress: false,
+	var wp =
+	gulp.src( webpackEntries )
+		.pipe( named() )
+		.pipe( webpack({
+			progress	: false,
 			stats: {
-				colors			: true ,
-				modules			: false,
-				reasons			: false
+				colors	: true ,
+				modules	: false,
+				reasons	: false
 			},
-			module	: {
+			watch		: true,
+			module		: {
 				loaders: [
 					{ test	: /\.css$/	, loader: ExtractTextPlugin.extract("style-loader", "css-loader")},
 					{ test	: /\.html$/	, loader: 'raw-loader'},
-					{ test: /\.(png|woff|jpg|jpeg|gif)$/, loader: 'url-loader?limit=100000' }
+                    { test: /\.(png|woff|jpg|jpeg|gif)$/, loader: 'url-loader?limit=100000' }
 				]
 			},
 			plugins: [ new ExtractTextPlugin("[name].css")
 					 ],
 			failOnError	: false
-    }, function(err, stats) {
-        if(err) throw new gutil.PluginError("webpack", err);
-        gutil.log( "[webpack]"
-				 , stats.toString( { colors		: true
-								   , modules	: false
-								   , chunck		: false
-								   }
-								 )
-				 );
-        callback();
-    });
+    	}) ); /* End of pipe webpack */
+   // Split CSS and JS process
+   var css = wp.pipe( filter('*.css' ))
+     , js  = wp.pipe( filter('*.js'  ));
+	// CSS process
+	css.pipe( autoprefixer() )
+		// Split dev and dist
+		css	.pipe( gulp.dest('dev') )
+			.pipe( cleanCSS() )
+			.pipe( gulp.dest('dist') )
+			.pipe( gzip() )
+			.pipe( gulp.dest('dist') );
+
+	// JS process
+	js	.pipe( gulp.dest('dev') )
+		.pipe( uglify() )
+		.pipe( gulp.dest('dist') )
+		.pipe( gzip() )
+		.pipe( gulp.dest('dist') );
+
+	return wp;
 });
 
+;
 
 
-
-var filesToWatch =	[ 'css/**/*.css'
-					, 'js/**/*.js'
-					, 'js/**/*.css'
-					, 'TactHab_modules/**/*.js'
-					, 'Server/**/*.js'
-					];
-
-
-gulp.task('watch', function () {
-  var watcher = gulp.watch(filesToWatch, ['lint', 'webpack']);
-  watcher.on('change', function (event) {
-    if (event.type === 'deleted') {                   // if a file is deleted, forget about it
-      delete cached.caches.scripts[event.path];       // gulp-cached remove api
-      remember.forget('scripts', event.path);         // gulp-remember remove api
-    }
-  });
-});
-
-gulp.task('default', ['lint', 'webpack', 'watch'], function() {
-	console.log("Done!");
+gulp.task('default', ['webpack', 'watch'], function() {
+	console.log("Done ???");
 });
 
 

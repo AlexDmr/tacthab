@@ -56,7 +56,7 @@ Pselector_ObjTypePresentation.prototype.Render	= function() {
 	if(typeof this.html.select === 'undefined') {
 		 this.copyHTML(html_template, root);
 		 this.html.select = root.querySelector('select.brickType');
-		 this.html.select.onchange = function(e) {self.selector.objectsType = self.html.select.value;}
+		 this.html.select.onchange = function() {self.selector.objectsType = self.html.select.value;}
 		 this.selector.objectsType = this.selector.objectsType || this.html.select.querySelector("option");
 		}
 	this.html.select.value = this.selector.objectsType;

@@ -127,7 +127,7 @@ Brick.prototype.getDescription	= function() {
 	}
 Brick.prototype.getBricks		= function( filter ) {
 	 var res = {};
-	 if(typeof filter === "undefined") {filter = function(e) {return true;};}
+	 if(typeof filter === "undefined") {filter = function() {return true;};}
 	 for(var i in D_brick) {
 		 if( filter(D_brick[i]) ) {res[i] = D_brick[i];}
 		}
@@ -139,7 +139,7 @@ Brick.prototype.getActions	= function() {return [];}
 Brick.prototype.getEvents	= function() {return [];}
 Brick.prototype.getStates	= function() {return [];}
 
-Brick.prototype.init		= function(obj) {return this;}
+Brick.prototype.init		= function(/*obj*/) {return this;}
 Brick.prototype.serialize	= function() {
 	 var json = { brickId	: this.brickId
 				, classe	: 'Brick'

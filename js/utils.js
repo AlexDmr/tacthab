@@ -51,7 +51,7 @@ var utils = {
 			 call.callId = callId++;
 			}
 		 // console.log( "Calling", call);
-		 return new Promise	( function(resolve, reject) {
+		 return new Promise	( function(resolve) {
 			 utils.io.emit	( 'call', call
 							, function(data){
 								 // console.log("Call", call.callId, " returns", data);

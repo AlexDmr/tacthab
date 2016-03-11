@@ -172,7 +172,7 @@ UpnpService.prototype.callAction = function(actionName, args, callback) {
 	  	host    : this.host,
 	  	port    : this.port,
 	  	path    : this.controlUrl,
-	  	method  : "POST",
+	  	method  : "POST"
 	}
 	if (TRACE && DETAIL) {
 		console.log("sending SOAP request " + JSON.stringify(options) + "\n" + s);
@@ -309,7 +309,7 @@ UpnpService.prototype._resubscribe = function(sid, callback) {
 	options.headers = {
 		"host"     : host + ":" + port,
 		"sid"      : sid,
-		"timeout"  : "Second-" + this.subscriptionTimeout,
+		"timeout"  : "Second-" + this.subscriptionTimeout
 	};
 	
 	var req = http.request(options, function(res) {
@@ -346,11 +346,11 @@ UpnpService.prototype.unsubscribe = function(sid, callback) {
 	  	method  : "UNSUBSCRIBE",
 	  	host    : this.host,
 	  	port    : this.port,
-	  	path    : this.eventSubUrl,
+	  	path    : this.eventSubUrl
 	}
 	options.headers = {
 		"host"     : this.host + ":" + this.port,
-		"sid"      : sid,
+		"sid"      : sid
 	};
 
 	var req = http.request(options, function(res) {
@@ -384,10 +384,10 @@ UpnpService.prototype._getServiceDesc = function(callback) {
 	var options = {
 		host : this.host,
 		port : this.port,
-		path : this.scpdUrl,
+		path : this.scpdUrl
 	}
 	options.headers = {
-		"host"  : this.host + ":" + this.port,
+		"host"  : this.host + ":" + this.port
 	};
 	var req = http.request(options, function(res) {
 		var buf = "";

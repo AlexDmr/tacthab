@@ -42,7 +42,7 @@ BrickFhem.prototype.getDescription = function() {
 	}
 
 BrickFhem.prototype.update			= function(data) {
-	console.error("-_-_-_- BrickFhem::update should be implemented and specialized...");
+	console.error("-_-_-_- BrickFhem::update should be implemented and specialized...", data);
 	return {};
 }
 

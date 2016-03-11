@@ -4,7 +4,7 @@ var Pnode = require( './Pnode.js' )
   ;
 
 // Definition of a node for programs
-var ActionNode = function(parent, mtd, params) {
+var ActionNode = function(/*parent, mtd, params*/) {
 	 Pnode.prototype.constructor.apply(this, []);
 	 return this;
 	}

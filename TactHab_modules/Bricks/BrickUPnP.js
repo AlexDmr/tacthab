@@ -56,7 +56,7 @@ function CB_newSubscription(brick) {
 				 console.log("\tBrickUPnP: Registering the new subscription for", this.id);
 				}
 }
-function CB_service(brick, service) {
+function CB_service(brick/*, service*/) {
 	return function(err, data) {
 				 if(err) {
 					 console.error('BrickUPnP', brick.brickId, "received:", "\n\terr :", err, "\n\tdata :", data);
@@ -96,7 +96,7 @@ BrickUPnP.prototype.init	 		= function(device) {
 		}
 	 return this;
 	}
-BrickUPnP.prototype.UpdateEvent		= function(eventNode, service) {}
+BrickUPnP.prototype.UpdateEvent		= function(/*eventNode, service*/) {}
 BrickUPnP.prototype.UpdateFromEvent	= function(eventNode, service) {
 	 var L = eventNode.getElementsByTagName('e:property');
 	 for(var i=0; i<L.length; i++) {

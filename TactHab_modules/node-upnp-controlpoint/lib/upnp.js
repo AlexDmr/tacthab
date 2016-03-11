@@ -103,7 +103,7 @@ Gateway.prototype.AddPortMapping = function(protocol, extPort, intPort, host, de
     <NewLeaseDuration>0</NewLeaseDuration>\
     </u:AddPortMapping>",
     "AddPortMapping",
-    function(err, response) {
+    function(err/*, response*/) {
       if (err) return callback(err);
     }
   );
@@ -211,7 +211,7 @@ function pipoParseHTTP_header(str) {
 		   };
 }
 
-ControlPoint.prototype.onRequestMessage = function(msg, rinfo) {
+ControlPoint.prototype.onRequestMessage = function(msg/*, rinfo*/) {
 	var str = msg.toString('utf8');
 	var res = pipoParseHTTP_header(str);
 	// console.log("ControlPoint::onRequestMessage", "\n\t", res.method, ":", rinfo);
@@ -243,7 +243,7 @@ ControlPoint.prototype.onRequestMessage = function(msg, rinfo) {
 /**
  * Message handler for HTTPU response.
  */
-ControlPoint.prototype.onResponseMessage = function(msg, rinfo){
+ControlPoint.prototype.onResponseMessage = function(msg/*, rinfo*/){
 	var str = msg.toString('utf8');	
 	var res = pipoParseHTTP_header(str);
 	// console.log("ControlPoint::onResponseMessage", "\n\tinf:", rinfo, "\n\t", res);

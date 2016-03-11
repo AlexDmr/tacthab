@@ -113,7 +113,7 @@ var DragDrop = {
 							  , false );
 		 node.addEventListener( 'dragend'
 							  , function(event) {
-									 self.stoppingDrag( node, infoObj );
+									 self.stoppingDrag();
 									 event.preventDefault();
 									 event.stopPropagation();
 									} 
@@ -135,7 +135,7 @@ var DragDrop = {
 				}
 			}
 		}
-	, stoppingDrag	: function(node, infoObj) {
+	, stoppingDrag	: function() {
 		 var self = this;
 		 // console.log('Stop dragging', self.draggedNode);
 		 self.draggedNode	= null;

@@ -133,7 +133,7 @@ MediaBrowser.prototype.RenderItem = function(name, iconURL, mediaServerId, direc
 			   }
 	 return htmlMS;
 	}
-MediaBrowser.prototype.getServers = function(PnodeID) {
+MediaBrowser.prototype.getServers = function() {
 	 var self = this;
 	 this.htmldivContent.innerHTML = '';
 	 this.htmldivContent.classList.remove('error');

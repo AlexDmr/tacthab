@@ -37,7 +37,7 @@ actuator_01.prototype.init				= function(FhemBridge, listEntry) {
 }
 
 actuator_01.prototype.extractData		= function(data) {
-	// console.log("actuator_01::extractData", data);
+	console.log("actuator_01::extractData", data);
 	return {};
 }
 

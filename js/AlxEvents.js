@@ -40,11 +40,9 @@ AlxEvent.prototype.off	= function(eventName, callback) {
 	return this;
 }
 
-AlxEvent.prototype.disposeAlxEvent	= function(eventName, callback) {
+AlxEvent.prototype.disposeAlxEvent	= function() {
 	if(this.AlxEvent) {
-		 var keys, key;
-		 for(var e in keys) {
-			  key = key[e];
+		 for(var e in this.AlxEvent) {
 			  this.AlxEvent[e] = [];
 			  delete this.AlxEvent[e];
 			}

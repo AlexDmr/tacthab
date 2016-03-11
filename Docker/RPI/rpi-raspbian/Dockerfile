@@ -1,7 +1,7 @@
 FROM resin/rpi-raspbian
 
 RUN apt-get -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" dist-upgrade
-RUN apt-get -y install curl
+# RUN apt-get -y install curl
 # Basic stuff
 RUN apt-get update
 RUN apt-get install -y make

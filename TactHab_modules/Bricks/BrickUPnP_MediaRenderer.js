@@ -235,7 +235,7 @@ BrickUPnP_MediaRenderer.prototype.setVolume	= function(volume) {
 		}); // Promise
 	}
 BrickUPnP_MediaRenderer.prototype.goToTime	= function(time) {
-	 
+	 console.error( "BrickUPnP_MediaRenderer.prototype.goToTime", time, "has to be implemented!" );
 	}
 
 // UPnP events

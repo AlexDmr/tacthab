@@ -55,7 +55,7 @@ BrickSensorTag.prototype.connect 		= function() {
 	return new Promise( function(resolve, reject) {
 		sensorTag.connectAndSetUp( function(error) {
 			if(error) {console.error("sensorTag connectAndSetUp error", error); return;}
-			sensorTag.readDeviceName( function(error, deviceName) {
+			sensorTag.readDeviceName( function(error/*, deviceName*/) {
 				if(error) {reject(error); return;}
 				brick.isConnected = true;
 				resolve( brick.getDescription() );
@@ -69,7 +69,7 @@ BrickSensorTag.prototype.connectAndSetUp	= function() {
 	var sensorTag = this.sensorTag;
 	sensorTag.connectAndSetUp( function(error) {
 		if(error) {console.error("sensorTag connectAndSetUp error", error); return;}
-		sensorTag.readDeviceName( function(error, deviceName) {
+		sensorTag.readDeviceName( function(error/*, deviceName*/) {
 			if(error) {console.error(error); return;}
 			brick.emit("updateDescription", brick.getDescription());
 		});
@@ -168,7 +168,7 @@ var L_mtd = [
 ];
 
 var i, mtd;
-for(var i=0; i<L_mtd.length; i++) {
+for(i=0; i<L_mtd.length; i++) {
 	mtd = L_mtd[i];
 	//console.log("Generating method", mtd);
 	BrickSensorTag.prototype[mtd.name] = new Function( mtd.params

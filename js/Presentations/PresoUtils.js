@@ -57,7 +57,7 @@ var PresoUtils = {
 			}
 		 return this.mapping[className];
 		}
-	, unserialize	: function(json, cb) {
+	, unserialize	: function(json) {
 		 // console.log("json.subType : ", json.subType);
 		 var parent;
 		 var Cname	= json.subType || json.className;

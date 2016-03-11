@@ -66,11 +66,7 @@ AlxAutomate.prototype.whichStateIfActiobn			= function(actionName) {
 }
 
 AlxAutomate.prototype.goingToState					= function(stateName) {
-	/*var L = []
-	  , s = this.currentState;*/
-	
-	// Find the shortest actions path to go to stateName from currentState
-	
+	console.log( stateName );
 	return null;
 }
 

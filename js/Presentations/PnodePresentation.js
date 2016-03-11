@@ -126,7 +126,7 @@ domReady( function() {
 							 , true
 							 );
 });
-						 
+
 PnodePresentation.prototype.displayContextMenu	= function(x, y) {
 	var i, htmlItem, item;
 	root.innerHTML = "";
@@ -141,7 +141,7 @@ PnodePresentation.prototype.displayContextMenu	= function(x, y) {
 		}
 	root.style.top	= y + 'px';
 	root.style.left	= x + 'px';
-	if(root.parentNode) {} else {document.body.appendChild(root);}
+	if(root.parentNode !== null) {document.body.appendChild(root);}
 	return this;
 }
 
