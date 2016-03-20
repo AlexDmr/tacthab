@@ -26,7 +26,7 @@ module.exports = function(app) {
 							 controllerFct.apply(this, [$scope, utils]);
 							}
 						 , controllerAs	: "ctrl"
-						 , link			: function(scope, element, attr, controller) {
+						 , link			: function(scope, element/*, attr, controller*/) {
 							 var template 	=  templates[scope.brick.class]
 							 				|| templates.default ;
 							 element.html( template );

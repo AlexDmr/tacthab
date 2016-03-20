@@ -54,7 +54,7 @@ module.exports = function(app) {
 							, templateUrl		: "/IHM/js/activities/alxActivity.html"
 							, scope				: { //activity	: "=activity"
 												  }
-							, link				: function(scope, element, attr, controller) {
+							, link				: function(/*scope, element, attr, controller*/) {
 								// Get the program node
 								// var HTML_program 	= element[0].querySelector("section.mechanisms > section.program");
 								// controller.program 	= new ProgramNode();

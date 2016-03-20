@@ -3,7 +3,7 @@ var BrickOpenHAB = require( "./BrickOpenHAB.js" );
 module.exports = function(scope, utils) {
 	BrickOpenHAB.apply(this, [scope, utils]);
 	// console.log( "Create a Dimmer controller", scope.brick.state, this );
-	this.userSetNumber = function(e) {
+	this.userSetNumber = function(/*e*/) {
 		// console.log(e, this.value);
 		utils.call	( this.brick.id
 					, "setNumber"

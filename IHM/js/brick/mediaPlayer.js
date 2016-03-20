@@ -63,7 +63,7 @@ module.exports = function(app) {
 										 // console.log( "dropMedia", event, draggedInfo);
 										 var info = draggedInfo.draggedData;
 										 return this.Load( info.serverId, info.mediaId
-														 ).then( function(res) {ctrl.Play()} );
+														 ).then( function(/*res*/) {ctrl.Play()} );
 									 }
 									}
 							, bindToController 	: true

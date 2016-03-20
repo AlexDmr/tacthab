@@ -58,7 +58,7 @@ module.exports = function(app) {
 											  , context		: "="
 											  , title		: "@title"
 											  }
-							, link			: function(scope, element, attr, controller) {
+							, link			: function(/*scope, element, attr, controller*/) {
 							}
 						};
 					});

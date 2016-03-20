@@ -79,7 +79,7 @@ module.exports = function(app) {
 							, scope			: { bricks	: "=bricks"
 											  , title	: "@title"
 											  }
-							, link			: function(scope, element, attr, controller) {
+							, link			: function(/*scope, element, attr, controller*/) {
 								// interact(element).draggable( {inertia: true} );
 							}
 							};

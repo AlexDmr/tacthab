@@ -18,6 +18,9 @@ var filesToLint 	=	[ 'js/**/*.js'
 						, 'templates/**/*.js'
 						];
 
+
+
+
 var problemFiles	=	filesToLint.slice();
 function appendProblemFiles(fName) {
 	if(problemFiles.indexOf(fName) === -1) {
@@ -49,7 +52,7 @@ function listLinted() {
 }
 
 function linterPipeline() {
-	// console.log( "linterPipeline", problemFiles );
+	console.log( "linterPipeline", problemFiles );
     return gulp	.src ( problemFiles		)
 				.pipe( eslint() 		)
 				.pipe( listLinted() 	)

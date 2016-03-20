@@ -50,7 +50,7 @@ module.exports = function(app) {
 						},
 						controllerAs: "ctrl",
 						templateUrl	: "/IHM/js/BLE/templates/bleServer.html",
-						link		: function(scope, element, attr, controller) {}
+						link		: function(/*scope, element, attr, controller*/) {}
 					 };
 				 });
 }

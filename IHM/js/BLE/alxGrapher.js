@@ -4,7 +4,7 @@ require( "./templates/alxGrapher.css" );
 
 module.exports = function(app) {
 	app.directive( "alxGrapher"
-				 , function($parse) {
+				 , function(/*$parse*/) {
 					 return {
 						restrict	: 'E',
 						scope		: { 
@@ -13,7 +13,7 @@ module.exports = function(app) {
 							onEnable		: "&",
 							onDisable		: "&",
 							onPeriodChange	: "&",
-							periods			: "=",
+							periods			: "="
 						},
 						controller	: function($scope) {
 							var ctrl 			= this 
@@ -22,7 +22,7 @@ module.exports = function(app) {
 							//$scope.period = $scope.descriptionData.period || 100;
 
 							$scope.$watch( 'descriptionData'
-										 , function(newValue, oldValue) {ctrl.processDataArray();}
+										 , function(/*newValue, oldValue*/) {ctrl.processDataArray();}
 										 , true );
 							//var ctrl = this;
 							// descriptionData.data has to be an array of object of the same type
@@ -54,7 +54,7 @@ module.exports = function(app) {
 						},
 						controllerAs: "ctrl",
 						templateUrl	: "/IHM/js/BLE/templates/alxGrapher.html",
-						link		: function(scope, element, attr, controller) {
+						link		: function(scope, element/*, attr, controller*/) {
 							var svg 		= element[0].querySelector( "svg" );
 							scope.descriptionData.maxSize = parseInt( window.getComputedStyle( svg ).width);
 						}

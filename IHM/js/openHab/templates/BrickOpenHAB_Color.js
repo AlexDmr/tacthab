@@ -8,7 +8,7 @@ function toHex(d) {
 module.exports = function(scope, utils) {
 	BrickOpenHAB.apply(this, [scope, utils]);
 	// console.log( "Create a color controller", this, scope );
-	this.userSetColor = function(e) {
+	this.userSetColor = function(/*e*/) {
 		// console.log(e, this.color);
 		var r = parseInt( this.color.slice(1,3), 16 )
 		  , g = parseInt( this.color.slice(3,5), 16 )

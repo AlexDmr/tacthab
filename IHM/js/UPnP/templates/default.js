@@ -1,6 +1,6 @@
 require( "./default.css" );
 
-module.exports = function($scope, utils) {
+module.exports = function(/*$scope, utils*/) {
 	
 }
 

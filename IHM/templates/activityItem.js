@@ -5,7 +5,7 @@ module.exports = function(app) {
 			//
 		},
 		controllerAs	: "activityItemController",
-		link			: function(scope, element, attrs, controllers) {
+		link			: function(/*scope, element, attrs, controllers*/) {
 			
 		}
 	};

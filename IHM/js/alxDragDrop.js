@@ -13,12 +13,12 @@ var draggingPointers	= {}
 };
 */
 function removePointer(idPointer) {
-	var pos;
-	while(true) {
+	var pos, go = true;
+	while(go) {
 		pos = this.pointersOver.indexOf( idPointer );
 		if(pos >= 0) {
 			this.pointersOver.splice(pos, 1);
-		} else {break;}
+		} else {go = false;}
 	}
 }
 
@@ -165,7 +165,7 @@ module.exports = function(app) {
 					, function($parse) {
 						return {
 							  restrict		: 'A'
-							, link	: function(scope, elements, attrs, controller) {
+							, link	: function(scope, elements, attrs/*, controller*/) {
 								 var element = elements[0];
 								 // console.log( "alxDraggable:", attrs.alxDraggable, attrs);
 								 element.setAttribute("draggable", "true");
@@ -193,7 +193,7 @@ module.exports = function(app) {
 		.directive	("alxDroppable" 
 					, function($parse) {
 						return {
-							  link	: function(scope, elements, attrs, controller) {
+							  link	: function(scope, elements, attrs/*, controller*/) {
 								 var element = elements[0];
 								 var idDrop = idDropZone++;
 								 // console.log( "alxDroppable", attrs);

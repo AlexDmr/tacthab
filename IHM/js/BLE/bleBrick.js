@@ -16,7 +16,7 @@ module.exports = function(app) {
 								console.log( "connecting to", $scope.brick.id );
 								ctrl.isConnecting = true; $scope.$applyAsync();
 								utils.call( $scope.brick.id, "connect", [] 
-										  ).then( function(res) {
+										  ).then( function(/*res*/) {
 													 $scope.brick.isConnected	= true;
 													}
 												, function(err) {
@@ -32,7 +32,7 @@ module.exports = function(app) {
 								console.log( "disconnecting from", $scope.brick.id );
 								ctrl.isConnecting = true; $scope.$applyAsync();
 								utils.call( $scope.brick.id, "disconnect", [] 
-										  ).then( function(res) {
+										  ).then( function(/*res*/) {
 													 $scope.brick.isConnected	= false;
 													}
 												, function(err) {
@@ -82,7 +82,7 @@ module.exports = function(app) {
 						},
 						controllerAs: "ctrl",
 						templateUrl	: "/IHM/js/BLE/templates/bleBrick.html",
-						link		: function(scope, element, attr, controller) {
+						link		: function(scope, element/*, attr, controller*/) {
 							subscribeForEvent( scope.brick, "updateDescription", element
 											 , function(event) {
 												  scope.$applyAsync( function() {scope.brick.services = event.services;} );

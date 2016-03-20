@@ -1,23 +1,43 @@
+require( "angular-material/angular-material.css" );
 require( "./controllerIHM.css" );
 require( "./openHab/openHab.css" );
-require( "../bower_components/ngDraggable/ngDraggable.js" );
+// var ngDraggable = require( "ng-draggable" );
 
-var utils	= require( "../../js/utils.js" )
-  , context	= {bricks: {}}
+var utils			= require( "../../js/utils.js"	)
+  , context			= {bricks: {}}
+  , angular			= require( "angular"			)
+  , angularMaterial	= require( "angular-material"	)
   ;
 
 utils.initIO( location.hostname + ":" + location.port + "/m2m" );
 // utils.initIO(  );
 
 var app =
-angular	.module( "ihmActivity", ["ngMaterial", "ui.router", "angular-toArrayFilter", "ngDraggable"] )
+angular	.module( "ihmActivity", [angularMaterial])//"ngMaterial", "ui.router", "angular-toArrayFilter", "ngDraggable"] )
+		.filter('toArray', function () {
+			return function (obj, addKey) {
+				if (!angular.isObject(obj)) return obj;
+				if ( addKey === false ) {
+					return Object.keys(obj).map(function(key) {
+					return obj[key];
+					});
+					} else {
+						return Object.keys(obj).map(function (key) {
+						var value = obj[key];
+						return angular.isObject(value) ?
+						Object.defineProperty(value, '$key', { enumerable: false, value: key}) :
+						{ $key: key, $value: value };
+						});
+					}
+			};
+		})
 		.controller	( "TActHabIHMController"
 					, function($scope, $http) {
 						 var ctrl = this;
 						 this.context = context;
 						 this.context.activities = {}; //localStorage.activities?JSON.parse(localStorage.activities):[];
 						 
-						 $scope.filterBrickOpenHAB = function(obj, i, A) {
+						 $scope.filterBrickOpenHAB = function(obj/*, i, A*/) {
 							 return obj.type.indexOf("BrickOpenHAB") !== -1;
 							}
 						 

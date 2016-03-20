@@ -31,7 +31,7 @@ module.exports = function(app) {
 								console.log( "connecting to", $scope.brick.id );
 								ctrl.isConnecting = true; $scope.$applyAsync();
 								utils.call( $scope.brick.id, "connect", [] 
-										  ).then( function(res) {
+										  ).then( function(/*res*/) {
 													 $scope.brick.isConnected	= true;
 													}
 												, function(err) {
@@ -47,7 +47,7 @@ module.exports = function(app) {
 								console.log( "disconnecting from", $scope.brick.id );
 								ctrl.isConnecting = true; $scope.$applyAsync();
 								utils.call( $scope.brick.id, "disconnect", [] 
-										  ).then( function(res) {
+										  ).then( function(/*res*/) {
 													 $scope.brick.isConnected	= false;
 													}
 												, function(err) {
