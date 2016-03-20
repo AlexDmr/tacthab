@@ -1,9 +1,8 @@
 var BrickFhem = require( './BrickFhem.js' );
 
 // Define
-function lightSensor_01(FhemBridge, listEntry) {
-	BrickFhem.apply(this, [FhemBridge, listEntry]);
-	this.types.push( 'lightSensor_01' );
+function lightSensor_01(id, FhemBridge, listEntry) {
+	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
 	this.lightSensor = {};
 	return this;
 }

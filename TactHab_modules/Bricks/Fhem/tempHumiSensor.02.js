@@ -1,16 +1,16 @@
 var BrickFhem = require('./BrickFhem.js');
 
 // Define
-function tempHumiSensor_02(FhemBridge, listEntry) {
-	BrickFhem.apply(this, [FhemBridge, listEntry]);
+function tempHumiSensor_02(id, FhemBridge, listEntry) {
+	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
 	this.TempHumi = {};
 	return this;
 }
 
 tempHumiSensor_02.prototype = Object.create(BrickFhem.prototype ); //new BrickFhem(); tempHumiSensor_02.prototype.unreference();
-	tempHumiSensor_02.prototype.types.push( 'tempHumiSensor_02' );
 tempHumiSensor_02.prototype.constructor		= tempHumiSensor_02;
 tempHumiSensor_02.prototype.getTypeName		= function() {return "tempHumiSensor_02";}
+tempHumiSensor_02.prototype.getTypes		= function() {var L=BrickFhem.prototype.getTypes(); L.push(tempHumiSensor_02.prototype.getTypeName()); return L;}
 
 tempHumiSensor_02.prototype.dispose			= function() {
 	 BrickFhem.prototype.dispose.apply(this, []);

@@ -5,3 +5,6 @@
 /uploads
 /dist
 /dev
+/IHM/dev
+/IHM/dist
+/IHM/node_modules

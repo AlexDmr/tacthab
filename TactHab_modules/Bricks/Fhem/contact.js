@@ -1,9 +1,8 @@
 var BrickFhem = require( './BrickFhem.js' );
 
 // Define
-function contact(FhemBridge, listEntry) {
-	BrickFhem.apply(this, [FhemBridge, listEntry]);
-	this.types.push( 'contact' );
+function contact(id, FhemBridge, listEntry) {
+	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
 	return this;
 }
 

@@ -27,6 +27,9 @@ require( "./Server/tacthab_web.js" )(webServer);
 require( "./Server/openHab.js"     )(webServer);
 require( "./Server/M2MIAGE.js"     )(webServer);
 
+var FhemBridge = require( "./TactHab_modules/Bricks/Factory__Fhem.js" );
+var fb = new FhemBridge( "192.168.1.12", 8880);
+
 try {
 	require( "./Server/BLE.js"     	   )(webServer);
 } catch(errorBLE) {console.error("errorBLE", errorBLE);}

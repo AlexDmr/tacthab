@@ -1,1 +1,1 @@
-sh -c "cd /opt/fhem/ && perl fhem.pl fhem.cfg && echo FHEM->started && tail -f /dev/null"
+sh -c "cd /opt/fhem/ && perl fhem.pl fhem.cfg && echo FHEM->started"

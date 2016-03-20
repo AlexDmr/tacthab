@@ -1,24 +1,33 @@
-/*
-var BrickUPnP		= require( './BrickUPnP.js' )
-  , BrickUPnPFactory= require( './BrickUPnPFactory.js' )
-  , websocket		= require( 'websocket' )
-  , fs				= require( 'fs-extra' )
+var Brick		= require( './Brick.js' )
+  , websocket	= require( 'websocket' )
+  , fs			= require( 'fs-extra' )
+  , upath		= require("upath")
   ;
   
 var WebSocketClient = websocket.client	
 	
-var BrickFhem = function() {
-	 // var self = this;
-	 BrickUPnP.prototype.constructor.apply(this, []);
-	 return this;
+
+// console.log( "_____________________________________________");
+var fhemDir = upath.normalizeSafe( __dirname );
+// console.log( fhemDir );
+// throw "argh";
+// console.log( "_____________________________________________");
+
+var FhemBridge = function(IP, port) {
+	// var self = this;
+	// Brick.apply(this, []);
+	if(IP && port) {
+	 	this.init(IP, port);
 	}
+	return this;
+}
 
-BrickFhem.prototype = Object.create( BrickUPnP.prototype ); //new BrickUPnP(); BrickFhem.prototype.unreference();
-BrickFhem.prototype.constructor = BrickFhem;
-BrickFhem.prototype.getTypeName = function() {return "BrickFhem";}
-BrickFhem.prototype.getTypes		= function() {var L=BrickUPnP.prototype.getTypes(); L.push(BrickFhem.prototype.getTypeName()); return L;}
+FhemBridge.prototype = Object.create( {} ); 
+FhemBridge.prototype.constructor = FhemBridge;
+FhemBridge.prototype.getTypeName = function() {return "FhemBridge";}
+FhemBridge.prototype.getTypes	= function() {var L=[]/*BrickUPnP.prototype.getTypes()*/; L.push(FhemBridge.prototype.getTypeName()); return L;}
 
-BrickFhem.prototype.sendCommand	= function(cmd) {
+FhemBridge.prototype.sendCommand	= function(cmd) {
 	 // console.log("sending to Fhem:", cmd);
 	 this.connection.send( JSON.stringify( { type		: 'command'
 										   , payload	: cmd
@@ -26,55 +35,57 @@ BrickFhem.prototype.sendCommand	= function(cmd) {
 										 )
 						 );
 	}
-BrickFhem.prototype.init = function(device) {
+FhemBridge.prototype.init = function(IP, port) {
 	 var self = this;
-	 BrickUPnP.prototype.init.apply(this, [device]);
+	 // Brick.prototype.init.apply(this, []);
 	 // XXX Establish a websocket connexion with the server and retrieve everything
-	 var address = 'ws://' + device.host + ':8080';
+	 var address = 'ws://' + IP + ':' + port;
 	 this.ws_client = new WebSocketClient();
 	 var firstTime = true;
 	 this.ws_client.on( 'connect'
 			  , function(connection) {
 					 var listArg = "room=EnOcean:FILTER=TYPE=EnOcean";
 					 // Connected to Fhem
-					 console.log('BrickFhem::init Client connected to Fhem');
+					 console.log('FhemBridge::init Client connected to Fhem');
 					 clearInterval( self.reconnectTimer );
 					 connection.on('close', function() {
-						 console.log('BrickFhem: Fhem disconnected, retry!');
+						 console.log('FhemBridge: Fhem disconnected, retry!');
 						 self.reconnectTimer =
 						 setInterval( function() {console.log("\tlet's retry"); 
 												  firstTime = false;
-												  self.init(device);
+												  self.init(IP, port);
 												  console.log("\t...");
 												 }
 									, 5000 );
 						});
 					 connection.on('message', function(e) {
 						 try {
-							 if(e.type !== 'utf8') {console.error("!!! BrickFhem::onmessage ERROR type is not utf8 but", e.type); return;}
+							 if(e.type !== 'utf8') {console.error("!!! FhemBridge::onmessage ERROR type is not utf8 but", e.type); return;}
 							 var msg = JSON.parse(e.utf8Data), brick;
 							 switch(msg.type) {
 								 case 'event'		:
 									// console.log("\t////Fhem => event\t\t:", msg.payload);
-									brick = BrickUPnP.prototype.getBrickFromId(msg.payload.name);
+									brick = Brick.prototype.getBrickFromId(msg.payload.name);
 									if(brick && brick.update) {brick.update( msg.payload );}
 								 break;
 								 case 'listentry'	:
-									console.log("\t////Fhem => listentry\t:", msg.payload.name, msg.payload.attributes.subType);
+									// console.log("\t////Fhem => listentry\t:", msg.payload.name, msg.payload.attributes.subType);
 									// Create related brick
 									if(msg.payload.arg === listArg) {	// EnOcean
 										 var subType	= msg.payload.attributes.subType
-										   , fileName	= './TactHab_modules/Bricks/Fhem/' + subType + '.js';
+										   , fileName	= fhemDir + '/Fhem/' + subType + '.js';
 										 console.log("\trequire", fileName);
 										 fs.exists( fileName
 												  , function(exists) {
 														 var EnO_Brick, brick2;
 														 if(exists) {
-															 EnO_Brick = require(fileName);
-															 console.log(msg.type, '=>', EnO_Brick?'FOUND':'NOT FOUND');
-															 brick2 = new EnO_Brick(self, msg.payload);
-															 brick2.changeIdTo( msg.payload.name );
-															} else {console.error("BrickFhem::init", fileName, "does not exist!!!!");}
+															 try {
+															 	EnO_Brick = require(fileName);
+																 console.log(msg.type, '=>', EnO_Brick?'FOUND':'NOT FOUND');
+																 brick2 = new EnO_Brick(msg.payload.name, self, msg.payload);
+																 console.log( "FHEM", EnO_Brick, brick2);
+																} catch(errLoad) {console.error("Error processing", fileName, "\n", errLoad, "\n____________________________________________");}
+															} else {console.error("FhemBridge::init", fileName, "does not exist!!!!");}
 														}
 												  );
 										} else {console.error("listentry for", msg.payload.arg);}
@@ -88,11 +99,11 @@ BrickFhem.prototype.init = function(device) {
 								 default			:
 									console.error("\tUnknown Fhem message type", msg.type);
 								}
-							} catch(err) {console.error("!!! BrickFhem::onmessage ERROR:", err);}//, "from\n", e);}
+							} catch(err) {console.error("!!! FhemBridge::onmessage ERROR:", err);}//, "from\n", e);}
 						});
 					 self.connection = connection;
 					 self.sendCommand( { command	: 'subscribe'
-									   , arg		: 'BrickFhemTActHab'
+									   , arg		: 'FhemBridge'
 									   , type		: '.*'
 									   , name		: '.*'
 									   , changed	: '.*'
@@ -106,18 +117,11 @@ BrickFhem.prototype.init = function(device) {
 						}
 					}
 				);
+	 console.log( "connect FHEM @", address);
 	 this.ws_client.connect(address, ['json']);
 	 
 	 return this;
 	}
 	
 //---------------------------------------------------------------------------------------
-var Factory__Fhem = new BrickUPnPFactory( 'Factory__Fhem'
-										, BrickFhem
-										, function(device) {
-											 // console.log("Is this Fhem?");
-											 return device.friendlyName === 'FhemTActHab';
-											}
-										); 
-module.exports = Factory__Fhem;
-*/
+module.exports = FhemBridge;

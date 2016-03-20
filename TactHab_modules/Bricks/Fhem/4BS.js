@@ -1,8 +1,8 @@
 var BrickFhem = require( './BrickFhem.js' );
 
 // Define
-function EnO_4BS(FhemBridge, listEntry) {
-	BrickFhem.apply(this, [FhemBridge, listEntry]);
+function EnO_4BS(id, FhemBridge, listEntry) {
+	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
 	this.data = [];
 	return this;
 }

@@ -3,8 +3,8 @@ var Brick		= require( '../Brick.js' )
   ;
 	  
 // Define
-function BrickFhem(FhemBridge, listEntry) {
-	Brick.apply(this, []);
+function BrickFhem(id, FhemBridge, listEntry) {
+	Brick.apply(this, [id]);
 	this.init(FhemBridge, listEntry);
 	return this;
 }

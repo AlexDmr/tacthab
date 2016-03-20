@@ -1,9 +1,8 @@
 var BrickFhem = require( './BrickFhem.js' );
 
 // Define
-function EnO_switch(FhemBridge, listEntry) {
-	BrickFhem.apply(this, [FhemBridge, listEntry]);
-	this.types.push( 'EnO_switch' );
+function EnO_switch(id, FhemBridge, listEntry) {
+	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
 	this.buttons = {};
 	return this;
 }

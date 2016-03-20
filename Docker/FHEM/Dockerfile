@@ -47,12 +47,13 @@ VOLUME ["/opt/fhem"]
 
 # Ports
 EXPOSE 7072
-EXPOSE 8880
 EXPOSE 8083
 EXPOSE 8085
+EXPOSE 8880
 
-# Command to be executed, launch fhem...
+# Command to be executed,a launch fhem...
 COPY startFHEM.sh /startFHEM.sh
 RUN chmod 755 /startFHEM.sh
 
-CMD ["/bin/bash", "/startFHEM.sh"]
+# CMD ["/bin/bash", "/startFHEM.sh"]
+# CMD ["/startFHEM.sh"]

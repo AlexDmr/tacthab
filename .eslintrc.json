@@ -1,0 +1,18 @@
+{
+    "env": {
+        "browser"   : true,
+        "node"      : true,
+        "commonjs"  : true,
+        "es6"       : true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "no-mixed-spaces-and-tabs": [
+            0, 
+            "smart-tabs"
+        ],
+        "no-console": [
+            0
+        ]
+    }
+}
