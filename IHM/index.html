@@ -46,6 +46,16 @@
 			</md-tab-body>
 		</md-tab>
 		<md-tab >
+			<md-tab-label>Fhem</md-tab-label>
+			<md-tab-body class="fhem">
+				<fhem ng-repeat="brick in ((T.context.bricks | toArray:false) | filter:filterBrickFhem)"
+						  brick="brick"
+						>
+				</fhem>
+				<fhem></fhem>
+			</md-tab-body>
+		</md-tab>
+		<md-tab >
 			<md-tab-label>BlueTooth 4 server (BLE)</md-tab-label>
 			<md-tab-body class="bleServer">
 				<ble-server context="T.context"></ble-server>

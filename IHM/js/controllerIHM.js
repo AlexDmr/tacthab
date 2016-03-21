@@ -73,13 +73,13 @@ angular	.module( "ihmActivity", [angularMaterial])//"ngMaterial", "ui.router", "
 		;
 
 console.log( "Loading directives" );
-require( "./brick/brick.js" )(app);
-require( "./brick/mediaPlayer.js" )(app);
-require( "../templates/mediaSelector.js" )(app);
-require( "./alxDragDrop.js" )(app);
-require( "./activities/alxActivities.js" )(app);
-require( "./activities/alxActivity.js" )(app);
-require( "./UPnP/UPnP.js" )(app);
-require( "./openHab/openHab.js" )(app);
-require( "./BLE/BLE.js" )(app);
-
+require( "./brick/brick.js" 				)(app);
+require( "./brick/mediaPlayer.js" 			)(app);
+require( "../templates/mediaSelector.js" 	)(app);
+require( "./alxDragDrop.js" 				)(app);
+require( "./activities/alxActivities.js" 	)(app);
+require( "./activities/alxActivity.js" 		)(app);
+require( "./UPnP/UPnP.js" 					)(app);
+require( "./openHab/openHab.js" 			)(app);
+require( "./BLE/BLE.js" 					)(app);
+require( "./FHEM/fhem.js" 					)(app);

@@ -1,0 +1,35 @@
+<!-- Case where the openHab connection is already specified -->
+<md-card>
+	<md-content layout="row" ng-show="brick">
+		<!-- <img class="icon fhem" src="/js/Presentations/openHab/templates/openhab-logo-square.png"></img> -->
+		<md-content layout="column">
+			<h4 ng-bind="brick.name"></h4>
+			<md-content layout="row">
+				<label>Server on {{brick.config.host}}:{{brick.config.port}}</label>
+			</md-content>
+			<md-content layout="row">
+				<label>MQTT on {{brick.config.mqtt.host}}:{{brick.config.mqtt.port}} listening {{brick.config.mqtt.prefix}}</label>
+			</md-content>
+		</md-content>
+	</md-content>
+</md-card>
+
+<!-- Case where the we have to specify the openHab connection -->
+<md-card>
+	<md-content class="description" layout="column" ng-hide="brick">
+		<h4>Connect to a new Fhem server</h4>
+		<md-content class="description" layout="row">
+			<md-input-container class="md-block">
+				<label>Fhem host</label>
+				<!-- <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon> -->
+				<input ng-model="config.host" type="text">
+			</md-input-container>
+			<md-input-container class="md-block">
+				<label>Fhem port</label>
+				<!-- <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon> -->
+				<input ng-model="config.port" type="text">
+			</md-input-container>
+		</md-content>
+		<md-button class="md-raised md-primary" ng-click="$ctrl.connect()">Connect</md-button>
+	</md-content>
+</md-card>

@@ -5,27 +5,27 @@ var Brick		= require( './Brick.js' )
   ;
   
 var WebSocketClient = websocket.client	
-	
-
-// console.log( "_____________________________________________");
 var fhemDir = upath.normalizeSafe( __dirname );
-// console.log( fhemDir );
-// throw "argh";
-// console.log( "_____________________________________________");
 
-var FhemBridge = function(IP, port) {
+var FhemBridge = function(host, port) {
 	// var self = this;
-	// Brick.apply(this, []);
-	if(IP && port) {
-	 	this.init(IP, port);
+	Brick.apply(this, []);
+	this.config = {host: undefined, port: undefined};
+	this.bricks	= [];
+	if(host && port) {
+	 	this.init(host, port);
 	}
 	return this;
 }
 
-FhemBridge.prototype = Object.create( {} ); 
+FhemBridge.prototype = Object.create( Brick.prototype ); 
 FhemBridge.prototype.constructor = FhemBridge;
 FhemBridge.prototype.getTypeName = function() {return "FhemBridge";}
-FhemBridge.prototype.getTypes	= function() {var L=[]/*BrickUPnP.prototype.getTypes()*/; L.push(FhemBridge.prototype.getTypeName()); return L;}
+FhemBridge.prototype.getTypes	= function() {
+	var L = Brick.prototype.getTypes(); 
+	L.push(FhemBridge.prototype.getTypeName()); 
+	return L;
+}
 
 FhemBridge.prototype.sendCommand	= function(cmd) {
 	 // console.log("sending to Fhem:", cmd);
@@ -35,11 +35,23 @@ FhemBridge.prototype.sendCommand	= function(cmd) {
 										 )
 						 );
 	}
-FhemBridge.prototype.init = function(IP, port) {
+FhemBridge.prototype.getDescription	= function() {
+	var i, json = Brick.prototype.getDescription();
+	json.config = this.config;
+	json.bricks	= [];
+	for(i=0; i<this.bricks.length; i++) {
+		json.bricks.push( this.bricks[i].getDescription() )
+	}
+	return json;
+}
+
+FhemBridge.prototype.init 	= function(host, port) {
 	 var self = this;
+	 this.config.host 	= host;
+	 this.config.port 	= port;
 	 // Brick.prototype.init.apply(this, []);
 	 // XXX Establish a websocket connexion with the server and retrieve everything
-	 var address = 'ws://' + IP + ':' + port;
+	 var address = 'ws://' + host + ':' + port;
 	 this.ws_client = new WebSocketClient();
 	 var firstTime = true;
 	 this.ws_client.on( 'connect'
@@ -53,7 +65,7 @@ FhemBridge.prototype.init = function(IP, port) {
 						 self.reconnectTimer =
 						 setInterval( function() {console.log("\tlet's retry"); 
 												  firstTime = false;
-												  self.init(IP, port);
+												  self.init(host, port);
 												  console.log("\t...");
 												 }
 									, 5000 );
@@ -84,6 +96,7 @@ FhemBridge.prototype.init = function(IP, port) {
 																 console.log(msg.type, '=>', EnO_Brick?'FOUND':'NOT FOUND');
 																 brick2 = new EnO_Brick(msg.payload.name, self, msg.payload);
 																 console.log( "FHEM", EnO_Brick, brick2);
+																 self.bricks.push( brick2 );
 																} catch(errLoad) {console.error("Error processing", fileName, "\n", errLoad, "\n____________________________________________");}
 															} else {console.error("FhemBridge::init", fileName, "does not exist!!!!");}
 														}
