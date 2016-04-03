@@ -17,7 +17,7 @@ var ProtoBrick = D_brick.ProtoBrick = { brickId			: 'ProtoBrick'
 									  };
 var Brick = function(id) {
 	 var brick = this;
-	 this.brickId	= id || ('Brick' + (brickId++));
+	 this.brickId	= this.id = id || ('Brick' + (brickId++));
 		D_brick[this.brickId] = this;
 	 logs[this.brickId] = logs[this.brickId] || {};
 	 this.logEvents("state");

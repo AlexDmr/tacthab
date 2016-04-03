@@ -1,22 +1,24 @@
 var BrickFhem = require( './BrickFhem.js' );
 
 // Define
-function lightSensor_01(id, FhemBridge, listEntry) {
+function BrickFhem_lightSensor_01(id, FhemBridge, listEntry) {
 	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
 	this.lightSensor = {};
 	return this;
 }
 
-lightSensor_01.prototype = Object.create(BrickFhem.prototype ); //new BrickFhem(); lightSensor_01.prototype.unreference();
-lightSensor_01.prototype.constructor		= lightSensor_01;
-lightSensor_01.prototype.getTypeName		= function() {return "lightSensor_01";}
-lightSensor_01.prototype.getTypes		= function() {var L=BrickFhem.prototype.getTypes(); L.push(lightSensor_01.prototype.getTypeName()); return L;}
+BrickFhem_lightSensor_01.prototype = Object.create(BrickFhem.prototype );
+BrickFhem_lightSensor_01.prototype.constructor	= BrickFhem_lightSensor_01;
+BrickFhem_lightSensor_01.prototype.getTypeName	= function() {return "BrickFhem_lightSensor_01";}
+BrickFhem_lightSensor_01.prototype.getTypes		= function() {var L=BrickFhem.prototype.getTypes(); L.push(BrickFhem_lightSensor_01.prototype.getTypeName()); return L;}
 
-lightSensor_01.prototype.dispose			= function() {
+BrickFhem_lightSensor_01.prototype.registerType(BrickFhem_lightSensor_01.prototype.getTypeName(), BrickFhem_lightSensor_01.prototype);
+
+BrickFhem_lightSensor_01.prototype.dispose			= function() {
 	 BrickFhem.prototype.dispose.apply(this, []);
 	}
 	
-lightSensor_01.prototype.extractData		= function(data) {
+BrickFhem_lightSensor_01.prototype.extractData		= function(data) {
 	 this.lightSensor.brightness = parseFloat( data.changed.brightness );
 	 var json  = { time			: new Date().getTime()
 				 , brightness	: this.lightSensor.brightness
@@ -24,9 +26,9 @@ lightSensor_01.prototype.extractData		= function(data) {
 	 return json;
 	}
 
-lightSensor_01.prototype.update			= function(data) {
+BrickFhem_lightSensor_01.prototype.update			= function(data) {
 		 var json = this.extractData(data);
 		 this.emit('update', json);
 		}
 
-module.exports = lightSensor_01;
+module.exports = BrickFhem_lightSensor_01;

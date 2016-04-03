@@ -5,6 +5,7 @@ var utils = require( "../../../js/utils.js" );
 module.exports = function(app) {
 	var controllers 	= {
 		Brick 						: function() {},
+		// openHab
 		BrickUPnP					: require( "../UPnP/templates/default.js" ),
 		BrickOpenHAB_Switch			: require( "../openHab/templates/BrickOpenHAB_Switch.js"			),
 		BrickOpenHAB_String			: require( "../openHab/templates/BrickOpenHAB_String.js"			),
@@ -13,11 +14,21 @@ module.exports = function(app) {
 		BrickOpenHAB_Dimmer			: require( "../openHab/templates/BrickOpenHAB_Dimmer.js"			),
 		BrickOpenHAB_DateTime		: require( "../openHab/templates/BrickOpenHAB_DateTime.js"			),
 		BrickOpenHAB_Contact		: require( "../openHab/templates/BrickOpenHAB_Contact.js"			),
-		BrickOpenHAB_Color			: require( "../openHab/templates/BrickOpenHAB_Color.js"				)
+		BrickOpenHAB_Color			: require( "../openHab/templates/BrickOpenHAB_Color.js"				),
+		// Fhem
+		BrickFhem					: require( "../FHEM/templates/BrickFhem.js"							),
+		BrickFhem_tempSensor_05		: require( "../FHEM/templates/tempSensor.05.js"						),
+		BrickFhem_EnO_4BS			: require( "../FHEM/templates/EnO_4BS.js"							),
+		BrickFhem_actuator_01		: require( "../FHEM/templates/actuator.01.js"						),
+		BrickFhem_tempHumiSensor_02	: require( "../FHEM/templates/tempHumiSensor.02.js"					),
+		BrickFhem_EnO_switch		: require( "../FHEM/templates/switch.js"							),
+		BrickFhem_lightSensor_01	: require( "../FHEM/templates/lightSensor.01.js"					),
+		BrickFhem_contact			: require( "../FHEM/templates/contact.js"							)
 	};
 
 	var templates	 	= {
 		Brick 						: require( "./brick.html" ),
+		// openHab
 		BrickUPnP					: require( "../UPnP/templates/default.html" ),
 		BrickOpenHAB_Switch			: require( "../openHab/templates/BrickOpenHAB_Switch.html"			),
 		BrickOpenHAB_String			: require( "../openHab/templates/BrickOpenHAB_String.html"			),
@@ -26,14 +37,23 @@ module.exports = function(app) {
 		BrickOpenHAB_Dimmer			: require( "../openHab/templates/BrickOpenHAB_Dimmer.html"			),
 		BrickOpenHAB_DateTime		: require( "../openHab/templates/BrickOpenHAB_DateTime.html"		),
 		BrickOpenHAB_Contact		: require( "../openHab/templates/BrickOpenHAB_Contact.html"			),
-		BrickOpenHAB_Color			: require( "../openHab/templates/BrickOpenHAB_Color.html"			)
-	};
+		BrickOpenHAB_Color			: require( "../openHab/templates/BrickOpenHAB_Color.html"			),
+		// Fhem
+		BrickFhem					: require( "../FHEM/templates/default.html"							),
+		BrickFhem_tempSensor_05		: require( "../FHEM/templates/tempSensor.05.html"					),
+		BrickFhem_EnO_4BS			: require( "../FHEM/templates/EnO_4BS.html"							),
+		BrickFhem_actuator_01		: require( "../FHEM/templates/actuator.01.html"						),
+		BrickFhem_tempHumiSensor_02	: require( "../FHEM/templates/tempHumiSensor.02.html"				),
+		BrickFhem_EnO_switch		: require( "../FHEM/templates/switch.html"							),
+		BrickFhem_lightSensor_01	: require( "../FHEM/templates/lightSensor.01.html"					),
+		BrickFhem_contact			: require( "../FHEM/templates/contact.html"							)
+	};	
 
 	app.directive	( "brick"
 					, function($compile) {
 						 return { restrict			: 'E'
 								, controller		: function($scope) {
-									console.log( "new brick", this.brick, $scope );
+									// console.log( "new brick", this.brick, $scope );
 									var types = this.brick.type
 									  , i, constr;
 									for(i=types.length-1; i>=0; i--) {

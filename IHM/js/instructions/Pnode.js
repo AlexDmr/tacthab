@@ -26,12 +26,16 @@ Pnode.prototype.copyInstruction = function(instruction) {
 	var obj = JSON.parse(JSON.stringify(instruction));
 	if(obj.$$hashKey) {delete obj.$$hashKey;}
 	return obj;
-
 }
+
 Pnode.hasOneType	= function(instruction, types) {
 		var t;
+		// console.log("Pnode::hasOneType", instruction, types);
 		for(t=0; t<types.length; t++) {
-			if( instruction.type && instruction.type.indexOf(types[t]) >= 0) {return true;}
+			if( instruction.type && instruction.type.indexOf(types[t]) >= 0) {
+				// console.log( "BANCO !!!!" );
+				return true;
+			}
 		}
 		return false;
 	}

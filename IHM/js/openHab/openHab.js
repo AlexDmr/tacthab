@@ -2,31 +2,6 @@ require( "./openHab.css" );
 
 var utils = require( "../../../js/utils.js" );
 
-/*
-var templates	=	{ BrickOpenHAB_Switch			: require( "./templates/BrickOpenHAB_Switch.html"		)
-					, BrickOpenHAB_String			: require( "./templates/BrickOpenHAB_String.html"		)
-					, BrickOpenHAB_RollerShutter	: require( "./templates/BrickOpenHAB_RollerShutter.html")
-					, BrickOpenHAB_Number			: require( "./templates/BrickOpenHAB_Number.html"		)
-					, BrickOpenHAB_Dimmer			: require( "./templates/BrickOpenHAB_Dimmer.html"		)
-					, BrickOpenHAB_DateTime			: require( "./templates/BrickOpenHAB_DateTime.html"		)
-					, BrickOpenHAB_Contact			: require( "./templates/BrickOpenHAB_Contact.html"		)
-					, BrickOpenHAB_Color			: require( "./templates/BrickOpenHAB_Color.html"		)
-					};
-
-var controllers	=	{ BrickOpenHAB_Switch			: require( "./templates/BrickOpenHAB_Switch.js"			)
-					, BrickOpenHAB_String			: require( "./templates/BrickOpenHAB_String.js"			)
-					, BrickOpenHAB_RollerShutter	: require( "./templates/BrickOpenHAB_RollerShutter.js"	)
-					, BrickOpenHAB_Number			: require( "./templates/BrickOpenHAB_Number.js"			)
-					, BrickOpenHAB_Dimmer			: require( "./templates/BrickOpenHAB_Dimmer.js"			)
-					, BrickOpenHAB_DateTime			: require( "./templates/BrickOpenHAB_DateTime.js"		)
-					, BrickOpenHAB_Contact			: require( "./templates/BrickOpenHAB_Contact.js"		)
-					, BrickOpenHAB_Color			: require( "./templates/BrickOpenHAB_Color.js"			)
-					};
-*/					
-// Subscribe to openHab messages
-// 		openHab_state
-// 		openHab_update
-
 var template = require("./openHab.html");
 module.exports = function(app) {
 	var controller = function($mdToast) {

@@ -16,12 +16,12 @@ module.exports = function(webServer) {
 							 console.log("/openHab POST", req.body);
 							 if(  req.body.host
 							   && req.body.port
-							   ) {console.log( "There is a host and a port" );
-								  // Does an openHab brick already listen to this server ?
-								  var host	= req.body.host
-								    , port	= parseInt( req.body.port )
-								    ;
-								  var bricks = Brick.prototype.getBricks( function(b) {
+							   ) {	console.log( "There is a host and a port" );
+									// Does an openHab brick already listen to this server ?
+									var host	= req.body.host
+								      , port	= parseInt( req.body.port )
+								      ;
+									var bricks = Brick.prototype.getBricks( function(b) {
 																	 return b.getTypeName
 																		 && b.getTypeName() === "FhemBridge"
 																		 && b.config.IP		=== host
@@ -29,18 +29,20 @@ module.exports = function(webServer) {
 																		 ;
 																	}
 															  );
-								  // If yes...
-								  if(Object.keys(bricks).length > 0) {
+									// If yes...
+									if(Object.keys(bricks).length > 0) {
 										var id = Object.keys(bricks)[0];
 										res.json( bricks[id].getDescription() );
 								  		console.log( "Fhem bridge already exists at brick", id);
-										return;
+									} else {
+									  // If no...
+										var bridge = new FhemBridge(host, port);
+										bridges.push( bridge );
+										res.json( bridge.getDescription() );
 									}
-								  // If no...
-								  var bridge = new FhemBridge(host, port);
-								  bridges.push( bridge );
-								  res.json( bridge.getDescription() );
-								} // if
+								} else {// if req.body...
+									res.json( {error: "missing host and/or port"} );
+								}
 							} // function
 					  ); // post
 

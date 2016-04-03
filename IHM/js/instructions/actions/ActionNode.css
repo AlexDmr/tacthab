@@ -51,18 +51,15 @@ instruction > section.Pnode.ActionNode .selector {
 
 @keyframes ActionNodePresentation_droppable {
 	0%				 {background	: #B9B9FF;}
-	50%				   {transform		: scale(1.2);
-					   background	: lightgreen;
-					  }
-	100%			   {background: #B9B9FF;}
+	50%				 {background	: lightgreen;}
+	100%			 {background: #B9B9FF;}
 }
 
-instruction > section.Pnode.ActionNode .selector.possible2drop {
+instruction > section.Pnode.ActionNode.candrop {
 	animation		: ActionNodePresentation_droppable 1s ease-in-out infinite;
 }
 
-instruction > section.Pnode.ActionNode .selector.possible2drop.ready2drop {
-	transform		: scale(1.2);
+instruction > section.Pnode.ActionNode.candrop.overdrop {
 	background		: lightgreen;
 	animation		: initial;
 }

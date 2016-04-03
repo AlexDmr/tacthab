@@ -1,30 +1,30 @@
 var BrickFhem = require( './BrickFhem.js' );
 
 // Define
-function EnO_4BS(id, FhemBridge, listEntry) {
+function BrickFhem_EnO_4BS(id, FhemBridge, listEntry) {
 	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
-	this.data = [];
 	return this;
 }
 
-EnO_4BS.prototype = Object.create(BrickFhem.prototype ); //new BrickFhem(); EnO_4BS.prototype.unreference();
-EnO_4BS.prototype.constructor		= EnO_4BS;
-EnO_4BS.prototype.getTypeName		= function() {return "EnO_4BS";}
-EnO_4BS.prototype.getTypes		= function() {var L=BrickFhem.prototype.getTypes(); L.push(EnO_4BS.prototype.getTypeName()); return L;}
+BrickFhem_EnO_4BS.prototype = Object.create(BrickFhem.prototype );
+BrickFhem_EnO_4BS.prototype.constructor		= BrickFhem_EnO_4BS;
+BrickFhem_EnO_4BS.prototype.getTypeName		= function() {return "BrickFhem_EnO_4BS";}
+BrickFhem_EnO_4BS.prototype.getTypes		= function() {var L=BrickFhem.prototype.getTypes(); L.push(BrickFhem_EnO_4BS.prototype.getTypeName()); return L;}
 
-EnO_4BS.prototype.dispose			= function() {
-	 delete this.data;
-	 BrickFhem.prototype.dispose.apply(this, []);
-	}
+BrickFhem_EnO_4BS.prototype.registerType(BrickFhem_EnO_4BS.prototype.getTypeName(), BrickFhem_EnO_4BS.prototype);
 
-EnO_4BS.prototype.extractData		= function(data) {
-	 console.log("EnO_4BS::extractData", data);
-	 return {};
-	}
+BrickFhem_EnO_4BS.prototype.dispose			= function() {
+	BrickFhem.prototype.dispose.apply(this, []);
+}
 
-EnO_4BS.prototype.update			= function(data) {
-		 var json = this.extractData(data);
-		 this.emit('update', json);
-		}
+BrickFhem_EnO_4BS.prototype.extractData		= function(data) {
+	console.log("BrickFhem_EnO_4BS::extractData", data);
+	return {};
+}
+
+BrickFhem_EnO_4BS.prototype.update			= function(data) {
+	var json = this.extractData(data);
+	this.emit('update', json);
+}
 		
-module.exports = EnO_4BS;
+module.exports = BrickFhem_EnO_4BS;

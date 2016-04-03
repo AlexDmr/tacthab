@@ -12,8 +12,11 @@ var utils			= require( "../../js/utils.js"	)
 utils.initIO( location.hostname + ":" + location.port + "/m2m" );
 // utils.initIO(  );
 
+var filters = require( "./filters.js" );
+console.log( "require filters", filters);
+
 var app =
-angular	.module( "ihmActivity", [angularMaterial])//"ngMaterial", "ui.router", "angular-toArrayFilter", "ngDraggable"] )
+angular	.module( "ihmActivity", [filters, angularMaterial])//"ngMaterial", "ui.router", "angular-toArrayFilter", "ngDraggable"] )
 		.filter('toArray', function () {
 			return function (obj, addKey) {
 				if (!angular.isObject(obj)) return obj;
@@ -35,12 +38,7 @@ angular	.module( "ihmActivity", [angularMaterial])//"ngMaterial", "ui.router", "
 					, function($scope, $http) {
 						 var ctrl = this;
 						 this.context = context;
-						 this.context.activities = {}; //localStorage.activities?JSON.parse(localStorage.activities):[];
-						 
-						 $scope.filterBrickOpenHAB = function(obj/*, i, A*/) {
-							 return obj.type.indexOf("BrickOpenHAB") !== -1;
-							}
-						 
+						 this.context.activities = {}; //localStorage.activities?JSON.parse(localStorage.activities):[];						 
 						 $http	.get('/getContext')
 								.success( function(data) {
 									ctrl.context = data;
@@ -50,10 +48,12 @@ angular	.module( "ihmActivity", [angularMaterial])//"ngMaterial", "ui.router", "
 													// console.log( "brickAppears", data);
 													$scope.$applyAsync( function() {
 														ctrl.context.bricks[data.id] = data;
-														var L = ctrl.context.brickTypes[ data.class ].instances;
-														if(L.indexOf(data.id) !== -1) {
-															console.error("brick", data.id, "already present in instances of", data.class, L);
-														} else {L.push( data.id );}
+														if( ctrl.context.brickTypes[ data.class ] ) {
+															var L = ctrl.context.brickTypes[ data.class ].instances;
+															if(L.indexOf(data.id) !== -1) {
+																console.error("brick", data.id, "already present in instances of", data.class, L);
+															} else {L.push( data.id );}
+														} else {console.error("No bricktype for", data.class, data, "\n", ctrl.context.brickTypes); }
 													});
 												});
 									utils.io.on	( "brickDisappears"
@@ -61,10 +61,12 @@ angular	.module( "ihmActivity", [angularMaterial])//"ngMaterial", "ui.router", "
 													// console.log("brick brickDisappears", data);
 													$scope.$applyAsync( function() {
 														delete ctrl.context.bricks[data.brickId];
-														var L 	= ctrl.context.brickTypes[ data.class ].instances
-														  , pos = L.indexOf( data.brickId )
-														  ;
-														if(pos>=0) {L.splice(pos, 1);}
+														if( ctrl.context.brickTypes[ data.class ] ) {
+															var L 	= ctrl.context.brickTypes[ data.class ].instances
+															  , pos = L.indexOf( data.brickId )
+															  ;
+															if(pos>=0) {L.splice(pos, 1);}
+														}
 													});
 												});
 								});

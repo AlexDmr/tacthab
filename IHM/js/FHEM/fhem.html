@@ -7,9 +7,6 @@
 			<md-content layout="row">
 				<label>Server on {{brick.config.host}}:{{brick.config.port}}</label>
 			</md-content>
-			<md-content layout="row">
-				<label>MQTT on {{brick.config.mqtt.host}}:{{brick.config.mqtt.port}} listening {{brick.config.mqtt.prefix}}</label>
-			</md-content>
 		</md-content>
 	</md-content>
 </md-card>
@@ -22,14 +19,15 @@
 			<md-input-container class="md-block">
 				<label>Fhem host</label>
 				<!-- <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon> -->
-				<input ng-model="config.host" type="text">
+				<input ng-model="$ctrl.config.host" type="text">
 			</md-input-container>
 			<md-input-container class="md-block">
 				<label>Fhem port</label>
 				<!-- <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon> -->
-				<input ng-model="config.port" type="text">
+				<input ng-model="$ctrl.config.port" type="text">
 			</md-input-container>
 		</md-content>
 		<md-button class="md-raised md-primary" ng-click="$ctrl.connect()">Connect</md-button>
 	</md-content>
 </md-card>
+

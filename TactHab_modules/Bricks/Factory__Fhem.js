@@ -7,6 +7,24 @@ var Brick		= require( './Brick.js' )
 var WebSocketClient = websocket.client	
 var fhemDir = upath.normalizeSafe( __dirname );
 
+var dirFhem = __dirname + "/Fhem";
+var reJS	= new RegExp( '\.js$' );
+fs.readdir(dirFhem, function(err, files) {
+	if(err) {
+		console.error( "Error reading directory /Fhem", err);
+	} else {
+		console.log( "Files in /Fhem", files);
+		files.forEach( function(f) {
+			if( reJS.test(f) ) {
+				console.log( "Fhem require", f);
+				require(dirFhem + "/" + f);
+			}
+			});
+	}
+});
+
+
+
 var FhemBridge = function(host, port) {
 	// var self = this;
 	Brick.apply(this, []);
@@ -28,13 +46,12 @@ FhemBridge.prototype.getTypes	= function() {
 }
 
 FhemBridge.prototype.sendCommand	= function(cmd) {
-	 // console.log("sending to Fhem:", cmd);
-	 this.connection.send( JSON.stringify( { type		: 'command'
-										   , payload	: cmd
-										   }
-										 )
+	this.connection.send( JSON.stringify( { type	: 'command'
+										  , payload	: cmd
+										  }
+										)
 						 );
-	}
+}
 FhemBridge.prototype.getDescription	= function() {
 	var i, json = Brick.prototype.getDescription();
 	json.config = this.config;
@@ -93,10 +110,10 @@ FhemBridge.prototype.init 	= function(host, port) {
 														 if(exists) {
 															 try {
 															 	EnO_Brick = require(fileName);
-																 console.log(msg.type, '=>', EnO_Brick?'FOUND':'NOT FOUND');
-																 brick2 = new EnO_Brick(msg.payload.name, self, msg.payload);
-																 console.log( "FHEM", EnO_Brick, brick2);
-																 self.bricks.push( brick2 );
+																console.log(msg.type, '=>', EnO_Brick?'FOUND':'NOT FOUND');
+																brick2 = new EnO_Brick(msg.payload.name, self, msg.payload);
+																console.log( "FHEM", EnO_Brick, brick2);
+																self.bricks.push( brick2 );
 																} catch(errLoad) {console.error("Error processing", fileName, "\n", errLoad, "\n____________________________________________");}
 															} else {console.error("FhemBridge::init", fileName, "does not exist!!!!");}
 														}

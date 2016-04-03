@@ -1,44 +1,53 @@
 var BrickFhem = require( './BrickFhem.js' );
 
 // Define
-function tempSensor_05(id, FhemBridge, listEntry) {
+function BrickFhem_tempSensor_05(id, FhemBridge, listEntry) {
 	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
+	this.temperature = undefined;
+	this.logEvents( "temperature" );
 	return this;
 }
 
-tempSensor_05.prototype = Object.create(BrickFhem.prototype );
-tempSensor_05.prototype.constructor		= tempSensor_05;
-tempSensor_05.prototype.getTypeName		= function() {return "tempSensor_05";}
-tempSensor_05.prototype.getTypes		= function() {
+BrickFhem_tempSensor_05.prototype = Object.create(BrickFhem.prototype );
+BrickFhem_tempSensor_05.prototype.constructor		= BrickFhem_tempSensor_05;
+BrickFhem_tempSensor_05.prototype.getTypeName		= function() {return "BrickFhem_tempSensor_05";}
+BrickFhem_tempSensor_05.prototype.getTypes			= function() {
 	var L = BrickFhem.prototype.getTypes(); 
-	L.push(tempSensor_05.prototype.getTypeName()); 
+	L.push(BrickFhem_tempSensor_05.prototype.getTypeName()); 
 	return L;
 }
 
-tempSensor_05.prototype.dispose			= function() {
-	 BrickFhem.prototype.dispose.apply(this, []);
-	}
+BrickFhem_tempSensor_05.prototype.registerType(BrickFhem_tempSensor_05.prototype.getTypeName(), BrickFhem_tempSensor_05.prototype);
 
-tempSensor_05.prototype.init			= function(FhemBridge, listEntry) {
-	BrickFhem.prototype.init.apply(this, [FhemBridge, listEntry]);
-	this.data.push( { time: new Date().getTime()
-					, value:parseFloat(listEntry.readings.temperature.value)
-					}
-				  );
+BrickFhem_tempSensor_05.prototype.dispose			= function() {
+	BrickFhem.prototype.dispose.apply(this, []);
 }
 
-tempSensor_05.prototype.extractData		= function(data) {
-	 this.TempHumi = { temperature	: parseFloat( data.changed.temperature )
-					 };
-	 var json  = { time			: new Date().getTime()
-				 , temperature	: this.TempHumi.temperature
-				 };
-	 return json;
+BrickFhem_tempSensor_05.prototype.init				= function(FhemBridge, listEntry) {
+	BrickFhem.prototype.init.apply(this, [FhemBridge, listEntry]);
+}
+
+BrickFhem_tempSensor_05.prototype.extractData		= function(data) {
+	this.temperature = parseFloat( data.changed.temperature );
+	var json  = 	{ time			: Date.now()
+					, temperature	: this.temperature
+					};
+	this.log("temperature", this.temperature, json.time);
+	return json;
+}
+
+BrickFhem_tempSensor_05.prototype.update			= function(data) {
+	var json = this.extractData(data);
+	this.emit('update', json);
+}
+
+BrickFhem_tempSensor_05.prototype.getDescription	= function() {
+	var json = BrickFhem.prototype.getDescription.apply(this, []);
+	json.state = {
+		temperature	: this.temperature
 	}
+	return json;
+}
 
-tempSensor_05.prototype.update			= function(data) {
-		 var json = this.extractData(data);
-		 this.emit('update', json);
-		}
 
-module.exports = tempSensor_05;
+module.exports = BrickFhem_tempSensor_05;

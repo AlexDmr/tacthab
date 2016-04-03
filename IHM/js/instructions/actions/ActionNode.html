@@ -1,13 +1,13 @@
-<section ng-class="ctrl.instruction.type">
+<section ng-class				= "ctrl.instruction.type"
+		 alx-droppable			= "Pnode.hasOneType(draggedInfo.draggedData, ctrl.sources)"
+		 alx-accept-feedback	= "candrop"
+		 alx-hover-feedback		= "overdrop"
+		 alx-drop-action		= "ctrl.appendSelector(draggedInfo.draggedData)"
+		 >
 	<img class="action_symbol" ng-src="{{ctrl.actionIcon}}"></img>
 	<div class="action_description">
 		<p class="actionName" ng-bind="ctrl.actionLabel"></p>
-		<p 	class="selector"
-			alx-droppable		= "draggedInfo.hasOneTypeIn(ctrl.sources)"
-			alx-accept-feedback	= "candrop"
-			alx-hover-feedback	= "overdrop"
-			alx-drop-action		= "ctrl.appendAction(draggedInfo)"
-			>
+		<p 	class="selector" >
 			<p ng-hide="ctrl.instruction.children.length === 0">Drop ACTION here</p>
 			<instruction ng-repeat	= "instruction in ctrl.instruction.children"
 						 data		= "instruction"

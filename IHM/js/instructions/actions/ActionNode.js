@@ -21,6 +21,9 @@ ActionNode.prototype.toJSON 		= function() {
 	json.actionIcon 	= this.instruction.actionIcon;
 	return json;
 }
+ActionNode.prototype.appendSelector	= function(obj) {
+	console.log( this, "ActionNode::appendSelector", obj );
+	
+}
 
-ActionNode.prototype.constructor = ActionNode;
 module.exports = ActionNode;

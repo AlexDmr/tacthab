@@ -8,14 +8,14 @@ var Brick				= require( './Brick.js' )
   , mqtt				= require( 'mqtt' )
   , fs					= require( 'fs-extra' )
   // , AlxEvent			= require( '../../js/AlxEvents.js' )
-  , Brick_Color			= require( './types/Color.js' )
-  , Brick_Contact		= require( './types/Contact.js' )
-  , Brick_DateTime		= require( './types/DateTime.js' )
-  , Brick_Dimmer		= require( './types/Dimmer.js' )
-  , Brick_Number		= require( './types/Number.js' )
-  , Brick_RollerShutter	= require( './types/RollerShutter.js' )
-  , Brick_String		= require( './types/String.js' )
-  , Brick_Switch		= require( './types/Switch.js' )
+  , Brick_Color			= require( './openHab/Color.js' )
+  , Brick_Contact		= require( './openHab/Contact.js' )
+  , Brick_DateTime		= require( './openHab/DateTime.js' )
+  , Brick_Dimmer		= require( './openHab/Dimmer.js' )
+  , Brick_Number		= require( './openHab/Number.js' )
+  , Brick_RollerShutter	= require( './openHab/RollerShutter.js' )
+  , Brick_String		= require( './openHab/String.js' )
+  , Brick_Switch		= require( './openHab/Switch.js' )
   , webServer			= require( '../webServer/webServer.js' )
   ;
 
@@ -55,7 +55,7 @@ var BrickOpenHAB = function() {
 
 BrickOpenHAB.prototype = Object.create(BrickUPnP.prototype); //new BrickUPnP(); BrickOpenHAB.prototype.unreference();
 BrickOpenHAB.prototype.constructor = BrickOpenHAB;
-BrickOpenHAB.prototype.getTypeName = function() {return "BrickOpenHAB";}
+BrickOpenHAB.prototype.getTypeName = function() {return "BridgeOpenHAB";}
 BrickOpenHAB.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickOpenHAB.prototype.getTypeName()); return L;}
 BrickOpenHAB.prototype.registerType("BrickOpenHAB", BrickOpenHAB.prototype);
 

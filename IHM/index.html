@@ -38,7 +38,7 @@
 		<md-tab >
 			<md-tab-label>open Hab</md-tab-label>
 			<md-tab-body class="openHab">
-				<open-hab ng-repeat="brick in ((T.context.bricks | toArray:false) | filter:filterBrickOpenHAB)"
+				<open-hab ng-repeat="brick in ((T.context.bricks | toArray:false) | filterBridgeOpenHAB)"
 						  brick="brick"
 						>
 				</open-hab>
@@ -48,11 +48,18 @@
 		<md-tab >
 			<md-tab-label>Fhem</md-tab-label>
 			<md-tab-body class="fhem">
-				<fhem ng-repeat="brick in ((T.context.bricks | toArray:false) | filter:filterBrickFhem)"
+				<fhem ng-repeat="brick in ((T.context.bricks | toArray:false) | filterBridgeFhem)"
 						  brick="brick"
 						>
 				</fhem>
 				<fhem></fhem>
+				<hr/>
+				<h1>YO</h1>
+				<md-content layout="row" flex class="bricks">
+					<md-card ng-repeat="brick in (T.context.bricks | toArray:false | filterBrickFhem)">
+						hello : {{brick | json}}
+					</md-card>
+				</md-content>
 			</md-tab-body>
 		</md-tab>
 		<md-tab >
