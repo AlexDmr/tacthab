@@ -14,7 +14,7 @@
 					>
 					<p ng-hide="ctrl.childEvent.length">Drop EVENT here</p>
 					<div>
-						<instruction ng-repeat="inst in ctrl.childEvent" data="inst"></instruction>
+						<instruction ng-repeat="inst in ctrl.childEvent" data="inst" context="ctrl.context"></instruction>
 					</div>
 				</div>
 			</div>
@@ -27,7 +27,7 @@
 				>
 				<p ng-hide="ctrl.childReaction.length">Drop REACTION here</p>
 				<div>
-					<instruction ng-repeat="inst in ctrl.childReaction" data="inst"></instruction>
+					<instruction ng-repeat="inst in ctrl.childReaction" data="inst" context="ctrl.context"></instruction>
 				</div>
 			</div>
 		</div>

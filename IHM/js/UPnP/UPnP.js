@@ -11,20 +11,20 @@ var controllers	=	{ default		: require( "./templates/default.js" )
 // 		openHab_state
 // 		openHab_update
 
+var controller = function($scope) {
+	var controllerFct	=  controllers[$scope.brick.class]
+						|| controllers.default ;
+	controllerFct.apply(this, [$scope, utils]);
+}
+controller.$inject = ["$scope"];
 
 module.exports = function(app) {
 	app.directive	( "brickUpnp"
-				, function($compile) {
+				, ["$compile", function($compile) {
 					 return {
 						   restrict		: 'E'
 						 , scope		: { brick	: "=data" }
-						 , controller	: function($scope) {
-							 // console.log("brick:", $scope.brick);
-							 var controllerFct	=  controllers[$scope.brick.class]
-							   					|| controllers.default ;
-							 
-							 controllerFct.apply(this, [$scope, utils]);
-							}
+						 , controller	: controller
 						 , controllerAs	: "ctrl"
 						 , link			: function(scope, element/*, attr, controller*/) {
 							 var template 	=  templates[scope.brick.class]
@@ -33,6 +33,6 @@ module.exports = function(app) {
 							 $compile(element.contents())(scope);
 							}
 					 };
-					}
+					}]
 				)
 }

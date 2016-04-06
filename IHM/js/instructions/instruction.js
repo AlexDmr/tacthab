@@ -1,5 +1,6 @@
-var actions = require( "./actions/actions.js" ),
-	events	= require( "./events/events.js" )
+var actions 	= require( "./actions/actions.js" ),
+	events		= require( "./events/events.js" ),
+	selectors	= require( "./selectors/SelectorNode.js" )
 	;
 
 var i, json, ctrl;
@@ -76,28 +77,33 @@ console.log( "instructionTypes:", instructionTypes);
 
 // Register the instruction directive in Angular
 var instructionFct = function(app) {
+	selectors(app); // Register selectors components into the module
 	/* Pnode serialization
 		  className: this.className
 		, PnodeID: this.id
 		, children: []
 	*/
+	var controller = function($scope) {
+		// console.log( "Create an instruction controller", this);
+		var className = this.instruction.subType || this.instruction.className;
+		if(controllers[className]) {
+			controllers[className].apply(this, [$scope]);
+		} else {
+			console.error( "className", className, "is currently not supported as controller..." );
+		}
+	}
+	controller.$inject = ["$scope"];
+				
 	app.directive	(
 		"instruction",
-		function($compile) {
+		["$compile", function($compile) {
 			return {
 				  restrict			: 'E'
-				, controller		: function($scope) {
-					// console.log( "Create an instruction controller", this);
-					var className = this.instruction.subType || this.instruction.className;
-					if(controllers[className]) {
-						controllers[className].apply(this, [$scope]);
-					} else {
-						console.error( "className", className, "is currently not supported as controller..." );
-					}
-				}
+				, controller		: controller
 				, bindToController 	: true
 				, controllerAs		: 'ctrl'
-				, scope				: { instruction	: "=data"
+				, scope				: { instruction	: "<data"
+									  , context		: "<"
 									  }
 				, link				: function(scope, element, attr, controller) {
 					var className = controller.instruction.subType || controller.instruction.className;
@@ -110,7 +116,7 @@ var instructionFct = function(app) {
 					}
 				}
 			};
-		}
+		}]
 		);
 }
 

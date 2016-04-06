@@ -35,7 +35,7 @@ angular	.module( "ihmActivity", [filters, angularMaterial])//"ngMaterial", "ui.r
 			};
 		})
 		.controller	( "TActHabIHMController"
-					, function($scope, $http) {
+					, ["$scope", "$http", function($scope, $http) {
 						 var ctrl = this;
 						 this.context = context;
 						 this.context.activities = {}; //localStorage.activities?JSON.parse(localStorage.activities):[];						 
@@ -70,7 +70,7 @@ angular	.module( "ihmActivity", [filters, angularMaterial])//"ngMaterial", "ui.r
 													});
 												});
 								});
-						}
+						}]
 					)
 		;
 

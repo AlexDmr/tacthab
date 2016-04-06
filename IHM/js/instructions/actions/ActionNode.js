@@ -7,6 +7,7 @@ var ActionNode = function(scope) {
 	this.instruction	= this.instruction				|| {children: [], className: "ActionNode"};
 	this.actionLabel	= this.instruction.actionLabel	|| "Action";
 	this.actionIcon		= this.instruction.actionIcon	|| "/js/Presentations/HTML_templates/action-icon.png";
+	this.selNode		= this.instruction.selector;
 	this.sources		= ['Brick'];
 	Object.setPrototypeOf(this, ActionNode.prototype);
 }
@@ -23,7 +24,21 @@ ActionNode.prototype.toJSON 		= function() {
 }
 ActionNode.prototype.appendSelector	= function(obj) {
 	console.log( this, "ActionNode::appendSelector", obj );
-	
+	if( this.selNode ) { // Thee is already a selector, have to combine !
+		// obj.type.indexOf( '' )
+	} else { // There is no selector yet
+		if( obj.selector ) { // The dropped object is a selector, just reference it
+			this.selNode = obj;
+		} else { // The dropped object is a brick, add a brick selector
+			this.selNode =	{ className : 'Pselector_ObjInstance'
+							, selector	: { name		: obj.name
+										  , type 		: obj.type
+										  , objectId	: obj.id
+										  , defaultDescr: obj
+										  }
+							}
+		}
+	}
 }
 
 module.exports = ActionNode;

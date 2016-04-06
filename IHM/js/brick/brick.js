@@ -49,22 +49,24 @@ module.exports = function(app) {
 		BrickFhem_contact			: require( "../FHEM/templates/contact.html"							)
 	};	
 
+	var controller = function($scope) {
+		console.log( "new brick", this.brick, $scope );
+		var types = this.brick?this.brick.type:[] //'Brick'
+		  , i, constr;
+		for(i=types.length-1; i>=0; i--) {
+			constr = controllers[ types[i] ];
+			if(constr) {
+				constr.apply(this, [$scope, utils]);
+				this.type = types[i];
+				break;
+			}
+		}
+	}
+	controller.$inject = ["$scope"];
 	app.directive	( "brick"
-					, function($compile) {
+					, ["$compile", function($compile) {
 						 return { restrict			: 'E'
-								, controller		: function($scope) {
-									// console.log( "new brick", this.brick, $scope );
-									var types = this.brick.type
-									  , i, constr;
-									for(i=types.length-1; i>=0; i--) {
-										constr = controllers[ types[i] ];
-										if(constr) {
-											constr.apply(this, [$scope, utils]);
-											this.type = types[i];
-											break;
-										}
-									}
-								}
+								, controller		: controller
 								, bindToController 	: true
 								, controllerAs		: 'ctrl'
 								, templateUrl		: "/IHM/js/brick/brick.html"
@@ -76,7 +78,7 @@ module.exports = function(app) {
 							 		$compile(element.contents())(scope);
 								}
 								};
-						}
+						}]
 					);
 };
 

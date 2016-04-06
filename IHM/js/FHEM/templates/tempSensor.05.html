@@ -3,4 +3,6 @@
 			aria-label="Temperature"    
 			>
 </md-icon>
-<label ng-bind="ctrl.brick.state.temperature"></label>
+<label ng-bind="$ctrl.temperature"></label>
+@ {{$ctrl.lastUpdate | date}}
+<img class="fhem svg" src="../TactHab_modules/Bricks/Fhem/images/thermometer.svg"/>

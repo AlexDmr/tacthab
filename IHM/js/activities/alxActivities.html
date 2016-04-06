@@ -42,8 +42,10 @@ Par ici les sections...
 
 	<!-- Activities -->
 	<section class="activities">
-		<alx-activity ng-repeat="activity in activities" activity="activity"></alx-activity>
-		<alx-activity></alx-activity>
+		<alx-activity context="ctrl.context" 
+					  ng-repeat="activity in activities" activity="activity"
+					  ></alx-activity>
+		<alx-activity context="ctrl.context"></alx-activity>
 	</section>
 
 	<!-- Bricks -->
@@ -70,6 +72,17 @@ Par ici les sections...
 				</md-list-item>
 			</md-list>
 			<md-list class="instances">
+				<!-- This type -->
+				<!-- All instances of that type that... -->
+				<md-list-item flex>
+					<section alx-draggable 	= "{brickType: ctrl.context.brickTypes[ctrl.brickTypeName]}" 
+							 ng-class 		= "ctrl.context.brickTypes[ctrl.brickTypeName]" 
+							 alx-drag-start = "ctrl.closeBricks()"
+							 alx-drag-end 	= "ctrl.openBricks()"
+							 flex>
+						<brick data="ctrl.context.brickTypes[ctrl.brickTypeName].json"></brick>
+					</section>
+				</md-list-item>
 				<!-- Instances -->
 				<md-list-item flex ng-repeat="brickId in ctrl.context.brickTypes[ctrl.brickTypeName].instances">
 					<section alx-draggable 	= "ctrl.context.bricks[brickId]" 

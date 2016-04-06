@@ -1,0 +1,18 @@
+instruction > section.Pnode.SelectorNode {
+
+}
+
+@keyframes SelectorNodePresentation_droppable {
+	0%				 {background	: #B9B9FF;}
+	50%				 {background	: lightgreen;}
+	100%			 {background: #B9B9FF;}
+}
+
+instruction > section.Pnode.SelectorNode.candrop {
+	animation		: SelectorNodePresentation_droppable 1s ease-in-out infinite;
+}
+
+instruction > section.Pnode.SelectorNode.candrop.overdrop {
+	background		: lightgreen;
+	animation		: initial;
+}

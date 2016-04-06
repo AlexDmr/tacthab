@@ -1,7 +1,42 @@
-brick-upnp md-card.BrickUPnP_MediaServer {
+/*
+brick-upnp > md-card.BrickUPnP_MediaServer {
 	background 		: cyan; 
 }
 
-brick-upnp md-card.BrickUPnP_MediaRenderer {
+brick-upnp > md-card.BrickUPnP_MediaRenderer {
 	background 		: lightgreen; 
+}
+
+brick-upnp img {
+	width 			: 50px;
+	height 			: 50px; 
+}
+
+*/
+
+brick > section.Brick {
+	width			: 100px;
+	height 			:  50px;
+	margin 			:   3px;
+	padding 		:   2px;
+	border 			: solid black 1px;
+	border-radius 	: 2px;
+	display 		: flex;
+	flex-flow 		: row; 
+}
+
+brick > section.Brick > img.iconURL {
+	width 			: 44px;
+	height			: 44px;
+	flex 			: 0 1 44px;
+}
+
+brick > section.Brick > span.name {
+	margin-right 	: 2px;
+	flex 			: 1 1;
+	word-break 		: break-all;
+    text-overflow 	: ellipsis;
+    height 			: 44px;
+    overflow 		: hidden;
+    font-size 		: x-small;
 }

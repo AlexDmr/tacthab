@@ -21,38 +21,41 @@ var pipo = {
 	logic		: null
 };
 
+var controller = function($scope) {
+	var ctrl 		= this;
+	this.activity 	= pipo;
+	this.dataProgram = {
+		className: "ParallelNode",
+		type	 : ["Pnode", "ControlFlow", "NChildNode", "ParallelNode"], 
+		children: [{ 
+			className	: 'ActionNode',
+			label		: 'Action 1',
+			type		: ['Pnode', 'ActionNode']
+			},
+			{ 
+			className	: 'WhenNode',
+			type		: ['WhenNode']
+			}
+		]
+	};
+	this.appendBrick	= function(data) {
+		$scope.$applyAsync( function() {
+			ctrl.activity.components.push( data );
+		});
+	}
+}
+controller.$inject = ["$scope"];
+
 module.exports = function(app) {
 	app.directive	( "alxActivity"
 					, function() {
 						return {
 							  restrict			: 'E'
-							, controller		: function($scope) {
-								 var ctrl 		= this;
-								 this.activity 	= pipo;
-								 this.dataProgram = {
-								 	className: "ParallelNode",
-								 	type	 : ["Pnode", "ControlFlow", "NChildNode", "ParallelNode"], 
-									children: [{ 
-										className	: 'ActionNode',
-										label		: 'Action 1',
-										type		: ['Pnode', 'ActionNode']
-										},
-										{ 
-										className	: 'WhenNode',
-										type		: ['WhenNode']
-										}
-									]
-								 };
-								 this.appendBrick	= function(data) {
-								 	$scope.$applyAsync( function() {
-								 		ctrl.activity.components.push( data );
-								 	});
-								 }
-								}
+							, controller		: controller
 							, bindToController	: true
 							, controllerAs		: 'ctrl'
 							, templateUrl		: "/IHM/js/activities/alxActivity.html"
-							, scope				: { //activity	: "=activity"
+							, scope				: { context	: "<"
 												  }
 							, link				: function(/*scope, element, attr, controller*/) {
 								// Get the program node

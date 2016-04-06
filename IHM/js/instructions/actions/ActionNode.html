@@ -8,11 +8,9 @@
 	<div class="action_description">
 		<p class="actionName" ng-bind="ctrl.actionLabel"></p>
 		<p 	class="selector" >
-			<p ng-hide="ctrl.instruction.children.length === 0">Drop ACTION here</p>
-			<instruction ng-repeat	= "instruction in ctrl.instruction.children"
-						 data		= "instruction"
-						>
-			</instruction>
+			<!-- <p ng-hide="ctrl.instruction.children.length === 0">Drop a {{ctrl.sources}}</p>-->
+			<selector ng-if="ctrl.selNode" data = "ctrl.selNode" context="ctrl.context"></selector> 
+			<!-- {{ctrl | json}} -->
 		</p>
 	</div>
 </section>

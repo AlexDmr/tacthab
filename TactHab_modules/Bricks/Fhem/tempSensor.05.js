@@ -3,7 +3,8 @@ var BrickFhem = require( './BrickFhem.js' );
 // Define
 function BrickFhem_tempSensor_05(id, FhemBridge, listEntry) {
 	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
-	this.temperature = undefined;
+	this.temperature	= null;
+	this.lastUpdate		= null;
 	this.logEvents( "temperature" );
 	return this;
 }
@@ -28,11 +29,12 @@ BrickFhem_tempSensor_05.prototype.init				= function(FhemBridge, listEntry) {
 }
 
 BrickFhem_tempSensor_05.prototype.extractData		= function(data) {
-	this.temperature = parseFloat( data.changed.temperature );
-	var json  = 	{ time			: Date.now()
+	this.temperature	= parseFloat( data.changed.temperature );
+	this.lastUpdate		= Date.now()
+	var json  = 	{ time			: this.lastUpdate
 					, temperature	: this.temperature
 					};
-	this.log("temperature", this.temperature, json.time);
+	this.log("temperature", this.temperature, this.lastUpdate);
 	return json;
 }
 
@@ -44,7 +46,8 @@ BrickFhem_tempSensor_05.prototype.update			= function(data) {
 BrickFhem_tempSensor_05.prototype.getDescription	= function() {
 	var json = BrickFhem.prototype.getDescription.apply(this, []);
 	json.state = {
-		temperature	: this.temperature
+		temperature	: this.temperature,
+		lastUpdate	: this.lastUpdate
 	}
 	return json;
 }
