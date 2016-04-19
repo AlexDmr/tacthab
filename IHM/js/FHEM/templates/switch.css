@@ -1,0 +1,16 @@
+brick > section.BrickFhem_EnO_switch table.buttons {
+	border-collapse			: collapse;
+	border 					: solid black 2px;
+	margin-left 			: auto;
+    margin-right 			: auto;
+    font-size 				: initial; 
+}
+
+brick > section.BrickFhem_EnO_switch table.buttons td {
+	border 					: dotted black 1px;
+	text-align 				: center;
+}
+
+brick > section.Brick.BrickFhem_EnO_switch > span.description > section.state {
+	border-right 			: solid black 1px;
+}

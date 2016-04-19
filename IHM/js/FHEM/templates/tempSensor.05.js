@@ -1,20 +1,19 @@
+var BrickFhem = require( "./BrickFhem.js" ).controller;
 require( "./tempSensor.05.css" );
 
-var BrickFhem = require( "./BrickFhem.js" );
+module.exports = {
+	template	: require( "./tempSensor.05.html" ),
+	controller	: function($scope, utils) {
+		var ctrl = this;
+		BrickFhem.apply(this, [$scope, utils]);
 
-module.exports = function($scope, utils) {
-	var ctrl = this;
-	BrickFhem.apply(this, [$scope, utils]);
-
-	this.lastUpdate		= null;
-	this.temperature	= null;
-	this.update = function(event) {
-		console.log( "tempSensor.05.js -> update with", event);
-		this.brick.state = event;
-		$scope.$applyAsync( function() {
-			ctrl.lastUpdate		= event.time;
-			ctrl.temperature	= event.temperature;
-		} );
+		this.lastUpdate		= null;
+		this.update = function(event) {
+			console.log( "tempSensor.05.js -> update with", event);
+			$scope.$applyAsync( function() {
+				ctrl.lastUpdate				= event.data.time;
+				ctrl.brick.fhem.temperature	= event.data.temperature;
+			} );
+		}
 	}
-
 }

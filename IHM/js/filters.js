@@ -7,7 +7,7 @@ function filterBrickType(type) {
 	}
 }
 var filterBrickFhem		= filterBrickType( "BrickFhem" )
-  , filterBridgeFhem	= filterBrickType( "BridgeFhem" )
+  , filterBridgeFhem	= filterBrickType( "FhemBridge" )
   , filterBridgeOpenHAB	= filterBrickType( "BridgeOpenHAB" )
   , filterBrickOpenHAB	= filterBrickType( "BrickOpenHAB_item" )
   ;

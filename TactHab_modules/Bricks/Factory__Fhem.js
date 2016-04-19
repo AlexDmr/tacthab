@@ -1,7 +1,8 @@
-var Brick		= require( './Brick.js' )
-  , websocket	= require( 'websocket' )
-  , fs			= require( 'fs-extra' )
-  , upath		= require("upath")
+var Brick			= require( './Brick.js' )
+  , websocket		= require( 'websocket' )
+  , fs				= require( 'fs-extra' )
+  , upath			= require( 'upath')
+  , BrickFhemZwave	= require( './Fhem/BrickFhemZwave.js' )
   ;
   
 var WebSocketClient = websocket.client	
@@ -39,11 +40,9 @@ var FhemBridge = function(host, port) {
 FhemBridge.prototype = Object.create( Brick.prototype ); 
 FhemBridge.prototype.constructor = FhemBridge;
 FhemBridge.prototype.getTypeName = function() {return "FhemBridge";}
-FhemBridge.prototype.getTypes	= function() {
-	var L = Brick.prototype.getTypes(); 
-	L.push(FhemBridge.prototype.getTypeName()); 
-	return L;
-}
+var L = Brick.prototype.getTypes(); 
+L.push(FhemBridge.prototype.getTypeName()); 
+FhemBridge.prototype.getTypes	= function() {return L;}
 
 FhemBridge.prototype.sendCommand	= function(cmd) {
 	this.connection.send( JSON.stringify( { type	: 'command'
@@ -53,11 +52,11 @@ FhemBridge.prototype.sendCommand	= function(cmd) {
 						 );
 }
 FhemBridge.prototype.getDescription	= function() {
-	var i, json = Brick.prototype.getDescription();
+	var i, json = Brick.prototype.getDescription.apply(this, []);
 	json.config = this.config;
 	json.bricks	= [];
 	for(i=0; i<this.bricks.length; i++) {
-		json.bricks.push( this.bricks[i].getDescription() )
+		json.bricks.push( this.bricks[i].brickId )
 	}
 	return json;
 }
@@ -73,7 +72,7 @@ FhemBridge.prototype.init 	= function(host, port) {
 	 var firstTime = true;
 	 this.ws_client.on( 'connect'
 			  , function(connection) {
-					 var listArg = "room=EnOcean:FILTER=TYPE=EnOcean";
+					 var listArg = ".*"; //"room=EnOcean:FILTER=TYPE=EnOcean";
 					 // Connected to Fhem
 					 console.log('FhemBridge::init Client connected to Fhem');
 					 clearInterval( self.reconnectTimer );
@@ -95,30 +94,14 @@ FhemBridge.prototype.init 	= function(host, port) {
 								 case 'event'		:
 									// console.log("\t////Fhem => event\t\t:", msg.payload);
 									brick = Brick.prototype.getBrickFromId(msg.payload.name);
-									if(brick && brick.update) {brick.update( msg.payload );}
+									if(brick && brick.update) {
+										brick.update( msg.payload );
+									}// else {console.error("Fhem event unrelated to any brick", msg);}
 								 break;
 								 case 'listentry'	:
-									// console.log("\t////Fhem => listentry\t:", msg.payload.name, msg.payload.attributes.subType);
+									// console.log("\t////Fhem => listentry\t:", msg);
 									// Create related brick
-									if(msg.payload.arg === listArg) {	// EnOcean
-										 var subType	= msg.payload.attributes.subType
-										   , fileName	= fhemDir + '/Fhem/' + subType + '.js';
-										 console.log("\trequire", fileName);
-										 fs.exists( fileName
-												  , function(exists) {
-														 var EnO_Brick, brick2;
-														 if(exists) {
-															 try {
-															 	EnO_Brick = require(fileName);
-																console.log(msg.type, '=>', EnO_Brick?'FOUND':'NOT FOUND');
-																brick2 = new EnO_Brick(msg.payload.name, self, msg.payload);
-																console.log( "FHEM", EnO_Brick, brick2);
-																self.bricks.push( brick2 );
-																} catch(errLoad) {console.error("Error processing", fileName, "\n", errLoad, "\n____________________________________________");}
-															} else {console.error("FhemBridge::init", fileName, "does not exist!!!!");}
-														}
-												  );
-										} else {console.error("listentry for", msg.payload.arg);}
+									self.processListEntry( msg );
 								 break;
 								 case 'getreply'	:
 									// console.log("\t////Fhem => reply\t\t:", msg.payload);
@@ -152,6 +135,48 @@ FhemBridge.prototype.init 	= function(host, port) {
 	 
 	 return this;
 	}
+
+var brickConstructors = {};
+function getBrickConstructor(fileName) {
+	return new Promise( function(resolve, reject) {
+		if( brickConstructors[fileName] ) {
+			resolve( brickConstructors[fileName] );
+		} else {fs.exists( fileName
+						 , function(exists) {
+								if(exists) {
+									try {brickConstructors[fileName] = require(fileName);
+										 resolve( brickConstructors[fileName] );
+										 console.log( "required", fileName );
+										} catch(errLoad) {reject("Error processing", fileName, "\n", errLoad, "\n____________________________________________");}
+									} else {reject("FhemBridge::init", fileName, "does not exist!!!!");}
+								}
+						  );
+		}
+	});
+}
+FhemBridge.prototype.processListEntry	= function(msg) {
+	var type 		= msg.payload.internals.TYPE
+	  , fileName, subType, brick
+	  , self = this;
+	switch( type ) {
+		case 'EnOcean'	:
+			subType		= msg.payload.attributes.subType
+			fileName 	= fhemDir + '/Fhem/' + subType + '.js';
+			getBrickConstructor(fileName).then( function(brickConstructor) {
+				brick 	= new brickConstructor(msg.payload.name, self, msg.payload);
+				self.bricks.push( brick );
+			}, function(err) {console.error( "ERROR loading EnOcean", fileName, "\n", err);} );
+		break;
+		case 'ZWave'	:
+			// console.error( "Must implement Zwave Fhem adapter" );
+			// console.log( msg );
+			// classes = msg.payload.attributes.classes.split(' ');
+			brick = new BrickFhemZwave(msg.payload.internals.NAME, this, msg.payload);
+			this.bricks.push( brick );
+		break;
+
+	}
+}
 	
 //---------------------------------------------------------------------------------------
 module.exports = FhemBridge;

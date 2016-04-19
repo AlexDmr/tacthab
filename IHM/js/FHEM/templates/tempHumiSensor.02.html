@@ -1,1 +1,13 @@
-{{ctrl.brick | json}}
+<section ng-class="ctrl.brick.type">
+	<span class="description">
+		<section class="name">{{ctrl.brick.name}}</section>
+		<section class="separator"></section>
+		<section class="state">
+			<section class="temperature">{{ctrl.brick.fhem.temperature}}°C	</section>
+			<section class="humidity"	>{{ctrl.brick.fhem.humidity}}%		</section>
+		</section>
+	</span>
+	<img class="iconURL" src="/IHM/images/icons/fhem.png"></img>
+	<img class="thermometerIconURL" src="/TactHab_modules/Bricks/Fhem/images/thermometer.svg"></img>
+	<img class="humidityIconURL"    src="/IHM/js/FHEM/templates/images/humidity.webp"></img>
+</section>

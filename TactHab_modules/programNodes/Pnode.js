@@ -159,7 +159,7 @@ Pnode.prototype.call = function(call) {
 Pnode.prototype.getContextDescription = function() {
 	var context = this.getContext();
 	var json = {bricks:{}, variables:{}, brickTypes: {}};
-	var i, type, brick;
+	var i, t, type, brick;
 
 	// Add types
 	for(type in Brick.D_brickTypes) {
@@ -175,12 +175,31 @@ Pnode.prototype.getContextDescription = function() {
 		brick 			= context.bricks[i];
 		json.bricks[i] 	= brick.getDescription();
 		if(brick.getTypeName) {
-			type 			= brick.getTypeName();
-			// console.log( "add instance", brick.brickId, "to", type );
+			type = brick.getTypes();
+			for(t=type.length-1; t>=0; t--) {
+				if(json.brickTypes[ type[t] ] ) {
+					json.brickTypes[ type[t] ].instances.push( brick.brickId );
+					break;
+				}
+			}
+			/*type 			= brick.getTypeName();
 			if(json.brickTypes[type]) {
 				json.brickTypes[type].instances.push( brick.brickId );
-			} else {console.error("-------> Pnode::getContextDescription::ERROR -------> no type", type);}
-		} // else {console.error("no types for brick", brick.brickId);}
+			}*/
+		} else {
+			if( brick.type ) {
+				console.log( "------> Must cast", brick.brickId );
+				for(t=brick.type.length-1; i>=0; i--) {
+					console.log( brick.brickId, "can be consdered as a", brick.type[t], "?");
+					if( json.brickTypes[ brick.type[t] ] ) {
+						console.log( "\t=>YES" );
+						json.brickTypes[ brick.type[t] ].instances.push( brick.brickId );
+						break;
+					}
+				}
+			}
+		}
+
 	}
 	// Add variabes
 	for(i in context.variables) {

@@ -1,11 +1,4 @@
-<md-card ng-class="ctrl.brick.type">
-	<md-card-content>
-		<img ng-src		= "{{ctrl.brick.iconURL}}" 
-			 class		= "md-card-image iconURL" 
-			 alt		= "{{ctrl.brick.iconURL}}"
-			 />
-		YO : {{ctrl.brick.name}}
-	</md-card-content>
-	<md-card-footer>
-	</md-card-footer>
-</md-card>
+<section ng-class="ctrl.brick.type">
+	<span class="name" ng-bind="ctrl.brick.name"></span>
+	<img class="iconURL" ng-src="{{ctrl.iconURL}}"></img>
+</section>

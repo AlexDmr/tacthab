@@ -15,10 +15,13 @@ var BrickUPnP_MediaRenderer = function(id) {
 	 return this;
 	}
 BrickUPnP_MediaRenderer.prototype = Object.create( BrickUPnP.prototype ); 
-BrickUPnP_MediaRenderer.prototype.registerType('BrickUPnP_MediaRenderer', BrickUPnP_MediaRenderer.prototype);
 BrickUPnP_MediaRenderer.prototype.constructor	= BrickUPnP_MediaRenderer;
 BrickUPnP_MediaRenderer.prototype.getTypeName	= function() {return "BrickUPnP_MediaRenderer";}
-BrickUPnP_MediaRenderer.prototype.getTypes		= function() {var L=BrickUPnP.prototype.getTypes(); L.push(BrickUPnP_MediaRenderer.prototype.getTypeName()); return L;}
+BrickUPnP_MediaRenderer.prototype.getTypes		= function() {
+	var L = BrickUPnP.prototype.getTypes(); 
+	L.push(BrickUPnP_MediaRenderer.prototype.getTypeName()); 
+	return L;}
+BrickUPnP_MediaRenderer.prototype.registerType('BrickUPnP_MediaRenderer', BrickUPnP_MediaRenderer.prototype);
 
 var actions = BrickUPnP.prototype.getActions()
   , states 	= BrickUPnP.prototype.getStates ()

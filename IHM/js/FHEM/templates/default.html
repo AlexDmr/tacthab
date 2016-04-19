@@ -1,1 +1,9 @@
-{{ctrl.brick | json}}
+<section ng-class="ctrl.brick.type">
+	<span class="description">
+		<section class="name">{{ctrl.brick.name}}</section>
+		<!-- <section class="separator"></section>
+		<section class="state">{{ctrl.brick.fhem.temperature}}°C</section> -->
+	</span>
+	<img class="iconURL" src="/IHM/images/icons/fhem.png"></img>
+	<!-- <img class="serviceIconURL" src="/TactHab_modules/Bricks/Fhem/images/thermometer.svg"></img> -->
+</section>

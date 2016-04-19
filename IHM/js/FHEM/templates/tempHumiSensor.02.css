@@ -1,0 +1,23 @@
+brick > section.BrickFhem_tempHumiSensor_02 >img.humidityIconURL	{
+	position 				: absolute;
+	width 					: 24px;
+	height 					: 24px;
+	bottom 					:  0px; 
+	right 					:  0px;
+	background-color 		: rgba(128,255,128,0.7);
+    border-left 			: solid black 1px;
+    border-right 			: solid black 1px;
+}
+
+brick > section.BrickFhem_tempHumiSensor_02 >img.thermometerIconURL		{
+	position 				: absolute;
+	width 					: 24px;
+	height 					: 24px;
+	bottom 					: 24px; 
+	right 					:  0px;
+	background-color 		: rgba(128,255,128,0.7);
+    border-top-right-radius	: 50%;
+    border-top 				: solid black 1px;
+    border-left 			: solid black 1px;
+    border-right 			: solid black 1px;
+}

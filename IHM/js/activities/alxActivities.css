@@ -14,3 +14,7 @@ md-sidenav.instructions {
 md-sidenav.instructions > * {
 	flex				: 1 1 auto;
 }
+
+md-sidenav.bricks section.specializations > * {
+	display 			: inline-block;
+}

@@ -29,33 +29,39 @@ BrickFhem.prototype.init			= function(FhemBridge, listEntry) {
 		this.name				= listEntry.name;
 		this.fhem.name			= listEntry.name;
 		this.fhem.attributes	= listEntry.attributes;
+		this.fhem.signalAtt		= Object.keys(listEntry.internals).filter( function(att) {return /ReceivingQuality$/.test(att);} )[0]
+		this.fhem.signalQuelity	= listEntry.internals[ this.fhem.signalAtt ];
+		this.fhem.lastUpdate	= Date.now()
 		} else {this.fhem.name	= undefined;}
 	this.fhem.bridge= FhemBridge;
+	return this;
 }
 
 BrickFhem.prototype.serialize		= function() {
 	var json = Brick.prototype.serialize.apply(this, []);
+	json.fhem = this.fhem;
 	return json;
 }
 
-BrickFhem.prototype.getDescription = function() {
+BrickFhem.prototype.getDescription	= function() {
 	var json = Brick.prototype.getDescription.apply(this, []);
+	json.fhem = this.fhem;
 	return json;
 }
 
-BrickFhem.prototype.sendCommand	= function(cmd) {
+BrickFhem.prototype.sendCommand		= function(cmd) {
 	this.fhem.bridge.sendCommand( cmd );
 }
 
-BrickFhem.prototype.update			= function(data) {
-	console.error("-_-_-_- BrickFhem::update should be implemented and specialized...", data);
-	return {};
+BrickFhem.prototype.extractData		= function(/*data*/) {
+	return 	{ lastUpdate	: this.fhem.lastUpdate = Date.now() 
+			};
 }
 
-/*BrickFhem.prototype.log				= function(name, value, ms) {
-	console.log( this, "log", name, value, ms);
-	return Brick.prototype.log.apply(this, [name, value, ms]);
-}*/
+BrickFhem.prototype.update			= function(data) {
+	var json = this.extractData(data);
+	this.emit('update', json);
+}
 
 BrickFhem.prototype.getESA			= function() {
 		return	{ events	: [ 'update' ]

@@ -1,13 +1,16 @@
-var BrickFhem = require( "./BrickFhem.js" );
+var BrickFhem = require( "./BrickFhem.js" ).controller;
 require( "./EnO_4BS.css" );
 
-module.exports = function($scope, utils) {
-	BrickFhem.apply(this, [$scope, utils]);
+module.exports = {
+	template	: require( "./default.html"),  // require( "./EnO_4BS.html" ),
+	controller	: function($scope, utils) {
+		BrickFhem.apply(this, [$scope, utils]);
 
-	this.update = function(event) {
-		console.log( "EnO_4BS -> update with", event);
-		this.brick.state = event;
-		$scope.$applyAsync();
+		this.update = function(event) {
+			console.log( "EnO_4BS -> update with", event);
+			this.brick.state = event;
+			$scope.$applyAsync();
+		}
+
 	}
-
-}
+};

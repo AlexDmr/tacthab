@@ -1,11 +1,11 @@
 <!-- Case where the openHab connection is already specified -->
-<md-card>
-	<md-content layout="row" ng-show="brick">
+<md-card ng-if="$ctrl.brick">
+	<md-content layout="row">
 		<!-- <img class="icon fhem" src="/js/Presentations/openHab/templates/openhab-logo-square.png"></img> -->
 		<md-content layout="column">
-			<h4 ng-bind="brick.name"></h4>
+			<h4 ng-bind="$ctrl.brick.name"></h4>
 			<md-content layout="row">
-				<label>Server on {{brick.config.host}}:{{brick.config.port}}</label>
+				<label>Fhem server at {{$ctrl.brick.config.host}}:{{$ctrl.brick.config.port}}</label>
 			</md-content>
 		</md-content>
 	</md-content>
@@ -13,7 +13,7 @@
 
 <!-- Case where the we have to specify the openHab connection -->
 <md-card>
-	<md-content class="description" layout="column" ng-hide="brick">
+	<md-content class="description" layout="column" ng-if="!$ctrl.brick">
 		<h4>Connect to a new Fhem server</h4>
 		<md-content class="description" layout="row">
 			<md-input-container class="md-block">

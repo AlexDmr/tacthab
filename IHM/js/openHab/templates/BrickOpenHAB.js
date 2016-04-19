@@ -3,6 +3,7 @@
 module.exports = function($scope, utils) {
 	var ctrl = this;
 	var cbEventName = this.brick.id + "::state";
+	this.iconURL = "images/icons/openHab.png";
 	utils.io.emit	( "subscribeBrick"
 					, { brickId		: this.brick.id
 					  , eventName	: "state"
@@ -27,3 +28,6 @@ module.exports = function($scope, utils) {
 					);
 	}
 }
+
+module.exports.controller	= module.exports;
+module.exports.template		= require( "../../brick/brick.html" );

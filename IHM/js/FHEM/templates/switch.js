@@ -1,13 +1,24 @@
-var BrickFhem = require( "./BrickFhem.js" );
-require( "./EnO_4BS.css" );
+var BrickFhem = require( "./BrickFhem.js" ).controller;
+require( "./switch.css" );
 
-module.exports = function($scope, utils) {
-	BrickFhem.apply(this, [$scope, utils]);
+module.exports = {
+	template	: require( "./switch.html" ),
+	controller	: function($scope, utils) {
+		var ctrl = this;
+		BrickFhem.apply(this, [$scope, utils]);
 
-	this.update = function(event) {
-		console.log( "switch -> update with", event);
-		this.brick.state = event;
-		$scope.$applyAsync();
+		this.update = function(event) {
+			console.log( "switch -> update with", event);
+			if( event.state ) {
+				ctrl.brick.fhem.buttons.state.length = 0;
+				event.state.forEach( function(e) {
+					ctrl.brick.fhem.buttons.state.push( e );
+				});
+			}
+			if( event.state ) {
+				this.brick.fhem.buttons.pressed	= event.pressed;
+			}
+			$scope.$applyAsync();
+		}
 	}
-
 }

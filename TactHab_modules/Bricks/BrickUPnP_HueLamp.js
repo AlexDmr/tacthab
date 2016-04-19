@@ -4,25 +4,27 @@ var Brick	= require( './Brick.js' )
 
 function BrickUPnP_HueLamp(HueBridge, lampHueId, lampJS) {
 	Brick.apply(this, []);
-	this.HueBridge	= HueBridge;
-	this.lampHueId	= lampHueId;
-	this.prefixHTTP	= HueBridge.prefixHTTP;
-	this.update(lampJS);
-	var self = this;
-	this.set( { alert: "select"
-			  }
-			, function(err ) {console.log("Error ADD Hue", lampHueId, err );}
-		    , function(data) {console.log("Yeahh ADD Hue", lampHueId, data);
-							  self.set({on:true, transitiontime: 20, hue:46920, sat:255});
-							  setTimeout(function() {self.set({transitiontime: 20, hue:0, bri:50});}, 2000);
-							  setTimeout(function() {self.set({on:false});}, 5000);
-							 }
-			);
+	if( HueBridge, lampHueId ) {
+		this.HueBridge	= HueBridge;
+		this.lampHueId	= lampHueId;
+		this.prefixHTTP	= HueBridge.prefixHTTP;
+		this.update(lampJS);
+		var self = this;
+		this.set( { alert: "select"
+				  }
+				, function(err ) {console.log("Error ADD Hue", lampHueId, err );}
+			    , function(data) {console.log("Yeahh ADD Hue", lampHueId, data);
+								  self.set({on:true, transitiontime: 20, hue:46920, sat:255});
+								  setTimeout(function() {self.set({transitiontime: 20, hue:0, bri:50});}, 2000);
+								  setTimeout(function() {self.set({on:false});}, 5000);
+								 }
+				);
+	}
 	return this;
 }
 
-BrickUPnP_HueLamp.prototype					= Object.create(Brick.prototype); //new Brick(); BrickUPnP_HueLamp.prototype.unreference();
-BrickUPnP_HueLamp.prototypeconstructor		= BrickUPnP_HueLamp;
+BrickUPnP_HueLamp.prototype					= Object.create(Brick.prototype);
+BrickUPnP_HueLamp.prototype.constructor		= BrickUPnP_HueLamp;
 BrickUPnP_HueLamp.prototype.getTypeName		= function() {return 'BrickUPnP_HueLamp';}
 BrickUPnP_HueLamp.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickUPnP_HueLamp.prototype.getTypeName()); return L;}
 BrickUPnP_HueLamp.prototype.registerType('BrickUPnP_HueLamp', BrickUPnP_HueLamp.prototype);

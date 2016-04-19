@@ -3,8 +3,7 @@ var BrickFhem = require( './BrickFhem.js' );
 // Define
 function BrickFhem_tempSensor_05(id, FhemBridge, listEntry) {
 	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
-	this.temperature	= null;
-	this.lastUpdate		= null;
+	// console.log( "new BrickFhem_tempSensor_05", id);
 	this.logEvents( "temperature" );
 	return this;
 }
@@ -12,11 +11,9 @@ function BrickFhem_tempSensor_05(id, FhemBridge, listEntry) {
 BrickFhem_tempSensor_05.prototype = Object.create(BrickFhem.prototype );
 BrickFhem_tempSensor_05.prototype.constructor		= BrickFhem_tempSensor_05;
 BrickFhem_tempSensor_05.prototype.getTypeName		= function() {return "BrickFhem_tempSensor_05";}
-BrickFhem_tempSensor_05.prototype.getTypes			= function() {
-	var L = BrickFhem.prototype.getTypes(); 
-	L.push(BrickFhem_tempSensor_05.prototype.getTypeName()); 
-	return L;
-}
+var L = BrickFhem.prototype.getTypes(); 
+L.push(BrickFhem_tempSensor_05.prototype.getTypeName()); 
+BrickFhem_tempSensor_05.prototype.getTypes			= function() {return L;}
 
 BrickFhem_tempSensor_05.prototype.registerType(BrickFhem_tempSensor_05.prototype.getTypeName(), BrickFhem_tempSensor_05.prototype);
 
@@ -26,31 +23,24 @@ BrickFhem_tempSensor_05.prototype.dispose			= function() {
 
 BrickFhem_tempSensor_05.prototype.init				= function(FhemBridge, listEntry) {
 	BrickFhem.prototype.init.apply(this, [FhemBridge, listEntry]);
+	this.fhem.temperature = parseFloat( listEntry.internals.STATE );
+	console.log( "new temperature sensor at", this.fhem.temperature );
 }
 
-BrickFhem_tempSensor_05.prototype.extractData		= function(data) {
-	this.temperature	= parseFloat( data.changed.temperature );
-	this.lastUpdate		= Date.now()
-	var json  = 	{ time			: this.lastUpdate
-					, temperature	: this.temperature
-					};
-	this.log("temperature", this.temperature, this.lastUpdate);
-	return json;
-}
-
-BrickFhem_tempSensor_05.prototype.update			= function(data) {
-	var json = this.extractData(data);
-	this.emit('update', json);
-}
-
-BrickFhem_tempSensor_05.prototype.getDescription	= function() {
-	var json = BrickFhem.prototype.getDescription.apply(this, []);
-	json.state = {
-		temperature	: this.temperature,
-		lastUpdate	: this.lastUpdate
+BrickFhem_tempSensor_05.prototype.extractData		= function(event) {
+	var json = BrickFhem.prototype.extractData.apply(this, [event]);
+	if(event.changed.temperature) {
+		this.fhem.temperature = json.temperature = parseFloat( event.changed.temperature );
+		// this.log("temperature", json.temperature, json.lastUpdate);
 	}
 	return json;
 }
+
+
+/*BrickFhem_tempSensor_05.prototype.getDescription	= function() {
+	var json = BrickFhem.prototype.getDescription.apply(this, []);
+	return json;
+}*/
 
 
 module.exports = BrickFhem_tempSensor_05;

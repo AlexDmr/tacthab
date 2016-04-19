@@ -54,14 +54,11 @@
 				</fhem>
 				<fhem></fhem>
 				<hr/>
-				<h1>YO</h1>
-				<md-content class="bricks">
-					<md-card ng-repeat="brick in (T.context.bricks | toArray:false | filterBrickFhem)">
-						<md-card-content>
-							<brick data="brick"></brick>
-						</md-card-content>
-					</md-card>
-				</md-content>
+				<section class="fhem bricks">
+					<span class="brick" ng-repeat="brick in (T.context.bricks | toArray:false | filterBrickFhem)">
+						<brick data="brick"></brick>
+					</span>
+				</section>
 			</md-tab-body>
 		</md-tab>
 		<md-tab >

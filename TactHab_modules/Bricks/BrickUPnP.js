@@ -17,7 +17,10 @@ var BrickUPnP = function(id) {
 BrickUPnP.prototype = Object.create(Brick.prototype); // new Brick(); BrickUPnP.prototype.unreference();
 BrickUPnP.prototype.constructor		= BrickUPnP;
 BrickUPnP.prototype.getTypeName		= function() {return "BrickUPnP";}
-BrickUPnP.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickUPnP.prototype.getTypeName()); return L;}
+BrickUPnP.prototype.getTypes		= function() {
+	var L=Brick.prototype.getTypes(); 
+	L.push(BrickUPnP.prototype.getTypeName()); 
+	return L;}
 BrickUPnP.prototype.registerType('BrickUPnP', BrickUPnP.prototype);
 
 

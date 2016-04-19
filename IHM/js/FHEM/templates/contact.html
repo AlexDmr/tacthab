@@ -1,1 +1,12 @@
-{{ctrl.brick | json}}
+<section ng-class="ctrl.brick.type">
+	<span class="description">
+		<section class="name">{{ctrl.brick.name}}</section>
+		<section class="separator"></section>
+		<section class="state">
+			<span ng-if=" ctrl.brick.fhem.isOpen">OPEN </span>
+			<span ng-if="!ctrl.brick.fhem.isOpen">CLOSE</span>
+		</section>
+	</span>
+	<img class="iconURL" src="/IHM/images/icons/fhem.png"></img>
+	<img class="serviceIconURL" ng-src="{{ctrl.stateIconURL}}"></img>
+</section>

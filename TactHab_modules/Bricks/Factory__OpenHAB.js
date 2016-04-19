@@ -53,11 +53,13 @@ var BrickOpenHAB = function() {
 	 return this;
 	}
 
-BrickOpenHAB.prototype = Object.create(BrickUPnP.prototype); //new BrickUPnP(); BrickOpenHAB.prototype.unreference();
+BrickOpenHAB.prototype = Object.create(BrickUPnP.prototype);
 BrickOpenHAB.prototype.constructor = BrickOpenHAB;
 BrickOpenHAB.prototype.getTypeName = function() {return "BridgeOpenHAB";}
-BrickOpenHAB.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickOpenHAB.prototype.getTypeName()); return L;}
-BrickOpenHAB.prototype.registerType("BrickOpenHAB", BrickOpenHAB.prototype);
+var L=BrickUPnP.prototype.getTypes();
+L.push(BrickOpenHAB.prototype.getTypeName());
+BrickOpenHAB.prototype.getTypes		= function() {return L;}
+BrickOpenHAB.prototype.registerType("BridgeOpenHAB", BrickOpenHAB.prototype);
 
 BrickOpenHAB.prototype.getDescription	= function() {
 	 var json	= BrickUPnP.prototype.getDescription.apply(this, []);

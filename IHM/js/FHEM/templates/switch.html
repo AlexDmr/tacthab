@@ -1,1 +1,23 @@
-{{ctrl.brick | json}}
+<section ng-class="ctrl.brick.type">
+	<span class="description">
+		<section class="name">{{ctrl.brick.name}}</section>
+		<section class="separator"></section>
+		<section class="state">
+			<table class="buttons">
+				<tbody>
+					<tr>
+						<td ng-class="{pressed: ctrl.brick.fhem.buttons.state.indexOf('A1')>=0}">A1</td>
+						<td ng-class="{pressed: ctrl.brick.fhem.buttons.state.indexOf('B1')>=0}">B1</td>
+					</tr>
+					<tr>
+						<td ng-class="{pressed: ctrl.brick.fhem.buttons.state.indexOf('A0')>=0}">A0</td>
+						<td ng-class="{pressed: ctrl.brick.fhem.buttons.state.indexOf('B0')>=0}">B0</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+	</span>
+	<img class="iconURL" src="/IHM/images/icons/fhem.png"></img>
+	<img class="serviceIconURL" src="/IHM/js/FHEM/templates/images/luminosity.webp"></img>
+</section>
+

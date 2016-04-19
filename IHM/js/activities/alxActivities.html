@@ -57,44 +57,31 @@ Par ici les sections...
 					ng-click 	= "ctrl.gotoType(type)"
 					> / {{type}}</a>
 			</h4>
-
-			<md-list class="specializations">
-				<!-- Specializations -->
-				<md-list-item flex ng-repeat= "type in ctrl.context.brickTypes[ctrl.brickTypeName].specializations">
-					<section alx-draggable 	= "{brickType: type}" 
-							 ng-class 		= "type" 
-							 alx-drag-start = "ctrl.closeBricks()"
-							 alx-drag-end 	= "ctrl.openBricks()"
-							 ng-click 		= "ctrl.gotoType(type)"
-							 flex>
-						<brick data="ctrl.context.brickTypes[type].json"></brick>
-					</section>
-				</md-list-item>
-			</md-list>
-			<md-list class="instances">
-				<!-- This type -->
-				<!-- All instances of that type that... -->
-				<md-list-item flex>
-					<section alx-draggable 	= "{brickType: ctrl.context.brickTypes[ctrl.brickTypeName]}" 
-							 ng-class 		= "ctrl.context.brickTypes[ctrl.brickTypeName]" 
-							 alx-drag-start = "ctrl.closeBricks()"
-							 alx-drag-end 	= "ctrl.openBricks()"
-							 flex>
-						<brick data="ctrl.context.brickTypes[ctrl.brickTypeName].json"></brick>
-					</section>
-				</md-list-item>
-				<!-- Instances -->
-				<md-list-item flex ng-repeat="brickId in ctrl.context.brickTypes[ctrl.brickTypeName].instances">
-					<section alx-draggable 	= "ctrl.context.bricks[brickId]" 
-							 ng-class 		= "ctrl.context.bricks[brickId].type" 
-							 alx-drag-start = "ctrl.closeBricks()"
-							 alx-drag-end 	= "ctrl.openBricks()"
-							 flex>
-						<!-- {{brickId}} -->
-						<brick data="ctrl.context.bricks[brickId]"></brick>
-					</section>
-				</md-list-item>
-			</md-list>
+			<!-- Specializations -->
+			<section class = "specializations">
+				<span ng-repeat 		= "type in ctrl.context.brickTypes[ctrl.brickTypeName].specializations"
+					  alx-draggable 	= "{brickType: type}" 
+					  ng-class 			= "type" 
+					  alx-drag-start 	= "ctrl.closeBricks()"
+					  alx-drag-end 		= "ctrl.openBricks()"
+					  ng-click 			= "ctrl.gotoType(type)"
+					  >
+					  <brick data		= "ctrl.context.brickTypes[type].json" 
+					  		 ui			= "brickType" 
+					  		 brick-type	= "ctrl.context.brickTypes[type]"
+					  		 ></brick>
+				</span>
+			</section>
+			<section class = "instances">
+				<section ng-repeat 		= "brickId in ctrl.context.brickTypes[ctrl.brickTypeName].instances"
+						 alx-draggable 	= "ctrl.context.bricks[brickId]" 
+						 ng-class 		= "ctrl.context.bricks[brickId].type" 
+						 alx-drag-start = "ctrl.closeBricks()"
+						 alx-drag-end 	= "ctrl.openBricks()"
+						 flex>
+					<brick data="ctrl.context.bricks[brickId]"></brick>
+				</section>
+			</section>
 		</md-content>
 	</md-sidenav>
 

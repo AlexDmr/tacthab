@@ -12,8 +12,8 @@ var BrickUPnP_MediaServer = function(id) {
 BrickUPnP_MediaServer.prototype = Object.create( BrickUPnP.prototype ); //new BrickUPnP(); BrickUPnP_MediaServer.prototype.unreference();
 BrickUPnP_MediaServer.prototype.constructor = BrickUPnP_MediaServer;
 BrickUPnP_MediaServer.prototype.getTypeName = function() {return "BrickUPnP_MediaServer";}
-BrickUPnP_MediaServer.prototype.registerType('BrickUPnP_MediaServer', BrickUPnP_MediaServer.prototype);
 BrickUPnP_MediaServer.prototype.getTypes		= function() {var L=BrickUPnP.prototype.getTypes(); L.push(BrickUPnP_MediaServer.prototype.getTypeName()); return L;}
+BrickUPnP_MediaServer.prototype.registerType('BrickUPnP_MediaServer', BrickUPnP_MediaServer.prototype);
 
 BrickUPnP_MediaServer.prototype.getMetaData	= function(ObjectID) {
 	 var service = this.UPnP.device.services['urn:upnp-org:serviceId:ContentDirectory'];

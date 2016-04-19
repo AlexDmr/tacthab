@@ -15,6 +15,22 @@ utils.initIO( location.hostname + ":" + location.port + "/m2m" );
 var filters = require( "./filters.js" );
 console.log( "require filters", filters);
 
+function processContextTypes( context, type ) {
+	var nb, i;
+	if(type) {
+		nb = context.brickTypes[type].instances.length;
+		for(i=0; i<context.brickTypes[type].specializations.length; i++) {
+			nb += processContextTypes( context, context.brickTypes[type].specializations[i] );
+		}
+		context.brickTypes[type].nbInstances = nb;
+	} else {
+		for(type in context.brickTypes) {
+			processContextTypes(context, type);
+		}
+	}
+	return nb;
+}
+
 var app =
 angular	.module( "ihmActivity", [filters, angularMaterial])//"ngMaterial", "ui.router", "angular-toArrayFilter", "ngDraggable"] )
 		.filter('toArray', function () {
@@ -42,17 +58,29 @@ angular	.module( "ihmActivity", [filters, angularMaterial])//"ngMaterial", "ui.r
 						 $http	.get('/getContext')
 								.success( function(data) {
 									ctrl.context = data;
+									processContextTypes( data );
+
 									console.log("ctrl.context:", ctrl.context);
 									utils.io.on	( "brickAppears"
 												, function(data) {
 													// console.log( "brickAppears", data);
 													$scope.$applyAsync( function() {
+														var hci_class, i;
+														for(i=data.type.length-1; i>=0; i--) {
+															if( ctrl.context.brickTypes[ data.type[i] ] ) {
+																hci_class = data.type[i];
+																break;
+															}
+														}
 														ctrl.context.bricks[data.id] = data;
-														if( ctrl.context.brickTypes[ data.class ] ) {
-															var L = ctrl.context.brickTypes[ data.class ].instances;
+														if( ctrl.context.brickTypes[ hci_class ] ) {
+															var L = ctrl.context.brickTypes[ hci_class ].instances;
 															if(L.indexOf(data.id) !== -1) {
-																console.error("brick", data.id, "already present in instances of", data.class, L);
-															} else {L.push( data.id );}
+																console.error("brick", data.id, "already present in instances of", hci_class, L);
+															} else {
+																L.push( data.id );
+																processContextTypes( ctrl.context );
+															}
 														} else {console.error("No bricktype for", data.class, data, "\n", ctrl.context.brickTypes); }
 													});
 												});
@@ -65,7 +93,10 @@ angular	.module( "ihmActivity", [filters, angularMaterial])//"ngMaterial", "ui.r
 															var L 	= ctrl.context.brickTypes[ data.class ].instances
 															  , pos = L.indexOf( data.brickId )
 															  ;
-															if(pos>=0) {L.splice(pos, 1);}
+															if(pos>=0) {
+																L.splice(pos, 1);
+																processContextTypes( ctrl.context );
+															}
 														}
 													});
 												});

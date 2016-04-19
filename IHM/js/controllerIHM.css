@@ -47,3 +47,7 @@ md-tabs.menu {
 md-pagination-wrapper {
 	width							: auto !important;
 }
+
+section.bricks > span.brick {
+	display 						: inline-block; 
+}
