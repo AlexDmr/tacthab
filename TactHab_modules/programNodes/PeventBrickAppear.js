@@ -37,7 +37,7 @@ PeventBrickAppear.prototype.dispose		= function() {
 PeventBrickAppear.prototype.Start		= function() {
 	var res = Pevent.prototype.Start.apply(this, []);
 	if(res) {
-		 console.log("PeventBrickAppear->Start listening for", this.event.eventName);
+		 // console.log("PeventBrickAppear->Start listening for", this.event.eventName);
 		 ProtoBrick.on(this.event.eventName, this.triggerEventCB);
 		}
 	return res;
@@ -76,11 +76,11 @@ PeventBrickAppear.prototype.unserialize	= function(json, Putils) {
 }
 
 PeventBrickAppear.prototype.triggerEvent = function(event) {
-	console.log("PeventBrickAppear::triggerEvent for", event.brickId, "?");
+	// console.log("PeventBrickAppear::triggerEvent for", event.brickId, "?");
 	if(this.parent && this.state && this.children.length) {
 		 var targets = this.children[0].evalSelector();
 		 for(var i=0; i<targets.length; i++) {
-			 console.log("\t-", targets[i].brickId);
+			 // console.log("\t-", targets[i].brickId);
 			 if(targets[i].brickId === event.brickId) {
 				 this.parent.eventFromChild(this, event);
 				 return true;

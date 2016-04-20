@@ -83,12 +83,12 @@ BrickUPnP_MediaRenderer.prototype.init		= function(device) {
 														  }
 											}
 										);
-	 this.automatePlay.on('enter_PLAYING', function(e) {console.log("enter_PLAYING", e);});
-	 this.automatePlay.on('leave_PLAYING', function(e) {console.log("leave_PLAYING", e);});
-	 this.automatePlay.on('enter_STOPPED', function(e) {console.log("enter_STOPPED", e);});
-	 this.automatePlay.on('leave_STOPPED', function(e) {console.log("leave_STOPPED", e);});
-	 this.automatePlay.on('enter_PAUSED' , function(e) {console.log("enter_PAUSED" , e);});
-	 this.automatePlay.on('leave_PAUSED' , function(e) {console.log("leave_PAUSED" , e);});
+	 // this.automatePlay.on('enter_PLAYING', function(e) {console.log("enter_PLAYING", e);});
+	 // this.automatePlay.on('leave_PLAYING', function(e) {console.log("leave_PLAYING", e);});
+	 // this.automatePlay.on('enter_STOPPED', function(e) {console.log("enter_STOPPED", e);});
+	 // this.automatePlay.on('leave_STOPPED', function(e) {console.log("leave_STOPPED", e);});
+	 // this.automatePlay.on('enter_PAUSED' , function(e) {console.log("enter_PAUSED" , e);});
+	 // this.automatePlay.on('leave_PAUSED' , function(e) {console.log("leave_PAUSED" , e);});
 	 return this;
 	}
 
@@ -146,7 +146,7 @@ BrickUPnP_MediaRenderer.prototype.loadURI	= function(uri, metadata) {
 								 if(err) {
 									 console.error("loadURI error :", err, buffer);
 									 if(metadata !== "") {
-										 console.log("retry");
+										 // console.log("retry");
 										 service.callAction	( 'SetAVTransportURI'
 															, { InstanceID			: 0
 															  , CurrentURI			: uri
@@ -286,7 +286,7 @@ BrickUPnP_MediaRenderer.prototype.UpdateEvent	= function(eventNode, service) {
 				 // this.MediasStates[this.currentInstanceID || 0][eventNode.tagName] = val;
 				 this.MediasStates[service.serviceType] = this.MediasStates[service.serviceType] || {};
 				 this.MediasStates[service.serviceType][eventNode.tagName] = val;
-				 console.log(service.serviceType, eventNode.tagName, val);
+				 // console.log(service.serviceType, eventNode.tagName, val);
 				 this.MediasStates[service.serviceType][eventNode.tagName] = val;
 				 this.emit		(eventNode.tagName, {value: val});
 				 this.emit		( "eventUPnP" 

@@ -26,7 +26,7 @@ BrickUPnP.prototype.registerType('BrickUPnP', BrickUPnP.prototype);
 
 BrickUPnP.prototype.dispose			= function() {
 	 for(var i=0; i<this.subscriptions.length; i++) {
-		 console.log("\tclearTimeout", i);
+		 // console.log("\tclearTimeout", i);
 		 clearTimeout( this.subscriptions[i].timer );
 		}
 	 Brick.prototype.dispose.apply(this, []);
@@ -56,7 +56,7 @@ function CB_newSubscription(brick) {
 				 var pos = brick.subscriptions.indexOf( data.old );
 				 if(pos >= 0) {brick.subscriptions.splice(pos, 1);}
 				 brick.subscriptions.push( data.new );
-				 console.log("\tBrickUPnP: Registering the new subscription for", this.id);
+				 // console.log("\tBrickUPnP: Registering the new subscription for", this.id);
 				}
 }
 function CB_service(brick/*, service*/) {

@@ -14,10 +14,10 @@ fs.readdir(dirFhem, function(err, files) {
 	if(err) {
 		console.error( "Error reading directory /Fhem", err);
 	} else {
-		console.log( "Files in /Fhem", files);
+		// console.log( "Files in /Fhem", files);
 		files.forEach( function(f) {
 			if( reJS.test(f) ) {
-				console.log( "Fhem require", f);
+				// console.log( "Fhem require", f);
 				require(dirFhem + "/" + f);
 			}
 			});

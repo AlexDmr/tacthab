@@ -41,7 +41,7 @@ Brick.prototype.registerType	= function(name, proto) {
 	 if( D_brickTypes[protoBrickHeritedName] ) {
 	 	exemple = new proto.constructor();
 	 	exemple.name = name;
-	 	console.log( name, "inherits from", protoBrickHeritedName);
+	 	// console.log( name, "inherits from", protoBrickHeritedName);
 		D_brickTypes[protoBrickHeritedName].specializations.push( name );
 		D_brickTypes[name].generalization 	= protoBrickHeritedName;
 		D_brickTypes[name].json				= exemple.getDescription();
@@ -153,7 +153,7 @@ Brick.prototype.toString	= function() {
 	 return JSON.stringify(this.toJSON());
 	}
 ProtoBrick.on	= function(event, CB) {
-	 console.log("ProtoBrick.on", event);
+	 // console.log("ProtoBrick.on", event);
 	 Brick.prototype.on.apply(this, [event, CB]);
 	 return this;
 	}

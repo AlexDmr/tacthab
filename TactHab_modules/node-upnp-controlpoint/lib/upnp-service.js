@@ -1,9 +1,11 @@
-var util = require('util'),
-	EventEmitter = require('events').EventEmitter,
-	http = require("http"),
-	url = require("url"),
+var util 			= require('util'),
+	EventEmitter	= require('events').EventEmitter,
+	http 			= require("http"),
+	url 			= require("url"),
 	// xml2js = require('xml2js'),
-	xmldom = require("xmldom");
+	xmldom 			= require("xmldom"),
+	os 				= require( "os" ),
+	request 		= require( "request" );
 
 var xmlSerializer	= new xmldom.XMLSerializer();
 var domParser		= new xmldom.DOMParser();
@@ -51,7 +53,7 @@ var Subscription = function(service, sid, timeout) {
 	
 	this.timer = setTimeout(function() { 
 		self._resubscribe();
-	}, (this.timeout*1000)-5000);
+	}, (this.timeout*1000)-30000);
 }
 
 Subscription.prototype._resubscribe = function() {
@@ -206,7 +208,76 @@ UpnpService.prototype.callAction = function(actionName, args, callback) {
 
 var reURL = /^(https?):\/\/([\w|\.|\d]*)\:?(\d+)\/(.*)$/i;
 
-UpnpService.prototype.subscribe = function(callback, nbTry) {
+var ifaces = os.networkInterfaces(), netInterfaces = [];
+for (var dev in ifaces) {
+    var iface = ifaces[dev].filter(function(details) {
+        return details.family === 'IPv4' && details.internal === false;
+    });
+    if(iface.length > 0) {netInterfaces.push( iface[0] );}
+}
+
+UpnpService.prototype.subscribe = function(callback/*, nbTry*/) {
+	var self = this;
+	var IP = "127.0.0.1";
+
+	var path, host = this.host, port = this.port;
+	if(this.eventSubUrl.indexOf('/') !== 0) {
+		 if(this.eventSubUrl.indexOf('http') !== 0) {
+			 path = '/'; path += this.eventSubUrl;
+			} else {var reRes = reURL.exec( this.eventSubUrl );
+					host	= reRes[2];
+					port	= reRes[3];
+					path	= reRes[4];
+				   }
+		} else {path = this.eventSubUrl;}
+
+	var hostArray = host.split( "." );
+	var interface = netInterfaces.filter( function(netInterface) {
+		var adresseArray = netInterface.address.split( "." );
+		return adresseArray[0] === hostArray[0]
+		    && adresseArray[1] === hostArray[1]
+		    && adresseArray[2] === hostArray[2] ;
+	})[0];
+	if(interface) {
+		IP = interface.address;
+		// console.log( "Right IP address to use is", IP );
+	}
+
+
+	var callbackUrl = "http://" + IP + ":" + this.device.controlPoint.eventHandler.serverPort + "/listener";
+	var url = 'http://' + host + ':' + port + path;
+	var options = {
+	  	method	: "SUBSCRIBE",
+	  	url		: url,
+	  	headers	: {
+			"HOST"    			: host + ":" + port,
+			"CALLBACK" 			: "<" + callbackUrl + ">",
+			"NT"      			: "upnp:event",
+			"TIMEOUT"			: "Second-" + this.subscriptionTimeout,
+			"USER-AGENT"		: "TActHab/1 UPnP/1.1 nodejsUPnP/1",
+			"Content-Length"	: 0
+		}
+	};
+	// console.log( "subscribing to", url, "with", options );
+	request( options, function(err, response/*, body*/) {
+		if(err) {
+			console.error( "Error subscribing to", options, "\n=> ERROR:", err);
+		} else {
+			// console.log( "Subscribe =>", response.statusCode, body );
+			if( response.statusCode === 200) {
+				// console.log( "response.headers", response.headers );
+				var sid 			= response.headers.sid;
+				var timeout 		= parseInt( response.headers.timeout.slice(response.headers.timeout.indexOf('-')+1) );
+				var subscription 	= new Subscription(self, sid, timeout);
+				self.device.controlPoint.eventHandler.addSubscription(subscription);
+
+				if(callback) {callback(null, subscription);}
+			}
+		}
+	})
+}
+
+UpnpService.prototype.XXX_subscribe = function(callback, nbTry) {
 	if(typeof nbTry === "undefined") {nbTry = 3;}
 	var self = this;
 	// TODO determine IP address for service to callback on.
@@ -235,13 +306,14 @@ UpnpService.prototype.subscribe = function(callback, nbTry) {
 		"CALLBACK" 			: "<" + callbackUrl + ">",
 		"NT"      			: "upnp:event",
 		"TIMEOUT"			: "Second-" + this.subscriptionTimeout,
+		"USER-AGENT"		: "TActHab/1 UPnP/1.1 nodejsUPnP/1",
 		"Content-Length"	: 0
 	};
 	
 	if (TRACE && DETAIL) {
 		console.log("subscribing: " + JSON.stringify(options));
 	}
-	
+	// console.log( "\n______________________________________\nsubscribe to:\n\tpath : ", path, "\n\t  cb : ", callbackUrl);
 	var req = http.request(options, function(res) {
 		var buf = "";
 		res.on('data', function (chunk) { buf += chunk });
@@ -266,7 +338,7 @@ UpnpService.prototype.subscribe = function(callback, nbTry) {
 				if (TRACE && DETAIL) {
 					 console.log("got subscription response: " + JSON.stringify(res.headers.sid));
 					}
-				// console.log("upnp-service, subscribe ok with", res.headers);
+				console.log("upnp-service, subscribe ok with", res.headers);
 				var sid = res.headers.sid;
 				var timeout = parseInt( res.headers.timeout.slice(res.headers.timeout.indexOf('-')+1) );
 				var subscription = new Subscription(self, sid, Math.min(self.subscriptionTimeout, timeout));
@@ -287,7 +359,6 @@ UpnpService.prototype.subscribe = function(callback, nbTry) {
  */
 UpnpService.prototype._resubscribe = function(sid, callback) {
 	var self = this;
-
 	var path, host = this.host, port = this.port;
 	if(this.eventSubUrl.indexOf('/') !== 0) {
 		 if(this.eventSubUrl.indexOf('http') !== 0) {
@@ -307,11 +378,12 @@ UpnpService.prototype._resubscribe = function(sid, callback) {
 	  	path    : path 
 	}
 	options.headers = {
-		"host"     : host + ":" + port,
-		"sid"      : sid,
-		"timeout"  : "Second-" + this.subscriptionTimeout
+		"HOST"		: host + ":" + port,
+		"SID"		: sid,
+		"TIMEOUT"	: "Second-" + this.subscriptionTimeout
 	};
 	
+	// console.log( "Re-subscribe to", path, sid, this.subscriptionTimeout);
 	var req = http.request(options, function(res) {
 		var buf = "";
 		res.on('data', function (chunk) { buf += chunk });

@@ -6,7 +6,7 @@ var upnp			= require("./upnp"),
 	// Url				= require("url"),
 	xml2js			= require('xml2js'),
 	UpnpDevice		= require("./upnp-device").UpnpDevice,
-	ipPackage		= require('ip'),
+	// ipPackage		= require('ip'),
 	request			= require('request')
 	;
 	
@@ -80,14 +80,12 @@ EventHandler.prototype._serviceCallbackHandler = function(req, res) {
 	var reqContent = "";	
 	req.on("data", function(buf) {
 		reqContent += buf;
-		// var sid = req.headers.sid;
-		// console.log("data for", sid);
 	});
 	req.on("end", function EventReceived(nbTimes) {
 		if(typeof nbTimes === 'undefined') {nbTimes = 3}
 		if(nbTimes === 0)  {console.log("stop retrying for", req.headers.sid);
 							return;}
-		// console.log("callback content: " + reqContent);
+		// console.log("\n------------------------------------\n------------callback content: " + reqContent);
 		try {//console.log("_serviceCallbackHandler");
 			var sid = req.headers.sid;
 			var subscription = self.subscriptions[sid];
@@ -97,29 +95,29 @@ EventHandler.prototype._serviceCallbackHandler = function(req, res) {
 					console.log("event for", req.headers.host ,"sid " + sid, 'with seq', req.headers.seq, 'and length', req.headers['content-length']);
 				 }
 				// acknowledge the event notification					
-				 res.writeHead(200, { "Extended-Response" : self.responseCount + " ; comment=\"Notification Acknowledged\"" });
+				 res.writeHead	( 200
+				 				// , { "Extended-Response" : self.responseCount + " ; comment=\"Notification Acknowledged\"" }
+				 				);
 				 res.end("");
 				 self.responseCount++;
 				 // console.log( "\tsubscription.handleEvent", subscription.handleEvent);
 				 subscription.handleEvent( {textXML : reqContent} );
-				} else {//console.log("Event but no subscription for", sid);
-						// console.error( "\tno subscription with nbTimes=", nbTimes );
+				} else {
 						if(nbTimes > 1) {
 							 // console.log("\tretrying in 1 second ("+nbTimes+" times left)...");
 							 setTimeout	( (function(nbTimes) {
 											 return function() {EventReceived(nbTimes);}
 											})(nbTimes - 1)
 										, 1000);
-							} //else {console.error("\taborting after 3 trials...", req.headers);}
+							} else {console.error("\n_____________________________\nNo one listening aborting after 3 trials...", req.headers);}
 					   }
-
 		}
 		catch (ex) {
 			if (ex.toString().startsWith("Error: Text data outside of root node.")) {
 				// ignore
 			}
 			else {
-				 console.error("exception: " + ex);
+				 console.error("exception: ", ex);
 			}
 		}
 	});
@@ -271,9 +269,6 @@ UpnpControlPoint.prototype.search = function(s) {
 	var self = this;
 	s = s || 'upnp:rootdevice'; //'ssdp:all';
 	self.ssdp.search(s);
-/*	setTimeout	( function() {self.ssdp.search(s);}
-				, 10000
-				);*/
 };
 
 /**
@@ -283,7 +278,7 @@ UpnpControlPoint.prototype.search = function(s) {
  */	
 UpnpControlPoint.prototype._getDeviceDetails = function(udn, location, callback) {
 	var self = this;
-	var localAddress = ipPackage.address();//"127.0.0.1";		// will determine which local address is used to talk with the device.
+	var localAddress = /*ipPackage.address();*/"127.0.0.1";		// will determine which local address is used to talk with the device.
 	if (TRACE) {
 		console.log("getting device details from " + location);
 	}

@@ -3,10 +3,6 @@ var BrickFhem = require( './BrickFhem.js' );
 // Define
 function BrickFhem_EnO_switch(id, FhemBridge, listEntry) {
 	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
-	this.fhem.buttons = {
-		pressed	: false,
-		state	: []
-	};
 	this.logEvents( "state" );
 	return this;
 }
@@ -24,7 +20,10 @@ BrickFhem_EnO_switch.prototype.dispose			= function() {
 
 BrickFhem_EnO_switch.prototype.init				= function(FhemBridge, listEntry) {
 	BrickFhem.prototype.init.apply(this, [FhemBridge, listEntry]);
-	this.fhem.buttons.pressed = listEntry.internals.STATE === "pressed";
+	this.fhem.buttons = {
+		pressed	: listEntry.internals.STATE === "pressed",
+		state	: []
+	};
 }
 
 BrickFhem_EnO_switch.prototype.isPressed		= function() {
@@ -33,6 +32,7 @@ BrickFhem_EnO_switch.prototype.isPressed		= function() {
 
 BrickFhem_EnO_switch.prototype.extractData		= function(data) {
 	var json = BrickFhem.prototype.extractData.apply(this, [data]);
+	console.log( "BrickFhem_EnO_switch::extractData", data );
 	if(data.changed.buttons) {	// pressed or not
 		this.fhem.buttons.pressed = json.pressed = (data.changed.buttons === "pressed");
 		if( json.pressed === false ) {this.fhem.buttons.state.length = 0;}

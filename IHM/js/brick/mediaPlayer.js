@@ -86,7 +86,7 @@ module.exports = function(app) {
 												);
 								 utils.io.on	( cbEventName
 												, eventCB = function(eventData) {
-													 // console.log("brickOpenhab eventUPnP:", eventData);
+													 console.log("brickOpenhab eventUPnP:", eventData);
 													 var event = eventData.data;
 													 controller.state[event.serviceType] = controller.state[event.serviceType] || {};
 													 try {
