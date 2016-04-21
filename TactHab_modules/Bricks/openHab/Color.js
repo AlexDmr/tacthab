@@ -30,7 +30,7 @@ types.push	( BrickOpenHAB_Color.prototype.getTypeName()
 			, BrickOpenHAB_item.types.Percent
 			, BrickOpenHAB_item.types.HSB
 			);
-BrickOpenHAB_Color.prototype.getTypes			= function() {return types;}
+BrickOpenHAB_Color.prototype.getTypes			= function() {return types.slice();}
 
 BrickOpenHAB_Color.prototype.registerType(BrickOpenHAB_Color.prototype.getTypeName(), BrickOpenHAB_Color.prototype);
 BrickOpenHAB_Color.prototype.getColor			= function() {return this.color;}

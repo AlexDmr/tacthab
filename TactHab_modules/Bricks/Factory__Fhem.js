@@ -40,9 +40,11 @@ var FhemBridge = function(host, port) {
 FhemBridge.prototype = Object.create( Brick.prototype ); 
 FhemBridge.prototype.constructor = FhemBridge;
 FhemBridge.prototype.getTypeName = function() {return "FhemBridge";}
-var L = Brick.prototype.getTypes(); 
-L.push(FhemBridge.prototype.getTypeName()); 
-FhemBridge.prototype.getTypes	= function() {return L;}
+FhemBridge.prototype.getTypes	= function() {
+	var L = Brick.prototype.getTypes(); 
+	L.push(FhemBridge.prototype.getTypeName()); 
+	return L;
+}
 
 FhemBridge.prototype.sendCommand	= function(cmd) {
 	this.connection.send( JSON.stringify( { type	: 'command'

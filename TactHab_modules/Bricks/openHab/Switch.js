@@ -13,7 +13,7 @@ var types = BrickOpenHAB_item.prototype.getTypes();
 types.push	( BrickOpenHAB_Switch.prototype.getTypeName()
 			, BrickOpenHAB_item.types.OnOff
 			);
-BrickOpenHAB_Switch.prototype.getTypes		= function() {return types;}
+BrickOpenHAB_Switch.prototype.getTypes		= function() {return types.slice();}
 
 BrickOpenHAB_Switch.prototype.init			= function(device) {
 	BrickOpenHAB_item.prototype.init.apply(this, [device]);

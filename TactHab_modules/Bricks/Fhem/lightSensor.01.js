@@ -8,9 +8,11 @@ function BrickFhem_lightSensor_01(id, FhemBridge, listEntry) {
 BrickFhem_lightSensor_01.prototype = Object.create(BrickFhem.prototype );
 BrickFhem_lightSensor_01.prototype.constructor	= BrickFhem_lightSensor_01;
 BrickFhem_lightSensor_01.prototype.getTypeName	= function() {return "BrickFhem_lightSensor_01";}
-var L = BrickFhem.prototype.getTypes();
-L.push(BrickFhem_lightSensor_01.prototype.getTypeName()); 
-BrickFhem_lightSensor_01.prototype.getTypes		= function() {return L;}
+BrickFhem_lightSensor_01.prototype.getTypes		= function() {
+	var L = BrickFhem.prototype.getTypes();
+	L.push(BrickFhem_lightSensor_01.prototype.getTypeName()); 
+	return L;
+}
 
 BrickFhem_lightSensor_01.prototype.registerType(BrickFhem_lightSensor_01.prototype.getTypeName(), BrickFhem_lightSensor_01.prototype);
 

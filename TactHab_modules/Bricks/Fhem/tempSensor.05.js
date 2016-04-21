@@ -11,9 +11,11 @@ function BrickFhem_tempSensor_05(id, FhemBridge, listEntry) {
 BrickFhem_tempSensor_05.prototype = Object.create(BrickFhem.prototype );
 BrickFhem_tempSensor_05.prototype.constructor		= BrickFhem_tempSensor_05;
 BrickFhem_tempSensor_05.prototype.getTypeName		= function() {return "BrickFhem_tempSensor_05";}
-var L = BrickFhem.prototype.getTypes(); 
-L.push(BrickFhem_tempSensor_05.prototype.getTypeName()); 
-BrickFhem_tempSensor_05.prototype.getTypes			= function() {return L;}
+BrickFhem_tempSensor_05.prototype.getTypes			= function() {
+	var L = BrickFhem.prototype.getTypes(); 
+	L.push(BrickFhem_tempSensor_05.prototype.getTypeName()); 
+	return L;
+}
 
 BrickFhem_tempSensor_05.prototype.registerType(BrickFhem_tempSensor_05.prototype.getTypeName(), BrickFhem_tempSensor_05.prototype);
 

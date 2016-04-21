@@ -12,7 +12,7 @@ var types = BrickOpenHAB_item.prototype.getTypes();
 types.push	( BrickOpenHAB_Number.prototype.getTypeName()
 			, BrickOpenHAB_item.types.Decimal
 			);
-BrickOpenHAB_Number.prototype.getTypes		= function() {return types;}
+BrickOpenHAB_Number.prototype.getTypes		= function() {return types.slice();}
 
 BrickOpenHAB_Number.prototype.registerType(BrickOpenHAB_Number.prototype.getTypeName(), BrickOpenHAB_Number.prototype);
 

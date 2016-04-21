@@ -10,7 +10,7 @@ BrickOpenHAB_DateTime.prototype.constructor	= BrickOpenHAB_DateTime;
 BrickOpenHAB_DateTime.prototype.getTypeName 	= function() {return "BrickOpenHAB_DateTime";}
 var types = BrickOpenHAB_item.prototype.getTypes();
 types.push	( BrickOpenHAB_DateTime.prototype.getTypeName() );
-BrickOpenHAB_DateTime.prototype.getTypes		= function() {return types;}
+BrickOpenHAB_DateTime.prototype.getTypes		= function() {return types.slice();}
 
 BrickOpenHAB_DateTime.prototype.registerType(BrickOpenHAB_DateTime.prototype.getTypeName(), BrickOpenHAB_DateTime.prototype);
 

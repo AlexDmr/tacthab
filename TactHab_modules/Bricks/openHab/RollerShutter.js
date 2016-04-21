@@ -15,7 +15,7 @@ types.push	( BrickOpenHAB_RollerShutter.prototype.getTypeName()
 			, BrickOpenHAB_item.types.StopMove
 			, BrickOpenHAB_item.types.Percent
 			);
-BrickOpenHAB_RollerShutter.prototype.getTypes		= function() {return types;}
+BrickOpenHAB_RollerShutter.prototype.getTypes		= function() {return types.slice();}
 
 BrickOpenHAB_RollerShutter.prototype.registerType(BrickOpenHAB_RollerShutter.prototype.getTypeName(), BrickOpenHAB_RollerShutter.prototype);
 

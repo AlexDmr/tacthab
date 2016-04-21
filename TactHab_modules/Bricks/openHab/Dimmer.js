@@ -14,7 +14,7 @@ types.push	( BrickOpenHAB_Dimmer.prototype.getTypeName()
 			, BrickOpenHAB_item.types.IncreaseDecrease
 			, BrickOpenHAB_item.types.Percent
 			);
-BrickOpenHAB_Dimmer.prototype.getTypes		= function() {return types;}
+BrickOpenHAB_Dimmer.prototype.getTypes		= function() {return types.slice();}
 
 BrickOpenHAB_Dimmer.prototype.registerType(BrickOpenHAB_Dimmer.prototype.getTypeName(), BrickOpenHAB_Dimmer.prototype);
 

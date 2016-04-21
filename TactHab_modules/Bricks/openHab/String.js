@@ -13,7 +13,7 @@ var types = BrickOpenHAB_item.prototype.getTypes();
 types.push	( BrickOpenHAB_String.prototype.getTypeName() 
 			, BrickOpenHAB_item.types.String
 			);
-BrickOpenHAB_String.prototype.getTypes		= function() {return types;}
+BrickOpenHAB_String.prototype.getTypes		= function() {return types.slice();}
 
 BrickOpenHAB_String.prototype.registerType(BrickOpenHAB_String.prototype.getTypeName(), BrickOpenHAB_String.prototype);
 

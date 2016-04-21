@@ -12,7 +12,7 @@ var types = BrickOpenHAB_item.prototype.getTypes();
 types.push	( BrickOpenHAB_Contact.prototype.getTypeName()
 			, BrickOpenHAB_item.types.OpenClosed
 			);
-BrickOpenHAB_Contact.prototype.getTypes		= function() {return types;}
+BrickOpenHAB_Contact.prototype.getTypes		= function() {return types.slice();}
 
 BrickOpenHAB_Contact.prototype.registerType(BrickOpenHAB_Contact.prototype.getTypeName(), BrickOpenHAB_Contact.prototype);
 

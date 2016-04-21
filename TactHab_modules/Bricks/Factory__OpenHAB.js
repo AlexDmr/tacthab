@@ -56,9 +56,11 @@ var BrickOpenHAB = function() {
 BrickOpenHAB.prototype = Object.create(BrickUPnP.prototype);
 BrickOpenHAB.prototype.constructor = BrickOpenHAB;
 BrickOpenHAB.prototype.getTypeName = function() {return "BridgeOpenHAB";}
-var L=BrickUPnP.prototype.getTypes();
-L.push(BrickOpenHAB.prototype.getTypeName());
-BrickOpenHAB.prototype.getTypes		= function() {return L;}
+BrickOpenHAB.prototype.getTypes		= function() {
+	var L=BrickUPnP.prototype.getTypes();
+	L.push(BrickOpenHAB.prototype.getTypeName());
+	return L;
+}
 BrickOpenHAB.prototype.registerType("BridgeOpenHAB", BrickOpenHAB.prototype);
 
 BrickOpenHAB.prototype.getDescription	= function() {
