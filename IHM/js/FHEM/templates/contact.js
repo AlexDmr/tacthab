@@ -7,7 +7,7 @@ module.exports = {
 		// var ctrl = this;
 		BrickFhem.apply(this, [$scope, utils]);
 
-		console.log( "Fhem contact", this );
+		// console.log( "Fhem contact", this );
 
 		this.stateIconURL = this.brick.fhem.isOpen?"/IHM/js/FHEM/templates/images/open.svg":"/IHM/js/FHEM/templates/images/close.svg";
 

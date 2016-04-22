@@ -23,12 +23,17 @@ module.exports = {
 						 ctrl.update(event);
 						}
 					);
+		this.sendGetCommand = function(cmd) {
+			return this.sendCommand("get " + this.brick.id + ' ' + cmd);
+		}
+		this.sendSetCommand = function(cmd) {
+			return this.sendCommand("set " + this.brick.id + ' ' + cmd);
+		}
 		this.sendCommand = function( cmd ) {
-			// console.log( "state", this.brick.state);
-			utils.call	( this.brick.id
-						, "sendCommand"
-						, [cmd]
-						);
+			return utils.call	( this.brick.id
+								, "sendCommand"
+								, [cmd]
+								);
 		}
 	}
 };

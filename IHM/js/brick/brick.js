@@ -7,7 +7,7 @@ module.exports = function(app) {
 		Brick 						: { controller 	: function() {},
 										template 	: require( "./brick.html" )							},
 		brickType					: { controller 	: function() {},
-										template 	: require( "./brickType.html" )							},
+										template 	: require( "./brickType.html" )						},
 		BrickUPnP					: require( "../UPnP/templates/default.js" 							),
 		BrickUPnP_MediaServer		: require( "../UPnP/templates/BrickUPnP_MediaServer.js" 			),
 		BrickUPnP_MediaRenderer		: require( "../UPnP/templates/BrickUPnP_MediaRenderer.js" 			),
@@ -29,7 +29,8 @@ module.exports = function(app) {
 		BrickFhem_tempHumiSensor_02	: require( "../FHEM/templates/tempHumiSensor.02.js"					),
 		BrickFhem_EnO_switch		: require( "../FHEM/templates/switch.js"							),
 		BrickFhem_lightSensor_01	: require( "../FHEM/templates/lightSensor.01.js"					),
-		BrickFhem_contact			: require( "../FHEM/templates/contact.js"							) 
+		BrickFhem_contact			: require( "../FHEM/templates/contact.js"							),
+		BrickFhemZwave				: require( "../FHEM/templates/BrickFhemZwave.js" 					)
 	};
 
 	var controller = function($scope) {

@@ -50,7 +50,7 @@ BrickFhem.prototype.getDescription	= function() {
 }
 
 BrickFhem.prototype.sendCommand		= function(cmd) {
-	this.fhem.bridge.sendCommand( cmd );
+	this.fhem.bridge.sendCommand( {command: cmd} );
 }
 
 BrickFhem.prototype.extractData		= function(/*data*/) {

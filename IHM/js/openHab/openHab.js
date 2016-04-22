@@ -5,8 +5,8 @@ var utils = require( "../../../js/utils.js" );
 var template = require("./openHab.html");
 module.exports = function(app) {
 	var controller = function($mdToast) {
-		// console.log( utils );
-		this.config = {
+		var ctrl = this;
+		this.config = localStorage.TActHab_config_openHab?JSON.parse(localStorage.TActHab_config_openHab):{
 		 	MQTT_host	: "127.0.0.1",
 		 	MQTT_port	: 1883,
 		 	MQTT_prefix	: "a4h",
@@ -25,6 +25,7 @@ module.exports = function(app) {
 						}
 					  ).then( function(xhr) {
 									 console.log("MQTT connected", xhr);
+									 localStorage.TActHab_config_openHab = JSON.stringify( ctrl.config );
 									 var json, message;
 									 try {json = JSON.parse(xhr.responseText);} catch(errParse) {
 									 	console.error("errParse:", errParse);
