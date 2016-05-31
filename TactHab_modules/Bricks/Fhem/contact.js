@@ -3,6 +3,7 @@ var BrickFhem = require( './BrickFhem.js' );
 // Define
 function BrickFhem_contact(id, FhemBridge, listEntry) {
 	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
+	this.logEvents( "isOpen" );
 	return this;
 }
 
@@ -26,6 +27,7 @@ BrickFhem_contact.prototype.extractData		= function(event) {
 	var json = BrickFhem.prototype.extractData.apply(this, [event]);
 	if(event.changed.state) {
 		this.fhem.isOpen = json.isOpen = (event.changed.state === 'open');
+		this.log("isOpen", json.isOpen, json.lastUpdate);
 	}
 	return json;
 }

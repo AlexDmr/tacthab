@@ -42,23 +42,46 @@ var controller = function($scope) {
 	 this.setVolume	= function(volume) {
 		 return utils.call	( ctrl.brick.id, "setVolume", [volume] );
 	 }
-	 this.Play	= function() {
+	 this.Play		= function() {
 		 return utils.call	( ctrl.brick.id, "Play", [] );
 	 }
-	 this.Stop	= function() {
+	 this.Stop		= function() {
 		 return utils.call	( ctrl.brick.id, "Stop", [] );										 
 	 }
-	 this.Pause	= function() {
+	 this.Pause		= function() {
 		 return utils.call	( ctrl.brick.id, "Pause", [] );
 	 }
-	 this.Load	= function(serverId, mediaId) {
+	 this.Load		= function(serverId, mediaId) {
 		 return utils.call	( ctrl.brick.id, "loadMedia", [serverId, mediaId] );
 	 }
+	 this.loadURI	= function(uri, metadata) {
+		 return utils.call	( ctrl.brick.id, "loadURI"  , [uri, metadata] );
+	 }
 	 this.dropMedia	= function(event, draggedInfo) {
-		 // console.log( "dropMedia", event, draggedInfo);
 		 var info = draggedInfo.draggedData;
-		 return this.Load( info.serverId, info.mediaId
-						 ).then( function(/*res*/) {ctrl.Play()} );
+		 console.log( "dropMedia", event, draggedInfo);
+		 var pipoMetaData = [ 
+		 	'<DIDL-Lite xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/" xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/">',
+		 		'<item id="0" parentID="0" restricted="False">',
+		 			'<dc:title>', info.URL, '</dc:title>',
+		 			'<upnp:artist>', info.URL, '</upnp:artist>',
+		 			'<res bitsPerSample="16" protocolInfo="http-get:*:audio/mpeg:*" duration="17:00:00.000" nrAudioChannels="2" bitrate="192000" sampleFrequency="48000">',
+		 			// '<res bitsPerSample="16" protocolInfo="http-get:*:audio/mpeg:*" duration="17:00:00.000 nrAudioChannels="2" >',
+		 				info.URL,
+		 			'</res>',
+		 			'<upnp:album>', info.URL, '</upnp:album>',
+		 			'<upnp:genre>Streaming</upnp:genre>',
+		 			'<upnp:class>object.item.audioItem.audioBroadcast</upnp:class>',
+		 		'</item>',
+		 	'</DIDL-Lite>'].join();
+		 if( info.URL ) {
+		 	 console.log( "loadURI:", pipoMetaData );
+			 return this.loadURI( info.URL, pipoMetaData
+							 	).then( function(/*res*/) {ctrl.Play()} );
+		 } else {
+			 return this.Load( info.serverId, info.mediaId
+							 ).then( function(/*res*/) {ctrl.Play()} );
+			}
 	 }
 }
 controller.$inject = ["$scope"];

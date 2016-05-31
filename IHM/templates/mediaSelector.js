@@ -39,6 +39,7 @@ module.exports = function(app) {
 								 var ctrl = this;
 								 this.searching		= false;
 								 // console.log("mediaSelector");
+								 this.streamUrl		= "";
 								 this.localBricks	= $scope.bricks; 
 								 this.serverId		= null;
 								 this.breadcrumb	= [ {name: "Servers"} ];

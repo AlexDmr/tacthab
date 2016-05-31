@@ -15,20 +15,32 @@
 </md-card>
 
 <!-- Case where the we have to specify the openHab connection -->
-<md-card>
+<md-card class="newConnection">
+	<md-card-title>
+		<md-card-title-text>
+			<span class="md-headline">Connect to OpenHab</span>
+			<span class="md-subhead">
+				<md-input-container class="md-block host">
+					<label>host</label>
+					<!-- <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon> -->
+					<input ng-model="$ctrl.config.host" type="text">
+				</md-input-container>
+				<md-input-container class="md-block port">
+					<label>port</label>
+					<!-- <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon> -->
+					<input ng-model="$ctrl.config.port" type="text">
+				</md-input-container>
+			</span>
+		</md-card-title-text>
+		<md-card-title-media>
+			<div class="md-media-lg card-media"></div>
+		</md-card-title-media>
+	</md-card-title>
+
+
+
 	<md-content class="description" layout="column" ng-if="$ctrl.brick === undefined">
-		<h4>Connect to a new OpenHab server</h4>
 		<md-content class="description" layout="row">
-			<md-input-container class="md-block">
-				<label>openHab host</label>
-				<!-- <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon> -->
-				<input ng-model="$ctrl.config.host" type="text">
-			</md-input-container>
-			<md-input-container class="md-block">
-				<label>openHab port</label>
-				<!-- <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon> -->
-				<input ng-model="$ctrl.config.port" type="text">
-			</md-input-container>
 		</md-content>
 		<md-content class="description" layout="row">
 			<md-input-container class="md-block">

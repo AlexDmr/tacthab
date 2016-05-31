@@ -12,19 +12,17 @@ function factory(prototype) {
 	SWITCH_BINARY.init				= function(FhemBridge, listEntry) {
 		prototype.init.apply(this, [FhemBridge, listEntry]);
 		this.fhem.SWITCH_BINARY = listEntry.readings.reportedState.value;
+		this.logEvents( "SWITCH_BINARY"	);
 		return this;
 	}
 	SWITCH_BINARY.extractData		= function(data) {
 		var json = prototype.extractData.apply(this, [data] );
-		switch(data.changed.reportedState) {
-			case "on"	: 
-			case "off"	: 
-				this.fhem.SWITCH_BINARY = json.SWITCH_BINARY = data.changed.reportedState;
-			break;
+		if(data.changed.reportedState) {
+			this.fhem.SWITCH_BINARY = json.SWITCH_BINARY = data.changed.reportedState;
+			this.log("SWITCH_BINARY", json.SWITCH_BINARY, json.lastUpdate);
 		}
 		return 	json;
 	}
-
 	return SWITCH_BINARY;
 }
 

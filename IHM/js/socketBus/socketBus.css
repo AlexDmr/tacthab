@@ -1,34 +1,34 @@
-fhem img.icon {
+socket-bus img.icon {
 	width				: 75px;
 	height				: 75px;
 }
 
-fhem h4 {
+socket-bus h4 {
     margin-top			: 0.5em;
     margin-bottom		: 0.75em;
 }
 
 
-fhem {
+socket-bus {
 	display 			: inline-block;
 	width 				: 512px;
 }
-fhem md-card.newConnection .card-media {
+socket-bus md-card.newConnection .card-media {
 	background-image 	: url( "/IHM/images/icons/fhem.png" );
 	background-size 	: contain;
 	background-repeat 	: no-repeat;
 }
 
-fhem md-card.newConnection .md-subhead {
+socket-bus md-card.newConnection .md-subhead {
 	display 			: flex;
 	flex-flow 			: row;  
 }
 
-fhem md-card.newConnection .md-subhead > md-input-container.host {
+socket-bus md-card.newConnection .md-subhead > md-input-container.host {
 	flex 				: 1 1 auto;
 }
 
-fhem md-card.newConnection .md-subhead > md-input-container.port {
+socket-bus md-card.newConnection .md-subhead > md-input-container.port {
 	flex 				: 0 1 50px;
 }
 

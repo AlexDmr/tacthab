@@ -3,6 +3,7 @@ var BrickFhem = require( './BrickFhem.js' );
 // Define
 function BrickFhem_lightSensor_01(id, FhemBridge, listEntry) {
 	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
+	this.logEvents( "brightness" );
 }
 
 BrickFhem_lightSensor_01.prototype = Object.create(BrickFhem.prototype );
@@ -30,6 +31,7 @@ BrickFhem_lightSensor_01.prototype.extractData		= function(data) {
 	var json  = BrickFhem.prototype.extractData.apply(this, [data]);
 	if( data.changed.brightness ) {
 	 	this.fhem.brightness = json.brightness = parseFloat( data.changed.brightness );
+	 	this.log("brightness", json.brightness, json.lastUpdate);
 	}
 	return json;
 }

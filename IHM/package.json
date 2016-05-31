@@ -9,11 +9,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "angular": "^1.5.2",
-    "angular-animate": "^1.5.2",
-    "angular-aria": "^1.5.2",
-    "angular-material": "^1.0.6",
-    "angular-messages": "^1.5.2",
+    "angular": "^1.5.6",
+    "angular-animate": "^1.5.6",
+    "angular-aria": "^1.5.6",
+    "angular-material": "^1.0.8",
+    "angular-messages": "^1.5.6",
+    "angular-mocks": "^1.5.6",
+    "angular-route": "^1.5.6",
+    "angular-sanitize": "^1.5.6",
     "ng-draggable": "^1.0.0"
   }
 }

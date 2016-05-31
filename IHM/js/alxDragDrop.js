@@ -91,7 +91,7 @@ function dragStart(event, idPointer, info, innerScope) {
 	// console.log( "->dragStart", idPointer, draggedData );
 	if(event.dataTransfer) {event.dataTransfer.setData("text/plain", "toto");}
 	draggingPointers[idPointer] = { node		: event.currentTarget
-								  , draggedData	: innerScope.draggedData
+								  , draggedData	: innerScope.scope.$eval( innerScope.draggedData )
 								  , canDrop		: 0
 								  };
 	// Update all dropzone that can handle that node...
@@ -172,7 +172,7 @@ module.exports = function(app) {
 								 
 								 var innerScope =	{ alxDragStart	: $parse( attrs.alxDragStart )
 													, alxDragEnd	: $parse( attrs.alxDragEnd   )
-													, draggedData	: scope.$eval( attrs.alxDraggable )
+													, draggedData	: attrs.alxDraggable // scope.$eval( attrs.alxDraggable )
 													, scope			: scope
 													};
 								 // var draggedData = scope.$eval( attrs.alxDraggable );

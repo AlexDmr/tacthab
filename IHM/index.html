@@ -36,6 +36,33 @@
 			</md-tab-body>
 		</md-tab>
 		<md-tab >
+			<md-tab-label>Bridges</md-tab-label>
+			<md-tab-body class="openHab">
+				<h2>OpenHab</h2>
+				<open-hab></open-hab>
+				<open-hab ng-repeat="brick in ((T.context.bricks | toArray:false) | filterBridgeOpenHAB)"
+						  brick="brick"
+						>
+				</open-hab>
+				<hr/>
+				<h2>Fhem</h2>
+				<fhem></fhem>
+				<fhem ng-repeat="brick in ((T.context.bricks | toArray:false) | filterBridgeFhem)"
+						  brick="brick"
+						>
+				</fhem>
+				<hr/>
+				<h2>socketBus</h2>
+				<socket-bus></socket-bus>
+				<hr/>
+				<h2>BlueTooth 4 server (BLE)</h2>
+				<ble-server context="T.context"></ble-server>
+			</md-tab-body>
+		</md-tab>
+
+
+<!-- 		
+		<md-tab >
 			<md-tab-label>open Hab</md-tab-label>
 			<md-tab-body class="openHab">
 				<open-hab ng-repeat="brick in ((T.context.bricks | toArray:false) | filterBridgeOpenHAB)"
@@ -48,10 +75,6 @@
 		<md-tab >
 			<md-tab-label>Fhem</md-tab-label>
 			<md-tab-body class="fhem">
-				<fhem ng-repeat="brick in ((T.context.bricks | toArray:false) | filterBridgeFhem)"
-						  brick="brick"
-						>
-				</fhem>
 				<fhem></fhem>
 				<hr/>
 				<section class="fhem bricks">
@@ -67,7 +90,7 @@
 				<ble-server context="T.context"></ble-server>
 			</md-tab-body>
 		</md-tab>
-		
+ -->		
 	</md-tabs>
 </body>
 </html>

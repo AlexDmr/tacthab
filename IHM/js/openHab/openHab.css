@@ -1,20 +1,44 @@
+open-hab {
+	display 			: inline-block;
+	width 				: 512px; 
+}
+
 open-hab img.icon {
-	width			: 75px;
-	height			: 75px;
+	width				: 75px;
+	height				: 75px;
 }
 
 open-hab h4 {
-    margin-top		: 0.5em;
-    margin-bottom	: 0.75em;
+    margin-top			: 0.5em;
+    margin-bottom		: 0.75em;
 }
 
 brick-openhab md-slider[md-discrete] {
-    margin-right	: 20px;
-	margin-left		: 15px;
+    margin-right		: 20px;
+	margin-left			: 15px;
 }
 
 brick-openhab md-input-container.color input {
-	width			: 2em;
-	height			: 2em;
-	display			: inline-flex;
+	width				: 2em;
+	height				: 2em;
+	display				: inline-flex;
+}
+
+open-hab md-card.newConnection .card-media {
+	background-image 	: url( "/js/Presentations/openHab/templates/openhab-logo-square.png" );
+	background-size 	: contain;
+	background-repeat 	: no-repeat;
+}
+
+open-hab md-card.newConnection .md-subhead {
+	display 			: flex;
+	flex-flow 			: row;  
+}
+
+open-hab md-card.newConnection .md-subhead > md-input-container.host {
+	flex 				: 1 1 auto;
+}
+
+open-hab md-card.newConnection .md-subhead > md-input-container.port {
+	flex 				: 0 1 50px;
 }

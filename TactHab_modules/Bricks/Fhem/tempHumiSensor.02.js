@@ -3,6 +3,8 @@ var BrickFhem = require('./BrickFhem.js');
 // Define
 function BrickFhem_tempHumiSensor_02(id, FhemBridge, listEntry) {
 	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
+	this.logEvents( "temperature"	);
+	this.logEvents( "humidity"		);
 	return this;
 }
 
@@ -38,10 +40,11 @@ BrickFhem_tempHumiSensor_02.prototype.extractData		= function(event) {
 	var json = BrickFhem.prototype.extractData.apply(this, [event]);
 	if(event.changed.temperature) {
 		this.fhem.temperature 	= json.temperature 	= parseFloat( event.changed.temperature );
-
+		this.log("temperature", json.temperature, json.lastUpdate);
 	}
 	if(event.changed.humidity) {
 		this.fhem.humidity 		= json.humidity		= parseFloat( event.changed.humidity );
+		this.log("humidity", json.humidity, json.lastUpdate);
 	}
 	return json;
 }

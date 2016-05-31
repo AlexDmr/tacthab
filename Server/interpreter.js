@@ -27,30 +27,31 @@ module.exports = function(webServer) {
 							}
 					  );	
 	webServer.app.get ( '/getDescription', getDescription);
-	webServer.app.post( '/getContext'
-					  , getContext = function(req, res) {
-							var nodeId = req.body.nodeId; 
-							var json;
-							var node =  Pnode.prototype.getNode( nodeId ) 
-									 || Pnode.prototype.getNode( webServer.pgRootId )
-									 || pipoPgRoot;
-							if(node) {
-								 try {var context			= node.getContextDescription()
-										, contextFiltered	= {bricks: {}, variables: context.variables, brickTypes: context.brickTypes};
-									  for(var i in context.bricks) {
-										 if( context.bricks[i].id !== "ProtoBrick"
-										   &&context.bricks[i].id !== "webServer"
-										   ) {contextFiltered.bricks[i] = context.bricks[i];}  
-										}
-									  json = contextFiltered;
-									 } catch(err) {console.error("ERROR: getContextDescription", err, node);
-												   json = {}
-												  }
-								 // console.log("/getContext", node.id, "\n", json);
-								} else {json = {};}
-							res.json(json);
-							}
-					  );
+	getContext = function(nodeId) {
+		var json;
+		var node =  Pnode.prototype.getNode( nodeId ) 
+				 || Pnode.prototype.getNode( webServer.pgRootId )
+				 || pipoPgRoot;
+		if(node) {
+			 try {var context			= node.getContextDescription()
+					, contextFiltered	= {bricks: {}, variables: context.variables, brickTypes: context.brickTypes};
+				  for(var i in context.bricks) {
+					 if( context.bricks[i].id !== "ProtoBrick"
+					   &&context.bricks[i].id !== "webServer"
+					   ) {contextFiltered.bricks[i] = context.bricks[i];}  
+					}
+				  json = contextFiltered;
+				 } catch(err) {console.error("ERROR: getContextDescription", err, node);
+							   json = {}
+							  }
+			 // console.log("/getContext", node.id, "\n", json);
+			} else {json = {};}
+			return json;
+		};
+	webServer.app.post	( '/getContext'
+						, function(req, res) {
+							res.json( getContext( req.body.nodeId ) );
+						});
 	webServer.app.get ( '/getContext', getContext);
 	webServer.app.post( '/Start'
 					  , function(req, res) {
@@ -104,4 +105,6 @@ module.exports = function(webServer) {
 								}
 							 res.end();
 						} );
+
+	return {getContext: getContext};
 };

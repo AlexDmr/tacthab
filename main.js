@@ -21,9 +21,10 @@ console.log('webServer.init(',__dirname,',8888, 8843)');
 webServer.init(__dirname, '8888', '8843', rootPath);
 UpnpServer.init( webServer.TLS_SSL );
 
+var interpreter = 
 require( "./Server/interpreter.js"	)(webServer);
 require( "./Server/editor.js"		)(webServer);
-require( "./Server/tacthab_web.js"	)(webServer);
+require( "./Server/tacthab_web.js"	)(webServer, interpreter);
 require( "./Server/openHab.js"		)(webServer);
 require( "./Server/M2MIAGE.js"		)(webServer);
 

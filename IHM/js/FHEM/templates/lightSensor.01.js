@@ -8,7 +8,7 @@ module.exports = {
 
 		this.update = function(event) {
 			var ctrl = this;
-			console.log( "lightSensor.01 -> update with", event);
+			// console.log( "lightSensor.01 -> update with", event);
 			$scope.$applyAsync( function() {
 				ctrl.brick.fhem.brightness = event.data.brightness;
 			});

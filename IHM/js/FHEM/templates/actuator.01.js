@@ -7,7 +7,7 @@ module.exports = {
 		BrickFhem.apply(this, [$scope, utils]);
 
 		this.update = function(event) {
-			console.log( "actuator.01 -> update with", event);
+			// console.log( "actuator.01 -> update with", event);
 			this.brick.state = event;
 			$scope.$applyAsync();
 		}

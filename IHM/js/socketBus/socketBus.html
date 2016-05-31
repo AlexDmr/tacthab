@@ -1,0 +1,36 @@
+<md-card class="">
+	<md-card-title>
+		<md-card-title-text>
+			<span class="md-headline">Connect to socketBus</span>
+			<span class="md-subhead">
+				<md-input-container class="md-block host">
+					<label>host</label>
+					<input ng-model="$ctrl.config.host" type="text">
+				</md-input-container>
+				<md-input-container class="md-block login">
+					<label>login</label>
+					<input ng-model="$ctrl.config.login" type="text">
+				</md-input-container>
+				<md-input-container class="md-block pass">
+					<label>pass</label>
+					<input ng-model="$ctrl.config.pass" type="text">
+				</md-input-container>
+			</span>
+		</md-card-title-text>
+		<md-card-title-media>
+			<div class="md-media-lg card-media"></div>
+		</md-card-title-media>
+	</md-card-title>
+	</md-content ng-hide="$ctrl.connected">
+		<md-button class="md-raised md-primary" ng-click="$ctrl.connect()">Connect</md-button>
+	</md-content>
+	</md-content ng-show="$ctrl.connected">
+		<md-button class="md-raised md-primary" ng-click="$ctrl.disconnect()">Disconnect</md-button>
+		<md-button class="md-raised md-primary" ng-click="$ctrl.ping()">Ping</md-button>
+		<md-list>
+			<md-list-item class="md-3-line" ng-repeat="log in $ctrl.logs">
+				{{log | json}}
+			</md-list-item>
+		</md-list>
+	</md-content>
+</md-card>

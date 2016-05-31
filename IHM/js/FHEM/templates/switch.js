@@ -8,7 +8,7 @@ module.exports = {
 		BrickFhem.apply(this, [$scope, utils]);
 
 		this.update = function(event) {
-			console.log( "switch -> update with", event);
+			// console.log( "switch -> update with", event);
 			if( event.state ) {
 				ctrl.brick.fhem.buttons.state.length = 0;
 				event.state.forEach( function(e) {

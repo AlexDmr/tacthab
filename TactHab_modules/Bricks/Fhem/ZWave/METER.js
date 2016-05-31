@@ -11,6 +11,7 @@ function factory(prototype) {
 	}
 	METER.init				= function(FhemBridge, listEntry) {
 		prototype.init.apply(this, [FhemBridge, listEntry]);
+		this.logEvents( "power"	);
 		if( listEntry.readings.power ) {
 			this.fhem.power = parseInt( listEntry.readings.power.value );
 		}
@@ -20,6 +21,7 @@ function factory(prototype) {
 		var json = prototype.extractData.apply(this, [data] );
 		if(data.changed.power) {
 			this.fhem.power = json.power = parseInt( data.changed.power );
+			this.log("power", json.power, json.lastUpdate);
 		}
 		return 	json;
 	}

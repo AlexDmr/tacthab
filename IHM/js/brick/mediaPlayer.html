@@ -1,4 +1,4 @@
-<md-card alx-droppable			= "draggedInfo.draggedData.serverId && draggedInfo.draggedData.mediaId"
+<md-card alx-droppable			= "draggedInfo.draggedData.URL || (draggedInfo.draggedData.serverId && draggedInfo.draggedData.mediaId)"
 		 alx-accept-feedback	= "acceptDrop"
 		 alx-hover-feedback		= "droppable"
 		 alx-drop-action		= "ctrl.dropMedia(event, draggedInfo)"

@@ -9,7 +9,7 @@ module.exports = {
 
 		this.lastUpdate		= null;
 		this.update = function(event) {
-			console.log( "tempSensor.05.js -> update with", event);
+			// console.log( "tempSensor.05.js -> update with", event);
 			$scope.$applyAsync( function() {
 				ctrl.lastUpdate				= event.data.time;
 				ctrl.brick.fhem.temperature	= event.data.temperature;

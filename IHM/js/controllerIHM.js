@@ -15,6 +15,8 @@ utils.initIO( location.hostname + ":" + location.port + "/m2m" );
 var filters = require( "./filters.js" );
 console.log( "require filters", filters);
 
+// hdfgjhdfgjdf;
+
 function processContextTypes( context, type ) {
 	var nb, i;
 	if(type) {
@@ -116,3 +118,4 @@ require( "./UPnP/UPnP.js" 					)(app);
 require( "./openHab/openHab.js" 			)(app);
 require( "./BLE/BLE.js" 					)(app);
 require( "./FHEM/fhem.js" 					)(app);
+require( "./socketBus/socketBus.js" 		)(app);

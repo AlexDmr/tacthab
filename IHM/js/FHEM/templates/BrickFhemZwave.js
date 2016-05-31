@@ -19,7 +19,7 @@ module.exports = {
 
 		this.update			= function(event) {
 			var ctrl = this;
-			console.log( "BrickFhemZwave -> update with", event);
+			// console.log( "BrickFhemZwave -> update with", event);
 			$scope.$applyAsync( function() {
 				Object.assign(ctrl.brick.fhem, event.data);
 			});

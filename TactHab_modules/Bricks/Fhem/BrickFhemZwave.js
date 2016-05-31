@@ -31,7 +31,7 @@ function BrickFhemZwave(id, FhemBridge, listEntry) {
 	var brick = this, proto;
 	BrickFhem.apply(this, [id, FhemBridge, listEntry]);
 	if(listEntry && listEntry.attributes) {
-		console.log( "BrickFhemZwave", listEntry.attributes.classes);
+		// console.log( "BrickFhemZwave", listEntry.attributes.classes);
 		listEntry.attributes.classes.split(' ').forEach( function(type) {
 			if( subtypes[type] ) {
 				proto = subtypes[type].factory( Object.getPrototypeOf(brick) );
