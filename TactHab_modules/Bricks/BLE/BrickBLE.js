@@ -42,7 +42,7 @@ BrickBLE.prototype.dispose	= function() {
 							  );
 	} else {
 		this.peripheral = null;
-		Brick.prototype.apply(this, []);
+		Brick.prototype.dispose.apply(this, []);
 	}
 }
 
