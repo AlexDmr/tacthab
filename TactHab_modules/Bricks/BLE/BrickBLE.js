@@ -95,7 +95,7 @@ BrickBLE.prototype.getDescription	= function() {
 	   , property;
 	 json.isConnected = this.isConnected;
 	 json.services = [];
-	 if(this.peripheral.services) {
+	 if(this.peripheral && this.peripheral.services) {
 	 for(i=0; i<this.peripheral.services.length; i++) {
 	 	service = this.peripheral.services[i];
 	 	serviceJSON = 	{ uuid 				: service.uuid
