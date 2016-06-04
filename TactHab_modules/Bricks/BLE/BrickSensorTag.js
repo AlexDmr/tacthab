@@ -7,37 +7,39 @@ var BrickSensorTag = function(id, sensorTag) {
 
 	BrickBLE.apply(this, [id, sensorTag]);
 	
-	this.peripheral		=
-	this.sensorTag 		= sensorTag;
-	//this.isConnected	= true;
-	//this.emit("connected", {value: true});
+	if(sensorTag) {
+		this.peripheral		=
+		this.sensorTag 		= sensorTag;
+		//this.isConnected	= true;
+		//this.emit("connected", {value: true});
 
-	// Accelerometer
-	sensorTag.on('accelerometerChange', function(x, y, z) {
-		//console.log("accelerometerChange", id, x, y, z);
-		self.emit("accelerometerChange", {x:x, y:y, z:z});
-	});
-	sensorTag.on('gyroscopeChange', function(x, y, z) {
-		self.emit("gyroscopeChange", {x:x, y:y, z:z});
-	});
-	sensorTag.on('magnetometerChange', function(x, y, z) {
-		self.emit("magnetometerChange", {x:x, y:y, z:z});
-	});
-	sensorTag.on('irTemperatureChange', function(objectTemperature, ambientTemperature) {
-		self.emit("irTemperatureChange", {objectTemperature:objectTemperature, ambientTemperature:ambientTemperature});
-	});
-	sensorTag.on('humidityChange', function(temperature, humidity) {
-		self.emit("humidityChange", {temperature:temperature, humidity:humidity});
-	});
-	sensorTag.on('barometricPressureChange', function(pressure) {
-		self.emit("barometricPressureChange", {pressure:pressure});
-	});
-	sensorTag.on('luxometerChange', function(lux) {
-		self.emit("luxometerChange", {lux:lux});
-	});
-	sensorTag.on('simpleKeyChange', function(left, right, reedRelay) {
-		self.emit("luxometerChange", {left:left, right:right, reedRelay:reedRelay});
-	});
+		// Accelerometer
+		sensorTag.on('accelerometerChange', function(x, y, z) {
+			//console.log("accelerometerChange", id, x, y, z);
+			self.emit("accelerometerChange", {x:x, y:y, z:z});
+		});
+		sensorTag.on('gyroscopeChange', function(x, y, z) {
+			self.emit("gyroscopeChange", {x:x, y:y, z:z});
+		});
+		sensorTag.on('magnetometerChange', function(x, y, z) {
+			self.emit("magnetometerChange", {x:x, y:y, z:z});
+		});
+		sensorTag.on('irTemperatureChange', function(objectTemperature, ambientTemperature) {
+			self.emit("irTemperatureChange", {objectTemperature:objectTemperature, ambientTemperature:ambientTemperature});
+		});
+		sensorTag.on('humidityChange', function(temperature, humidity) {
+			self.emit("humidityChange", {temperature:temperature, humidity:humidity});
+		});
+		sensorTag.on('barometricPressureChange', function(pressure) {
+			self.emit("barometricPressureChange", {pressure:pressure});
+		});
+		sensorTag.on('luxometerChange', function(lux) {
+			self.emit("luxometerChange", {lux:lux});
+		});
+		sensorTag.on('simpleKeyChange', function(left, right, reedRelay) {
+			self.emit("luxometerChange", {left:left, right:right, reedRelay:reedRelay});
+		});
+	}
 }
 
 BrickSensorTag.prototype = Object.create(BrickBLE.prototype); // new Brick(); BrickUPnP.prototype.unreference();

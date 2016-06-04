@@ -16,26 +16,29 @@ bufferSubscribeSwitch[2] = 1;
 var BrickMetaWear 	= function(id, peripheral) {
 	var brick = this;
 	BrickBLE.apply(this, [id, peripheral]);
-	console.log( "Creation of a BrickMetaWear", this.name);
+	
+	if(peripheral) {
+		console.log( "Creation of a BrickMetaWear", this.name);
 
-	this.initAccelerometer	();
-	this.initGyroscope		();
-	this.initLED			();
+		this.initAccelerometer	();
+		this.initGyroscope		();
+		this.initLED			();
 
-	this.on	( 'ble_' + defs.modules.SWITCH + '_' + defs.SwitchRegister.STATE
-			, function(bin) {
-				// console.log("switch:", bin);
-				var state = bin.readUInt8(2) === 1;
-				brick.emit( "buttonChange", {state: state} );
-			});
+		this.on	( 'ble_' + defs.modules.SWITCH + '_' + defs.SwitchRegister.STATE
+				, function(bin) {
+					// console.log("switch:", bin);
+					var state = bin.readUInt8(2) === 1;
+					brick.emit( "buttonChange", {state: state} );
+				});
 
-	this.on(defs.NOTIFY_UUID, function(data) {
-		// console.log("MetaWear notification:", data);
-		var mw_module		= data.readUInt8(0)
-		  , mw_eventType	= data.readUInt8(1);
-		// console.log( "emit" + 'ble_' + mw_module + '_' + mw_eventType );
-		brick.emit('ble_' + mw_module + '_' + mw_eventType, data);
-	});
+		this.on(defs.NOTIFY_UUID, function(data) {
+			// console.log("MetaWear notification:", data);
+			var mw_module		= data.readUInt8(0)
+			  , mw_eventType	= data.readUInt8(1);
+			// console.log( "emit" + 'ble_' + mw_module + '_' + mw_eventType );
+			brick.emit('ble_' + mw_module + '_' + mw_eventType, data);
+		});
+	}
 }
 
 BrickMetaWear.is 	= function(peripheral) {
