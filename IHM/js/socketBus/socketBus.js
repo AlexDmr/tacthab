@@ -5,46 +5,44 @@ var template = require("./socketBus.html");
 module.exports = function(app) {
 	var controller = function($scope) {
 		var ctrl = this;
-		utils.XHR( 'GET', '/socketBus' ).then( function(xhr) {
-			var json = JSON.parse( xhr.responseText );
-			ctrl.config.host	= json.host || "https://thacthab.herokuapp.com";
-			ctrl.config.login	= json.login;
-			if( ctrl.config.login !== "" ) {ctrl.connected = true;}
-			console.log( 'socketBus =>', json);
-			$scope.$apply();
+		utils.call( 'socketBus', 'getConnections', [] ).then( function(json) {
+			console.log( "socketBus getConnections =>", json);
+			for(var i in json) {
+				ctrl.config.host			= json[i].host || "https://thacthab.herokuapp.com";
+				ctrl.config.login			= json[i].login;
+				ctrl.config.friendlyName	= json[i].friendlyName;
+				if( ctrl.config.login !== "" ) {ctrl.connected = true;}
+				$scope.$apply();
+				break;
+			}
 		});
 		this.logs		= [];
 		this.connected	= false;
 		this.config		= {
-		 	host	: "https://thacthab.herokuapp.com",
-		 	login	: "",
-		 	pass	: ""
+		 	host			: "https://thacthab.herokuapp.com",
+		 	login			: "",
+		 	pass			: "",
+		 	friendlyName	: ""
 		};
+		this.ping		= function() {utils.call( "socketBus", "ping", [] );}
 		this.connect	= function() {
-			utils.XHR	('POST', '/socketBus', {host: this.config.host, login: this.config.login, pass: this.config.pass})
-				 .then	( function(xhr) {
-				 				console.log( "POST /socketBus", ctrl.config, "=>", xhr.responseText);
-				 				ctrl.connected = true;
-				 				$scope.$apply();
-				 			} ) 
-				 ;
+			utils.call( "socketBus", "connectTo", [this.config.host, this.config.login, this.config.pass] );
 		}
 
 		// Subscribe to messages
-		var cbEventName ="socketBus::update";
-		utils.io.emit	( "subscribeBrick"
-						, { brickId		: "socketBus"
-						  , eventName	: "message"
-						  , cbEventName	: cbEventName
-						  }
-						);
-		utils.io.on	( cbEventName
-					, function(event) {
-						 console.log("brickOpenhab event:", event);
-						 ctrl.logs.push( event );
-						 $scope.$apply();
-						}
-					);
+		utils.subscribeBrick( "socketBus", "message", function(event) {
+			console.log("brickOpenhab message:", event);
+			$scope.$applyAsync( function() { ctrl.logs.push( event.data );} );
+		});
+
+		utils.subscribeBrick( "socketBus", "connected", function(event) {
+			console.log("brickOpenhab connected:", event);
+			$scope.$applyAsync( function() {
+			 	ctrl.connected		= true;
+				ctrl.config.host	= event.data.host;
+				ctrl.config.login	= event.data.login;
+			});
+		});
 	};
 	controller.$inject = [ '$scope' ];
 	app.component( "socketBus"

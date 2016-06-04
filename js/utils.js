@@ -42,6 +42,17 @@ var utils = {
 		 this.io = this.io || io.apply(null, arguments);
 		}
 	// , io	: io()
+	, subscribeBrick	: function(brickId, eventName, cb) {
+		var cbEventName = brickId + "::" + eventName;
+		utils.io.emit	( "subscribeBrick"
+						, { brickId		: brickId
+						  , eventName	: eventName
+						  , cbEventName	: cbEventName
+						  }
+						);
+		utils.io.on	( cbEventName, cb);
+		return cbEventName;
+	}
 	, call	: function(objectId, method, params, cb) {
 		 var call =	{ objectId	: objectId
 					, method	: method

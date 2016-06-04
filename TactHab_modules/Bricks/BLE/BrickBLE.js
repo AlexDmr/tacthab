@@ -5,25 +5,27 @@ var Brick		= require( '../Brick.js' )
 var BrickBLE = function(id, peripheral) {
 	var brick = this;
 
-	Brick.apply(this, [id]);
-	this.peripheral	= peripheral;
-	this.name		= peripheral.advertisement?peripheral.advertisement.localName:peripheral.address;
+	if(id && peripheral) {
+		Brick.apply(this, [id]);
+		this.peripheral	= peripheral;
+		this.name		= peripheral.advertisement?peripheral.advertisement.localName:peripheral.address;
 
-	this.isConnected						= false;
-	this.gotAllServicesAndCharacteristics	= false;
-	peripheral.on  ('connect'		, function() {
-		brick.isConnected	= true;
-		brick.emit("connected", {value: true});
-	});
-	peripheral.once('disconnect'	, function() {
-		brick.isConnected	= false;
-		brick.emit("connected", {value: false});
-	});
-	
-	this.characteristics 	= {};
-	this.cb_characterisitcs = {};
+		this.isConnected						= false;
+		this.gotAllServicesAndCharacteristics	= false;
+		peripheral.on  ('connect'		, function() {
+			brick.isConnected	= true;
+			brick.emit("connected", {value: true});
+		});
+		peripheral.once('disconnect'	, function() {
+			brick.isConnected	= false;
+			brick.emit("connected", {value: false});
+		});
+		
+		this.characteristics 	= {};
+		this.cb_characterisitcs = {};
 
-	this.getDescription();	
+		this.getDescription();
+	} else {Brick.apply(this, []);}
 }
 
 BrickBLE.prototype = Object.create(Brick.prototype); // new Brick(); BrickUPnP.prototype.unreference();

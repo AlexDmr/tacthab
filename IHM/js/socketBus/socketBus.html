@@ -8,12 +8,8 @@
 					<input ng-model="$ctrl.config.host" type="text">
 				</md-input-container>
 				<md-input-container class="md-block login">
-					<label>login</label>
-					<input ng-model="$ctrl.config.login" type="text">
-				</md-input-container>
-				<md-input-container class="md-block pass">
-					<label>pass</label>
-					<input ng-model="$ctrl.config.pass" type="text">
+					<label>Friendly name</label>
+					<input ng-model="$ctrl.config.friendlyName" type="text">
 				</md-input-container>
 			</span>
 		</md-card-title-text>
@@ -21,16 +17,25 @@
 			<div class="md-media-lg card-media"></div>
 		</md-card-title-media>
 	</md-card-title>
-	</md-content ng-hide="$ctrl.connected">
-		<md-button class="md-raised md-primary" ng-click="$ctrl.connect()">Connect</md-button>
-	</md-content>
-	</md-content ng-show="$ctrl.connected">
-		<md-button class="md-raised md-primary" ng-click="$ctrl.disconnect()">Disconnect</md-button>
-		<md-button class="md-raised md-primary" ng-click="$ctrl.ping()">Ping</md-button>
-		<md-list>
-			<md-list-item class="md-3-line" ng-repeat="log in $ctrl.logs">
-				{{log | json}}
-			</md-list-item>
-		</md-list>
+	<md-content>
+		<md-content class="logPass">
+			<md-input-container class="login">
+				<label>login</label>
+				<input ng-model="$ctrl.config.login" type="text">
+			</md-input-container>
+			<md-input-container class="pass">
+				<label>pass</label>
+				<input ng-model="$ctrl.config.pass" type="text">
+			</md-input-container>
+		</md-content>
+		<md-button ng-hide="$ctrl.connected" class="md-raised md-primary" ng-click="$ctrl.connect()"	>Connect	</md-button>
+		<md-button ng-show="$ctrl.connected" class="md-raised md-primary" ng-click="$ctrl.disconnect()"	>Disconnect	</md-button>
+		<md-button ng-show="$ctrl.connected" class="md-raised md-primary" ng-click="$ctrl.ping()"		>Ping		</md-button>
 	</md-content>
 </md-card>
+
+<md-list>
+	<md-list-item class="md-3-line" ng-repeat="log in $ctrl.logs">
+		{{log | json}}
+	</md-list-item>
+</md-list>

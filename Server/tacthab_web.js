@@ -3,7 +3,27 @@ var ioClient		= require( 'socket.io-client' )
   , socketBus_uuid	= uuid.v4()
   , Brick			= require( "../TactHab_modules/Bricks/Brick.js" )
   , request			= require( "request" )
+  , external_IP_v4	= ""
+  , external_IP_v6	= ""
   ;
+
+request.get( "http://checkip.amazonaws.com/", function(err, httpResponse, body) {
+	if(err) {
+		console.error( "Error getting IP v4 from http://checkip.amazonaws.com/" );
+	} else {
+		external_IP_v4 = body;
+		console.log( "external_IP_v4 =", external_IP_v4 );
+	}
+});
+
+request.get( "http://icanhazip.com/", function(err, httpResponse, body) {
+	if(err) {
+		console.error( "Error getting IP v6 from http://icanhazip.com/" );
+	} else {
+		external_IP_v6 = body;
+		console.log( "external_IP_v6 =", external_IP_v6 );
+	}
+});
 
 var socketBus 			= new Brick( "socketBus" );
 socketBus.connections 	= {};
@@ -30,8 +50,10 @@ socketBus.on( "ping", function(msg) {
 			pass 		: msg.pass,
 			title 		: "pong",
 			message 	: JSON.stringify( {
-				uuid 		: socketBus_uuid, 
-				friendlyName: this.friendlyName
+				uuid 			: socketBus_uuid, 
+				friendlyName	: socketBus.friendlyName,
+				external_IP_v4	: external_IP_v4,
+				external_IP_v6	: external_IP_v6
 				} )
 		});
 });
@@ -40,7 +62,28 @@ socketBus.on( "pong", function(msg) {
 	console.log( "pong from", msg );
 });
 
-socketBus.connectTo	= function( host, login, pass ) {
+
+socketBus.disconnectFrom	= function( host, login ) {
+	var id = host + "::" + login;
+	if(this.connections[id]) {
+		this.connections[id].socket.off();
+		delete this.connections[id];
+	}
+}
+
+socketBus.getConnections	= function() {
+	var json = {}, i;
+	for(i in this.connections) {
+		json[i] = {
+			friendlyName	: this.getfriendlyName(),
+			host			: this.connections[i].host ,
+			login			: this.connections[i].login
+		}
+	}
+	return json;
+}
+
+socketBus.connectTo	= function( host, login, pass, friendlyName ) {
 	var self = this;
 	var id = host + "::" + login;
 	if(this.connections[id]) {this.connections[id].socket.off();}
@@ -54,6 +97,7 @@ socketBus.connectTo	= function( host, login, pass ) {
 								, function(res) {
 									 console.log("login =>", res);
 									 if(res === 'banco') {
+									 	self.setfriendlyName( friendlyName );
 										socket.emit	( "subscribe"
 													, { id		: 'all'
 													  , data	: { title	: '.*'
@@ -77,6 +121,14 @@ socketBus.connectTo	= function( host, login, pass ) {
 														 			} );
 														}
 													);
+										self.ping();
+										socketBus.emit( 'connected', {
+											host 			: host, 
+											login 			: login, 
+											friendlyName	: friendlyName,
+											external_IP_v4	: external_IP_v4,
+											external_IP_v6	: external_IP_v6
+										} );
 										}
 									} // socket.emit( 'login' ... )
 								);
@@ -84,8 +136,7 @@ socketBus.connectTo	= function( host, login, pass ) {
 			   );
 	 socket.on ( 'disconnect'
 			   , function() {
-					 self.connections[id].socket.off();
-					 delete self.connections[id];
+					 self.disconnectFrom(host, login);
 					}
 			   );
 }
@@ -120,7 +171,7 @@ module.exports = function(webServer/*, interpreter*/) {
 						);
 	 // Init a socket.IO client to http://thacthab.herokuapp.com
 	 // XXX Do something for logins...
-	 webServer.app.get	( '/socketBus'
+/*	 webServer.app.get	( '/socketBus'
 						, function(req, res) {
 							res.json( {host: req.body.host, login: req.body.login} );
 						});
@@ -129,5 +180,5 @@ module.exports = function(webServer/*, interpreter*/) {
 							console.log("/socketBus", req.body);
 							socketBus.connectTo(req.body.host, req.body.login, req.body.pass);
 							res.json( {brickId: "socketBus"} );
-						});
+						});*/
 };

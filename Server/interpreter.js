@@ -52,7 +52,10 @@ module.exports = function(webServer) {
 						, function(req, res) {
 							res.json( getContext( req.body.nodeId ) );
 						});
-	webServer.app.get ( '/getContext', getContext);
+	webServer.app.get ( '/getContext'
+						, function(req, res) {
+							res.json( getContext( req.body.nodeId ) );
+						});
 	webServer.app.post( '/Start'
 					  , function(req, res) {
 							 if(req.body.programId) {

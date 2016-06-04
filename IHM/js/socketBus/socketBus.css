@@ -10,9 +10,21 @@ socket-bus h4 {
 
 
 socket-bus {
-	display 			: inline-block;
-	width 				: 512px;
+	display 			: inline-flex;
+	flex-flow			: row;
+	height 				: 400px;
 }
+
+socket-bus > md-card, socket-bus > md-list {
+	min-width 			: 384px;
+	max-width 			: 512px;
+}
+
+socket-bus > md-list {
+	overflow-y			: scroll;
+    overflow-x			: hidden;
+}
+
 socket-bus md-card.newConnection .card-media {
 	background-image 	: url( "/IHM/images/icons/fhem.png" );
 	background-size 	: contain;
@@ -32,3 +44,16 @@ socket-bus md-card.newConnection .md-subhead > md-input-container.port {
 	flex 				: 0 1 50px;
 }
 
+
+socket-bus md-card md-card-title-media > div.card-media {
+	background 			: radial-gradient(ellipse at center, rgba(231,56,39,1) 0%, rgba(116,28,20,1) 50%, rgba(76,18,13,0) 67%, rgba(0,0,0,0) 100%);
+}
+
+socket-bus md-content.logPass {
+	display 			: flex;
+	flex-flow 			: row;  
+}
+
+socket-bus md-content.logPass > * {
+	flex 				: 1 1 auto;
+}
