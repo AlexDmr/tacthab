@@ -1,11 +1,11 @@
-FROM alexd2/nodejs.5.xx
+FROM alexd2/node-6xx
 
 RUN node --version
 RUN git clone https://github.com/AlexDmr/tacthab.git
 
 WORKDIR ./tacthab
 RUN npm install
-RUN cd IHM ; bower install --allow-root
+RUN cd IHM ; gulp
 
 EXPOSE 8888 8443
 
