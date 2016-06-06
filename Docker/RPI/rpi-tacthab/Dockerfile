@@ -1,6 +1,7 @@
 FROM alexd2/rpi-node-6xx
 
 RUN node --version
+RUN git config --global http.sslVerify false
 RUN git clone https://github.com/AlexDmr/tacthab.git
 
 WORKDIR ./tacthab
