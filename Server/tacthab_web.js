@@ -4,7 +4,7 @@ var ioClient		= require( 'socket.io-client' )
   , Brick			= require( "../TactHab_modules/Bricks/Brick.js" )
   , request			= require( "request" )
   , external_IP_v4	= ""
-  , external_IP_v6	= ""
+  // , external_IP_v6	= ""
   ;
 
 request.get( "http://checkip.amazonaws.com/", function(err, httpResponse, body) {
@@ -16,27 +16,13 @@ request.get( "http://checkip.amazonaws.com/", function(err, httpResponse, body) 
 	}
 });
 
-request.get( "http://icanhazip.com/", function(err, httpResponse, body) {
-	if(err) {
-		console.error( "Error getting IP v6 from http://icanhazip.com/" );
-	} else {
-		external_IP_v6 = body;
-		console.log( "external_IP_v6 =", external_IP_v6 );
-	}
-});
-
 var socketBus 			= new Brick( "socketBus" );
 socketBus.connections 	= {};
 socketBus.ping			= function() {
 	var i, msg;
 	for(i in this.connections) {
 		msg = this.connections[i];
-		request.post( msg.host + '/broadcast' ).form( 
-			{	login 		: msg.login,
-				pass 		: msg.pass,
-				title 		: "ping",
-				message 	: ""
-			});
+		socketBus.send(msg.host, msg.login, msg.pass, "ping", "");
 	}
 }
 socketBus.friendlyName = "TActHab";
@@ -44,18 +30,25 @@ socketBus.getfriendlyName	= function( ) {return this.friendlyName;}
 socketBus.setfriendlyName	= function(v) {this.friendlyName = v;}
 
 socketBus.on( "ping", function(msg) {
-	console.log( "socketBus send back a pong on", msg )
-	request.post( msg.host + '/broadcast' ).form( 
-		{	login 		: msg.login,
-			pass 		: msg.pass,
-			title 		: "pong",
-			message 	: JSON.stringify( {
+	// console.log( "socketBus send back a pong on", msg );
+	socketBus.send(msg.host, msg.login, msg.pass, "pong", JSON.stringify( {
+		uuid 			: socketBus_uuid, 
+		friendlyName	: socketBus.friendlyName,
+		external_IP_v4	: external_IP_v4
+		} )
+	);
+
+	request.get( "http://checkip.amazonaws.com/", function(err, httpResponse, body) {
+		if (!err && (external_IP_v4 !== body)) {
+			external_IP_v4 = body;
+			socketBus.send(msg.host, msg.login, msg.pass, "pong", JSON.stringify( {
 				uuid 			: socketBus_uuid, 
 				friendlyName	: socketBus.friendlyName,
-				external_IP_v4	: external_IP_v4,
-				external_IP_v6	: external_IP_v6
+				external_IP_v4	: external_IP_v4
 				} )
-		});
+			);
+			}
+	});
 });
 socketBus.on( "pong", function(msg) {
 	// Remember 
@@ -81,6 +74,15 @@ socketBus.getConnections	= function() {
 		}
 	}
 	return json;
+}
+
+socketBus.send				= function(host, login, pass, title, message) {
+	request.post( host + '/broadcast' ).form( 
+		{	login 		: login,
+			pass 		: pass,
+			title 		: title,
+			message 	: message
+		});	
 }
 
 socketBus.connectTo	= function( host, login, pass, friendlyName ) {
@@ -126,8 +128,7 @@ socketBus.connectTo	= function( host, login, pass, friendlyName ) {
 											host 			: host, 
 											login 			: login, 
 											friendlyName	: friendlyName,
-											external_IP_v4	: external_IP_v4,
-											external_IP_v6	: external_IP_v6
+											external_IP_v4	: external_IP_v4
 										} );
 										}
 									} // socket.emit( 'login' ... )
