@@ -1,4 +1,5 @@
-FROM alexd2/rpi-node-6xx
+# FROM alexd2/rpi-node-6xx
+FROM hypriot/rpi-node
 
 RUN node --version
 RUN git config --global http.sslVerify false
