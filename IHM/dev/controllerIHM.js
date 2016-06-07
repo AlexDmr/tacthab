@@ -162,16 +162,16 @@
 
 	console.log( "Loading directives" );
 	__webpack_require__( 69 				)(app);
-	__webpack_require__( 147 			)(app);
-	__webpack_require__( 152 	)(app);
-	__webpack_require__( 155 				)(app);
-	__webpack_require__( 158 	)(app);
-	__webpack_require__( 203 		)(app);
-	__webpack_require__( 206 					)(app);
-	__webpack_require__( 209 			)(app);
-	__webpack_require__( 211 					)(app);
-	__webpack_require__( 223 					)(app);
-	__webpack_require__( 227 		)(app);
+	__webpack_require__( 151 			)(app);
+	__webpack_require__( 156 	)(app);
+	__webpack_require__( 159 				)(app);
+	__webpack_require__( 162 	)(app);
+	__webpack_require__( 207 		)(app);
+	__webpack_require__( 210 					)(app);
+	__webpack_require__( 213 			)(app);
+	__webpack_require__( 215 					)(app);
+	__webpack_require__( 227 					)(app);
+	__webpack_require__( 231 		)(app);
 
 
 /***/ },
@@ -68417,26 +68417,27 @@
 			BrickUPnP					: __webpack_require__( 76 							),
 			BrickUPnP_MediaServer		: __webpack_require__( 79 			),
 			BrickUPnP_MediaRenderer		: __webpack_require__( 80 			),
+			BrickUPnP_HueLamp			: __webpack_require__( 81							),
 			// openHab
-			BrickOpenHAB_item			: __webpack_require__( 81 					),
-			BrickOpenHAB_Switch			: __webpack_require__( 82			),
-			BrickOpenHAB_String			: __webpack_require__( 86			),
-			BrickOpenHAB_RollerShutter	: __webpack_require__( 90		),
-			BrickOpenHAB_Number			: __webpack_require__( 94			),
-			BrickOpenHAB_Dimmer			: __webpack_require__( 98			),
-			BrickOpenHAB_DateTime		: __webpack_require__( 102			),
-			BrickOpenHAB_Contact		: __webpack_require__( 106			),
-			BrickOpenHAB_Color			: __webpack_require__( 110				),
+			BrickOpenHAB_item			: __webpack_require__( 85 					),
+			BrickOpenHAB_Switch			: __webpack_require__( 86			),
+			BrickOpenHAB_String			: __webpack_require__( 90			),
+			BrickOpenHAB_RollerShutter	: __webpack_require__( 94		),
+			BrickOpenHAB_Number			: __webpack_require__( 98			),
+			BrickOpenHAB_Dimmer			: __webpack_require__( 102			),
+			BrickOpenHAB_DateTime		: __webpack_require__( 106			),
+			BrickOpenHAB_Contact		: __webpack_require__( 110			),
+			BrickOpenHAB_Color			: __webpack_require__( 114				),
 			// Fhem
-			BrickFhem					: __webpack_require__( 115							),
-			BrickFhem_tempSensor_05		: __webpack_require__( 116						),
-			BrickFhem_EnO_4BS			: __webpack_require__( 120							),
-			BrickFhem_actuator_01		: __webpack_require__( 124						),
-			BrickFhem_tempHumiSensor_02	: __webpack_require__( 127					),
-			BrickFhem_EnO_switch		: __webpack_require__( 131							),
-			BrickFhem_lightSensor_01	: __webpack_require__( 135					),
-			BrickFhem_contact			: __webpack_require__( 139							),
-			BrickFhemZwave				: __webpack_require__( 143 					)
+			BrickFhem					: __webpack_require__( 119							),
+			BrickFhem_tempSensor_05		: __webpack_require__( 120						),
+			BrickFhem_EnO_4BS			: __webpack_require__( 124							),
+			BrickFhem_actuator_01		: __webpack_require__( 128						),
+			BrickFhem_tempHumiSensor_02	: __webpack_require__( 131					),
+			BrickFhem_EnO_switch		: __webpack_require__( 135							),
+			BrickFhem_lightSensor_01	: __webpack_require__( 139					),
+			BrickFhem_contact			: __webpack_require__( 143							),
+			BrickFhemZwave				: __webpack_require__( 147 					)
 		};
 
 		var controller = function($scope) {
@@ -68568,6 +68569,63 @@
 /* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
+	__webpack_require__( 82 );
+	var template 		= __webpack_require__( 84 ),
+		colorConverter	= __webpack_require__( 115 );
+
+	module.exports = {
+		template	: template,
+		controller	: function($scope, utils) {
+			// var ctrl = this;
+			utils.subscribeBrick( this.brick.id, "update", function(event) {
+				$scope.$applyAsync( function() {
+					console.log( "BrickUPnP_HueLamp::event", event );
+				});
+			});
+
+			// Commands to the Hue lamp
+			this.isOn = false;
+			this.toggle			= function() {
+				this.isOn = !this.isOn;
+				this.setOn( this.isOn );
+			}
+			this.setOn			= function(value) {
+				this.sendCommand( {on: value} );
+			}
+			this.setColor		= function( color ) {
+				console.log( "setColor", color );
+				var rgb = colorConverter.stringRGB_to_IntArray( color ),
+					xy  = colorConverter.getXYPointFromRGB(rgb[0]/255, rgb[1]/255, rgb[2]/255);
+				this.sendCommand( {on: true, xy: xy, bri: Math.max(rgb[0], rgb[1], rgb[2])} );
+			}
+			this.sendCommand	= function( json ) {
+				console.log( "call", this.brick.id, "set", [json]);
+				return utils.call	( this.brick.id
+									, "set"
+									, [json]
+									);
+			}
+		}
+	}
+
+
+/***/ },
+/* 82 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 83 */,
+/* 84 */
+/***/ function(module, exports) {
+
+	module.exports = "<section ng-class=\"ctrl.brick.type\" ng-dblclick=\"ctrl.toggle()\">\r\n\t<span class=\"description\">\r\n\t\t<section class=\"name\">{{ctrl.brick.name}}</section>\r\n\t\t<section class=\"separator\"></section>\r\n\t\t<section class=\"state\">{{ctrl.brick | json}}</section>\r\n\t</span>\r\n\t<img class=\"iconURL\" src=\"/IHM/images/icons/hue.png\"></img>\r\n\t<div class=\"color\"></div>\r\n\t<input ng-model=\"ctrl.color\" type=\"color\" ng-change=\"ctrl.setColor( ctrl.color )\" ng-show=\"ctrl.isOn\"/>\r\n</section>\r\n"
+
+/***/ },
+/* 85 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// var utils = require( "../../../../js/utils.js" );
 
 	module.exports = function($scope, utils) {
@@ -68603,14 +68661,14 @@
 	module.exports.template		= __webpack_require__( 74 );
 
 /***/ },
-/* 82 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickOpenHAB = __webpack_require__( 81 );
-	__webpack_require__( 83 );
+	var BrickOpenHAB = __webpack_require__( 85 );
+	__webpack_require__( 87 );
 
 	module.exports = {
-		template	: __webpack_require__( 85 ),
+		template	: __webpack_require__( 89 ),
 		controller	: function(scope, utils) {
 			BrickOpenHAB.apply(this, [scope, utils]);
 			// console.log( "Create a switch controller", this.brick.state, this );
@@ -68633,27 +68691,27 @@
 
 
 /***/ },
-/* 83 */
+/* 87 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 84 */,
-/* 85 */
+/* 88 */,
+/* 89 */
 /***/ function(module, exports) {
 
 	module.exports = "<md-switch\tng-model \t= \"ctrl.value\" \r\n\t\t\taria-label \t= \"ctrl.brick.name\" \r\n\t\t\tclass \t\t= \"md-block\" \r\n\t\t\tng-change \t= \"ctrl.userSetSwitch()\"\r\n\t\t\t>\r\n{{ctrl.brick.name}}\r\n</md-switch>"
 
 /***/ },
-/* 86 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickOpenHAB = __webpack_require__( 81 );
-	__webpack_require__( 87 );
+	var BrickOpenHAB = __webpack_require__( 85 );
+	__webpack_require__( 91 );
 
 	module.exports = {
-		template	: __webpack_require__( 89 ),
+		template	: __webpack_require__( 93 ),
 		controller	: function(scope, utils) {
 			BrickOpenHAB.apply(this, [scope, utils]);
 			// console.log( "Create a color controller", this, scope );
@@ -68677,27 +68735,27 @@
 
 
 /***/ },
-/* 87 */
+/* 91 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 88 */,
-/* 89 */
+/* 92 */,
+/* 93 */
 /***/ function(module, exports) {
 
 	module.exports = "\r\n<md-input-container>\r\n    <label>{{ctrl.brick.name}}</label>\r\n    <input\tng-model \t= \"ctrl.brick.state\" \r\n\t\t\ttype \t\t= \"text\"\r\n\t\t\tng-change \t= \"ctrl.userSetText()\"\r\n\t\t\t/>\r\n</md-input-container>\r\n"
 
 /***/ },
-/* 90 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickOpenHAB = __webpack_require__( 81 );
-	__webpack_require__( 91 );
+	var BrickOpenHAB = __webpack_require__( 85 );
+	__webpack_require__( 95 );
 
 	module.exports = {
-		template	: __webpack_require__( 93 ),
+		template	: __webpack_require__( 97 ),
 		controller	: function(scope, utils) {
 			BrickOpenHAB.apply(this, [scope, utils]);
 			// console.log( "Create a Dimmer controller", scope.brick.state, this );
@@ -68716,27 +68774,27 @@
 
 
 /***/ },
-/* 91 */
+/* 95 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 92 */,
-/* 93 */
+/* 96 */,
+/* 97 */
 /***/ function(module, exports) {
 
 	module.exports = "\r\nRollerShutter"
 
 /***/ },
-/* 94 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickOpenHAB = __webpack_require__( 81 );
-	__webpack_require__( 95 );
+	var BrickOpenHAB = __webpack_require__( 85 );
+	__webpack_require__( 99 );
 
 	module.exports = {
-		template	: __webpack_require__( 97 ),
+		template	: __webpack_require__( 101 ),
 		controller	: function(scope, utils) {
 			BrickOpenHAB.apply(this, [scope, utils]);
 			// console.log( "Create a Dimmer controller", scope.brick.state, this );
@@ -68760,27 +68818,27 @@
 
 
 /***/ },
-/* 95 */
+/* 99 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 96 */,
-/* 97 */
+/* 100 */,
+/* 101 */
 /***/ function(module, exports) {
 
 	module.exports = "\r\n<md-input-container class=\"md-block\" flex>\r\n\t<label>{{ctrl.brick.name}}</label>\r\n\t<!--<md-icon md-svg-src=\"img/icons/ic_card_giftcard_24px.svg\"></md-icon>-->\r\n\t<input\tng-model \t= \"ctrl.value\" \r\n\t\t\ttype \t\t= \"number\" \r\n\t\t\tng-change \t= \"ctrl.userSetNumber()\"\r\n\t\t\tflex \r\n\t\t\t/>\r\n</md-input-container>"
 
 /***/ },
-/* 98 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickOpenHAB = __webpack_require__( 81 );
-	__webpack_require__( 99 );
+	var BrickOpenHAB = __webpack_require__( 85 );
+	__webpack_require__( 103 );
 
 	module.exports = {
-		template	: __webpack_require__( 101 ),
+		template	: __webpack_require__( 105 ),
 		controller	: function(scope, utils) {
 			BrickOpenHAB.apply(this, [scope, utils]);
 			// console.log( "Create a Dimmer controller", scope.brick.state, this );
@@ -68804,38 +68862,6 @@
 
 
 /***/ },
-/* 99 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 100 */,
-/* 101 */
-/***/ function(module, exports) {
-
-	module.exports = "<md-content layout=\"column\">\r\n\t<p>{{ctrl.brick.name}}</p>\r\n\t<md-slider\tflex \r\n\t\t\t\tmd-discrete \r\n\t\t\t\tng-model \t= \"ctrl.value\" \r\n\t\t\t\tstep=\"1\" min=\"0\" max=\"100\" \r\n\t\t\t\taria-label \t= \"{{ctrl.brick.name}}\"\r\n\t\t\t\tng-change \t= \"ctrl.userSetDimmer()\"\r\n\t\t\t\t>\r\n\t</md-slider>\r\n</md-content>\r\n"
-
-/***/ },
-/* 102 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var BrickOpenHAB = __webpack_require__( 81 );
-	__webpack_require__( 103 );
-
-	module.exports = {
-		template	: __webpack_require__( 105 ),
-		controller	: function(scope, utils) {
-			BrickOpenHAB.apply(this, [scope, utils]);
-			// console.log( "Create a color controller", this, scope );
-			this.updateState = function(event, noUpdate) {
-				console.log( "BrickOpenHAB_DateTime event", event, noUpdate);
-			}
-		}
-	};
-
-
-/***/ },
 /* 103 */
 /***/ function(module, exports) {
 
@@ -68846,13 +68872,13 @@
 /* 105 */
 /***/ function(module, exports) {
 
-	module.exports = "\r\nDateTime"
+	module.exports = "<md-content layout=\"column\">\r\n\t<p>{{ctrl.brick.name}}</p>\r\n\t<md-slider\tflex \r\n\t\t\t\tmd-discrete \r\n\t\t\t\tng-model \t= \"ctrl.value\" \r\n\t\t\t\tstep=\"1\" min=\"0\" max=\"100\" \r\n\t\t\t\taria-label \t= \"{{ctrl.brick.name}}\"\r\n\t\t\t\tng-change \t= \"ctrl.userSetDimmer()\"\r\n\t\t\t\t>\r\n\t</md-slider>\r\n</md-content>\r\n"
 
 /***/ },
 /* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickOpenHAB = __webpack_require__( 81 );
+	var BrickOpenHAB = __webpack_require__( 85 );
 	__webpack_require__( 107 );
 
 	module.exports = {
@@ -68861,7 +68887,7 @@
 			BrickOpenHAB.apply(this, [scope, utils]);
 			// console.log( "Create a color controller", this, scope );
 			this.updateState = function(event, noUpdate) {
-				console.log( "BrickOpenHAB_Contact event", event, noUpdate);
+				console.log( "BrickOpenHAB_DateTime event", event, noUpdate);
 			}
 		}
 	};
@@ -68878,22 +68904,54 @@
 /* 109 */
 /***/ function(module, exports) {
 
-	module.exports = "Contact {{ctrl.brick.name}}: {{ctrl.brick.state}}"
+	module.exports = "\r\nDateTime"
 
 /***/ },
 /* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickOpenHAB = __webpack_require__( 81 );
-	var convert = __webpack_require__( 111 );
-	__webpack_require__( 112 );
+	var BrickOpenHAB = __webpack_require__( 85 );
+	__webpack_require__( 111 );
+
+	module.exports = {
+		template	: __webpack_require__( 113 ),
+		controller	: function(scope, utils) {
+			BrickOpenHAB.apply(this, [scope, utils]);
+			// console.log( "Create a color controller", this, scope );
+			this.updateState = function(event, noUpdate) {
+				console.log( "BrickOpenHAB_Contact event", event, noUpdate);
+			}
+		}
+	};
+
+
+/***/ },
+/* 111 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 112 */,
+/* 113 */
+/***/ function(module, exports) {
+
+	module.exports = "Contact {{ctrl.brick.name}}: {{ctrl.brick.state}}"
+
+/***/ },
+/* 114 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BrickOpenHAB = __webpack_require__( 85 );
+	var convert = __webpack_require__( 115 );
+	__webpack_require__( 116 );
 
 	function toHex(d) {
 		return  ("0"+(Number(d).toString(16))).slice(-2).toLowerCase()
 	}
 
 	module.exports = {
-		template	: __webpack_require__( 114 ),
+		template	: __webpack_require__( 118 ),
 		controller	: function(scope, utils) {
 			BrickOpenHAB.apply(this, [scope, utils]);
 			// console.log( "Create a color controller", this, scope );
@@ -68930,7 +68988,7 @@
 
 
 /***/ },
-/* 111 */
+/* 115 */
 /***/ function(module, exports) {
 
 	/**
@@ -69069,28 +69127,127 @@
 	    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 	}
 
+	function stringRGB_to_IntArray( str ) {
+		var color	= "([0-9a-fA-F]{2})",
+			RE		= new RegExp( "^#" + color + color + color + "$" ),
+			rgb		= RE.exec( str );
+		if(rgb) {
+			return	[ parseInt( rgb[1], 16 )
+					, parseInt( rgb[2], 16 )
+					, parseInt( rgb[3], 16 )
+					]
+		} else {return null;}
+	}
+
+
+
+	// Phillips Hue
+
+	var XYPoint = function(x, y) {
+			this.x = x;
+			this.y = y;
+		},
+		Red = new XYPoint(0.675, 0.322),
+		Lime = new XYPoint(0.4091, 0.518),
+		Blue = new XYPoint(0.167, 0.04);
+
+	function _crossProduct(p1, p2) {
+		return (p1.x * p2.y - p1.y * p2.x);
+	}
+
+	function _checkPointInLampsReach(p) {
+		var v1 = new XYPoint(Lime.x - Red.x, Lime.y - Red.y),
+			v2 = new XYPoint(Blue.x - Red.x, Blue.y - Red.y),
+			q = new XYPoint(p.x - Red.x, p.y - Red.y),
+			s = _crossProduct(q, v2) / _crossProduct(v1, v2),
+			t = _crossProduct(v1, q) / _crossProduct(v1, v2);
+		return (s >= 0.0) && (t >= 0.0) && (s + t <= 1.0);
+	}
+
+	function _getClosestPointToPoint(A, B, P) {
+		var AP = new XYPoint(P.x - A.x, P.y - A.y),
+			AB = new XYPoint(B.x - A.x, B.y - A.y),
+			ab2 = AB.x * AB.x + AB.y * AB.y,
+			ap_ab = AP.x * AB.x + AP.y * AB.y,
+			t = ap_ab / ab2;
+		if (t < 0.0) t = 0.0;
+		else if (t > 1.0) t = 1.0;
+		return new XYPoint(A.x + AB.x * t, A.y + AB.y * t);
+	}
+
+	function _getDistanceBetweenTwoPoints(one, two) {
+		var dx = one.x - two.x,
+			// horizontal difference
+			dy = one.y - two.y; // vertical difference
+		return Math.sqrt(dx * dx + dy * dy);
+	}
+
+	function getXYPointFromRGB(red, green, blue) {
+		var r = (red > 0.04045) ? Math.pow((red + 0.055) / (1.0 + 0.055), 2.4) : (red / 12.92),
+			g = (green > 0.04045) ? Math.pow((green + 0.055) / (1.0 + 0.055), 2.4) : (green / 12.92),
+			b = (blue > 0.04045) ? Math.pow((blue + 0.055) / (1.0 + 0.055), 2.4) : (blue / 12.92),
+			X = r * 0.4360747 + g * 0.3850649 + b * 0.0930804,
+			Y = r * 0.2225045 + g * 0.7168786 + b * 0.0406169,
+			Z = r * 0.0139322 + g * 0.0971045 + b * 0.7141733,
+			cx = X / (X + Y + Z),
+			cy = Y / (X + Y + Z);
+		cx = isNaN(cx) ? 0.0 : cx;
+		cy = isNaN(cy) ? 0.0 : cy;
+		//Check if the given XY value is within the colourreach of our lamps.
+		var xyPoint = new XYPoint(cx, cy),
+			inReachOfLamps = _checkPointInLampsReach(xyPoint);
+		if (!inReachOfLamps) {
+			//Color is unreproducible, find the closest point on each line in the CIE 1931 'triangle'.
+			var pAB = _getClosestPointToPoint(Red, Lime, xyPoint),
+				pAC = _getClosestPointToPoint(Blue, Red, xyPoint),
+				pBC = _getClosestPointToPoint(Lime, Blue, xyPoint),
+				// Get the distances per point and see which point is closer to our Point.
+				dAB = _getDistanceBetweenTwoPoints(xyPoint, pAB),
+				dAC = _getDistanceBetweenTwoPoints(xyPoint, pAC),
+				dBC = _getDistanceBetweenTwoPoints(xyPoint, pBC),
+				lowest = dAB,
+				closestPoint = pAB;
+			if (dAC < lowest) {
+				lowest = dAC;
+				closestPoint = pAC;
+			}
+			if (dBC < lowest) {
+				lowest = dBC;
+				closestPoint = pBC;
+			}
+			// Change the xy value to a value which is within the reach of the lamp.
+			cx = closestPoint.x;
+			cy = closestPoint.y;
+		}
+		
+		return [cx, cy];
+	}
+
+
 	module.exports = {
-	    rgbToHsl    : rgbToHsl,
-	    hslToRgb    : hslToRgb,
-	    rgbToHsv    : rgbToHsv,
-	    hsvToRgb    : hsvToRgb
+	    rgbToHsl				: rgbToHsl,
+	    hslToRgb				: hslToRgb,
+	    rgbToHsv				: rgbToHsv,
+	    hsvToRgb				: hsvToRgb,
+	    stringRGB_to_IntArray	: stringRGB_to_IntArray,
+	    getXYPointFromRGB		: getXYPointFromRGB
 	};
 
 /***/ },
-/* 112 */
+/* 116 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 113 */,
-/* 114 */
+/* 117 */,
+/* 118 */
 /***/ function(module, exports) {
 
 	module.exports = "<md-content class=\"md-block color\">\r\n\t<input \t\taria-label \t= \"{{ctrl.brick.name}}\"\r\n\t\t\t\tng-model \t= \"ctrl.color\"\r\n\t\t\t\ttype \t\t= \"color\"\r\n\t\t\t\tng-change \t= \"ctrl.userSetColor()\"\r\n\t\t\t\t/>\r\n\t{{ctrl.brick.name}}\r\n</md-content>"
 
 /***/ },
-/* 115 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// var utils = require( "../../../../js/utils.js" );
@@ -69099,26 +69256,31 @@
 		template	: __webpack_require__( 74	),
 		controller	: function($scope, utils) {
 			var ctrl = this;
-			var cbEventName = this.brick.id + "::update";
-			this.iconURL = "images/icons/fhem.png";
+			// var cbEventName = this.brick.id + "::update";
+			// this.iconURL = "images/icons/fhem.png";
 
-			utils.io.emit	( "subscribeBrick"
+
+			utils.subscribeBrick( this.brick.id, "update", function(event) {
+				ctrl.update(event);
+			});
+
+	/*		utils.io.emit	( "subscribeBrick"
 							, { brickId		: this.brick.id
 							  , eventName	: "update"
 							  , cbEventName	: cbEventName
 							  }
 							);
-			this.update = function(/*event*/) {
+	*/		this.update = function(/*event*/) {
 				// this.brick.state = event.data.value;
 				$scope.$applyAsync();
 			}
-			utils.io.on	( cbEventName
+	/*		utils.io.on	( cbEventName
 						, function(event) {
 							 // console.log("brickOpenhab event:", event);
 							 ctrl.update(event);
 							}
 						);
-			this.sendGetCommand = function(cmd) {
+	*/		this.sendGetCommand = function(cmd) {
 				return this.sendCommand("get " + this.brick.id + ' ' + cmd);
 			}
 			this.sendSetCommand = function(cmd) {
@@ -69134,14 +69296,14 @@
 	};
 
 /***/ },
-/* 116 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickFhem = __webpack_require__( 115 ).controller;
-	__webpack_require__( 117 );
+	var BrickFhem = __webpack_require__( 119 ).controller;
+	__webpack_require__( 121 );
 
 	module.exports = {
-		template	: __webpack_require__( 119 ),
+		template	: __webpack_require__( 123 ),
 		controller	: function($scope, utils) {
 			var ctrl = this;
 			BrickFhem.apply(this, [$scope, utils]);
@@ -69159,27 +69321,27 @@
 
 
 /***/ },
-/* 117 */
+/* 121 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 118 */,
-/* 119 */
+/* 122 */,
+/* 123 */
 /***/ function(module, exports) {
 
 	module.exports = "<section ng-class=\"ctrl.brick.type\">\r\n\t<span class=\"description\">\r\n\t\t<section class=\"name\">{{ctrl.brick.name}}</section>\r\n\t\t<section class=\"separator\"></section>\r\n\t\t<section class=\"state\">{{ctrl.brick.fhem.temperature}}°C</section>\r\n\t</span>\r\n\t<img class=\"iconURL\" src=\"/IHM/images/icons/fhem.png\"></img>\r\n\t<img class=\"serviceIconURL\" src=\"/TactHab_modules/Bricks/Fhem/images/thermometer.svg\"></img>\r\n</section>\r\n"
 
 /***/ },
-/* 120 */
+/* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickFhem = __webpack_require__( 115 ).controller;
-	__webpack_require__( 121 );
+	var BrickFhem = __webpack_require__( 119 ).controller;
+	__webpack_require__( 125 );
 
 	module.exports = {
-		template	: __webpack_require__( 123),  // require( "./EnO_4BS.html" ),
+		template	: __webpack_require__( 127),  // require( "./EnO_4BS.html" ),
 		controller	: function($scope, utils) {
 			BrickFhem.apply(this, [$scope, utils]);
 
@@ -69193,27 +69355,27 @@
 	};
 
 /***/ },
-/* 121 */
+/* 125 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 122 */,
-/* 123 */
+/* 126 */,
+/* 127 */
 /***/ function(module, exports) {
 
 	module.exports = "<section ng-class=\"ctrl.brick.type\">\r\n\t<span class=\"description\">\r\n\t\t<section class=\"name\">{{ctrl.brick.name}}</section>\r\n\t\t<!-- <section class=\"separator\"></section>\r\n\t\t<section class=\"state\">{{ctrl.brick.fhem.temperature}}°C</section> -->\r\n\t</span>\r\n\t<img class=\"iconURL\" src=\"/IHM/images/icons/fhem.png\"></img>\r\n\t<!-- <img class=\"serviceIconURL\" src=\"/TactHab_modules/Bricks/Fhem/images/thermometer.svg\"></img> -->\r\n</section>\r\n"
 
 /***/ },
-/* 124 */
+/* 128 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickFhem = __webpack_require__( 115 ).controller;
-	__webpack_require__( 125 );
+	var BrickFhem = __webpack_require__( 119 ).controller;
+	__webpack_require__( 129 );
 
 	module.exports = {
-		template	: __webpack_require__( 123),  // require( "./actuator.01.html" ),
+		template	: __webpack_require__( 127),  // require( "./actuator.01.html" ),
 		controller	: function($scope, utils) {
 			BrickFhem.apply(this, [$scope, utils]);
 
@@ -69227,21 +69389,21 @@
 
 
 /***/ },
-/* 125 */
+/* 129 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 126 */,
-/* 127 */
+/* 130 */,
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickFhem = __webpack_require__( 115 ).controller;
-	__webpack_require__( 128 );
+	var BrickFhem = __webpack_require__( 119 ).controller;
+	__webpack_require__( 132 );
 
 	module.exports =  {
-		template	: __webpack_require__( 130 ),
+		template	: __webpack_require__( 134 ),
 		controller	: function($scope, utils) {
 			var ctrl = this;
 			BrickFhem.apply(this, [$scope, utils]);
@@ -69261,27 +69423,27 @@
 
 
 /***/ },
-/* 128 */
+/* 132 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 129 */,
-/* 130 */
+/* 133 */,
+/* 134 */
 /***/ function(module, exports) {
 
 	module.exports = "<section ng-class=\"ctrl.brick.type\">\r\n\t<span class=\"description\">\r\n\t\t<section class=\"name\">{{ctrl.brick.name}}</section>\r\n\t\t<section class=\"separator\"></section>\r\n\t\t<section class=\"state\">\r\n\t\t\t<section class=\"temperature\">{{ctrl.brick.fhem.temperature}}°C\t</section>\r\n\t\t\t<section class=\"humidity\"\t>{{ctrl.brick.fhem.humidity}}%\t\t</section>\r\n\t\t</section>\r\n\t</span>\r\n\t<img class=\"iconURL\" src=\"/IHM/images/icons/fhem.png\"></img>\r\n\t<img class=\"thermometerIconURL\" src=\"/TactHab_modules/Bricks/Fhem/images/thermometer.svg\"></img>\r\n\t<img class=\"humidityIconURL\"    src=\"/IHM/js/FHEM/templates/images/humidity.webp\"></img>\r\n</section>\r\n"
 
 /***/ },
-/* 131 */
+/* 135 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickFhem = __webpack_require__( 115 ).controller;
-	__webpack_require__( 132 );
+	var BrickFhem = __webpack_require__( 119 ).controller;
+	__webpack_require__( 136 );
 
 	module.exports = {
-		template	: __webpack_require__( 134 ),
+		template	: __webpack_require__( 138 ),
 		controller	: function($scope, utils) {
 			var ctrl = this;
 			BrickFhem.apply(this, [$scope, utils]);
@@ -69303,27 +69465,27 @@
 	}
 
 /***/ },
-/* 132 */
+/* 136 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 133 */,
-/* 134 */
+/* 137 */,
+/* 138 */
 /***/ function(module, exports) {
 
 	module.exports = "<section ng-class=\"ctrl.brick.type\">\r\n\t<span class=\"description\">\r\n\t\t<section class=\"name\">{{ctrl.brick.name}}</section>\r\n\t\t<section class=\"separator\"></section>\r\n\t\t<section class=\"state\">\r\n\t\t\t<table class=\"buttons\">\r\n\t\t\t\t<tbody>\r\n\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t<td ng-class=\"{pressed: ctrl.brick.fhem.buttons.state.indexOf('A1')>=0}\">A1</td>\r\n\t\t\t\t\t\t<td ng-class=\"{pressed: ctrl.brick.fhem.buttons.state.indexOf('B1')>=0}\">B1</td>\r\n\t\t\t\t\t</tr>\r\n\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t<td ng-class=\"{pressed: ctrl.brick.fhem.buttons.state.indexOf('A0')>=0}\">A0</td>\r\n\t\t\t\t\t\t<td ng-class=\"{pressed: ctrl.brick.fhem.buttons.state.indexOf('B0')>=0}\">B0</td>\r\n\t\t\t\t\t</tr>\r\n\t\t\t\t</tbody>\r\n\t\t\t</table>\r\n\t\t</section>\r\n\t</span>\r\n\t<img class=\"iconURL\" src=\"/IHM/images/icons/fhem.png\"></img>\r\n\t<img class=\"serviceIconURL\" src=\"/IHM/js/FHEM/templates/images/switch.svg\"></img>\r\n</section>\r\n\r\n"
 
 /***/ },
-/* 135 */
+/* 139 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickFhem = __webpack_require__( 115 ).controller;
-	__webpack_require__( 136 );
+	var BrickFhem = __webpack_require__( 119 ).controller;
+	__webpack_require__( 140 );
 
 	module.exports = {
-		template	: __webpack_require__( 138 ),
+		template	: __webpack_require__( 142 ),
 		controller	: function($scope, utils) {
 			BrickFhem.apply(this, [$scope, utils]);
 
@@ -69338,27 +69500,27 @@
 	};
 
 /***/ },
-/* 136 */
+/* 140 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 137 */,
-/* 138 */
+/* 141 */,
+/* 142 */
 /***/ function(module, exports) {
 
 	module.exports = "<section ng-class=\"ctrl.brick.type\">\r\n\t<span class=\"description\">\r\n\t\t<section class=\"name\">{{ctrl.brick.name}}</section>\r\n\t\t<section class=\"separator\"></section>\r\n\t\t<section class=\"state\">{{ctrl.brick.fhem.brightness}}</section>\r\n\t</span>\r\n\t<img class=\"iconURL\" src=\"/IHM/images/icons/fhem.png\"></img>\r\n\t<img class=\"serviceIconURL\" src=\"/IHM/js/FHEM/templates/images/luminosity.webp\"></img>\r\n</section>\r\n"
 
 /***/ },
-/* 139 */
+/* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickFhem = __webpack_require__( 115 ).controller;
-	__webpack_require__( 140 );
+	var BrickFhem = __webpack_require__( 119 ).controller;
+	__webpack_require__( 144 );
 
 	module.exports = {
-		template	: __webpack_require__( 142 ),
+		template	: __webpack_require__( 146 ),
 		controller	: function($scope, utils) {
 			// var ctrl = this;
 			BrickFhem.apply(this, [$scope, utils]);
@@ -69380,27 +69542,27 @@
 
 
 /***/ },
-/* 140 */
+/* 144 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 141 */,
-/* 142 */
+/* 145 */,
+/* 146 */
 /***/ function(module, exports) {
 
 	module.exports = "<section ng-class=\"ctrl.brick.type\">\r\n\t<span class=\"description\">\r\n\t\t<section class=\"name\">{{ctrl.brick.name}}</section>\r\n\t\t<section class=\"separator\"></section>\r\n\t\t<section class=\"state\">\r\n\t\t\t<span ng-if=\" ctrl.brick.fhem.isOpen\">OPEN </span>\r\n\t\t\t<span ng-if=\"!ctrl.brick.fhem.isOpen\">CLOSE</span>\r\n\t\t</section>\r\n\t</span>\r\n\t<img class=\"iconURL\" src=\"/IHM/images/icons/fhem.png\"></img>\r\n\t<img class=\"serviceIconURL\" ng-src=\"{{ctrl.stateIconURL}}\"></img>\r\n</section>\r\n"
 
 /***/ },
-/* 143 */
+/* 147 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var BrickFhem = __webpack_require__( 115 ).controller;
-	__webpack_require__( 144 );
+	var BrickFhem = __webpack_require__( 119 ).controller;
+	__webpack_require__( 148 );
 
 	module.exports = {
-		template	: __webpack_require__( 146 ),
+		template	: __webpack_require__( 150 ),
 		controller	: function($scope, utils) {
 			BrickFhem.apply(this, [$scope, utils]);
 
@@ -69427,23 +69589,23 @@
 
 
 /***/ },
-/* 144 */
+/* 148 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 145 */,
-/* 146 */
+/* 149 */,
+/* 150 */
 /***/ function(module, exports) {
 
 	module.exports = "<section ng-class=\"ctrl.brick.type\" ng-dblclick=\"ctrl.triggerAction($event)\">\r\n\t<span class=\"description\">\r\n\t\t<section class=\"name\">{{ctrl.brick.name}}</section>\r\n\t\t<section class=\"separator\"></section>\r\n\t\t<section class=\"state\">\r\n\t\t\t<span ng-if=\"ctrl.brick.fhem.power >= 0\">{{ctrl.brick.fhem.power}}W</span>\r\n\t\t\t<span ng-if=\"ctrl.brick.fhem.SWITCH_BINARY\">{{ctrl.brick.fhem.SWITCH_BINARY}}</span>\r\n\t\t</section>\r\n\t</span>\r\n\t<img class=\"iconURL\" src=\"/IHM/images/icons/fhem.png\"></img>\r\n\t<img class=\"serviceIconURL\" ng-src=\"{{ctrl.iconDevice}}\"></img>\r\n</section>\r\n"
 
 /***/ },
-/* 147 */
+/* 151 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 148 );
+	__webpack_require__( 152 );
 	var utils = __webpack_require__( 10 );
 
 	var controller = function($scope) {
@@ -69584,19 +69746,19 @@
 
 
 /***/ },
-/* 148 */
+/* 152 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 149 */,
-/* 150 */,
-/* 151 */,
-/* 152 */
+/* 153 */,
+/* 154 */,
+/* 155 */,
+/* 156 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 153 );
+	__webpack_require__( 157 );
 	var utils		= __webpack_require__( 10 )
 	  , parser		= new DOMParser()
 	  ;
@@ -69690,17 +69852,17 @@
 
 
 /***/ },
-/* 153 */
+/* 157 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 154 */,
-/* 155 */
+/* 158 */,
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
-	 __webpack_require__( 156 );
+	 __webpack_require__( 160 );
 
 	var draggingPointers	= {}
 	  , dropZones			= {}
@@ -69939,19 +70101,19 @@
 
 
 /***/ },
-/* 156 */
+/* 160 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 157 */,
-/* 158 */
+/* 161 */,
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 159 );
+	__webpack_require__( 163 );
 	// var utils = require( "../../../js/utils.js" );
-	var instructionDir = __webpack_require__( 161 );
+	var instructionDir = __webpack_require__( 165 );
 
 	var controller = function($scope, $mdSidenav) {
 		this.toggleBricks		= function() {$mdSidenav("bricksList"		).toggle();};
@@ -70019,35 +70181,35 @@
 	}
 
 /***/ },
-/* 159 */
+/* 163 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 160 */,
-/* 161 */
+/* 164 */,
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var actions 	= __webpack_require__( 162 ),
-		events		= __webpack_require__( 172 ),
-		selectors	= __webpack_require__( 181 )
+	var actions 	= __webpack_require__( 166 ),
+		events		= __webpack_require__( 176 ),
+		selectors	= __webpack_require__( 185 )
 		;
 
 	var i, json, ctrl;
 
 	var controllers 	= {
-		ParallelNode 				: __webpack_require__( 189	),
-		SequenceNode				: __webpack_require__( 194	),
-		WhenNode					: __webpack_require__( 197		),
-		ActionNode					: __webpack_require__( 165 		)
+		ParallelNode 				: __webpack_require__( 193	),
+		SequenceNode				: __webpack_require__( 198	),
+		WhenNode					: __webpack_require__( 201		),
+		ActionNode					: __webpack_require__( 169 		)
 	};
 
 	var templates	 	= {
-		ParallelNode 				: __webpack_require__( 200	),
-		SequenceNode				: __webpack_require__( 201	),
-		WhenNode					: __webpack_require__( 202		),
-		ActionNode					: __webpack_require__( 169 		)
+		ParallelNode 				: __webpack_require__( 204	),
+		SequenceNode				: __webpack_require__( 205	),
+		WhenNode					: __webpack_require__( 206		),
+		ActionNode					: __webpack_require__( 173 		)
 	};
 
 	// Register instructions classified with respect to their type (workflow, brick type, ...)
@@ -70163,26 +70325,26 @@
 	module.exports = instructionFct;
 
 /***/ },
-/* 162 */
+/* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 		BrickUPnP_MediaRenderer	: {
-			ActionNodePlay	: { controller	: __webpack_require__( 163	)
-							  , template	: __webpack_require__( 169 ) },
-			ActionNodePause	: { controller	: __webpack_require__( 170	)
-							  , template	: __webpack_require__( 169 ) },
-			ActionNodeStop	: { controller	: __webpack_require__( 171 	)
-							  , template	: __webpack_require__( 169 ) }
+			ActionNodePlay	: { controller	: __webpack_require__( 167	)
+							  , template	: __webpack_require__( 173 ) },
+			ActionNodePause	: { controller	: __webpack_require__( 174	)
+							  , template	: __webpack_require__( 173 ) },
+			ActionNodeStop	: { controller	: __webpack_require__( 175 	)
+							  , template	: __webpack_require__( 173 ) }
 		}
 	};
 
 
 /***/ },
-/* 163 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ActionNodeBrickUPnP_MediaRenderer = __webpack_require__( 164 );
+	var ActionNodeBrickUPnP_MediaRenderer = __webpack_require__( 168 );
 
 	var ActionNodePlay = function(scope) {
 		this.instruction	=  this.instruction	
@@ -70205,10 +70367,10 @@
 
 
 /***/ },
-/* 164 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ActionNode = __webpack_require__( 165 );
+	var ActionNode = __webpack_require__( 169 );
 
 	var ActionNodeBrickUPnP_MediaRenderer = function(scope) {
 		ActionNode.apply(this, [scope]);
@@ -70227,11 +70389,11 @@
 
 
 /***/ },
-/* 165 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 166		);
-	var Pnode = __webpack_require__( 168 );
+	__webpack_require__( 170		);
+	var Pnode = __webpack_require__( 172 );
 
 	var ActionNode = function(scope) {
 		Pnode.apply(this, [scope]);
@@ -70277,14 +70439,14 @@
 
 
 /***/ },
-/* 166 */
+/* 170 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 167 */,
-/* 168 */
+/* 171 */,
+/* 172 */
 /***/ function(module, exports) {
 
 	var id = 0;
@@ -70333,16 +70495,16 @@
 
 
 /***/ },
-/* 169 */
+/* 173 */
 /***/ function(module, exports) {
 
 	module.exports = "<section ng-class\t\t\t\t= \"ctrl.instruction.type\"\r\n\t\t alx-droppable\t\t\t= \"Pnode.hasOneType(draggedInfo.draggedData, ctrl.sources)\"\r\n\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t alx-drop-action\t\t= \"ctrl.appendSelector(draggedInfo.draggedData)\"\r\n\t\t >\r\n\t<img class=\"action_symbol\" ng-src=\"{{ctrl.actionIcon}}\"></img>\r\n\t<div class=\"action_description\">\r\n\t\t<p class=\"actionName\" ng-bind=\"ctrl.actionLabel\"></p>\r\n\t\t<p \tclass=\"selector\" >\r\n\t\t\t<!-- <p ng-hide=\"ctrl.instruction.children.length === 0\">Drop a {{ctrl.sources}}</p>-->\r\n\t\t\t<selector ng-if=\"ctrl.selNode\" data = \"ctrl.selNode\" context=\"ctrl.context\"></selector> \r\n\t\t\t<!-- {{ctrl | json}} -->\r\n\t\t</p>\r\n\t</div>\r\n</section>\r\n"
 
 /***/ },
-/* 170 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ActionNodeBrickUPnP_MediaRenderer = __webpack_require__( 164 );
+	var ActionNodeBrickUPnP_MediaRenderer = __webpack_require__( 168 );
 
 	var ActionNodePause = function(scope) {
 		this.instruction	=	this.instruction	
@@ -70366,10 +70528,10 @@
 
 
 /***/ },
-/* 171 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ActionNodeBrickUPnP_MediaRenderer = __webpack_require__( 164 );
+	var ActionNodeBrickUPnP_MediaRenderer = __webpack_require__( 168 );
 
 	var ActionNodeStop = function(scope) {
 		this.instruction	=  this.instruction	
@@ -70392,28 +70554,28 @@
 
 
 /***/ },
-/* 172 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
 		BrickUPnP_MediaRenderer	: {
-			EventNodePlay	: { controller	: __webpack_require__( 173	)
-							  , template	: __webpack_require__( 178 ) },
-			EventNodePause	: { controller	: __webpack_require__( 179)
-							  , template	: __webpack_require__( 178 ) },
-			EventNodeStop	: { controller	: __webpack_require__( 180 )
-							  , template	: __webpack_require__( 178 ) }
+			EventNodePlay	: { controller	: __webpack_require__( 177	)
+							  , template	: __webpack_require__( 182 ) },
+			EventNodePause	: { controller	: __webpack_require__( 183)
+							  , template	: __webpack_require__( 182 ) },
+			EventNodeStop	: { controller	: __webpack_require__( 184 )
+							  , template	: __webpack_require__( 182 ) }
 		}
 	};
 
 
 /***/ },
-/* 173 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// require( "./EventNode.css"		);
 
-	var EventNodeBrickUPnP_MediaRenderer = __webpack_require__( 174 );
+	var EventNodeBrickUPnP_MediaRenderer = __webpack_require__( 178 );
 
 	var subType = "BrickUPnP_MediaRenderer/EventNodePlay";
 	var EventNodePlay = function(scope) {
@@ -70436,12 +70598,12 @@
 
 
 /***/ },
-/* 174 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// require( "./EventNode.css"		);
 
-	var EventNode	= __webpack_require__( 175 );
+	var EventNode	= __webpack_require__( 179 );
 
 	var EventNodeBrickUPnP_MediaRenderer = function(scope) {
 		EventNode.apply(this, [scope]);
@@ -70464,11 +70626,11 @@
 
 
 /***/ },
-/* 175 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 176		);
-	var Pnode = __webpack_require__( 168 );
+	__webpack_require__( 180		);
+	var Pnode = __webpack_require__( 172 );
 
 	var EventNode = function(scope) {
 		Pnode.apply(this, [scope]);
@@ -70500,25 +70662,25 @@
 
 
 /***/ },
-/* 176 */
+/* 180 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 177 */,
-/* 178 */
+/* 181 */,
+/* 182 */
 /***/ function(module, exports) {
 
 	module.exports = "<section ng-class=\"ctrl.instruction.type\">\r\n\t<img class=\"event_symbol\" ng-src=\"{{ctrl.eventIcon}}\"></img>\r\n\t<div class=\"event_description event\">\r\n\t\t<p class=\"eventName\" ng-bind=\"ctrl.eventLabel\"></p>\r\n\t\t<p \tclass=\"selector\"\r\n\t\t\talx-droppable\t\t= \"draggedInfo.hasOneTypeIn(ctrl.sources)\"\r\n\t\t\talx-accept-feedback\t= \"candrop\"\r\n\t\t\talx-hover-feedback\t= \"overdrop\"\r\n\t\t\talx-drop-action\t\t= \"ctrl.appendEvent(draggedInfo)\"\r\n\t\t\t>\r\n\t\t\t<p ng-hide=\"ctrl.instruction.children.length === 0\">Drop EVENT here</p>\r\n\t\t\t<instruction ng-repeat\t= \"instruction in ctrl.instruction.children\"\r\n\t\t\t\t\t\t data\t\t= \"instruction\"\r\n\t\t\t\t\t\t>\r\n\t\t\t</instruction>\r\n\t\t</p>\r\n\t</div>\r\n\t<img class=\"eventThunder\" src=\"/js/Presentations/HTML_templates/event-icon.png\"></img>\r\n</section>"
 
 /***/ },
-/* 179 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// require( "./EventNode.css"		);
 
-	var EventNodeBrickUPnP_MediaRenderer = __webpack_require__( 174 );
+	var EventNodeBrickUPnP_MediaRenderer = __webpack_require__( 178 );
 
 	var subType = "BrickUPnP_MediaRenderer/EventNodePause";
 	var EventNodePause = function(scope) {
@@ -70541,12 +70703,12 @@
 
 
 /***/ },
-/* 180 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// require( "./EventNode.css"		);
 
-	var EventNodeBrickUPnP_MediaRenderer = __webpack_require__( 174 );
+	var EventNodeBrickUPnP_MediaRenderer = __webpack_require__( 178 );
 
 
 	var subType = "BrickUPnP_MediaRenderer/EventNodeStop";
@@ -70570,16 +70732,16 @@
 
 
 /***/ },
-/* 181 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 182 );
+	__webpack_require__( 186 );
 
 	var templates = {
 		SelectorNode 			: { controller 	: function() {console.log( "new SelectorNode", this.instruction);},
-									template 	: __webpack_require__( 184 )
+									template 	: __webpack_require__( 188 )
 									},
-		Pselector_ObjInstance	: __webpack_require__( 185 )
+		Pselector_ObjInstance	: __webpack_require__( 189 )
 	};
 	templates[ undefined ] = templates.SelectorNode;
 
@@ -70623,23 +70785,23 @@
 
 
 /***/ },
-/* 182 */
+/* 186 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 183 */,
-/* 184 */
+/* 187 */,
+/* 188 */
 /***/ function(module, exports) {
 
 	module.exports = "SelectorNode has to be defined for {{$ctrl.instruction}}\r\n"
 
 /***/ },
-/* 185 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Pnode = __webpack_require__( 168 );
+	var Pnode = __webpack_require__( 172 );
 
 	var SelectorNode_Brick = function(scope) {
 		Pnode.apply(this, [scope]);
@@ -70660,10 +70822,10 @@
 		console.log( this, "SelectorNode_Brick::appendSelector", obj );
 	}
 
-	__webpack_require__( 186 );
+	__webpack_require__( 190 );
 	module.exports = {
 		controller	: SelectorNode_Brick,
-		template	: __webpack_require__( 188 )
+		template	: __webpack_require__( 192 )
 	};
 
 	/* JSON of a selector
@@ -70678,27 +70840,27 @@
 	DE SORTE A AVOIR ACCES A LA LISTE DES BRIQUES DISPONIBLES !!!*/
 
 /***/ },
-/* 186 */
+/* 190 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 187 */,
-/* 188 */
+/* 191 */,
+/* 192 */
 /***/ function(module, exports) {
 
 	module.exports = "<section ng-class = \"$ctrl.type\"\r\n\t\t \r\n\t\t >\r\n\t<brick ng-if=\"$ctrl.brick\" data=\"$ctrl.brick\"></brick>\r\n</section>"
 
 /***/ },
-/* 189 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 190		);
-	__webpack_require__( 192	);
+	__webpack_require__( 194		);
+	__webpack_require__( 196	);
 	// require( "./ActionNode.css"		);
 
-	var Pnode = __webpack_require__( 168 );
+	var Pnode = __webpack_require__( 172 );
 
 
 	var ParallelNode = function(scope) {
@@ -70734,28 +70896,28 @@
 	module.exports = ParallelNode;
 
 /***/ },
-/* 190 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 191 */,
-/* 192 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 193 */,
 /* 194 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 195 */,
+/* 196 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 197 */,
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 190		);
-	__webpack_require__( 195	);
+	__webpack_require__( 194		);
+	__webpack_require__( 199	);
 	// require( "./ActionNode.css"		);
 
-	var Pnode = __webpack_require__( 168 );
+	var Pnode = __webpack_require__( 172 );
 
 
 	var SequenceNode = function(scope) {
@@ -70792,19 +70954,19 @@
 
 
 /***/ },
-/* 195 */
+/* 199 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 196 */,
-/* 197 */
+/* 200 */,
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 198 );
+	__webpack_require__( 202 );
 
-	var Pnode = __webpack_require__( 168 );
+	var Pnode = __webpack_require__( 172 );
 
 	/*{ childEvent	: null
 	, childReaction	: null
@@ -70856,35 +71018,35 @@
 	module.exports = WhenNode;
 
 /***/ },
-/* 198 */
+/* 202 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 199 */,
-/* 200 */
+/* 203 */,
+/* 204 */
 /***/ function(module, exports) {
 
 	module.exports = "<section ng-class \t\t\t\t= \"ctrl.instruction.type\"\r\n\t\t alx-droppable\t\t\t= \"Pnode.hasOneType(draggedInfo.draggedData, ['ActionNode', 'ControlFlow'])\"\r\n\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t alx-drop-action\t\t= \"ctrl.appendChild(draggedInfo.draggedData)\"\r\n\t\t>\r\n\t<div class=\"prefix frameStructure\"></div>\r\n\t<div class=\"content\">\r\n\t\t<div class \t\t= \"child\"\r\n\t\t\t ng-repeat\t= \"instruction in ctrl.instruction.children\"\r\n\t\t\t>\r\n\t\t\t<div class=\"separator frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\"></div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<instruction data=\"instruction\" context=\"ctrl.context\"></instruction>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"separator suffix frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\">\r\n\t\t\t\t\t<div class=\"left\"></div><div class=\"right\"></div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t<!-- <div class=\"content\">\r\n\t\t<div class=\"lastOne Pnode ActionNodePresentation\">Drop node</div>\r\n\t</div> -->\r\n\t</div>\r\n\t<div class=\"suffix frameStructure\"></div>\r\n</section>\r\n\r\n"
 
 /***/ },
-/* 201 */
+/* 205 */
 /***/ function(module, exports) {
 
 	module.exports = "<section ng-class\t\t\t\t= \"ctrl.instruction.type\"\r\n\t\t alx-droppable\t\t\t= \"Pnode.hasOneType(draggedInfo.draggedData, ['ActionNode', 'ControlFlow'])\"\r\n\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t alx-drop-action\t\t= \"ctrl.appendChild(draggedInfo.draggedData)\"\r\n\t\t>\r\n\t<div class=\"prefix frameStructure\"></div>\r\n\t<div class=\"content\">\r\n\t\t<div class \t\t= \"child\"\r\n\t\t\t ng-repeat\t= \"instruction in ctrl.instruction.children track by $index\"\r\n\t\t\t>\r\n\t\t\t<div class=\"separator frameStructure\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\"></div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t\t<div class=\"container\">\r\n\t\t\t\t<instruction data=\"instruction\" context=\"ctrl.context\"></instruction>\r\n\t\t\t</div>\r\n\t\t\t<div class=\" frameStructure separator suffix\">\r\n\t\t\t\t<div class=\"top\"></div>\r\n\t\t\t\t<div class=\"middle\">\r\n\t\t\t\t\t<div class=\"left\"></div><div class=\"right\"></div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"bottom\"></div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n\t<div class=\"frameStructure suffix\"></div>\r\n</section>"
 
 /***/ },
-/* 202 */
+/* 206 */
 /***/ function(module, exports) {
 
 	module.exports = "<section ng-class=\"ctrl.instruction.type\">\r\n\t<div class=\"arrow\">\r\n\t\t<div class=\"eventSymbol\"></div>\r\n\t\t<div class=\"defwhen\">\r\n\t\t\t<div class=\"eventDrop\">\r\n\t\t\t\t<div class=\"ImplicitVariable\">\r\n\t\t\t\t\tLet's call the event source <div class=\"variableName Pnode Pselector_variable\">brick</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t<div class=\"event\"\r\n\t\t\t\t\t alx-droppable\t\t\t= \"Pnode.hasOneType(draggedInfo.draggedData, ['EventNode'])\"\r\n\t\t\t\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t\t\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t\t\t\t alx-drop-action\t\t= \"ctrl.appendEvent(draggedInfo.draggedData)\"\r\n\t\t\t\t\t>\r\n\t\t\t\t\t<p ng-hide=\"ctrl.childEvent.length\">Drop EVENT here</p>\r\n\t\t\t\t\t<div>\r\n\t\t\t\t\t\t<instruction ng-repeat=\"inst in ctrl.childEvent\" data=\"inst\" context=\"ctrl.context\"></instruction>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t\t<img src=\"/js/Presentations/HTML_templates/implySymbol.svg\"></img>\r\n\t\t\t<div class=\"instructions\"\r\n\t\t\t\t alx-droppable\t\t\t= \"Pnode.hasOneType(draggedInfo.draggedData, ['ActionNode', 'ControlFlow'])\"\r\n\t\t\t\t alx-accept-feedback\t= \"candrop\"\r\n\t\t\t\t alx-hover-feedback\t\t= \"overdrop\"\r\n\t\t\t\t alx-drop-action\t\t= \"ctrl.appendInstruction(draggedInfo.draggedData)\"\r\n\t\t\t\t>\r\n\t\t\t\t<p ng-hide=\"ctrl.childReaction.length\">Drop REACTION here</p>\r\n\t\t\t\t<div>\r\n\t\t\t\t\t<instruction ng-repeat=\"inst in ctrl.childReaction\" data=\"inst\" context=\"ctrl.context\"></instruction>\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n</section>\r\n"
 
 /***/ },
-/* 203 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 204 );
+	__webpack_require__( 208 );
 
 	// var utils = require( "../../../js/utils.js" );
 
@@ -70955,17 +71117,17 @@
 
 
 /***/ },
-/* 204 */
+/* 208 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 205 */,
-/* 206 */
+/* 209 */,
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 207 );
+	__webpack_require__( 211 );
 
 	var utils = __webpack_require__( 10 );
 
@@ -71004,21 +71166,21 @@
 
 
 /***/ },
-/* 207 */
+/* 211 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 208 */,
-/* 209 */
+/* 212 */,
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__( 8 );
 
 	var utils = __webpack_require__( 10 );
 
-	var template = __webpack_require__(210);
+	var template = __webpack_require__(214);
 	module.exports = function(app) {
 		var controller = function($mdToast) {
 			var ctrl = this;
@@ -71071,19 +71233,19 @@
 
 
 /***/ },
-/* 210 */
+/* 214 */
 /***/ function(module, exports) {
 
 	module.exports = "<!-- Case where the openHab connection is already specified -->\r\n<md-card ng-if=\"$ctrl.brick\">\r\n\t<md-content layout=\"row\">\r\n\t\t<img class=\"icon openHab\" src=\"/js/Presentations/openHab/templates/openhab-logo-square.png\"></img>\r\n\t\t<md-content layout=\"column\">\r\n\t\t\t<h4 ng-bind=\"$ctrl.brick.name\"></h4>\r\n\t\t\t<md-content layout=\"row\">\r\n\t\t\t\t<label>Server on {{$ctrl.brick.config.host}}:{{$ctrl.brick.config.port}}</label>\r\n\t\t\t</md-content>\r\n\t\t\t<md-content layout=\"row\">\r\n\t\t\t\t<label>MQTT on {{$ctrl.brick.config.mqtt.host}}:{{$ctrl.brick.config.mqtt.port}} listening {{$ctrl.brick.config.mqtt.prefix}}</label>\r\n\t\t\t</md-content>\r\n\t\t</md-content>\r\n\t</md-content>\r\n</md-card>\r\n\r\n<!-- Case where the we have to specify the openHab connection -->\r\n<md-card class=\"newConnection\">\r\n\t<md-card-title>\r\n\t\t<md-card-title-text>\r\n\t\t\t<span class=\"md-headline\">Connect to OpenHab</span>\r\n\t\t\t<span class=\"md-subhead\">\r\n\t\t\t\t<md-input-container class=\"md-block host\">\r\n\t\t\t\t\t<label>host</label>\r\n\t\t\t\t\t<!-- <md-icon md-svg-src=\"img/icons/ic_person_24px.svg\" class=\"name\"></md-icon> -->\r\n\t\t\t\t\t<input ng-model=\"$ctrl.config.host\" type=\"text\">\r\n\t\t\t\t</md-input-container>\r\n\t\t\t\t<md-input-container class=\"md-block port\">\r\n\t\t\t\t\t<label>port</label>\r\n\t\t\t\t\t<!-- <md-icon md-svg-src=\"img/icons/ic_person_24px.svg\" class=\"name\"></md-icon> -->\r\n\t\t\t\t\t<input ng-model=\"$ctrl.config.port\" type=\"text\">\r\n\t\t\t\t</md-input-container>\r\n\t\t\t</span>\r\n\t\t</md-card-title-text>\r\n\t\t<md-card-title-media>\r\n\t\t\t<div class=\"md-media-lg card-media\"></div>\r\n\t\t</md-card-title-media>\r\n\t</md-card-title>\r\n\r\n\r\n\r\n\t<md-content class=\"description\" layout=\"column\" ng-if=\"$ctrl.brick === undefined\">\r\n\t\t<md-content class=\"description\" layout=\"row\">\r\n\t\t</md-content>\r\n\t\t<md-content class=\"description\" layout=\"row\">\r\n\t\t\t<md-input-container class=\"md-block\">\r\n\t\t\t\t<label>MQTT host</label>\r\n\t\t\t\t<!-- <md-icon md-svg-src=\"img/icons/ic_person_24px.svg\" class=\"name\"></md-icon> -->\r\n\t\t\t\t<input ng-model=\"$ctrl.config.MQTT_host\" type=\"text\">\r\n\t\t\t</md-input-container>\r\n\t\t\t<md-input-container class=\"md-block\">\r\n\t\t\t\t<label>MQTT port</label>\r\n\t\t\t\t<!-- <md-icon md-svg-src=\"img/icons/ic_person_24px.svg\" class=\"name\"></md-icon> -->\r\n\t\t\t\t<input ng-model=\"$ctrl.config.MQTT_port\" type=\"number\">\r\n\t\t\t</md-input-container>\r\n\t\t\t<md-input-container class=\"md-block\">\r\n\t\t\t\t<label>MQTT prefix</label>\r\n\t\t\t\t<!-- <md-icon md-svg-src=\"img/icons/ic_person_24px.svg\" class=\"name\"></md-icon> -->\r\n\t\t\t\t<input ng-model=\"$ctrl.config.MQTT_prefix\" type=\"text\">\r\n\t\t\t</md-input-container>\r\n\t\t\t<md-input-container class=\"md-block\">\r\n\t\t\t\t<label>Log MQTT into a file</label>\r\n\t\t\t\t<!-- <md-icon md-svg-src=\"img/icons/ic_person_24px.svg\" class=\"name\"></md-icon> -->\r\n\t\t\t\t<md-select ng-model=\"$ctrl.config.logMQTT\">\r\n\t\t\t\t\t<md-option value=\"true\">YES</md-option>\r\n\t\t\t\t\t<md-option value=\"\"    >NO </md-option>\r\n\t\t\t\t</md-select>\r\n\t\t\t</md-input-container>\r\n\t\t</md-content>\r\n\t\t<md-button class=\"md-raised md-primary\" ng-click=\"$ctrl.connect()\">Connect</md-button>\r\n\t</md-content>\r\n</md-card>\r\n"
 
 /***/ },
-/* 211 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var bleSensorTag 	= __webpack_require__( 212 )
-	  , bleBrick		= __webpack_require__( 216 )
-	  , bleMetawear		= __webpack_require__( 217 )
-	  , alxGrapher		= __webpack_require__( 220 )
+	var bleSensorTag 	= __webpack_require__( 216 )
+	  , bleBrick		= __webpack_require__( 220 )
+	  , bleMetawear		= __webpack_require__( 221 )
+	  , alxGrapher		= __webpack_require__( 224 )
 	  , utils			= __webpack_require__( 10 )
 	  ;
 
@@ -71141,13 +71303,13 @@
 	}
 
 /***/ },
-/* 212 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 213 );
+	__webpack_require__( 217 );
 
 	var utils				= __webpack_require__( 10 )
-	  , subscribeForEvent	= __webpack_require__( 215 )
+	  , subscribeForEvent	= __webpack_require__( 219 )
 	  ;
 
 	var controller = function($http, $scope) {
@@ -71264,14 +71426,14 @@
 	}
 
 /***/ },
-/* 213 */
+/* 217 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 214 */,
-/* 215 */
+/* 218 */,
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils = __webpack_require__( 10 );
@@ -71313,11 +71475,11 @@
 
 
 /***/ },
-/* 216 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var utils				= __webpack_require__( 10 )
-	  , subscribeForEvent	= __webpack_require__( 215 )
+	  , subscribeForEvent	= __webpack_require__( 219 )
 	  ;
 
 	var controller = function($scope) {
@@ -71415,13 +71577,13 @@
 	}
 
 /***/ },
-/* 217 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 218 );
+	__webpack_require__( 222 );
 
 	var utils				= __webpack_require__( 10 )
-	  , subscribeForEvent	= __webpack_require__( 215 )
+	  , subscribeForEvent	= __webpack_require__( 219 )
 	  ;
 
 	var controller = function($http, $scope) {
@@ -71521,17 +71683,17 @@
 	}
 
 /***/ },
-/* 218 */
+/* 222 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 219 */,
-/* 220 */
+/* 223 */,
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 221 );
+	__webpack_require__( 225 );
 	//var resizeDetector = require( "../../../js/resizeDetector.js" );
 
 	var controller = function($scope) {
@@ -71595,20 +71757,20 @@
 
 
 /***/ },
-/* 221 */
+/* 225 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 222 */,
-/* 223 */
+/* 226 */,
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 224 );
+	__webpack_require__( 228 );
 	var utils = __webpack_require__( 10 );
 
-	var template = __webpack_require__(226);
+	var template = __webpack_require__(230);
 	module.exports = function(app) {
 		var controller = function() {
 			var ctrl = this, host, port;
@@ -71642,26 +71804,26 @@
 
 
 /***/ },
-/* 224 */
+/* 228 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 225 */,
-/* 226 */
+/* 229 */,
+/* 230 */
 /***/ function(module, exports) {
 
 	module.exports = "<!-- Case where the openHab connection is already specified -->\r\n<md-card ng-if=\"$ctrl.brick\">\r\n\t<md-content layout=\"row\">\r\n\t\t<!-- <img class=\"icon fhem\" src=\"/js/Presentations/openHab/templates/openhab-logo-square.png\"></img> -->\r\n\t\t<md-content layout=\"column\">\r\n\t\t\t<h4 ng-bind=\"$ctrl.brick.name\"></h4>\r\n\t\t\t<md-content layout=\"row\">\r\n\t\t\t\t<label>Fhem server at {{$ctrl.brick.config.host}}:{{$ctrl.brick.config.port}}</label>\r\n\t\t\t</md-content>\r\n\t\t</md-content>\r\n\t</md-content>\r\n</md-card>\r\n\r\n<!-- Case where the we have to specify the Fhem connection -->\r\n<!-- <md-card>\r\n\t<md-content class=\"description\" layout=\"column\" ng-if=\"!$ctrl.brick\">\r\n\t\t<h4>Connect to a new Fhem server</h4>\r\n\t\t<md-content class=\"description\" layout=\"row\">\r\n\t\t\t<md-input-container class=\"md-block\">\r\n\t\t\t\t<label>Fhem host</label>\r\n\t\t\t\t<input ng-model=\"$ctrl.config.host\" type=\"text\">\r\n\t\t\t</md-input-container>\r\n\t\t\t<md-input-container class=\"md-block\">\r\n\t\t\t\t<label>Fhem port</label>\r\n\t\t\t\t<input ng-model=\"$ctrl.config.port\" type=\"text\">\r\n\t\t\t</md-input-container>\r\n\t\t</md-content>\r\n\t\t<md-button class=\"md-raised md-primary\" ng-click=\"$ctrl.connect()\">Connect</md-button>\r\n\t</md-content>\r\n</md-card> -->\r\n\r\n\r\n<md-card class=\"newConnection\" ng-if=\"!$ctrl.brick\">\r\n\t<md-card-title>\r\n\t\t<md-card-title-text>\r\n\t\t\t<span class=\"md-headline\">Connect to Fhem</span>\r\n\t\t\t<span class=\"md-subhead\">\r\n\t\t\t\t<md-input-container class=\"md-block host\">\r\n\t\t\t\t\t<label>host</label>\r\n\t\t\t\t\t<!-- <md-icon md-svg-src=\"img/icons/ic_person_24px.svg\" class=\"name\"></md-icon> -->\r\n\t\t\t\t\t<input ng-model=\"$ctrl.config.host\" type=\"text\">\r\n\t\t\t\t</md-input-container>\r\n\t\t\t\t<md-input-container class=\"md-block port\">\r\n\t\t\t\t\t<label>port</label>\r\n\t\t\t\t\t<!-- <md-icon md-svg-src=\"img/icons/ic_person_24px.svg\" class=\"name\"></md-icon> -->\r\n\t\t\t\t\t<input ng-model=\"$ctrl.config.port\" type=\"text\">\r\n\t\t\t\t</md-input-container>\r\n\t\t\t</span>\r\n\t\t</md-card-title-text>\r\n\t\t<md-card-title-media>\r\n\t\t\t<div class=\"md-media-lg card-media\"></div>\r\n\t\t</md-card-title-media>\r\n\t</md-card-title>\r\n\t</md-content>\r\n\t\t<md-button class=\"md-raised md-primary\" ng-click=\"$ctrl.connect()\">Connect</md-button>\r\n\t</md-content>\r\n</md-card>\r\n"
 
 /***/ },
-/* 227 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__( 228 );
+	__webpack_require__( 232 );
 	var utils = __webpack_require__( 10 );
 
-	var template = __webpack_require__(230);
+	var template = __webpack_require__(234);
 	module.exports = function(app) {
 		var controller = function($scope) {
 			var ctrl = this;
@@ -71716,14 +71878,14 @@
 
 
 /***/ },
-/* 228 */
+/* 232 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 229 */,
-/* 230 */
+/* 233 */,
+/* 234 */
 /***/ function(module, exports) {
 
 	module.exports = "<md-card class=\"\">\r\n\t<md-card-title>\r\n\t\t<md-card-title-text>\r\n\t\t\t<span class=\"md-headline\">Connect to socketBus</span>\r\n\t\t\t<span class=\"md-subhead\">\r\n\t\t\t\t<md-input-container class=\"md-block host\">\r\n\t\t\t\t\t<label>host</label>\r\n\t\t\t\t\t<input ng-model=\"$ctrl.config.host\" type=\"text\">\r\n\t\t\t\t</md-input-container>\r\n\t\t\t\t<md-input-container class=\"md-block login\">\r\n\t\t\t\t\t<label>Friendly name</label>\r\n\t\t\t\t\t<input ng-model=\"$ctrl.config.friendlyName\" type=\"text\">\r\n\t\t\t\t</md-input-container>\r\n\t\t\t</span>\r\n\t\t</md-card-title-text>\r\n\t\t<md-card-title-media>\r\n\t\t\t<div class=\"md-media-lg card-media\"></div>\r\n\t\t</md-card-title-media>\r\n\t</md-card-title>\r\n\t<md-content>\r\n\t\t<md-content class=\"logPass\">\r\n\t\t\t<md-input-container class=\"login\">\r\n\t\t\t\t<label>login</label>\r\n\t\t\t\t<input ng-model=\"$ctrl.config.login\" type=\"text\">\r\n\t\t\t</md-input-container>\r\n\t\t\t<md-input-container class=\"pass\">\r\n\t\t\t\t<label>pass</label>\r\n\t\t\t\t<input ng-model=\"$ctrl.config.pass\" type=\"text\">\r\n\t\t\t</md-input-container>\r\n\t\t</md-content>\r\n\t\t<md-button ng-hide=\"$ctrl.connected\" class=\"md-raised md-primary\" ng-click=\"$ctrl.connect()\"\t>Connect\t</md-button>\r\n\t\t<md-button ng-show=\"$ctrl.connected\" class=\"md-raised md-primary\" ng-click=\"$ctrl.disconnect()\"\t>Disconnect\t</md-button>\r\n\t\t<md-button ng-show=\"$ctrl.connected\" class=\"md-raised md-primary\" ng-click=\"$ctrl.ping()\"\t\t>Ping\t\t</md-button>\r\n\t</md-content>\r\n</md-card>\r\n\r\n<md-list>\r\n\t<md-list-item class=\"md-3-line\" ng-repeat=\"log in $ctrl.logs\">\r\n\t\t{{log | json}}\r\n\t</md-list-item>\r\n</md-list>\r\n"

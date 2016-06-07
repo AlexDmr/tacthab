@@ -11,6 +11,7 @@ module.exports = function(app) {
 		BrickUPnP					: require( "../UPnP/templates/default.js" 							),
 		BrickUPnP_MediaServer		: require( "../UPnP/templates/BrickUPnP_MediaServer.js" 			),
 		BrickUPnP_MediaRenderer		: require( "../UPnP/templates/BrickUPnP_MediaRenderer.js" 			),
+		BrickUPnP_HueLamp			: require( "../Hue/BrickUPnP_HueLamp.js"							),
 		// openHab
 		BrickOpenHAB_item			: require( "../openHab/templates/BrickOpenHAB.js" 					),
 		BrickOpenHAB_Switch			: require( "../openHab/templates/BrickOpenHAB_Switch.js"			),

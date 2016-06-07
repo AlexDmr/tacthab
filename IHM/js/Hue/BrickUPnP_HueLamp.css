@@ -1,0 +1,8 @@
+brick > section.BrickUPnP_HueLamp input[type="color"] {
+	width			: 24px;
+	height			: 24px;
+	position		: absolute;
+	right			: 0px;
+	bottom			: 0px; 
+	border-radius	: 50%;
+}

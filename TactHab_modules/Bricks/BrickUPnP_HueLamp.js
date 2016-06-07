@@ -33,7 +33,8 @@ BrickUPnP_HueLamp.prototype.update	= function(lampJS) {
 	// Check for changes, trigger events
 	
 	// Update the description
-	this.lampJS = lampJS;	
+	// this.lampJS = lampJS;
+	this.emit("update", lampJS);
 }
 BrickUPnP_HueLamp.prototype.get		= function(cbError, cbSuccess) {
 	var self = this;
@@ -51,6 +52,7 @@ BrickUPnP_HueLamp.prototype.get		= function(cbError, cbSuccess) {
 }
 BrickUPnP_HueLamp.prototype.set		= function(jsonSet, cbError, cbSuccess) {
 	var self = this;
+	console.log( "BrickUPnP_HueLamp.prototype.set", jsonSet );
 	request	( { url		: self.prefixHTTP + '/api/TActHab8888/lights/' + this.lampHueId + '/state'
 			  , method	: "PUT"
 			  , body	: JSON.stringify(jsonSet)
@@ -61,6 +63,7 @@ BrickUPnP_HueLamp.prototype.set		= function(jsonSet, cbError, cbSuccess) {
 					 if(cbError) {cbError(error);}
 					} else {var json = JSON.parse(responseText);
 							if(cbSuccess) {cbSuccess(responseText);}
+							console.error("BrickUPnP_HueLamp::set success:", responseText);
 							for(var i=0; i<json.length; i++) {
 								 if(json[i].success) {
 									 for(var varName in json[i].success) {
