@@ -102,6 +102,15 @@ socketBus.connectTo	= function( host, login, pass, friendlyName ) {
 									 self.emit( "message", {socket: "login", res:res, ms: Date()});
 									 if(res === 'banco') {
 									 	self.setfriendlyName( friendlyName );
+										socket.on 	( 'disconnect'
+													, function() { 
+														console.log( "socketBus disconnect" );
+														self.emit( "message", {socket: "disconnect", ms: Date()});
+														self.socketBus.disconnectFrom(host, login);
+														setTimeout( function() {
+															socketBus.connectTo( host, login, pass );
+														}, 1000 );
+													});
 										socket.emit	( "subscribe"
 													, { id		: 'all'
 													  , data	: { title	: '.*'
@@ -147,11 +156,6 @@ socketBus.connectTo	= function( host, login, pass, friendlyName ) {
 					console.log( "socketBus reconnect" );
 	 				self.emit( 'message', {socket: "reconnect_attempt", ms: Date()} );
 	 			});
-	 socket.on 	( 'disconnect'
-				, function() { 
-					console.log( "socketBus disconnect" );
-					self.emit( "message", {socket: "disconnect", ms: Date()});
-				});
 }
 
 module.exports = function(webServer/*, interpreter*/) {
