@@ -231,11 +231,35 @@ function getXYPointFromRGB(red, green, blue) {
 }
 
 
+function xyBriToRgb(x, y, bri){
+    var z, Y, X, Z, r, g, b, maxValue;
+
+    z = 1.0 - x - y;
+    Y = bri / 255.0; // Brightness of lamp
+    X = (Y / y) * x;
+    Z = (Y / y) * z;
+    r =  X * 1.656492 - Y * 0.354851 - Z * 0.255038;
+    g = -X * 0.707196 + Y * 1.655397 + Z * 0.036152;
+    b =  X * 0.051713 - Y * 0.121364 + Z * 1.011530;
+    r = r <= 0.0031308 ? 12.92 * r : (1.0 + 0.055) * Math.pow(r, (1.0 / 2.4)) - 0.055;
+    g = g <= 0.0031308 ? 12.92 * g : (1.0 + 0.055) * Math.pow(g, (1.0 / 2.4)) - 0.055;
+    b = b <= 0.0031308 ? 12.92 * b : (1.0 + 0.055) * Math.pow(b, (1.0 / 2.4)) - 0.055;
+    maxValue = Math.max(r,g,b);
+    r /= maxValue;
+    g /= maxValue;
+    b /= maxValue;
+    r = Math.round(r * 255);   if (r < 0) { r = 255 }
+    g = Math.round(g * 255);   if (g < 0) { g = 255 }
+    b = Math.round(b * 255);   if (b < 0) { b = 255 }
+    return {r :r, g :g, b :b};
+}
+
 module.exports = {
     rgbToHsl				: rgbToHsl,
     hslToRgb				: hslToRgb,
     rgbToHsv				: rgbToHsv,
     hsvToRgb				: hsvToRgb,
     stringRGB_to_IntArray	: stringRGB_to_IntArray,
-    getXYPointFromRGB		: getXYPointFromRGB
+    getXYPointFromRGB		: getXYPointFromRGB,
+    xyBriToRgb				: xyBriToRgb
 };

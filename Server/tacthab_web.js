@@ -92,12 +92,14 @@ socketBus.connectTo	= function( host, login, pass, friendlyName ) {
 	this.connections[id] = {socket: ioClient( host ), login: login, pass: pass, host: host};
 	var socket = this.connections[id].socket;
 	socket.on 	( 'connect'
-			   	, function() {
+			   	, function () {
 					 console.log("Connected to", host);
+					 self.emit( "message", {socket: "connect", ms: Date()});
 					 socket.emit( 'login'
 								, {login: login, pass: pass}
 								, function(res) {
 									 console.log("login =>", res);
+									 self.emit( "message", {socket: "login", res:res, ms: Date()});
 									 if(res === 'banco') {
 									 	self.setfriendlyName( friendlyName );
 										socket.emit	( "subscribe"
@@ -134,12 +136,22 @@ socketBus.connectTo	= function( host, login, pass, friendlyName ) {
 									} // socket.emit( 'login' ... )
 								);
 					}
-			   );
-	 socket.on ( 'disconnect'
-			   , function() {
-					 self.disconnectFrom(host, login);
-					}
-			   );
+				);
+	 socket.on	( 'reconnect_attempt'
+	 			, function() {
+	 				console.log( "socketBus reconnect_attempt" );
+	 				self.emit( 'message', {socket: "reconnect_attempt", ms: Date()} );
+	 			});
+	 socket.on 	( 'reconnect'
+	 			, function() {
+					console.log( "socketBus reconnect" );
+	 				self.emit( 'message', {socket: "reconnect_attempt", ms: Date()} );
+	 			});
+	 socket.on 	( 'disconnect'
+				, function() { 
+					console.log( "socketBus disconnect" );
+					self.emit( "message", {socket: "disconnect", ms: Date()});
+				});
 }
 
 module.exports = function(webServer/*, interpreter*/) {

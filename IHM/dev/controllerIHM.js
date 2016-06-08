@@ -68419,15 +68419,15 @@
 			BrickUPnP_MediaRenderer		: __webpack_require__( 80 			),
 			BrickUPnP_HueLamp			: __webpack_require__( 81							),
 			// openHab
-			BrickOpenHAB_item			: __webpack_require__( 85 					),
-			BrickOpenHAB_Switch			: __webpack_require__( 86			),
-			BrickOpenHAB_String			: __webpack_require__( 90			),
-			BrickOpenHAB_RollerShutter	: __webpack_require__( 94		),
-			BrickOpenHAB_Number			: __webpack_require__( 98			),
-			BrickOpenHAB_Dimmer			: __webpack_require__( 102			),
-			BrickOpenHAB_DateTime		: __webpack_require__( 106			),
-			BrickOpenHAB_Contact		: __webpack_require__( 110			),
-			BrickOpenHAB_Color			: __webpack_require__( 114				),
+			BrickOpenHAB_item			: __webpack_require__( 86 					),
+			BrickOpenHAB_Switch			: __webpack_require__( 87			),
+			BrickOpenHAB_String			: __webpack_require__( 91			),
+			BrickOpenHAB_RollerShutter	: __webpack_require__( 95		),
+			BrickOpenHAB_Number			: __webpack_require__( 99			),
+			BrickOpenHAB_Dimmer			: __webpack_require__( 103			),
+			BrickOpenHAB_DateTime		: __webpack_require__( 107			),
+			BrickOpenHAB_Contact		: __webpack_require__( 111			),
+			BrickOpenHAB_Color			: __webpack_require__( 115				),
 			// Fhem
 			BrickFhem					: __webpack_require__( 119							),
 			BrickFhem_tempSensor_05		: __webpack_require__( 120						),
@@ -68571,15 +68571,22 @@
 
 	__webpack_require__( 82 );
 	var template 		= __webpack_require__( 84 ),
-		colorConverter	= __webpack_require__( 115 );
+		colorConverter	= __webpack_require__( 85 );
 
 	module.exports = {
 		template	: template,
 		controller	: function($scope, utils) {
-			// var ctrl = this;
+			var ctrl = this;
+			this.color = "#000000";
 			utils.subscribeBrick( this.brick.id, "update", function(event) {
 				$scope.$applyAsync( function() {
 					console.log( "BrickUPnP_HueLamp::event", event );
+					Object.assign(ctrl.brick.lampJS, event.data);
+					// Update the color from bri and xy
+					var xy	= ctrl.brick.lampJS.state.xy,
+						bri	= ctrl.brick.lampJS.state.bri;
+					var rgb = colorConverter.xyBriToRgb(xy[0], xy[1], bri);
+
 				});
 			});
 
@@ -68620,375 +68627,10 @@
 /* 84 */
 /***/ function(module, exports) {
 
-	module.exports = "<section ng-class=\"ctrl.brick.type\" ng-dblclick=\"ctrl.toggle()\">\r\n\t<span class=\"description\">\r\n\t\t<section class=\"name\">{{ctrl.brick.name}}</section>\r\n\t\t<section class=\"separator\"></section>\r\n\t\t<section class=\"state\">{{ctrl.brick | json}}</section>\r\n\t</span>\r\n\t<img class=\"iconURL\" src=\"/IHM/images/icons/hue.png\"></img>\r\n\t<div class=\"color\"></div>\r\n\t<input ng-model=\"ctrl.color\" type=\"color\" ng-change=\"ctrl.setColor( ctrl.color )\" ng-show=\"ctrl.isOn\"/>\r\n</section>\r\n"
+	module.exports = "<section ng-class=\"ctrl.brick.type\" ng-dblclick=\"ctrl.toggle()\">\r\n\t<span class=\"description\">\r\n\t\t<section class=\"name\">{{ctrl.brick.name}}</section>\r\n\t\t<section class=\"separator\"></section>\r\n\t\t<section class=\"state\">{{ctrl.brick | json}}\r\n\t\t\t<span ng-show=\"ctrl..brick.lampJS.state.on\">ON</span><span ng-hide=\"ctrl..brick.lampJS.state.on\">OFF</span>\r\n\t\t\t<span ng-show=\"ctrl..brick.lampJS.state.reachable\">?</span>\r\n\t\t\t<input ng-model=\"ctrl.color\" type=\"color\" ng-change=\"ctrl.setColor( ctrl.color )\" ng-show=\"ctrl.isOn\"/>\r\n\t\t</section>\r\n\t</span>\r\n\t<img class=\"iconURL\" src=\"/IHM/images/icons/hue.png\"></img>\r\n\t<div class=\"color\"></div>\r\n\t<input ng-model=\"ctrl.color\" type=\"color\" ng-change=\"ctrl.setColor( ctrl.color )\" ng-show=\"ctrl.isOn\"/>\r\n</section>\r\n"
 
 /***/ },
 /* 85 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// var utils = require( "../../../../js/utils.js" );
-
-	module.exports = function($scope, utils) {
-		var ctrl = this;
-		var cbEventName = this.brick.id + "::state";
-		this.iconURL = "images/icons/openHab.png";
-		utils.io.emit	( "subscribeBrick"
-						, { brickId		: this.brick.id
-						  , eventName	: "state"
-						  , cbEventName	: cbEventName
-						} 
-						);
-		this.updateState = function(event) {
-			this.brick.state = event.data.value;
-			$scope.$applyAsync();
-		}
-		utils.io.on	( cbEventName
-					, function(event) {
-						 // console.log("brickOpenhab event:", event);
-						 ctrl.updateState(event);
-						}
-					);
-		this.setState = function() {
-			// console.log( "state", this.brick.state);
-			utils.call	( this.brick.id
-						, "setState"
-						, [this.brick.state]
-						);
-		}
-	}
-
-	module.exports.controller	= module.exports;
-	module.exports.template		= __webpack_require__( 74 );
-
-/***/ },
-/* 86 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var BrickOpenHAB = __webpack_require__( 85 );
-	__webpack_require__( 87 );
-
-	module.exports = {
-		template	: __webpack_require__( 89 ),
-		controller	: function(scope, utils) {
-			BrickOpenHAB.apply(this, [scope, utils]);
-			// console.log( "Create a switch controller", this.brick.state, this );
-			this.userSetSwitch = function() {
-				// console.log(e, this.value);
-				utils.call	( this.brick.id
-							, "setState"
-							, [this.value?"ON":"OFF"]
-							);
-			}
-			this.updateState = function(event, noUpdate) {
-				// console.log( "Switch event", event);
-				this.value = event.data.value === "ON";
-				// console.log(this.color);
-				if(noUpdate !== true) {scope.$apply();}
-			}
-			this.updateState( {data: {value: this.brick.state}}, true );
-		}
-	}
-
-
-/***/ },
-/* 87 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 88 */,
-/* 89 */
-/***/ function(module, exports) {
-
-	module.exports = "<md-switch\tng-model \t= \"ctrl.value\" \r\n\t\t\taria-label \t= \"ctrl.brick.name\" \r\n\t\t\tclass \t\t= \"md-block\" \r\n\t\t\tng-change \t= \"ctrl.userSetSwitch()\"\r\n\t\t\t>\r\n{{ctrl.brick.name}}\r\n</md-switch>"
-
-/***/ },
-/* 90 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var BrickOpenHAB = __webpack_require__( 85 );
-	__webpack_require__( 91 );
-
-	module.exports = {
-		template	: __webpack_require__( 93 ),
-		controller	: function(scope, utils) {
-			BrickOpenHAB.apply(this, [scope, utils]);
-			// console.log( "Create a color controller", this, scope );
-			this.userSetText = function() {
-				utils.call	( this.brick.id
-							, "setString"
-							, [this.brick.state]
-							);
-			}
-			this.updateState = function(event, noUpdate) {
-				console.log( "string update", event.data.value );
-				this.brick.state = event.data.value;
-				if(noUpdate !== true) {scope.$apply();}
-			}
-			
-			this.updateState( {data: {value: this.brick.state}}
-							, true 
-							);
-		}
-	}
-
-
-/***/ },
-/* 91 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 92 */,
-/* 93 */
-/***/ function(module, exports) {
-
-	module.exports = "\r\n<md-input-container>\r\n    <label>{{ctrl.brick.name}}</label>\r\n    <input\tng-model \t= \"ctrl.brick.state\" \r\n\t\t\ttype \t\t= \"text\"\r\n\t\t\tng-change \t= \"ctrl.userSetText()\"\r\n\t\t\t/>\r\n</md-input-container>\r\n"
-
-/***/ },
-/* 94 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var BrickOpenHAB = __webpack_require__( 85 );
-	__webpack_require__( 95 );
-
-	module.exports = {
-		template	: __webpack_require__( 97 ),
-		controller	: function(scope, utils) {
-			BrickOpenHAB.apply(this, [scope, utils]);
-			// console.log( "Create a Dimmer controller", scope.brick.state, this );
-			this.userSetNumber = function(/*e*/) {
-				// console.log(e, this.value);
-				utils.call	( this.brick.id
-							, "setNumber"
-							, [this.value]
-							);
-			}
-			this.updateState = function(event, noUpdate) {
-				console.log( "BrickOpenHAB_RollerShutter event", event, noUpdate);
-			}
-		}
-	}
-
-
-/***/ },
-/* 95 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 96 */,
-/* 97 */
-/***/ function(module, exports) {
-
-	module.exports = "\r\nRollerShutter"
-
-/***/ },
-/* 98 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var BrickOpenHAB = __webpack_require__( 85 );
-	__webpack_require__( 99 );
-
-	module.exports = {
-		template	: __webpack_require__( 101 ),
-		controller	: function(scope, utils) {
-			BrickOpenHAB.apply(this, [scope, utils]);
-			// console.log( "Create a Dimmer controller", scope.brick.state, this );
-			this.userSetNumber = function(/*e*/) {
-				// console.log(e, this.value);
-				utils.call	( this.brick.id
-							, "setNumber"
-							, [this.value]
-							);
-			}
-			this.updateState = function(event, noUpdate) {
-				// console.log( "Number event", event);
-				this.value = event.data.value;
-				// console.log(this.color);
-				if(noUpdate !== true) {scope.$apply();}
-			}
-			if(typeof this.brick.state !== "number") {this.brick.state = 0;}
-			this.updateState( {data: {value: this.brick.state}}, true );
-		}
-	}
-
-
-/***/ },
-/* 99 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 100 */,
-/* 101 */
-/***/ function(module, exports) {
-
-	module.exports = "\r\n<md-input-container class=\"md-block\" flex>\r\n\t<label>{{ctrl.brick.name}}</label>\r\n\t<!--<md-icon md-svg-src=\"img/icons/ic_card_giftcard_24px.svg\"></md-icon>-->\r\n\t<input\tng-model \t= \"ctrl.value\" \r\n\t\t\ttype \t\t= \"number\" \r\n\t\t\tng-change \t= \"ctrl.userSetNumber()\"\r\n\t\t\tflex \r\n\t\t\t/>\r\n</md-input-container>"
-
-/***/ },
-/* 102 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var BrickOpenHAB = __webpack_require__( 85 );
-	__webpack_require__( 103 );
-
-	module.exports = {
-		template	: __webpack_require__( 105 ),
-		controller	: function(scope, utils) {
-			BrickOpenHAB.apply(this, [scope, utils]);
-			// console.log( "Create a Dimmer controller", scope.brick.state, this );
-			this.userSetDimmer = function() {
-				// console.log("userSetDimmer", this.value);
-				utils.call	( this.brick.id
-							, "setValue"
-							, [this.value]
-							);
-			}
-			this.updateState = function(event, noUpdate) {
-				// console.log( "Dimmer event", event.data.value);
-				this.value = event.data.value;
-				// console.log(this.color);
-				if(noUpdate !== true) {scope.$apply();}
-			}
-			if(typeof this.brick.state === "string") {this.brick.state = parseInt(this.brick.state) || 0;}
-			this.updateState( {data: {value: this.brick.state}}, true );
-		}
-	}
-
-
-/***/ },
-/* 103 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 104 */,
-/* 105 */
-/***/ function(module, exports) {
-
-	module.exports = "<md-content layout=\"column\">\r\n\t<p>{{ctrl.brick.name}}</p>\r\n\t<md-slider\tflex \r\n\t\t\t\tmd-discrete \r\n\t\t\t\tng-model \t= \"ctrl.value\" \r\n\t\t\t\tstep=\"1\" min=\"0\" max=\"100\" \r\n\t\t\t\taria-label \t= \"{{ctrl.brick.name}}\"\r\n\t\t\t\tng-change \t= \"ctrl.userSetDimmer()\"\r\n\t\t\t\t>\r\n\t</md-slider>\r\n</md-content>\r\n"
-
-/***/ },
-/* 106 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var BrickOpenHAB = __webpack_require__( 85 );
-	__webpack_require__( 107 );
-
-	module.exports = {
-		template	: __webpack_require__( 109 ),
-		controller	: function(scope, utils) {
-			BrickOpenHAB.apply(this, [scope, utils]);
-			// console.log( "Create a color controller", this, scope );
-			this.updateState = function(event, noUpdate) {
-				console.log( "BrickOpenHAB_DateTime event", event, noUpdate);
-			}
-		}
-	};
-
-
-/***/ },
-/* 107 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 108 */,
-/* 109 */
-/***/ function(module, exports) {
-
-	module.exports = "\r\nDateTime"
-
-/***/ },
-/* 110 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var BrickOpenHAB = __webpack_require__( 85 );
-	__webpack_require__( 111 );
-
-	module.exports = {
-		template	: __webpack_require__( 113 ),
-		controller	: function(scope, utils) {
-			BrickOpenHAB.apply(this, [scope, utils]);
-			// console.log( "Create a color controller", this, scope );
-			this.updateState = function(event, noUpdate) {
-				console.log( "BrickOpenHAB_Contact event", event, noUpdate);
-			}
-		}
-	};
-
-
-/***/ },
-/* 111 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 112 */,
-/* 113 */
-/***/ function(module, exports) {
-
-	module.exports = "Contact {{ctrl.brick.name}}: {{ctrl.brick.state}}"
-
-/***/ },
-/* 114 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var BrickOpenHAB = __webpack_require__( 85 );
-	var convert = __webpack_require__( 115 );
-	__webpack_require__( 116 );
-
-	function toHex(d) {
-		return  ("0"+(Number(d).toString(16))).slice(-2).toLowerCase()
-	}
-
-	module.exports = {
-		template	: __webpack_require__( 118 ),
-		controller	: function(scope, utils) {
-			BrickOpenHAB.apply(this, [scope, utils]);
-			// console.log( "Create a color controller", this, scope );
-			this.userSetColor = function(/*e*/) {
-				// console.log(e, this.color);
-				var r = parseInt( this.color.slice(1,3), 16 )
-				  , g = parseInt( this.color.slice(3,5), 16 )
-				  , b = parseInt( this.color.slice(5,7), 16 )
-				  ;
-				// console.log(this.color, "=>", r, g, b);
-				utils.call	( this.brick.id
-							, "setColor_RGB"
-							, [r, g, b]
-							);
-			}
-			this.updateState = function(event, noUpdate) {
-				// console.log( "Color event", event);
-				var rgb  = convert.hsvToRgb ( event.data.hue / 360
-											, event.data.saturation / 100
-											, event.data.brightness / 100
-											);
-				// console.log(rgb);
-				var str = "#" + toHex(rgb[0]) + toHex(rgb[1]) + toHex(rgb[2]);
-				this.color = str;
-				// console.log(this.color);
-				if(noUpdate !== true) {scope.$apply();}
-			}
-			console.log( "color init with", this.brick.state ); 
-			this.updateState( {data: this.brick.state}
-							, true 
-							);
-		}
-	};
-
-
-/***/ },
-/* 115 */
 /***/ function(module, exports) {
 
 	/**
@@ -69224,14 +68866,403 @@
 	}
 
 
+	function xyBriToRgb(x, y, bri){
+	    var z, Y, X, Z, r, g, b, maxValue;
+
+	    z = 1.0 - x - y;
+	    Y = bri / 255.0; // Brightness of lamp
+	    X = (Y / y) * x;
+	    Z = (Y / y) * z;
+	    r =  X * 1.656492 - Y * 0.354851 - Z * 0.255038;
+	    g = -X * 0.707196 + Y * 1.655397 + Z * 0.036152;
+	    b =  X * 0.051713 - Y * 0.121364 + Z * 1.011530;
+	    r = r <= 0.0031308 ? 12.92 * r : (1.0 + 0.055) * Math.pow(r, (1.0 / 2.4)) - 0.055;
+	    g = g <= 0.0031308 ? 12.92 * g : (1.0 + 0.055) * Math.pow(g, (1.0 / 2.4)) - 0.055;
+	    b = b <= 0.0031308 ? 12.92 * b : (1.0 + 0.055) * Math.pow(b, (1.0 / 2.4)) - 0.055;
+	    maxValue = Math.max(r,g,b);
+	    r /= maxValue;
+	    g /= maxValue;
+	    b /= maxValue;
+	    r = Math.round(r * 255);   if (r < 0) { r = 255 }
+	    g = Math.round(g * 255);   if (g < 0) { g = 255 }
+	    b = Math.round(b * 255);   if (b < 0) { b = 255 }
+	    return {r :r, g :g, b :b};
+	}
+
 	module.exports = {
 	    rgbToHsl				: rgbToHsl,
 	    hslToRgb				: hslToRgb,
 	    rgbToHsv				: rgbToHsv,
 	    hsvToRgb				: hsvToRgb,
 	    stringRGB_to_IntArray	: stringRGB_to_IntArray,
-	    getXYPointFromRGB		: getXYPointFromRGB
+	    getXYPointFromRGB		: getXYPointFromRGB,
+	    xyBriToRgb				: xyBriToRgb
 	};
+
+/***/ },
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// var utils = require( "../../../../js/utils.js" );
+
+	module.exports = function($scope, utils) {
+		var ctrl = this;
+		var cbEventName = this.brick.id + "::state";
+		this.iconURL = "images/icons/openHab.png";
+		utils.io.emit	( "subscribeBrick"
+						, { brickId		: this.brick.id
+						  , eventName	: "state"
+						  , cbEventName	: cbEventName
+						} 
+						);
+		this.updateState = function(event) {
+			this.brick.state = event.data.value;
+			$scope.$applyAsync();
+		}
+		utils.io.on	( cbEventName
+					, function(event) {
+						 // console.log("brickOpenhab event:", event);
+						 ctrl.updateState(event);
+						}
+					);
+		this.setState = function() {
+			// console.log( "state", this.brick.state);
+			utils.call	( this.brick.id
+						, "setState"
+						, [this.brick.state]
+						);
+		}
+	}
+
+	module.exports.controller	= module.exports;
+	module.exports.template		= __webpack_require__( 74 );
+
+/***/ },
+/* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BrickOpenHAB = __webpack_require__( 86 );
+	__webpack_require__( 88 );
+
+	module.exports = {
+		template	: __webpack_require__( 90 ),
+		controller	: function(scope, utils) {
+			BrickOpenHAB.apply(this, [scope, utils]);
+			// console.log( "Create a switch controller", this.brick.state, this );
+			this.userSetSwitch = function() {
+				// console.log(e, this.value);
+				utils.call	( this.brick.id
+							, "setState"
+							, [this.value?"ON":"OFF"]
+							);
+			}
+			this.updateState = function(event, noUpdate) {
+				// console.log( "Switch event", event);
+				this.value = event.data.value === "ON";
+				// console.log(this.color);
+				if(noUpdate !== true) {scope.$apply();}
+			}
+			this.updateState( {data: {value: this.brick.state}}, true );
+		}
+	}
+
+
+/***/ },
+/* 88 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 89 */,
+/* 90 */
+/***/ function(module, exports) {
+
+	module.exports = "<md-switch\tng-model \t= \"ctrl.value\" \r\n\t\t\taria-label \t= \"ctrl.brick.name\" \r\n\t\t\tclass \t\t= \"md-block\" \r\n\t\t\tng-change \t= \"ctrl.userSetSwitch()\"\r\n\t\t\t>\r\n{{ctrl.brick.name}}\r\n</md-switch>"
+
+/***/ },
+/* 91 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BrickOpenHAB = __webpack_require__( 86 );
+	__webpack_require__( 92 );
+
+	module.exports = {
+		template	: __webpack_require__( 94 ),
+		controller	: function(scope, utils) {
+			BrickOpenHAB.apply(this, [scope, utils]);
+			// console.log( "Create a color controller", this, scope );
+			this.userSetText = function() {
+				utils.call	( this.brick.id
+							, "setString"
+							, [this.brick.state]
+							);
+			}
+			this.updateState = function(event, noUpdate) {
+				console.log( "string update", event.data.value );
+				this.brick.state = event.data.value;
+				if(noUpdate !== true) {scope.$apply();}
+			}
+			
+			this.updateState( {data: {value: this.brick.state}}
+							, true 
+							);
+		}
+	}
+
+
+/***/ },
+/* 92 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 93 */,
+/* 94 */
+/***/ function(module, exports) {
+
+	module.exports = "\r\n<md-input-container>\r\n    <label>{{ctrl.brick.name}}</label>\r\n    <input\tng-model \t= \"ctrl.brick.state\" \r\n\t\t\ttype \t\t= \"text\"\r\n\t\t\tng-change \t= \"ctrl.userSetText()\"\r\n\t\t\t/>\r\n</md-input-container>\r\n"
+
+/***/ },
+/* 95 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BrickOpenHAB = __webpack_require__( 86 );
+	__webpack_require__( 96 );
+
+	module.exports = {
+		template	: __webpack_require__( 98 ),
+		controller	: function(scope, utils) {
+			BrickOpenHAB.apply(this, [scope, utils]);
+			// console.log( "Create a Dimmer controller", scope.brick.state, this );
+			this.userSetNumber = function(/*e*/) {
+				// console.log(e, this.value);
+				utils.call	( this.brick.id
+							, "setNumber"
+							, [this.value]
+							);
+			}
+			this.updateState = function(event, noUpdate) {
+				console.log( "BrickOpenHAB_RollerShutter event", event, noUpdate);
+			}
+		}
+	}
+
+
+/***/ },
+/* 96 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 97 */,
+/* 98 */
+/***/ function(module, exports) {
+
+	module.exports = "\r\nRollerShutter"
+
+/***/ },
+/* 99 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BrickOpenHAB = __webpack_require__( 86 );
+	__webpack_require__( 100 );
+
+	module.exports = {
+		template	: __webpack_require__( 102 ),
+		controller	: function(scope, utils) {
+			BrickOpenHAB.apply(this, [scope, utils]);
+			// console.log( "Create a Dimmer controller", scope.brick.state, this );
+			this.userSetNumber = function(/*e*/) {
+				// console.log(e, this.value);
+				utils.call	( this.brick.id
+							, "setNumber"
+							, [this.value]
+							);
+			}
+			this.updateState = function(event, noUpdate) {
+				// console.log( "Number event", event);
+				this.value = event.data.value;
+				// console.log(this.color);
+				if(noUpdate !== true) {scope.$apply();}
+			}
+			if(typeof this.brick.state !== "number") {this.brick.state = 0;}
+			this.updateState( {data: {value: this.brick.state}}, true );
+		}
+	}
+
+
+/***/ },
+/* 100 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 101 */,
+/* 102 */
+/***/ function(module, exports) {
+
+	module.exports = "\r\n<md-input-container class=\"md-block\" flex>\r\n\t<label>{{ctrl.brick.name}}</label>\r\n\t<!--<md-icon md-svg-src=\"img/icons/ic_card_giftcard_24px.svg\"></md-icon>-->\r\n\t<input\tng-model \t= \"ctrl.value\" \r\n\t\t\ttype \t\t= \"number\" \r\n\t\t\tng-change \t= \"ctrl.userSetNumber()\"\r\n\t\t\tflex \r\n\t\t\t/>\r\n</md-input-container>"
+
+/***/ },
+/* 103 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BrickOpenHAB = __webpack_require__( 86 );
+	__webpack_require__( 104 );
+
+	module.exports = {
+		template	: __webpack_require__( 106 ),
+		controller	: function(scope, utils) {
+			BrickOpenHAB.apply(this, [scope, utils]);
+			// console.log( "Create a Dimmer controller", scope.brick.state, this );
+			this.userSetDimmer = function() {
+				// console.log("userSetDimmer", this.value);
+				utils.call	( this.brick.id
+							, "setValue"
+							, [this.value]
+							);
+			}
+			this.updateState = function(event, noUpdate) {
+				// console.log( "Dimmer event", event.data.value);
+				this.value = event.data.value;
+				// console.log(this.color);
+				if(noUpdate !== true) {scope.$apply();}
+			}
+			if(typeof this.brick.state === "string") {this.brick.state = parseInt(this.brick.state) || 0;}
+			this.updateState( {data: {value: this.brick.state}}, true );
+		}
+	}
+
+
+/***/ },
+/* 104 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 105 */,
+/* 106 */
+/***/ function(module, exports) {
+
+	module.exports = "<md-content layout=\"column\">\r\n\t<p>{{ctrl.brick.name}}</p>\r\n\t<md-slider\tflex \r\n\t\t\t\tmd-discrete \r\n\t\t\t\tng-model \t= \"ctrl.value\" \r\n\t\t\t\tstep=\"1\" min=\"0\" max=\"100\" \r\n\t\t\t\taria-label \t= \"{{ctrl.brick.name}}\"\r\n\t\t\t\tng-change \t= \"ctrl.userSetDimmer()\"\r\n\t\t\t\t>\r\n\t</md-slider>\r\n</md-content>\r\n"
+
+/***/ },
+/* 107 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BrickOpenHAB = __webpack_require__( 86 );
+	__webpack_require__( 108 );
+
+	module.exports = {
+		template	: __webpack_require__( 110 ),
+		controller	: function(scope, utils) {
+			BrickOpenHAB.apply(this, [scope, utils]);
+			// console.log( "Create a color controller", this, scope );
+			this.updateState = function(event, noUpdate) {
+				console.log( "BrickOpenHAB_DateTime event", event, noUpdate);
+			}
+		}
+	};
+
+
+/***/ },
+/* 108 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 109 */,
+/* 110 */
+/***/ function(module, exports) {
+
+	module.exports = "\r\nDateTime"
+
+/***/ },
+/* 111 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BrickOpenHAB = __webpack_require__( 86 );
+	__webpack_require__( 112 );
+
+	module.exports = {
+		template	: __webpack_require__( 114 ),
+		controller	: function(scope, utils) {
+			BrickOpenHAB.apply(this, [scope, utils]);
+			// console.log( "Create a color controller", this, scope );
+			this.updateState = function(event, noUpdate) {
+				console.log( "BrickOpenHAB_Contact event", event, noUpdate);
+			}
+		}
+	};
+
+
+/***/ },
+/* 112 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 113 */,
+/* 114 */
+/***/ function(module, exports) {
+
+	module.exports = "Contact {{ctrl.brick.name}}: {{ctrl.brick.state}}"
+
+/***/ },
+/* 115 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BrickOpenHAB = __webpack_require__( 86 );
+	var convert = __webpack_require__( 85 );
+	__webpack_require__( 116 );
+
+	function toHex(d) {
+		return  ("0"+(Number(d).toString(16))).slice(-2).toLowerCase()
+	}
+
+	module.exports = {
+		template	: __webpack_require__( 118 ),
+		controller	: function(scope, utils) {
+			BrickOpenHAB.apply(this, [scope, utils]);
+			// console.log( "Create a color controller", this, scope );
+			this.userSetColor = function(/*e*/) {
+				// console.log(e, this.color);
+				var r = parseInt( this.color.slice(1,3), 16 )
+				  , g = parseInt( this.color.slice(3,5), 16 )
+				  , b = parseInt( this.color.slice(5,7), 16 )
+				  ;
+				// console.log(this.color, "=>", r, g, b);
+				utils.call	( this.brick.id
+							, "setColor_RGB"
+							, [r, g, b]
+							);
+			}
+			this.updateState = function(event, noUpdate) {
+				// console.log( "Color event", event);
+				var rgb  = convert.hsvToRgb ( event.data.hue / 360
+											, event.data.saturation / 100
+											, event.data.brightness / 100
+											);
+				// console.log(rgb);
+				var str = "#" + toHex(rgb[0]) + toHex(rgb[1]) + toHex(rgb[2]);
+				this.color = str;
+				// console.log(this.color);
+				if(noUpdate !== true) {scope.$apply();}
+			}
+			console.log( "color init with", this.brick.state ); 
+			this.updateState( {data: this.brick.state}
+							, true 
+							);
+		}
+	};
+
 
 /***/ },
 /* 116 */

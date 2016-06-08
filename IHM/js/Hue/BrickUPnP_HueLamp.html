@@ -2,7 +2,11 @@
 	<span class="description">
 		<section class="name">{{ctrl.brick.name}}</section>
 		<section class="separator"></section>
-		<section class="state">{{ctrl.brick | json}}</section>
+		<section class="state">{{ctrl.brick | json}}
+			<span ng-show="ctrl..brick.lampJS.state.on">ON</span><span ng-hide="ctrl..brick.lampJS.state.on">OFF</span>
+			<span ng-show="ctrl..brick.lampJS.state.reachable">?</span>
+			<input ng-model="ctrl.color" type="color" ng-change="ctrl.setColor( ctrl.color )" ng-show="ctrl.isOn"/>
+		</section>
 	</span>
 	<img class="iconURL" src="/IHM/images/icons/hue.png"></img>
 	<div class="color"></div>

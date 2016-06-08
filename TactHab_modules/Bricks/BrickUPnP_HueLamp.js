@@ -8,6 +8,7 @@ function BrickUPnP_HueLamp(HueBridge, lampHueId, lampJS) {
 		this.HueBridge	= HueBridge;
 		this.lampHueId	= lampHueId;
 		this.prefixHTTP	= HueBridge.prefixHTTP;
+		this.lampJS = {};
 		this.update(lampJS);
 		var self = this;
 		this.set( { alert: "select"
@@ -29,13 +30,23 @@ BrickUPnP_HueLamp.prototype.getTypeName		= function() {return 'BrickUPnP_HueLamp
 BrickUPnP_HueLamp.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickUPnP_HueLamp.prototype.getTypeName()); return L;}
 BrickUPnP_HueLamp.prototype.registerType('BrickUPnP_HueLamp', BrickUPnP_HueLamp.prototype);
 
+BrickUPnP_HueLamp.prototype.getDescription	= function() {
+	var json = Brick.prototype.getDescription.apply(this, []);
+	json.lampJS = this.lampJS;
+
+	return json;
+}
+
 BrickUPnP_HueLamp.prototype.update	= function(lampJS) {
 	// Check for changes, trigger events
-	
-	// Update the description
-	// this.lampJS = lampJS;
+	var i;
+	for(i in lampJS) {
+		this.lampJS[i] = lampJS[i];
+	}
+	this.name = this.lampJS.name.slice();
 	this.emit("update", lampJS);
 }
+
 BrickUPnP_HueLamp.prototype.get		= function(cbError, cbSuccess) {
 	var self = this;
 	request	( { url		: self.prefixHTTP + '/api/TActHab8888/lights/' + this.lampHueId

@@ -5,10 +5,17 @@ var template 		= require( "./BrickUPnP_HueLamp.html" ),
 module.exports = {
 	template	: template,
 	controller	: function($scope, utils) {
-		// var ctrl = this;
+		var ctrl = this;
+		this.color = "#000000";
 		utils.subscribeBrick( this.brick.id, "update", function(event) {
 			$scope.$applyAsync( function() {
 				console.log( "BrickUPnP_HueLamp::event", event );
+				Object.assign(ctrl.brick.lampJS, event.data);
+				// Update the color from bri and xy
+				var xy	= ctrl.brick.lampJS.state.xy,
+					bri	= ctrl.brick.lampJS.state.bri;
+				var rgb = colorConverter.xyBriToRgb(xy[0], xy[1], bri);
+
 			});
 		});
 
