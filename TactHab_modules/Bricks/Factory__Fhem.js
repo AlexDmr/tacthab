@@ -5,7 +5,7 @@ var Brick			= require( './Brick.js' )
   , BrickFhemZwave	= require( './Fhem/BrickFhemZwave.js' )
   ;
   
-var WebSocketClient = websocket.client	
+var WebSocketClient = websocket.client	;
 var fhemDir = upath.normalizeSafe( __dirname );
 
 var dirFhem = __dirname + "/Fhem";
@@ -31,6 +31,7 @@ var FhemBridge = function(host, port) {
 	Brick.apply(this, []);
 	this.config = {host: undefined, port: undefined};
 	this.bricks	= [];
+	this.connected = false;
 	if(host && port) {
 	 	this.init(host, port);
 	}
@@ -53,14 +54,22 @@ FhemBridge.prototype.sendCommand	= function(cmd) {
 										)
 						 );
 }
+FhemBridge.prototype.setConnected	= function(b) {
+	this.emit( "update", {connected: this.connected = b} );
+}
 FhemBridge.prototype.getDescription	= function() {
 	var i, json = Brick.prototype.getDescription.apply(this, []);
-	json.config = this.config;
-	json.bricks	= [];
+	json.config 	= this.config;
+	json.connected	= this.connected;	
+	json.bricks		= [];
 	for(i=0; i<this.bricks.length; i++) {
 		json.bricks.push( this.bricks[i].brickId )
 	}
 	return json;
+}
+
+FhemBridge.prototype.disconnect	= function() {
+	if(this.ws_client) {this.ws_client.close();}
 }
 
 FhemBridge.prototype.init 	= function(host, port) {
@@ -70,7 +79,8 @@ FhemBridge.prototype.init 	= function(host, port) {
 	 // Brick.prototype.init.apply(this, []);
 	 // XXX Establish a websocket connexion with the server and retrieve everything
 	 var address = 'ws://' + host + ':' + port;
-	 this.ws_client = new WebSocketClient();
+	 console.log( "connect FHEM @", address);
+	 this.ws_client = new WebSocketClient() //address, ['json']);
 	 var firstTime = true;
 	 this.ws_client.on( 'connect'
 			  , function(connection) {
@@ -78,11 +88,13 @@ FhemBridge.prototype.init 	= function(host, port) {
 					 // Connected to Fhem
 					 console.log('FhemBridge::init Client connected to Fhem');
 					 clearInterval( self.reconnectTimer );
+					 self.setConnected(true);
 					 connection.on('close', function() {
 						 console.log('FhemBridge: Fhem disconnected, retry!');
 						 self.reconnectTimer =
 						 setInterval( function() {console.log("\tlet's retry"); 
 												  firstTime = false;
+												  self.setConnected( false );
 												  self.init(host, port);
 												  console.log("\t...");
 												 }
@@ -132,7 +144,6 @@ FhemBridge.prototype.init 	= function(host, port) {
 						}
 					}
 				);
-	 console.log( "connect FHEM @", address);
 	 this.ws_client.connect(address, ['json']);
 	 
 	 return this;
@@ -177,6 +188,9 @@ FhemBridge.prototype.processListEntry	= function(msg) {
 			this.bricks.push( brick );
 		break;
 
+	}
+	if(brick) {
+		this.emit( "update", {bricks: this.bricks});
 	}
 }
 	

@@ -68,7 +68,7 @@ socketBus.getConnections	= function() {
 	var json = {}, i;
 	for(i in this.connections) {
 		json[i] = {
-			friendlyName	: this.getfriendlyName(),
+			friendlyName	: socketBus.friendlyName,
 			host			: this.connections[i].host ,
 			login			: this.connections[i].login
 		}
@@ -106,9 +106,9 @@ socketBus.connectTo	= function( host, login, pass, friendlyName ) {
 													, function() { 
 														console.log( "socketBus disconnect" );
 														self.emit( "message", {socket: "disconnect", ms: Date()});
-														self.socketBus.disconnectFrom(host, login);
+														self.disconnectFrom(host, login);
 														setTimeout( function() {
-															socketBus.connectTo( host, login, pass );
+															self.connectTo( host, login, pass );
 														}, 1000 );
 													});
 										socket.emit	( "subscribe"

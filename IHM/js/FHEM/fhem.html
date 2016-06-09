@@ -6,6 +6,9 @@
 			<h4 ng-bind="$ctrl.brick.name"></h4>
 			<md-content layout="row">
 				<label>Fhem server at {{$ctrl.brick.config.host}}:{{$ctrl.brick.config.port}}</label>
+				<label>{{$ctrl.brick.bricks.length}} devices managed</label>
+				<md-button class="md-raised md-warn" ng-click="$ctrl.disconnect()" ng-show="$ctrl.brick.connected">Disconnect</md-button>
+				<md-button class="md-raised md-warn" ng-click="$ctrl.dispose()" ng-hide="$ctrl.brick.connected">Dispose</md-button>
 			</md-content>
 		</md-content>
 	</md-content>

@@ -7,14 +7,15 @@ module.exports = function(app) {
 		var ctrl = this;
 		utils.call( 'socketBus', 'getConnections', [] ).then( function(json) {
 			console.log( "socketBus getConnections =>", json);
-			for(var i in json) {
-				ctrl.config.host			= json[i].host || "https://thacthab.herokuapp.com";
-				ctrl.config.login			= json[i].login;
-				ctrl.config.friendlyName	= json[i].friendlyName;
-				if( ctrl.config.login !== "" ) {ctrl.connected = true;}
-				$scope.$apply();
-				break;
-			}
+			$scope.$applyAsync( function() {
+				for(var i in json) {
+					ctrl.config.host			= json[i].host || "https://thacthab.herokuapp.com";
+					ctrl.config.login			= json[i].login;
+					ctrl.config.friendlyName	= json[i].friendlyName;
+					if( ctrl.config.login !== "" ) {ctrl.connected = true;}
+					break;
+				}
+			});
 		});
 		this.logs		= [];
 		this.connected	= false;
@@ -26,7 +27,7 @@ module.exports = function(app) {
 		};
 		this.ping		= function() {utils.call( "socketBus", "ping", [] );}
 		this.connect	= function() {
-			utils.call( "socketBus", "connectTo", [this.config.host, this.config.login, this.config.pass] );
+			utils.call( "socketBus", "connectTo", [this.config.host, this.config.login, this.config.pass, this.config.friendlyName] );
 		}
 
 		// Subscribe to messages

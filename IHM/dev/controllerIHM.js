@@ -68573,6 +68573,36 @@
 	var template 		= __webpack_require__( 84 ),
 		colorConverter	= __webpack_require__( 85 );
 
+
+	function xyBriToRgb(x, y, bri) {
+		var z, X, Y, Z, r, g, b, maxValue;
+
+	    z = 1.0 - x - y;
+	    Y = bri / 255.0; // Brightness of lamp
+	    X = (Y / y) * x;
+	    Z = (Y / y) * z;
+	    r = X * 1.612 - Y * 0.203 - Z * 0.302;
+	    g = -X * 0.509 + Y * 1.412 + Z * 0.066;
+	    b = X * 0.026 - Y * 0.072 + Z * 0.962;
+	    r = r <= 0.0031308 ? 12.92 * r : (1.0 + 0.055) * Math.pow(r, (1.0 / 2.4)) - 0.055;
+	    g = g <= 0.0031308 ? 12.92 * g : (1.0 + 0.055) * Math.pow(g, (1.0 / 2.4)) - 0.055;
+	    b = b <= 0.0031308 ? 12.92 * b : (1.0 + 0.055) * Math.pow(b, (1.0 / 2.4)) - 0.055;
+	    maxValue = Math.max(r,g,b);
+	    r /= maxValue;
+	    g /= maxValue;
+	    b /= maxValue;
+	    r = r * 255;   if (r < 0) { r = 255 }
+	    g = g * 255;   if (g < 0) { g = 255 }
+	    b = b * 255;   if (b < 0) { b = 255 }
+	    return {
+	        r :r,
+	        g :g,
+	        b :b
+	    }
+	}
+
+
+
 	module.exports = {
 		template	: template,
 		controller	: function($scope, utils) {
@@ -68613,8 +68643,9 @@
 				var rgb = colorConverter.stringRGB_to_IntArray( color ).map( function(x) {return x/255} ),
 					xy  = colorConverter.getXYStateFromRGB(rgb, this.brick.lampJS.modelid )/*,
 					bri	= Math.max(rgb[0], rgb[1], rgb[2])*/;
-				console.log("=>", rgb);
-				console.log("=>", xy);
+				console.log("colorRGB   =>", rgb);
+				console.log("colorXYB   =>", xy );
+				console.log("xyBriToRgb =>", xyBriToRgb(xy[0], xy[1], xy[2]) );
 				console.log("=>", colorConverter.getRGBFromXYState(xy[0], xy[1], xy[2]) );
 				this.sendCommand( {on: true, xy: xy, bri: Math.round(255*xy[2])} );
 			}
@@ -71926,7 +71957,7 @@
 
 	var template = __webpack_require__(230);
 	module.exports = function(app) {
-		var controller = function() {
+		var controller = function($scope) {
 			var ctrl = this, host, port;
 			if( localStorage.TActHab_fhemConnect_host && localStorage.TActHab_fhemConnect_port ) {
 				host	= localStorage.TActHab_fhemConnect_host;
@@ -71945,8 +71976,22 @@
 					 			} ) 
 					 ;
 			}
+
+			if(this.brick) {
+				utils.subscribeBrick( this.brick.id, "update", function(event) {
+					$scope.$applyAsync( function() {
+						Object.assign(ctrl.brick, event.data);
+					});
+				});
+				this.disconnect	= function() {
+					utils.call( ctrl.brick.id, "disconnect", []);
+				}	
+				this.dispose	= function() {
+					utils.call( ctrl.brick.id, "dispose", []);
+				}	
+			}
 		};
-		controller.$inject = [];
+		controller.$inject = ["$scope"];
 		app.component( "fhem"
 					 , 	{ bindings		: { brick	: "=brick"
 										  }
@@ -71968,7 +72013,7 @@
 /* 230 */
 /***/ function(module, exports) {
 
-	module.exports = "<!-- Case where the openHab connection is already specified -->\r\n<md-card ng-if=\"$ctrl.brick\">\r\n\t<md-content layout=\"row\">\r\n\t\t<!-- <img class=\"icon fhem\" src=\"/js/Presentations/openHab/templates/openhab-logo-square.png\"></img> -->\r\n\t\t<md-content layout=\"column\">\r\n\t\t\t<h4 ng-bind=\"$ctrl.brick.name\"></h4>\r\n\t\t\t<md-content layout=\"row\">\r\n\t\t\t\t<label>Fhem server at {{$ctrl.brick.config.host}}:{{$ctrl.brick.config.port}}</label>\r\n\t\t\t</md-content>\r\n\t\t</md-content>\r\n\t</md-content>\r\n</md-card>\r\n\r\n<!-- Case where the we have to specify the Fhem connection -->\r\n<!-- <md-card>\r\n\t<md-content class=\"description\" layout=\"column\" ng-if=\"!$ctrl.brick\">\r\n\t\t<h4>Connect to a new Fhem server</h4>\r\n\t\t<md-content class=\"description\" layout=\"row\">\r\n\t\t\t<md-input-container class=\"md-block\">\r\n\t\t\t\t<label>Fhem host</label>\r\n\t\t\t\t<input ng-model=\"$ctrl.config.host\" type=\"text\">\r\n\t\t\t</md-input-container>\r\n\t\t\t<md-input-container class=\"md-block\">\r\n\t\t\t\t<label>Fhem port</label>\r\n\t\t\t\t<input ng-model=\"$ctrl.config.port\" type=\"text\">\r\n\t\t\t</md-input-container>\r\n\t\t</md-content>\r\n\t\t<md-button class=\"md-raised md-primary\" ng-click=\"$ctrl.connect()\">Connect</md-button>\r\n\t</md-content>\r\n</md-card> -->\r\n\r\n\r\n<md-card class=\"newConnection\" ng-if=\"!$ctrl.brick\">\r\n\t<md-card-title>\r\n\t\t<md-card-title-text>\r\n\t\t\t<span class=\"md-headline\">Connect to Fhem</span>\r\n\t\t\t<span class=\"md-subhead\">\r\n\t\t\t\t<md-input-container class=\"md-block host\">\r\n\t\t\t\t\t<label>host</label>\r\n\t\t\t\t\t<!-- <md-icon md-svg-src=\"img/icons/ic_person_24px.svg\" class=\"name\"></md-icon> -->\r\n\t\t\t\t\t<input ng-model=\"$ctrl.config.host\" type=\"text\">\r\n\t\t\t\t</md-input-container>\r\n\t\t\t\t<md-input-container class=\"md-block port\">\r\n\t\t\t\t\t<label>port</label>\r\n\t\t\t\t\t<!-- <md-icon md-svg-src=\"img/icons/ic_person_24px.svg\" class=\"name\"></md-icon> -->\r\n\t\t\t\t\t<input ng-model=\"$ctrl.config.port\" type=\"text\">\r\n\t\t\t\t</md-input-container>\r\n\t\t\t</span>\r\n\t\t</md-card-title-text>\r\n\t\t<md-card-title-media>\r\n\t\t\t<div class=\"md-media-lg card-media\"></div>\r\n\t\t</md-card-title-media>\r\n\t</md-card-title>\r\n\t</md-content>\r\n\t\t<md-button class=\"md-raised md-primary\" ng-click=\"$ctrl.connect()\">Connect</md-button>\r\n\t</md-content>\r\n</md-card>\r\n"
+	module.exports = "<!-- Case where the openHab connection is already specified -->\r\n<md-card ng-if=\"$ctrl.brick\">\r\n\t<md-content layout=\"row\">\r\n\t\t<!-- <img class=\"icon fhem\" src=\"/js/Presentations/openHab/templates/openhab-logo-square.png\"></img> -->\r\n\t\t<md-content layout=\"column\">\r\n\t\t\t<h4 ng-bind=\"$ctrl.brick.name\"></h4>\r\n\t\t\t<md-content layout=\"row\">\r\n\t\t\t\t<label>Fhem server at {{$ctrl.brick.config.host}}:{{$ctrl.brick.config.port}}</label>\r\n\t\t\t\t<label>{{$ctrl.brick.bricks.length}} devices managed</label>\r\n\t\t\t\t<md-button class=\"md-raised md-warn\" ng-click=\"$ctrl.disconnect()\" ng-show=\"$ctrl.brick.connected\">Disconnect</md-button>\r\n\t\t\t\t<md-button class=\"md-raised md-warn\" ng-click=\"$ctrl.dispose()\" ng-hide=\"$ctrl.brick.connected\">Dispose</md-button>\r\n\t\t\t</md-content>\r\n\t\t</md-content>\r\n\t</md-content>\r\n</md-card>\r\n\r\n<!-- Case where the we have to specify the Fhem connection -->\r\n<!-- <md-card>\r\n\t<md-content class=\"description\" layout=\"column\" ng-if=\"!$ctrl.brick\">\r\n\t\t<h4>Connect to a new Fhem server</h4>\r\n\t\t<md-content class=\"description\" layout=\"row\">\r\n\t\t\t<md-input-container class=\"md-block\">\r\n\t\t\t\t<label>Fhem host</label>\r\n\t\t\t\t<input ng-model=\"$ctrl.config.host\" type=\"text\">\r\n\t\t\t</md-input-container>\r\n\t\t\t<md-input-container class=\"md-block\">\r\n\t\t\t\t<label>Fhem port</label>\r\n\t\t\t\t<input ng-model=\"$ctrl.config.port\" type=\"text\">\r\n\t\t\t</md-input-container>\r\n\t\t</md-content>\r\n\t\t<md-button class=\"md-raised md-primary\" ng-click=\"$ctrl.connect()\">Connect</md-button>\r\n\t</md-content>\r\n</md-card> -->\r\n\r\n\r\n<md-card class=\"newConnection\" ng-if=\"!$ctrl.brick\">\r\n\t<md-card-title>\r\n\t\t<md-card-title-text>\r\n\t\t\t<span class=\"md-headline\">Connect to Fhem</span>\r\n\t\t\t<span class=\"md-subhead\">\r\n\t\t\t\t<md-input-container class=\"md-block host\">\r\n\t\t\t\t\t<label>host</label>\r\n\t\t\t\t\t<!-- <md-icon md-svg-src=\"img/icons/ic_person_24px.svg\" class=\"name\"></md-icon> -->\r\n\t\t\t\t\t<input ng-model=\"$ctrl.config.host\" type=\"text\">\r\n\t\t\t\t</md-input-container>\r\n\t\t\t\t<md-input-container class=\"md-block port\">\r\n\t\t\t\t\t<label>port</label>\r\n\t\t\t\t\t<!-- <md-icon md-svg-src=\"img/icons/ic_person_24px.svg\" class=\"name\"></md-icon> -->\r\n\t\t\t\t\t<input ng-model=\"$ctrl.config.port\" type=\"text\">\r\n\t\t\t\t</md-input-container>\r\n\t\t\t</span>\r\n\t\t</md-card-title-text>\r\n\t\t<md-card-title-media>\r\n\t\t\t<div class=\"md-media-lg card-media\"></div>\r\n\t\t</md-card-title-media>\r\n\t</md-card-title>\r\n\t</md-content>\r\n\t\t<md-button class=\"md-raised md-primary\" ng-click=\"$ctrl.connect()\">Connect</md-button>\r\n\t</md-content>\r\n</md-card>\r\n"
 
 /***/ },
 /* 231 */
@@ -71983,14 +72028,15 @@
 			var ctrl = this;
 			utils.call( 'socketBus', 'getConnections', [] ).then( function(json) {
 				console.log( "socketBus getConnections =>", json);
-				for(var i in json) {
-					ctrl.config.host			= json[i].host || "https://thacthab.herokuapp.com";
-					ctrl.config.login			= json[i].login;
-					ctrl.config.friendlyName	= json[i].friendlyName;
-					if( ctrl.config.login !== "" ) {ctrl.connected = true;}
-					$scope.$apply();
-					break;
-				}
+				$scope.$applyAsync( function() {
+					for(var i in json) {
+						ctrl.config.host			= json[i].host || "https://thacthab.herokuapp.com";
+						ctrl.config.login			= json[i].login;
+						ctrl.config.friendlyName	= json[i].friendlyName;
+						if( ctrl.config.login !== "" ) {ctrl.connected = true;}
+						break;
+					}
+				});
 			});
 			this.logs		= [];
 			this.connected	= false;
@@ -72002,7 +72048,7 @@
 			};
 			this.ping		= function() {utils.call( "socketBus", "ping", [] );}
 			this.connect	= function() {
-				utils.call( "socketBus", "connectTo", [this.config.host, this.config.login, this.config.pass] );
+				utils.call( "socketBus", "connectTo", [this.config.host, this.config.login, this.config.pass, this.config.friendlyName] );
 			}
 
 			// Subscribe to messages

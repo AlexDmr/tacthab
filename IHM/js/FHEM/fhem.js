@@ -3,7 +3,7 @@ var utils = require( "../../../js/utils.js" );
 
 var template = require("./fhem.html");
 module.exports = function(app) {
-	var controller = function() {
+	var controller = function($scope) {
 		var ctrl = this, host, port;
 		if( localStorage.TActHab_fhemConnect_host && localStorage.TActHab_fhemConnect_port ) {
 			host	= localStorage.TActHab_fhemConnect_host;
@@ -22,8 +22,22 @@ module.exports = function(app) {
 				 			} ) 
 				 ;
 		}
+
+		if(this.brick) {
+			utils.subscribeBrick( this.brick.id, "update", function(event) {
+				$scope.$applyAsync( function() {
+					Object.assign(ctrl.brick, event.data);
+				});
+			});
+			this.disconnect	= function() {
+				utils.call( ctrl.brick.id, "disconnect", []);
+			}	
+			this.dispose	= function() {
+				utils.call( ctrl.brick.id, "dispose", []);
+			}	
+		}
 	};
-	controller.$inject = [];
+	controller.$inject = ["$scope"];
 	app.component( "fhem"
 				 , 	{ bindings		: { brick	: "=brick"
 									  }

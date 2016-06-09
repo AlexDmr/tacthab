@@ -24,8 +24,10 @@ module.exports = function(webServer) {
 									var bricks = Brick.prototype.getBricks( function(b) {
 																	 return b.getTypeName
 																		 && b.getTypeName() === "FhemBridge"
-																		 && b.config.IP		=== host
-																		 && b.config.port	=== parseInt( req.body.port )
+																		 && b.config.host	=== host
+																		 && (	b.config.port	=== req.body.port
+																		 	|| 	b.config.port	=== parseInt( req.body.port )
+																		 	)
 																		 ;
 																	}
 															  );
