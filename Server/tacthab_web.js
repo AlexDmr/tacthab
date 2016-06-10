@@ -108,7 +108,7 @@ socketBus.connectTo	= function( host, login, pass, friendlyName ) {
 														self.emit( "message", {socket: "disconnect", ms: Date()});
 														self.disconnectFrom(host, login);
 														setTimeout( function() {
-															self.connectTo( host, login, pass );
+															self.connectTo( host, login, pass, friendlyName );
 														}, 1000 );
 													});
 										socket.emit	( "subscribe"
