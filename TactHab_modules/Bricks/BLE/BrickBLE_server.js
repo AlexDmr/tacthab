@@ -1,34 +1,42 @@
 var noble			= require('noble')
-  , SensorTag		= require('sensortag')
+  // , SensorTag		= require('sensortag')
   , BrickBLE		= require("./BrickBLE.js")
-  , BrickSensorTag	= require("./BrickSensorTag.js")
+  // , BrickSensorTag	= require("./BrickSensorTag.js")
   , BrickMetaWear	= require("./BrickMetaWear.js")
   ;
 
 var L_CB_Discover	= [];
 var initDone		= false;
+var scanning 		= false;
 
-var L_types			= [ {nobleType	: SensorTag.CC2540, brickType	: BrickSensorTag}
+var L_types			= [ /*{nobleType	: SensorTag.CC2540, brickType	: BrickSensorTag}
 					  , {nobleType	: SensorTag.CC2650, brickType	: BrickSensorTag}
-					  , {nobleType	: BrickMetaWear, 	brickType	: BrickMetaWear}
+					  ,*/ {nobleType	: BrickMetaWear, 	brickType	: BrickMetaWear}
 					  ];
 
 function init() {
-	if(initDone) {return false;} //else {initDone = true;}
+	if(initDone) {
+		if( !scanning ) {
+			scanning = true;
+			console.log("restart BLE scanning");
+			noble.startScanning();
+		}
+		return false;
+	}
 	
-	noble.on('scanStop', function() {
-		setTimeout( function() {
+	noble.on('scanStop', function() {scanning = false;} );
+	/*	setTimeout( function() {
 			console.log("restart BLE scanning");
 			noble.startScanning();
 		}, 1000 );
-	});
+	});*/
 
 	// Start scan
 	console.log("noble.state ===", noble.state);
 	if(noble.state === "poweredOn") {
 		console.log("BLE start scanning");
 		noble.startScanning( );
-		initDone = true;
+		initDone = scanning = true;
 	} else {
 		noble.on('stateChange', function(state) {
 			console.log("\tnoble state:", state);
@@ -36,7 +44,7 @@ function init() {
 				case 'poweredOn':
 					console.log("BLE start scanning");
 					noble.startScanning();
-					initDone = true;
+					initDone = scanning = true;
 				break;
 				default:
 			}

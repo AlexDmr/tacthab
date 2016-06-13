@@ -40,6 +40,15 @@ var FhemBridge = function(host, port) {
 
 FhemBridge.prototype = Object.create( Brick.prototype ); 
 FhemBridge.prototype.constructor = FhemBridge;
+
+FhemBridge.prototype.dispose	= function() {
+	Brick.prototype.dispose.apply(this, []);
+	if(this.ws_client) {
+		
+		this.ws_client = null;
+	}
+}
+
 FhemBridge.prototype.getTypeName = function() {return "FhemBridge";}
 FhemBridge.prototype.getTypes	= function() {
 	var L = Brick.prototype.getTypes(); 
