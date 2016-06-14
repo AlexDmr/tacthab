@@ -77,7 +77,7 @@ BrickBLE_sever.prototype.stopScanning	= function() {
 }
 
 
-BrickBLE.prototype.getDescription	= function() {
+BrickBLE_sever.prototype.getDescription	= function() {
 	 var json = Brick.prototype.getDescription.apply(this, []);
 	 json.BLE_server = {
 	 	bricks			: [],
