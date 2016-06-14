@@ -24,18 +24,18 @@ function BrickBLE_sever(id) {
 
 	noble.on('scanStart', function() {
 		server.BLE_server.scanning = true;
-		server.emit("update", {scanning: server.BLE_server.scanning} );
+		server.emit("update_BrickBLE_sever", {scanning: server.BLE_server.scanning} );
 	});
 	noble.on('scanStop', function() {
 		if(server.BLE_server.continuousScan && server.BLE_server.scanning) {
 			noble.startScanning();
 		} else {
 			server.BLE_server.scanning = false;
-			server.emit("update", {scanning: server.BLE_server.scanning} );
+			server.emit("update_BrickBLE_sever", {scanning: server.BLE_server.scanning} );
 		}
 	});
 	noble.on('stateChange', function(state) {
-		server.emit("update", {state: server.BLE_server.state = state})
+		server.emit("update_BrickBLE_sever", {state: server.BLE_server.state = state})
 		if(state === "poweredOn") {noble.startScanning();}
 	});
 	noble.on( 'discover', function(peripheral) {
