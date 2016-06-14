@@ -2,6 +2,7 @@ var bleSensorTag 	= require( "./bleSensorTag.js" )
   , bleBrick		= require( "./bleBrick.js" )
   , bleMetawear		= require( "./bleMetaWear.js" )
   , alxGrapher		= require( "./alxGrapher.js" )
+  , BrickBLE_server	= require( "./BrickBLE_server.js" )
   , utils			= require( "../../../js/utils.js" )
   ;
 
@@ -41,10 +42,11 @@ var controller = function($http, $scope) {
 controller.$inject = ["$http", "$scope"];
 						
 module.exports = function(app) {
-	bleBrick	(app);
-	bleSensorTag(app);
-	alxGrapher	(app);
-	bleMetawear	(app);
+	bleBrick		(app);
+	bleSensorTag	(app);
+	alxGrapher		(app);
+	bleMetawear		(app);
+	BrickBLE_server	(app);
 	app.directive( "bleServer"
 				 , function() {
 					 return {

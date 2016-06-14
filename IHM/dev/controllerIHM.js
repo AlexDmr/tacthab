@@ -71431,6 +71431,7 @@
 	  , bleBrick		= __webpack_require__( 220 )
 	  , bleMetawear		= __webpack_require__( 221 )
 	  , alxGrapher		= __webpack_require__( 224 )
+	  , BrickBLE_server	= __webpack_require__( 235 )
 	  , utils			= __webpack_require__( 10 )
 	  ;
 
@@ -71470,10 +71471,11 @@
 	controller.$inject = ["$http", "$scope"];
 							
 	module.exports = function(app) {
-		bleBrick	(app);
-		bleSensorTag(app);
-		alxGrapher	(app);
-		bleMetawear	(app);
+		bleBrick		(app);
+		bleSensorTag	(app);
+		alxGrapher		(app);
+		bleMetawear		(app);
+		BrickBLE_server	(app);
 		app.directive( "bleServer"
 					 , function() {
 						 return {
@@ -72089,6 +72091,59 @@
 /***/ function(module, exports) {
 
 	module.exports = "<md-card class=\"\">\r\n\t<md-card-title>\r\n\t\t<md-card-title-text>\r\n\t\t\t<span class=\"md-headline\">Connect to socketBus</span>\r\n\t\t\t<span class=\"md-subhead\">\r\n\t\t\t\t<md-input-container class=\"md-block host\">\r\n\t\t\t\t\t<label>host</label>\r\n\t\t\t\t\t<input ng-model=\"$ctrl.config.host\" type=\"text\">\r\n\t\t\t\t</md-input-container>\r\n\t\t\t\t<md-input-container class=\"md-block login\">\r\n\t\t\t\t\t<label>Friendly name</label>\r\n\t\t\t\t\t<input ng-model=\"$ctrl.config.friendlyName\" type=\"text\">\r\n\t\t\t\t</md-input-container>\r\n\t\t\t</span>\r\n\t\t</md-card-title-text>\r\n\t\t<md-card-title-media>\r\n\t\t\t<div class=\"md-media-lg card-media\"></div>\r\n\t\t</md-card-title-media>\r\n\t</md-card-title>\r\n\t<md-content>\r\n\t\t<md-content class=\"logPass\">\r\n\t\t\t<md-input-container class=\"login\">\r\n\t\t\t\t<label>login</label>\r\n\t\t\t\t<input ng-model=\"$ctrl.config.login\" type=\"text\">\r\n\t\t\t</md-input-container>\r\n\t\t\t<md-input-container class=\"pass\">\r\n\t\t\t\t<label>pass</label>\r\n\t\t\t\t<input ng-model=\"$ctrl.config.pass\" type=\"text\">\r\n\t\t\t</md-input-container>\r\n\t\t</md-content>\r\n\t\t<md-button ng-hide=\"$ctrl.connected\" class=\"md-raised md-primary\" ng-click=\"$ctrl.connect()\"\t>Connect\t</md-button>\r\n\t\t<md-button ng-show=\"$ctrl.connected\" class=\"md-raised md-primary\" ng-click=\"$ctrl.disconnect()\"\t>Disconnect\t</md-button>\r\n\t\t<md-button ng-show=\"$ctrl.connected\" class=\"md-raised md-primary\" ng-click=\"$ctrl.ping()\"\t\t>Ping\t\t</md-button>\r\n\t</md-content>\r\n</md-card>\r\n\r\n<md-list>\r\n\t<md-list-item class=\"md-3-line\" ng-repeat=\"log in $ctrl.logs\">\r\n\t\t{{log | json}}\r\n\t</md-list-item>\r\n</md-list>\r\n"
+
+/***/ },
+/* 235 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__( 239 );
+	var utils = __webpack_require__( 10 );
+
+	var template = __webpack_require__(241);
+	module.exports = function(app) {
+		var controller = function($scope) {
+			var ctrl = this;
+			if(this.brick) {
+				utils.subscribeBrick( this.brick.id, "update_BrickBLE_sever", function(event) {
+					$scope.$applyAsync( function() {
+						Object.assign(ctrl.brick.BLE_server, event.data);
+					});
+				});
+			}
+			this.startScanning	= function() {
+				if(this.brick) {utils.call( "BrickBLE_sever", "startScanning", [this.brick.BLE_server.continuousScan]);}
+			}
+			this.stopScanning	= function() {
+				if(this.brick) {utils.call( "BrickBLE_sever", "stopScanning" , []);}
+			}
+		};
+		controller.$inject = ["$scope"];
+		app.component( "brickBleServer"
+					 , 	{ bindings		: { brick	: "<"
+					 					  , context	: "<"
+										  }
+						, controller	: controller
+						, template		: template
+						}
+					);
+	}
+
+
+/***/ },
+/* 236 */,
+/* 237 */,
+/* 238 */,
+/* 239 */
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+/* 240 */,
+/* 241 */
+/***/ function(module, exports) {
+
+	module.exports = "<section ng-class=\"$ctrl.brick.type\">\r\n\t<md-card>\r\n\t\t<md-card-title>\r\n\t\t\t<md-card-title-text>\r\n\t\t\t\t<span class=\"md-headline\">\r\n\t\t\t\t\tBluetooth\r\n\t\t\t\t\t<span ng-hide=\"$ctrl.brick.BLE_server.state\">not</span>\r\n\t\t\t\t\tavailable\r\n\t\t\t\t</span>\r\n\t\t\t\t<span class=\"md-subhead\">\r\n\t\t\t\t\t<section>\r\n\t\t\t\t\t\t<div>\r\n\t\t\t\t\t\t\t<span ng-show=\"$ctrl.brick.BLE_server.bricks\">{{$ctrl.brick.BLE_server.bricks.length}}</span>\r\n\t\t\t\t\t\t\t<span ng-hide=\"$ctrl.brick.BLE_server.bricks\">No</span>\r\n\t\t\t\t\t\t\tbricks\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<div>\r\n\t\t\t\t\t\t\tState: \r\n\t\t\t\t\t\t\t\t<span ng-show=\"$ctrl.brick.BLE_server.scanning\">scanning</span>\r\n\t\t\t\t\t\t\t\t<span ng-hide=\"$ctrl.brick.BLE_server.scanning\">not scanning</span>\r\n\t\t\t\t\t\t\t\t<span ng-bind=\"$ctrl.brick.BLE_server.state\"></span>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t<md-checkbox\taria-label\t= \"Continuous scanning\"\r\n\t\t\t\t\t\t\t\t\t\tng-model\t= \"$ctrl.brick.BLE_server.continuousScan\">\r\n\t\t\t\t\t\t\tContinuous scanning\t\r\n\t\t\t\t\t\t</md-checkbox>\r\n\t\t\t\t\t</section>\r\n\t\t\t\t</span>\r\n\t\t\t</md-card-title-text>\r\n\t\t\t<md-card-title-media>\r\n\t\t\t\t<div class=\"md-media-lg card-media\">\r\n\t\t\t\t\t<img\tng-hide\t= \"$ctrl.brick.BLE_server.state\"\r\n\t\t\t\t\t\t\tsrc\t\t= \"/IHM/js/BLE/templates/multiply.png\"\r\n\t\t\t\t\t/>\r\n\t\t\t\t</div>\r\n\t\t\t</md-card-title-media>\r\n\t\t</md-card-title>\r\n\t\t<md-content>\r\n\t\t\t<md-button\tng-hide=\"$ctrl.brick.BLE_server.scanning\" \r\n\t\t\t\t\t\tclass=\"md-raised md-primary\" \r\n\t\t\t\t\t\tng-click=\"$ctrl.startScanning()\"\r\n\t\t\t>Start scanning</md-button>\r\n\t\t\t<md-button\tng-show=\"$ctrl.brick.BLE_server.scanning\" \r\n\t\t\t\t\t\tclass=\"md-raised md-primary\" \r\n\t\t\t\t\t\tng-click=\"$ctrl.stopScanning()\"\r\n\t\t\t>Stop scanning</md-button>\r\n\t\t</md-content>\r\n\t</md-card>\r\n\r\n\t<section class=\"bricks\">\r\n\t\t<ble-brick \tng-repeat = \"brick in context.bricks | toArray:false | filter:{type:'BrickBLE'}\" \r\n\t\t\t\t\tbrick = \"brick\"\r\n\t\t></ble-brick>\r\n\t</section>\r\n</section>\r\n\r\n"
 
 /***/ }
 /******/ ]);

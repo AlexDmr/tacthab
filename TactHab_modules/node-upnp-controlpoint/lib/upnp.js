@@ -177,7 +177,7 @@ function ControlPoint() {
   this.server = dgram.createSocket({ type: 'udp4', reuseAddr: true });
   this.server.on('message', function(msg, rinfo) {self.onRequestMessage(msg, rinfo);});
   //XXX this._initParsers();
-  this.P_membership = new Promise( function(resolve, reject) {
+  this.P_membership = new Promise( function(resolve/*, reject*/) {
 	  self.server.bind( SSDP_PORT
 					  , function () {
 							self.server.addMembership       (BROADCAST_ADDR); //fixed issue #2

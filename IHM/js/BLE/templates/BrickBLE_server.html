@@ -1,0 +1,56 @@
+<section ng-class="$ctrl.brick.type">
+	<md-card>
+		<md-card-title>
+			<md-card-title-text>
+				<span class="md-headline">
+					Bluetooth
+					<span ng-hide="$ctrl.brick.BLE_server.state">not</span>
+					available
+				</span>
+				<span class="md-subhead">
+					<section>
+						<div>
+							<span ng-show="$ctrl.brick.BLE_server.bricks">{{$ctrl.brick.BLE_server.bricks.length}}</span>
+							<span ng-hide="$ctrl.brick.BLE_server.bricks">No</span>
+							bricks
+						</div>
+						<div>
+							State: 
+								<span ng-show="$ctrl.brick.BLE_server.scanning">scanning</span>
+								<span ng-hide="$ctrl.brick.BLE_server.scanning">not scanning</span>
+								<span ng-bind="$ctrl.brick.BLE_server.state"></span>
+						</div>
+						<md-checkbox	aria-label	= "Continuous scanning"
+										ng-model	= "$ctrl.brick.BLE_server.continuousScan">
+							Continuous scanning	
+						</md-checkbox>
+					</section>
+				</span>
+			</md-card-title-text>
+			<md-card-title-media>
+				<div class="md-media-lg card-media">
+					<img	ng-hide	= "$ctrl.brick.BLE_server.state"
+							src		= "/IHM/js/BLE/templates/multiply.png"
+					/>
+				</div>
+			</md-card-title-media>
+		</md-card-title>
+		<md-content>
+			<md-button	ng-hide="$ctrl.brick.BLE_server.scanning" 
+						class="md-raised md-primary" 
+						ng-click="$ctrl.startScanning()"
+			>Start scanning</md-button>
+			<md-button	ng-show="$ctrl.brick.BLE_server.scanning" 
+						class="md-raised md-primary" 
+						ng-click="$ctrl.stopScanning()"
+			>Stop scanning</md-button>
+		</md-content>
+	</md-card>
+
+	<section class="bricks">
+		<ble-brick 	ng-repeat = "brick in context.bricks | toArray:false | filter:{type:'BrickBLE'}" 
+					brick = "brick"
+		></ble-brick>
+	</section>
+</section>
+

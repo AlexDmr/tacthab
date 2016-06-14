@@ -293,7 +293,7 @@ UpnpControlPoint.prototype._getDeviceDetails = function(udn, location, callback)
 	request(objRequest, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
 			xml2js.parseString(body, function(err, result) {
-                if (!result.root) {
+                if (err || !result || !result.root) {
                     console.log("problem getting device details: no result.root");
                     return;
                 }

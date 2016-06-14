@@ -32,6 +32,5 @@ require( "./Server/Fhem.js"			)(webServer);
 // var FhemBridge = require( "./TactHab_modules/Bricks/Factory__Fhem.js" );
 // var fb = new FhemBridge( "192.168.1.12", 8880);
 
-try {
-	require( "./Server/BLE.js"		)(webServer);
-} catch(errorBLE) {console.error("errorBLE", errorBLE);}
+var BLE = require( "./Server/BLE.js" )
+if(BLE) {BLE(webServer);}
