@@ -48,7 +48,7 @@
 	</md-card>
 
 	<section class="bricks">
-		<ble-brick 	ng-repeat = "brick in context.bricks | toArray:false | filter:{type:'BrickBLE'}" 
+		<ble-brick 	ng-repeat = "brick in $ctrl.context.bricks | toArray:false | filter:{type:'BrickBLE'}" 
 					brick = "brick"
 		></ble-brick>
 	</section>

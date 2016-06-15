@@ -8,7 +8,9 @@ module.exports = function(app) {
 		if(this.brick) {
 			utils.subscribeBrick( this.brick.id, "update_BrickBLE_sever", function(event) {
 				$scope.$applyAsync( function() {
+					console.log( "BrickBLE_server update with", event.data );
 					Object.assign(ctrl.brick.BLE_server, event.data);
+					console.log( "BLE_server brick:", ctrl.brick );
 				});
 			});
 		}

@@ -55,6 +55,7 @@ function BrickBLE_sever(id) {
 		}
 		if(!brick) {brick = new BrickBLE(peripheral.id, peripheral);}
 		server.BLE_server.bricks.push( brick );
+		server.emit("update_BrickBLE_sever", {bricks: this.getDescription().BLE_server.bricks});
 	});
 }
 
