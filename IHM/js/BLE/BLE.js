@@ -1,6 +1,6 @@
-var bleSensorTag 	= require( "./bleSensorTag.js" )
-  , bleBrick		= require( "./bleBrick.js" )
-  , bleMetawear		= require( "./bleMetaWear.js" )
+var bleBrick		= require( "./bleBrick.js" )
+  // , bleSensorTag 	= require( "./bleSensorTag.js" )
+  // , bleMetawear		= require( "./bleMetaWear.js" )
   , alxGrapher		= require( "./alxGrapher.js" )
   , BrickBLE_server	= require( "./BrickBLE_server.js" )
   , utils			= require( "../../../js/utils.js" )
@@ -43,19 +43,21 @@ controller.$inject = ["$http", "$scope"];
 						
 module.exports = function(app) {
 	bleBrick		(app);
-	bleSensorTag	(app);
+	// bleSensorTag	(app);
 	alxGrapher		(app);
-	bleMetawear		(app);
+	// bleMetawear		(app);
 	BrickBLE_server	(app);
-	app.directive( "bleServer"
+
+
+	/*app.directive( "bleServer"
 				 , function() {
 					 return {
 						restrict	: 'E',
-						scope		: {context	: "="},
+						scope		: {context	: "<"},
 						controller	: controller,
 						controllerAs: "ctrl",
 						templateUrl	: "/IHM/js/BLE/templates/bleServer.html",
-						link		: function(/*scope, element, attr, controller*/) {}
+						link		: function(scope, element, attr, controller) {}
 					 };
-				 });
+				 });*/
 }

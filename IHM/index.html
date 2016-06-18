@@ -35,27 +35,30 @@
 				<alx-activities context="T.context" activities="T.activities" title="Les activités"></alx-activities>
 			</md-tab-body>
 		</md-tab>
-		<md-tab >
+		<md-tab>
 			<md-tab-label>Bridges</md-tab-label>
 			<md-tab-body class="openHab">
 				<h2>OpenHab</h2>
 				<open-hab></open-hab>
-				<open-hab ng-repeat="brick in ((T.context.bricks | toArray:false) | filterBridgeOpenHAB)"
-						  brick="brick"
+				<open-hab ng-repeat	= "brick in ((T.context.bricks | toArray:false) | filterBridgeOpenHAB)"
+						  brick		= "brick"
 						>
 				</open-hab>
 				<hr/>
 				<h2>Fhem</h2>
 				<fhem></fhem>
-				<fhem ng-repeat="brick in ((T.context.bricks | toArray:false) | filterBridgeFhem)"
-						  brick="brick"
+				<fhem	ng-repeat	= "brick in ((T.context.bricks | toArray:false) | filterBridgeFhem)"
+						brick		= "brick"
 						>
 				</fhem>
 				<hr/>
 				<h2>socketBus</h2>
 				<socket-bus></socket-bus>
 				<hr/>
-				<brick-ble-server context="T.context" brick="T.context.bricks['BrickBLE_sever']"></brick-ble-server>
+				<brick-ble-server	context		= "T.context"
+									brick		= "brick"
+									ng-repeat	= "brick in ((T.context.bricks | toArray:false) | filterBrickBLE_server)"
+				></brick-ble-server>
 			</md-tab-body>
 		</md-tab>
 

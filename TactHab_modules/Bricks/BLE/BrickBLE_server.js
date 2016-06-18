@@ -11,7 +11,7 @@ var L_types			= [ /*{nobleType	: SensorTag.CC2540, brickType	: BrickSensorTag}
 					  ,*/ {nobleType	: BrickMetaWear, 	brickType	: BrickMetaWear}
 					  ];
 
-function BrickBLE_sever(id) {
+function BrickBLE_server(id) {
 	var server = this;
 	Brick.apply(this, [ id ]);
 
@@ -55,30 +55,32 @@ function BrickBLE_sever(id) {
 		}
 		if(!brick) {brick = new BrickBLE(peripheral.id, peripheral);}
 		server.BLE_server.bricks.push( brick );
-		server.emit("update_BrickBLE_sever", {bricks: this.getDescription().BLE_server.bricks});
+		server.emit("update_BrickBLE_sever", {bricks: server.getDescription().BLE_server.bricks});
 	});
 }
 
-BrickBLE_sever.prototype				= Object.create(Brick.prototype);
-BrickBLE_sever.prototype.constructor	= BrickBLE_sever;
-BrickBLE_sever.prototype.getTypeName	= function() {return "BrickBLE_sever";}
-BrickBLE_sever.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickBLE_sever.prototype.getTypeName()); return L;}
+BrickBLE_server.prototype				= Object.create(Brick.prototype);
+BrickBLE_server.prototype.constructor	= BrickBLE_server;
+BrickBLE_server.prototype.getTypeName	= function() {return "BrickBLE_server";}
+BrickBLE_server.prototype.getTypes		= function() {var L=Brick.prototype.getTypes(); L.push(BrickBLE_server.prototype.getTypeName()); return L;}
 
-BrickBLE_sever.prototype.startScanning	= function(continuousScan) {
+BrickBLE_server.prototype.startScanning	= function(continuousScan) {
+	console.log( "BrickBLE_server::startScanning", continuousScan );
 	this.BLE_server.continuousScan = continuousScan?true:false;
 	if( !this.BLE_server.scanning && noble.state === "poweredOn") {
 		noble.startScanning();
 	}
 	this.emit( "update_BrickBLE_sever", {continuousScan: this.BLE_server.continuousScan} );
 }
-BrickBLE_sever.prototype.stopScanning	= function() {
+BrickBLE_server.prototype.stopScanning	= function() {
+	console.log( "BrickBLE_server::stopScanning" );
 	this.BLE_server.continuousScan	= false;
 	noble.stopScanning();
 	this.emit( "update_BrickBLE_sever", {continuousScan: this.BLE_server.continuousScan} );
 }
 
 
-BrickBLE_sever.prototype.getDescription	= function() {
+BrickBLE_server.prototype.getDescription	= function() {
 	 var json = Brick.prototype.getDescription.apply(this, []);
 	 json.BLE_server = {
 	 	bricks			: [],
@@ -87,11 +89,11 @@ BrickBLE_sever.prototype.getDescription	= function() {
 	 	state			: this.BLE_server.state
 	 };
 
-	 this.BLE_server.bricks.forEach( function(brick) {json.BLE_server.push( brick.id )} );
+	 this.BLE_server.bricks.forEach( function(brick) {json.BLE_server.bricks.push( brick.getDescription() )} );
 
 	 return json;
 }
 
-var BrickBLE_sever_singleton = new BrickBLE_sever( "BrickBLE_sever" );
+var BrickBLE_sever_singleton = new BrickBLE_server( "BrickBLE_server" );
 
 module.exports = BrickBLE_sever_singleton;

@@ -4,8 +4,11 @@ brick-ble-server > section {
 }
 
 brick-ble-server > section > * {
-	min-width 			: 512px;
-	max-width 			: 512px;
+	width 				: 384px;
+}
+
+brick-ble-server > section > .bricks {
+	width 				: 640px;
 }
 
 brick-ble-server > section > section.bricks {

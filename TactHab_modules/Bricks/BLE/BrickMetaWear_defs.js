@@ -1,9 +1,17 @@
+/*
+    Information from : 
+        - https://mbientlab.com/cppdocs/latest/
+        - https://github.com/mbientlab/Metawear-CppAPI/tree/master/src/metawear/sensor
+        - 
+*/
+
 const BASE_URI      = '326a#id#85cb9195d9dd464cfbbae75a'
     , SERVICE_UUID  = BASE_URI.replace('#id#', '9000')
     , COMMAND_UUID  = BASE_URI.replace('#id#', '9001')
     , NOTIFY_UUID   = BASE_URI.replace('#id#', '9006')
     ;
 
+// https://github.com/mbientlab/Metawear-CppAPI/blob/master/src/metawear/core/module.h
 const modules = {
     SWITCH                          : 0x01,
     LED                             : 0x02,
@@ -23,10 +31,67 @@ const modules = {
     GSR                             : 0x10,
     SETTINGS                        : 0x11,
     BAROMETER                       : 0x12,
-    GYRO                            : 0x13,
-    AMBIENT_LIGHT                   : 0x14,
+    GYRO							: 0x13,
+    AMBIENT_LIGHT					: 0x14,
+    MAGNETOMETER					: 0x15,
+	HUMIDITY						: 0x16,
+	COLOR_DETECTOR					: 0x17,
+	PROXIMITY						: 0x18,
     // break
     DEBUG                           : 0xfe
+};
+
+/*-----------------------------------------------------------------------------------------------------------------
+  Magnetometer BMM150 ---------------------------------------------------------------------------------------------
+*/
+//https://github.com/mbientlab/Metawear-CppAPI/blob/master/src/metawear/sensor/cpp/magnetometer_bmm150.cpp
+const MblMwMagBmm150PowerPreset	=	{
+	MWL_MW_MAG_BMM_150_PP_LOW_POWER			: {index: 0, data_rate: 0, rep_xy:  1, rep_z:  2},
+    MWL_MW_MAG_BMM_150_PP_REGULAR			: {index: 1, data_rate: 0, rep_xy:  4, rep_z: 14},
+    MWL_MW_MAG_BMM_150_PP_ENHANCED_REGULAR	: {index: 2, data_rate: 0, rep_xy:  7, rep_z: 26},
+    MWL_MW_MAG_BMM_150_PP_HIGH_ACCURACY		: {index: 3, data_rate: 5, rep_xy: 23, rep_z: 82}
+};
+//https://github.com/mbientlab/Metawear-CppAPI/blob/master/src/metawear/sensor/cpp/magnetometer_bmm150_register.h
+const MagnetometerBmm150Register =	{
+    POWER_MODE 								: 1,
+    DATA_INTERRUPT_ENABLE					: 2,
+    DATA_RATE								: 3,
+    DATA_REPETITIONS						: 4,
+    MAG_DATA								: 5
+};
+
+const DataInterpreter 			=	{
+    INT32 								: 0x00,
+    UINT32								: 0x01,
+    TEMPERATURE							: 0x02,
+    BOSCH_PRESSURE						: 0x03,
+    BOSCH_ALTITUDE						: 0x04,
+    BMI160_ROTATION						: 0x05,
+    BMI160_ROTATION_SINGLE_AXIS			: 0x06,
+    BOSCH_ACCELERATION					: 0x07,
+    BOSCH_ACCELERATION_SINGLE_AXIS		: 0x08,
+    MMA8452Q_ACCELERATION				: 0x09,
+    MMA8452Q_ACCELERATION_SINGLE_AXIS	: 0x0a,
+    BYTE_ARRAY							: 0x0b,
+    BMM150_B_FIELD						: 0x0c,
+    BMM150_B_FIELD_SINGLE_AXIS			: 0x0d,
+    SETTINGS_BATTERY_STATE				: 0x0e,
+    TCS34725_COLOR_ADC					: 0x0f,
+    BME280_HUMIDITY						: 0x10
+};
+
+
+
+/*-----------------------------------------------------------------------------------------------------------------
+  Accelerometer BMI160 ---------------------------------------------------------------------------------------------
+  https://github.com/mbientlab/Metawear-CppAPI/blob/master/src/metawear/sensor/cpp/accelerometer_bosch.cpp
+*/
+const AccelerometerBmi160Register = {
+    POWER_MODE 	                    : 1,
+    DATA_INTERRUPT_ENABLE           : 2,
+    DATA_CONFIG                     : 3,
+    DATA_INTERRUPT 			        : 4,
+    DATA_INTERRUPT_CONFIG 			: 5
 };
 
 const MblMwAccBmi160Range = { // 0x3, 0x5, 0x8, 0xc
@@ -36,13 +101,6 @@ const MblMwAccBmi160Range = { // 0x3, 0x5, 0x8, 0xc
     MBL_MW_ACC_BMI160_FSR_16G		: 0xc	///< +/- 16g
 } ;
 
-const AccelerometerBmi160Register = {
-    POWER_MODE 	                    : 1,
-    DATA_INTERRUPT_ENABLE           : 2,
-    DATA_CONFIG                     : 3,
-    DATA_INTERRUPT 			        : 4,
-    DATA_INTERRUPT_CONFIG 			: 5
-};
 
 /**
  * Available ouput data rates on the BMI160 accelerometer
@@ -119,6 +177,7 @@ const MblMwGyroBmi160Range = {
 
 
 module.exports = {
+	DataInterpreter 			: DataInterpreter,
     // Modules
     BASE_URI                    : BASE_URI,
     SERVICE_UUID                : SERVICE_UUID,
@@ -141,6 +200,9 @@ module.exports = {
     BarometerBmp280Register		: BarometerBmp280Register,
     // LED
     LED 						: LED,
+    // Magnetometer
+    MblMwMagBmm150PowerPreset	: MblMwMagBmm150PowerPreset,
+	MagnetometerBmm150Register 	: MagnetometerBmm150Register,
 
     // Information
     informations                : "MetaWear modules, translated from C++ API, tested for model R only."

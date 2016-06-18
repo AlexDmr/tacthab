@@ -10,15 +10,15 @@ module.exports = function(app) {
 				$scope.$applyAsync( function() {
 					console.log( "BrickBLE_server update with", event.data );
 					Object.assign(ctrl.brick.BLE_server, event.data);
-					console.log( "BLE_server brick:", ctrl.brick );
+					console.log( "BrickBLE_server brick:", ctrl.brick );
 				});
 			});
 		}
 		this.startScanning	= function() {
-			if(this.brick) {utils.call( "BrickBLE_sever", "startScanning", [this.brick.BLE_server.continuousScan]);}
+			if(this.brick) {utils.call( this.brick.id, "startScanning", [this.brick.BLE_server.continuousScan]);}
 		}
 		this.stopScanning	= function() {
-			if(this.brick) {utils.call( "BrickBLE_sever", "stopScanning" , []);}
+			if(this.brick) {utils.call( this.brick.id, "stopScanning" , []);}
 		}
 	};
 	controller.$inject = ["$scope"];

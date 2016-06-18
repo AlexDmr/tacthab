@@ -150,15 +150,23 @@ BrickBLE.prototype.readCharacteristic	= function(uuid) {
 }
 	
 BrickBLE.prototype.writeCharacteristic	= function(uuid, value) {
-	var characteristic = this.characteristics[uuid];
+	var characteristic = this.characteristics[uuid], i, index;
 	console.log( this.brickId, "writeCharacteristic", uuid, value );
 	if( characteristic ) {
 		var buffer;
 		if(value.constructor === Buffer) {
 			buffer = value;
 		} else {
-			buffer = new Buffer( Buffer.byteLength(value, 'utf8') );
-			buffer.write(value, 0);
+			if( value.indexOf("0x") === 0) {
+				buffer = new Buffer( Buffer.byteLength(value, 'utf8') - 2 );
+				for(i=0; i<buffer.length; i++) {
+					index = 2*(i+1)
+					buffer[i] = parseInt( value.slice(index, index+2), 16);
+				}
+			} else {
+				buffer = new Buffer( Buffer.byteLength(value, 'utf8') );
+				buffer.write(value, 0);
+			}
 		}
 		// console.log( "\tbuffer:", buffer);
 		return new Promise( function(resolve, reject) {
@@ -168,7 +176,7 @@ BrickBLE.prototype.writeCharacteristic	= function(uuid, value) {
 			});
 		});
 	}
-	return Promise.reject( "no such characteristic" );
+	return Promise.reject( "no such characteristic", uuid, "in", this.characteristics );
 }
 
 BrickBLE.prototype.notifyCharacteristic = function(uuid, notify) {

@@ -6,10 +6,12 @@ function filterBrickType(type) {
 		return obj.type.indexOf(type) !== -1;
 	}
 }
-var filterBrickFhem		= filterBrickType( "BrickFhem" )
-  , filterBridgeFhem	= filterBrickType( "FhemBridge" )
-  , filterBridgeOpenHAB	= filterBrickType( "BridgeOpenHAB" )
-  , filterBrickOpenHAB	= filterBrickType( "BrickOpenHAB_item" )
+var filterBrickFhem			= filterBrickType( "BrickFhem" )
+  , filterBridgeFhem		= filterBrickType( "FhemBridge" )
+  , filterBridgeOpenHAB		= filterBrickType( "BridgeOpenHAB" )
+  , filterBrickOpenHAB		= filterBrickType( "BrickOpenHAB_item" )
+  , filterBrickBLE_server	= filterBrickType( "BrickBLE_server" )
+  , filterBrickBLE			= filterBrickType( "BrickBLE" )
   ;
 
 angular	.module(id, [])
@@ -29,6 +31,14 @@ angular	.module(id, [])
 		.filter( 'filterBrickOpenHAB', 
 			function() {return function(A) {
 				return A.filter( filterBrickOpenHAB );
+			}})
+		.filter( 'filterBrickBLE_server', 
+			function() {return function(A) {
+				return A.filter( filterBrickBLE_server );
+			}})
+		.filter( 'filterBrickBLE', 
+			function() {return function(A) {
+				return A.filter( filterBrickBLE );
 			}})
 		;
 

@@ -2,50 +2,52 @@ require( "./templates/bleMetaWear.css" );
 
 var utils				= require( "../../../js/utils.js" )
   , subscribeForEvent	= require( "./subscribeForEvent.js" )
+  , template			= require( "./templates/bleMetaWear.html" )
   ;
 
-var controller = function($http, $scope) {
+var controller = function($scope) {
 	var ctrl = this;
 	this.isConnecting	= false;
-	this.button= { data: [], period: 100, maxSize: 200, enabled: false
-				 , name 		: "Button/Switch"};
-	this.acc   = { data: [], period: 100, maxSize: 200, enabled: false
-				 , name 		: "Accelerometer"};
-	this.gyro  = { data: [], period: 100, maxSize: 200, enabled: false
-				 , name 		: "Gyroscope"};
+	this.button			= { data: [], period: 100, maxSize: 200, enabled: false
+						  , name 		: "Button/Switch"};
+	this.acc   			= { data: [], period: 100, maxSize: 200, enabled: false
+						  , name 		: "Accelerometer"};
+	this.gyro  			= { data: [], period: 100, maxSize: 200, enabled: false
+						  , name 		: "Gyroscope"};
+	this.magnetometer	= { data: [], period: 'MWL_MW_MAG_BMM_150_PP_LOW_POWER', maxSize: 200, enabled: false
+						  , name 		: "Magnetometer"};
 
 	this.connect		= function() {
-		console.log( "connecting to", $scope.brick.id );
-		ctrl.isConnecting = true; $scope.$applyAsync();
-		utils.call( $scope.brick.id, "connect", [] 
+		console.log( "connecting to", ctrl.brick.id );
+		$scope.$applyAsync( function() {ctrl.isConnecting = true;} );
+		utils.call( ctrl.brick.id, "connect", [] 
 				  ).then( function(/*res*/) {
-							 $scope.brick.isConnected	= true;
+							 $scope.$applyAsync( function() {ctrl.brick.isConnected	= true;} );
 							}
 						, function(err) {
-							 console.error("error connecting to", $scope.brick.id, ":", err);
+							 console.error("error connecting to", ctrl.brick.id, ":", err);
 							} 
 				  ).then( function() {
-							 ctrl.isConnecting = false;
-							 $scope.$applyAsync();
+							 $scope.$applyAsync( function() {ctrl.isConnecting = false;} );
 							} 
 				  );
 	}
 	this.disconnect		= function() {
-		console.log( "disconnecting from", $scope.brick.id );
-		ctrl.isConnecting = true; $scope.$applyAsync();
-		utils.call( $scope.brick.id, "disconnect", [] 
+		console.log( "disconnecting from", ctrl.brick.id );
+		$scope.$applyAsync( function() {ctrl.isConnecting = true;} );
+		utils.call( ctrl.brick.id, "disconnect", [] 
 				  ).then( function(/*res*/) {
-							 $scope.brick.isConnected	= false;
+							 $scope.$applyAsync( function() {ctrl.brick.isConnected	= false;} );
 							}
 						, function(err) {
-							 console.error("error disconnecting from", $scope.brick.id, ":", err);
+							 console.error("error disconnecting from", ctrl.brick.id, ":", err);
 							} 
 				  ).then( function() {
-							 ctrl.isConnecting = false;
-							 $scope.$applyAsync();
+							 $scope.$applyAsync( function() {ctrl.isConnecting = false;} );
 							}
 				  );
 	}
+
 
 	this.setPeriodSensor		= function(/*sensor*/) {
 		/*if(sensor.enabled) {
@@ -56,46 +58,44 @@ var controller = function($http, $scope) {
 		}*/
 	};
 	this.enableSensor	= function(sensor) {
-		console.log("enable"+sensor.name, $scope.brick.id);
-		utils.call	($scope.brick.id, "enable"+sensor.name, []
-					).then( function() {return utils.call($scope.brick.id, "notify"+sensor.name, []);} )
-					 .then( function() {return utils.call($scope.brick.id, "set"+sensor.name+"Period", [sensor.period]);} )
-					 .then( function() {sensor.enabled = true; $scope.$apply();})
+		console.log("enable"+sensor.name, ctrl.brick.id);
+		utils.call	(ctrl.brick.id, "enable"+sensor.name, []
+					).then( function() {return utils.call(ctrl.brick.id, "notify"+sensor.name, []);} )
+					 .then( function() {return utils.call(ctrl.brick.id, "set"+sensor.name+"Period", [sensor.period]);} )
+					 .then( function() { $scope.$applyAsync( function() {sensor.enabled = true;} );})
 	};
 	this.disableSensor	= function(sensor) {
-		utils.call	($scope.brick.id, "disable"+sensor.name, []
-					).then( function() {sensor.enabled = false; $scope.$apply();})
+		utils.call	(ctrl.brick.id, "disable"+sensor.name, []
+					).then( function() {
+						$scope.$applyAsync( function() {sensor.enabled = false;} );
+					});
 	};
 }
 controller.$inject = ["$http", "$scope"];
 						
-module.exports = function(app) {
-	app.directive( "bleMetaWear"
-				 , function() {
-					 return {
-						restrict	: 'E',
-						scope		: {brick	: "="},
-						controller	: controller,
-						controllerAs: "ctrl",
-						templateUrl	: "/IHM/js/BLE/templates/bleMetaWear.html",
-						//templateNamespace: "svg",
-						link		: function(scope, element, attr, controller) {
-							// console.log("create bleSensorTag HTML");
-							var processEvent = function(event, sensor) {
-								scope.$applyAsync( function() {
-									sensor.enabled = true;
-									sensor.data.push( event );
-									sensor.data.splice(0, sensor.data.length - sensor.maxSize);
-									// scope.lastData = event;
-								});
-							}
-							subscribeForEvent( scope.brick, "buttonChange", element
-											 , function(event) {processEvent(event, controller.button);} );
-							subscribeForEvent( scope.brick, "accelerometerChange", element
-											 , function(event) {processEvent(event, controller.acc);} );
-							subscribeForEvent( scope.brick, "gyroscopeChange", element
-											 , function(event) {processEvent(event, controller.gyro);} );
-						}
-					 };
-				 });
+
+function link(scope, element, attr, controller) {
+	// console.log("create bleSensorTag HTML");
+	var processEvent = function(event, sensor) {
+		scope.$applyAsync( function() {
+			sensor.enabled = true;
+			sensor.data.push( event );
+			sensor.data.splice(0, sensor.data.length - sensor.maxSize);
+		});
+	}
+	subscribeForEvent( controller.brick, "buttonChange", element
+					 , function(event) {processEvent(event, controller.button);} );
+	subscribeForEvent( controller.brick, "accelerometerChange", element
+					 , function(event) {processEvent(event, controller.acc);} );
+	subscribeForEvent( controller.brick, "gyroscopeChange", element
+					 , function(event) {processEvent(event, controller.gyro);} );
+	subscribeForEvent( controller.brick, "magnetometerChange", element
+					 , function(event) {processEvent(event, controller.magnetometer);} );
 }
+
+
+module.exports = {
+	controller	: controller,
+	template	: template,
+	link		: link
+};
