@@ -5,6 +5,14 @@
         - 
 */
 
+// MblMwDataSignal	( const ResponseHeader& header
+//					, MblMwMetaWearBoard *owner, DataInterpreter interpreter
+//					, uint8_t n_channels
+//					, uint8_t channel_size
+//					, uint8_t is_signed
+//					, uint8_t offset
+//					);
+
 const BASE_URI      = '326a#id#85cb9195d9dd464cfbbae75a'
     , SERVICE_UUID  = BASE_URI.replace('#id#', '9000')
     , COMMAND_UUID  = BASE_URI.replace('#id#', '9001')
@@ -40,6 +48,63 @@ const modules = {
     // break
     DEBUG                           : 0xfe
 };
+
+/*-----------------------------------------------------------------------------------------------------------------
+  BOSCH BMP280 barometer + temperature-----------------------------------------------------------------------------
+*/
+// https://github.com/mbientlab/Metawear-CppAPI/blob/master/src/metawear/sensor/barometer_bosch.h
+
+const BarometerBmp280Register 		= {
+    PRESSURE 										: 1,
+    ALTITUDE 										: 2,
+    CONFIG 											: 3,
+    CYCLIC 											: 4
+};
+
+
+// Supported oversampling modes on the Bosch barometers
+const MblMwBaroBoschOversampling	= {
+    MBL_MW_BARO_BOSCH_OVERSAMPLE_SKIP 				: 0,
+    MBL_MW_BARO_BOSCH_OVERSAMPLE_ULTRA_LOW_POWER	: 1,
+    MBL_MW_BARO_BOSCH_OVERSAMPLE_LOW_POWER 			: 2,
+    MBL_MW_BARO_BOSCH_OVERSAMPLE_STANDARD 			: 3,
+    MBL_MW_BARO_BOSCH_OVERSAMPLE_HIGH 				: 4,
+    MBL_MW_BARO_BOSCH_OVERSAMPLE_ULTRA_HIGH 		: 5
+};
+
+// Supported filter modes on the Bosch barometers
+const MblMwBaroBoschIirFilter 		= {
+    MBL_MW_BARO_BOSCH_IIR_FILTER_OFF 				: 0,
+    MBL_MW_BARO_BOSCH_IIR_FILTER_AVG_2 				: 1,
+    MBL_MW_BARO_BOSCH_IIR_FILTER_AVG_4 				: 2,
+    MBL_MW_BARO_BOSCH_IIR_FILTER_AVG_8 				: 3, 
+    MBL_MW_BARO_BOSCH_IIR_FILTER_AVG_16 			: 4
+} ;
+
+// Supported stand by times on the BMP280 barometer
+const MblMwBaroBmp280StandbyTime 	= {
+    MBL_MW_BARO_BMP280_STANDBY_TIME_0_5MS			: 0,
+    MBL_MW_BARO_BMP280_STANDBY_TIME_62_5MS			: 1,
+    MBL_MW_BARO_BMP280_STANDBY_TIME_125MS			: 2,
+    MBL_MW_BARO_BMP280_STANDBY_TIME_250MS			: 3,
+    MBL_MW_BARO_BMP280_STANDBY_TIME_500MS			: 4,
+    MBL_MW_BARO_BMP280_STANDBY_TIME_1000MS			: 5,
+    MBL_MW_BARO_BMP280_STANDBY_TIME_2000MS			: 6,
+    MBL_MW_BARO_BMP280_STANDBY_TIME_4000MS			: 7
+};
+
+// Supported stand by times on the BME280 barometer
+const MblMwBaroBme280StandbyTime 	= {
+    MBL_MW_BARO_BME280_STANDBY_TIME_0_5MS			: 0,
+    MBL_MW_BARO_BME280_STANDBY_TIME_62_5MS			: 1,
+    MBL_MW_BARO_BME280_STANDBY_TIME_125MS			: 2,
+    MBL_MW_BARO_BME280_STANDBY_TIME_250MS			: 3,
+    MBL_MW_BARO_BME280_STANDBY_TIME_500MS			: 4,
+    MBL_MW_BARO_BME280_STANDBY_TIME_1000MS			: 5,
+    MBL_MW_BARO_BME280_STANDBY_TIME_10MS			: 6,
+    MBL_MW_BARO_BME280_STANDBY_TIME_20MS			: 7
+};
+
 
 /*-----------------------------------------------------------------------------------------------------------------
   Magnetometer BMM150 ---------------------------------------------------------------------------------------------
@@ -126,13 +191,6 @@ const AmbientLightLtr329Register = {
     OUTPUT                          : 3
 };
 
-const BarometerBmp280Register = {
-    PRESSURE 						: 1,
-    ALTITUDE 						: 2,
-    CONFIG 							: 3,
-    CYCLIC 							: 4
-};
-
 const GyroBmi160Register = {
     POWER_MODE 						: 1,
     DATA_INTERRUPT_ENABLE 			: 2,
@@ -196,13 +254,17 @@ module.exports = {
     SwitchRegister				: SwitchRegister,
     // Ambiant light
     AmbientLightLtr329Register	: AmbientLightLtr329Register,
-    // Barometer
-    BarometerBmp280Register		: BarometerBmp280Register,
     // LED
     LED 						: LED,
     // Magnetometer
     MblMwMagBmm150PowerPreset	: MblMwMagBmm150PowerPreset,
 	MagnetometerBmm150Register 	: MagnetometerBmm150Register,
+	// Barometer
+	BarometerBmp280Register		: BarometerBmp280Register,
+	MblMwBaroBoschOversampling	: MblMwBaroBoschOversampling,
+	MblMwBaroBoschIirFilter 	: MblMwBaroBoschIirFilter,
+	MblMwBaroBmp280StandbyTime 	: MblMwBaroBmp280StandbyTime,
+	MblMwBaroBme280StandbyTime 	: MblMwBaroBme280StandbyTime,
 
     // Information
     informations                : "MetaWear modules, translated from C++ API, tested for model R only."

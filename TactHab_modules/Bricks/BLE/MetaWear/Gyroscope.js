@@ -18,7 +18,8 @@ proto.initGyroscope 	= function() {
 				  ;
 				brick.emit("gyroscopeChange", {x:x, y:y, z:z});
 				}
-			)
+			);
+	
 }
 
 

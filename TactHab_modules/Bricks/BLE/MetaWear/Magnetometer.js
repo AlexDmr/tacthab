@@ -29,7 +29,7 @@ proto.initMagnetometer 	= function() {
 				  , y = data.readInt16LE(4) 
 				  , z = data.readInt16LE(6) 
 				  ;
-				console.log( "magnetometerChange", {x:x, y:y, z:z} );
+				// console.log( "magnetometerChange", {x:x, y:y, z:z} );
 				brick.emit("magnetometerChange", {x:x, y:y, z:z});
 				}
 			)

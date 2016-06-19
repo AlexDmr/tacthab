@@ -14,15 +14,30 @@ var controller = function($scope) {
 		if(    !$scope.descriptionData 
 			|| !$scope.descriptionData.data 
 			||  $scope.descriptionData.data.length === 0) {return;}
-		var i, j, att, data, value, item = $scope.descriptionData.data[0]
-		  , L_attributs = Object.keys(item);
-		ctrl.values = [];
+		var j, att, data, value;
+		ctrl.values = {};
 		var scale = 50 / (max?1.15*max:1);
-		for(i=0; i<L_attributs.length; i++) {
+		for(j=0; j<$scope.descriptionData.data.length; j++) {
+			data = $scope.descriptionData.data[j]
+			for(att in data) {
+				ctrl.values[att] = ctrl.values[att] || {name: att, string: ""};
+				value = data[att];
+				if(Math.abs(value) > max ) {max = Math.abs(value);}
+				ctrl.values[att].string += j;
+				ctrl.values[att].string += " ";
+				ctrl.values[att].string += scale * value;
+				ctrl.values[att].string += " ";
+			}
+		}
+
+
+
+		/*for(i=0; i<L_attributs.length; i++) {
 			att = L_attributs[i];
 			data = {name: att, string: ""};
 			ctrl.values.push( data );
 			for(j=0; j<$scope.descriptionData.data.length; j++) {
+				if(typeof $scope.descriptionData.data[j][att] === 'undefined') {continue;}
 				value = $scope.descriptionData.data[j][att];
 				if(Math.abs(value) > max ) {max = Math.abs(value);}
 				data.string += j;
@@ -30,7 +45,7 @@ var controller = function($scope) {
 				data.string += scale * value;
 				data.string += " ";
 			}
-		}
+		}*/
 	}
 }
 controller.$inject = ["$scope"];

@@ -21,7 +21,7 @@
 	<md-content class="graphers">
 		<!-- <p>Last data: {{lastData | json}}</p> -->
 	 	<md-tabs>
-			<md-tab label="Button">
+			<md-tab label="Btn">
 				<alx-grapher title 				= "Button"
 							 description-data	= "ctrl.button"
 							 on-enable 			= "ctrl.enableSensor   (ctrl.button)"
@@ -30,7 +30,7 @@
 							 >
 				</alx-grapher>
 			</md-tab>
-			<md-tab label="Accelerometer">
+			<md-tab label="Acc">
 				<alx-grapher title 				= "Accelerometer"
 							 description-data	= "ctrl.acc"
 							 on-enable 			= "ctrl.enableSensor   (ctrl.acc)"
@@ -40,7 +40,7 @@
 							 >
 				</alx-grapher>
 			</md-tab>
-			<md-tab label="Gyroscope">
+			<md-tab label="Gyr">
 				<alx-grapher title 				= "Gyroscope"
 							 description-data	= "ctrl.gyro"
 							 on-enable 			= "ctrl.enableSensor   (ctrl.gyro)"
@@ -49,13 +49,31 @@
 							 periods			= "[100, 200, 300, 400, 500, 1000, 2000]"
 							 >
 				</alx-grapher>
-			<md-tab label="Magnetometer">
+			<md-tab label="Mag">
 				<alx-grapher title 				= "Magnetometer"
 							 description-data	= "ctrl.magnetometer"
 							 on-enable 			= "ctrl.enableSensor   (ctrl.magnetometer)"
 							 on-disable 		= "ctrl.disableSensor  (ctrl.magnetometer)"
-							 on-period-change 	= "ctrl.setPeriodSensor(ctrl.gyro)"
+							 on-period-change 	= "ctrl.setPeriodSensor(ctrl.magnetometer)"
 							 periods			= "['MWL_MW_MAG_BMM_150_PP_LOW_POWER', 'MWL_MW_MAG_BMM_150_PP_REGULAR', 'MWL_MW_MAG_BMM_150_PP_ENHANCED_REGULAR', 'MWL_MW_MAG_BMM_150_PP_HIGH_ACCURACY']"
+							 >
+				</alx-grapher>
+			</md-tab>
+			<md-tab label="Bar">
+				<alx-grapher title 				= "Barometer"
+							 description-data	= "ctrl.pressure"
+							 on-enable 			= "ctrl.enableSensor   (ctrl.pressure)"
+							 on-disable 		= "ctrl.disableSensor  (ctrl.pressure)"
+							 on-period-change 	= "ctrl.setPeriodSensor(ctrl.pressure)"
+							 periods			= "[0, 1, 2, 3, 4, 5, 6, 7]"
+							 >
+				</alx-grapher>
+				<alx-grapher title 				= "Altimeter"
+							 description-data	= "ctrl.altitude"
+							 on-enable 			= "ctrl.enableSensor   (ctrl.altitude)"
+							 on-disable 		= "ctrl.disableSensor  (ctrl.altitude)"
+							 on-period-change 	= "ctrl.setPeriodSensor(ctrl.altitude)"
+							 periods			= "[0, 1, 2, 3, 4, 5, 6, 7]"
 							 >
 				</alx-grapher>
 			</md-tab>

@@ -16,6 +16,10 @@ var controller = function($scope) {
 						  , name 		: "Gyroscope"};
 	this.magnetometer	= { data: [], period: 'MWL_MW_MAG_BMM_150_PP_LOW_POWER', maxSize: 200, enabled: false
 						  , name 		: "Magnetometer"};
+	this.pressure		= { data: [], period: '2', maxSize: 200, enabled: false
+						  , name 		: "Barometer"};
+	this.altitude		= { data: [], period: '2', maxSize: 200, enabled: false
+						  , name 		: "Barometer"};
 
 	this.connect		= function() {
 		console.log( "connecting to", ctrl.brick.id );
@@ -77,12 +81,14 @@ controller.$inject = ["$http", "$scope"];
 function link(scope, element, attr, controller) {
 	// console.log("create bleSensorTag HTML");
 	var processEvent = function(event, sensor) {
+		// console.log("processEvent", event, sensor);
 		scope.$applyAsync( function() {
 			sensor.enabled = true;
 			sensor.data.push( event );
 			sensor.data.splice(0, sensor.data.length - sensor.maxSize);
 		});
 	}
+	var altitude, pressure;
 	subscribeForEvent( controller.brick, "buttonChange", element
 					 , function(event) {processEvent(event, controller.button);} );
 	subscribeForEvent( controller.brick, "accelerometerChange", element
@@ -91,6 +97,18 @@ function link(scope, element, attr, controller) {
 					 , function(event) {processEvent(event, controller.gyro);} );
 	subscribeForEvent( controller.brick, "magnetometerChange", element
 					 , function(event) {processEvent(event, controller.magnetometer);} );
+	subscribeForEvent( controller.brick, "pressureChange", element
+					 , function(event) {
+					 		pressure = pressure || event.pressure;
+					 		event.pressure = event.pressure - pressure;
+					 		processEvent(event, controller.pressure); 
+					 	});
+	subscribeForEvent( controller.brick, "altitudeChange", element
+					 , function(event) {
+					 		altitude = altitude || event.altitude;
+					 		event.altitude = event.altitude - altitude;
+					 		processEvent(event, controller.altitude); 
+					 	});
 }
 
 
