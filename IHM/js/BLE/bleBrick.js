@@ -61,7 +61,31 @@ var controller = function($scope) {
 						}
 				  } );
 	}
+	function getResultCB(characteristic) {
+		return function(res) {
+			var i;
+			console.log("getting result =>", res);
+			characteristic.stringInput = res.utf8 + ' :: 0x';
+			var hex = new Uint8Array(res.data);
+			for(i=0; i<hex.length; i++) {
+				characteristic.stringInput += ('0' + hex[i].toString(16)).slice(-2).toUpperCase();
+			}
+			characteristic.stringInput += " :: " + hex;
+
+			$scope.$apply();
+		}
+  }
+
 	this.readCharacteristic		= function(characteristic) {
+		utils.call( ctrl.brick.id, "readCharacteristic", [characteristic.uuid]
+				  ).then( getResultCB(characteristic) );
+	}
+	
+	this.writeCharacteristic	= function(characteristic, value) {
+		utils.call( ctrl.brick.id, "writeCharacteristic", [characteristic.uuid, value + "\r\n"]
+				  ).then( getResultCB(characteristic) );
+	}
+/*	this.readCharacteristic		= function(characteristic) {
 		utils.call( ctrl.brick.id, "readCharacteristic", [characteristic.uuid]
 				  ).then( function(res) {
 						console.log("readCharacteristic =>", res);
@@ -78,7 +102,7 @@ var controller = function($scope) {
 					  		characteristic.stringInput = res.utf8;
 						});
 				  } );
-	}
+	}*/
 	
 	// Polymorphism
 	var types = this.brick?this.brick.type:[] //'Brick'

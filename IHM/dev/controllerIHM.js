@@ -71612,40 +71612,22 @@
 	  // , bleMetawear		= require( "./bleMetaWear.js" )
 	  , alxGrapher		= __webpack_require__( 224 )
 	  , BrickBLE_server	= __webpack_require__( 227 )
-	  , utils			= __webpack_require__( 10 )
+	  // , utils			= require( "../../../js/utils.js" )
 	  ;
 
-	var controller = function($http, $scope) {
-		var ctrl = this;
+	var controller = function(/*$http, $scope*/) {
+		// var ctrl = this;
 		this.isInit	= false;
-		$http.get( "/BLE_isInit" ).then( function(obj) {
+		/*$http.get( "/BLE_isInit" ).then( function(obj) {
 			console.log("BLE_isInit =>", obj, ctrl);
 			if(obj.status === 200 && obj.data === true) {ctrl.isInit = true;}
-		});
-		
-		this.readCharacteristic		= function(brick, characteristic) {
-			utils.call( brick.id, "readCharacteristic", [characteristic.uuid]
-					  ).then( function(res) {
-						  console.log("readCharacteristic =>", res);
-						  characteristic.stringInput = res;
-						  $scope.$apply();
-					  } );
-		}
-		
-		this.writeCharacteristic	= function(brick, characteristic, value) {
-			utils.call( brick.id, "writeCharacteristic", [characteristic.uuid, value]
-					  ).then( function(res) {
-						  console.log("writeCharacteristic =>", res);
-						  characteristic.stringInput = res.utf8;
-						  $scope.$apply();
-					  } );
-		}
+		});*/
 		
 		this.init = function() {
-		$http.get( "/BLE_init" ).then( function(obj) {
+		/*$http.get( "/BLE_init" ).then( function(obj) {
 			console.log("/BLE_init =>", obj);
 			if(obj.status === 200 && obj.data === true) {ctrl.isInit = true;}
-		});
+		});*/
 		}
 	}
 	controller.$inject = ["$http", "$scope"];
@@ -71738,7 +71720,31 @@
 							}
 					  } );
 		}
+		function getResultCB(characteristic) {
+			return function(res) {
+				var i;
+				console.log("getting result =>", res);
+				characteristic.stringInput = res.utf8 + ' :: 0x';
+				var hex = new Uint8Array(res.data);
+				for(i=0; i<hex.length; i++) {
+					characteristic.stringInput += ('0' + hex[i].toString(16)).slice(-2).toUpperCase();
+				}
+				characteristic.stringInput += " :: " + hex;
+
+				$scope.$apply();
+			}
+	  }
+
 		this.readCharacteristic		= function(characteristic) {
+			utils.call( ctrl.brick.id, "readCharacteristic", [characteristic.uuid]
+					  ).then( getResultCB(characteristic) );
+		}
+		
+		this.writeCharacteristic	= function(characteristic, value) {
+			utils.call( ctrl.brick.id, "writeCharacteristic", [characteristic.uuid, value + "\r\n"]
+					  ).then( getResultCB(characteristic) );
+		}
+	/*	this.readCharacteristic		= function(characteristic) {
 			utils.call( ctrl.brick.id, "readCharacteristic", [characteristic.uuid]
 					  ).then( function(res) {
 							console.log("readCharacteristic =>", res);
@@ -71755,7 +71761,7 @@
 						  		characteristic.stringInput = res.utf8;
 							});
 					  } );
-		}
+		}*/
 		
 		// Polymorphism
 		var types = this.brick?this.brick.type:[] //'Brick'
@@ -71888,6 +71894,8 @@
 							  , name 		: "Barometer"};
 		this.temperature	= { data: [], maxSize: 200, enabled: false
 							  , name 		: "Temperature"};
+		this.luminometer	= { data: [], maxSize: 200, enabled: false
+							  , name 		: "Luminometer"};
 
 		this.connect		= function() {
 			console.log( "connecting to", ctrl.brick.id );
@@ -71961,6 +71969,8 @@
 						 , function(event) {processEvent(event, controller.button);} );
 		subscribeForEvent( controller.brick, "temperatureChange", element
 						 , function(event) {processEvent(event, controller.temperature);} );
+		subscribeForEvent( controller.brick, "luminometerChange", element
+						 , function(event) {processEvent(event, controller.luminometer);} );
 		subscribeForEvent( controller.brick, "accelerometerChange", element
 						 , function(event) {processEvent(event, controller.acc);} );
 		subscribeForEvent( controller.brick, "gyroscopeChange", element
@@ -72000,7 +72010,7 @@
 /* 223 */
 /***/ function(module, exports) {
 
-	module.exports = "<!-- <p>{{brick | json}}</p> -->\r\n<md-card>\r\n\t<md-card-title>\r\n\t\t<md-card-title-text>\r\n\t\t\t<span class=\"md-headline\" ng-bind=\"ctrl.brick.name\"></span>\r\n\t\t\t<span class=\"md-subhead\">\r\n\t\t\t\t<md-progress-circular\tmd-mode=\"indeterminate\"\r\n\t\t\t\t\t\t\t\t\t\tng-show=\"ctrl.isConnecting\"\r\n\t\t\t\t\t\t\t\t\t\t></md-progress-circular>\r\n\t\t\t\t<md-button \tclass\t= \"md-raised md-primary\" \r\n\t\t\t\t\t\t\tng-show\t= \"!ctrl.isConnecting && !ctrl.brick.isConnected\"\r\n\t\t\t\t\t\t\tng-click= \"ctrl.connect()\"\r\n\t\t\t\t\t\t\t>Connect</md-button>\r\n\t\t\t\t<md-button \tclass\t= \"md-raised md-primary\" \r\n\t\t\t\t\t\t\tng-show\t= \"!ctrl.isConnecting &&  ctrl.brick.isConnected\"\r\n\t\t\t\t\t\t\tng-click= \"ctrl.disconnect()\"\r\n\t\t\t\t\t\t\t>Disconnect</md-button>\r\n\t\t\t</span>\r\n\t\t</md-card-title-text>\r\n\t</md-card-title>\r\n\t<md-content class=\"graphers\">\r\n\t\t<!-- <p>Last data: {{lastData | json}}</p> -->\r\n\t \t<md-tabs>\r\n\t\t\t<md-tab label=\"Btn\">\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Button\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.button\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.button)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.button)\"\r\n\t\t\t\t\t\t\t periods\t\t\t= \"[]\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t</md-tab>\r\n\t\t\t<md-tab label=\"Tmp\">\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Temperature\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.temperature\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.temperature)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.temperature)\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t</md-tab>\r\n\t\t\t<md-tab label=\"Acc\">\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Accelerometer\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.acc\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.acc)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.acc)\"\r\n\t\t\t\t\t\t\t on-period-change \t= \"ctrl.setPeriodSensor(ctrl.acc)\"\r\n\t\t\t\t\t\t\t periods\t\t\t= \"[100, 200, 300, 400, 500, 1000, 2000]\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t</md-tab>\r\n\t\t\t<md-tab label=\"Gyr\">\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Gyroscope\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.gyro\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.gyro)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.gyro)\"\r\n\t\t\t\t\t\t\t on-period-change \t= \"ctrl.setPeriodSensor(ctrl.gyro)\"\r\n\t\t\t\t\t\t\t periods\t\t\t= \"[100, 200, 300, 400, 500, 1000, 2000]\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t<md-tab label=\"Mag\">\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Magnetometer\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.magnetometer\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.magnetometer)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.magnetometer)\"\r\n\t\t\t\t\t\t\t on-period-change \t= \"ctrl.setPeriodSensor(ctrl.magnetometer)\"\r\n\t\t\t\t\t\t\t periods\t\t\t= \"['MWL_MW_MAG_BMM_150_PP_LOW_POWER', 'MWL_MW_MAG_BMM_150_PP_REGULAR', 'MWL_MW_MAG_BMM_150_PP_ENHANCED_REGULAR', 'MWL_MW_MAG_BMM_150_PP_HIGH_ACCURACY']\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t</md-tab>\r\n\t\t\t<md-tab label=\"Bar\">\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Barometer\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.pressure\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.pressure)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.pressure)\"\r\n\t\t\t\t\t\t\t on-period-change \t= \"ctrl.setPeriodSensor(ctrl.pressure)\"\r\n\t\t\t\t\t\t\t periods\t\t\t= \"[0, 1, 2, 3, 4, 5, 6, 7]\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Altimeter\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.altitude\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.altitude)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.altitude)\"\r\n\t\t\t\t\t\t\t on-period-change \t= \"ctrl.setPeriodSensor(ctrl.altitude)\"\r\n\t\t\t\t\t\t\t periods\t\t\t= \"[0, 1, 2, 3, 4, 5, 6, 7]\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t</md-tab>\r\n\t\t\t<md-tab label=\"RAW\">\r\n\t\t\t\t<details ng-repeat=\"service in ctrl.brick.services\">\r\n\t\t\t\t\t<summary>\r\n\t\t\t\t\t\t<span class=\"name\" ng-bind=\"service.name\"></span>\r\n\t\t\t\t\t\t<span class=\"uuid\" ng-bind=\"service.uuid\"></span>\r\n\t\t\t\t\t\t<span class=\"type\" ng-bind=\"service.type\"></span>\r\n\t\t\t\t\t</summary>\r\n\t\t\t\t\t<ul>\r\n\t\t\t\t\t\t<li ng-repeat=\"characteristic in service.characteristics\">\r\n\t\t\t\t\t\t\t<details>\r\n\t\t\t\t\t\t\t\t<summary>\r\n\t\t\t\t\t\t\t\t\t<span class=\"name\" ng-bind=\"characteristic.name\"></span>\r\n\t\t\t\t\t\t\t\t\t<span class=\"uuid\" ng-bind=\"characteristic.uuid\"></span>\r\n\t\t\t\t\t\t\t\t\t<span class=\"type\" ng-bind=\"characteristic.type\"></span>\r\n\t\t\t\t\t\t\t\t</summary>\r\n\t\t\t\t\t\t\t\t<p>{{characteristic.properties | json}}</p>\r\n\t\t\t\t\t\t\t\t<md-content layout=\"column\">\r\n\t\t\t\t\t\t\t\t\t<md-content layout=\"row\">\r\n\t\t\t\t\t\t\t\t\t\t<md-input-container ng-show=\"characteristic.properties.write || characteristic.properties.writeWithoutResponse\">\r\n\t\t\t\t\t\t\t\t\t\t\t<label>Send</label>\r\n\t\t\t\t\t\t\t\t\t\t\t<input ng-model=\"commandValue\">\r\n\t\t\t\t\t\t\t\t\t\t</md-input-container>\r\n\t\t\t\t\t\t\t\t\t\t<md-button \tclass\t= \"md-raised md-primary\" \r\n\t\t\t\t\t\t\t\t\t\t\t\t\tng-show\t= \"characteristic.properties.read\"  \r\n\t\t\t\t\t\t\t\t\t\t\t\t\tng-click= \"ctrl.readCharacteristic(characteristic)\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t>Read</md-button>\r\n\t\t\t\t\t\t\t\t\t\t<md-button \tclass\t= \"md-raised md-primary\" \r\n\t\t\t\t\t\t\t\t\t\t\t\t\tng-show\t= \"characteristic.properties.read\"  \r\n\t\t\t\t\t\t\t\t\t\t\t\t\tng-click= \"ctrl.writeCharacteristic(characteristic, commandValue)\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tng-show\t= \"characteristic.properties.write || characteristic.properties.writeWithoutResponse\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t>Write</md-button>\r\n\t\t\t\t\t\t\t\t\t\t<md-button\tclass\t= \"md-raised md-primary\" \r\n\t\t\t\t\t\t\t\t\t\t\t\t\tng-show\t= \"characteristic.properties.notify\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tng-click = \"ctrl.notifyCharacteristic(characteristic)\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t>Notify</md-button>\r\n\t\t\t\t\t\t\t\t\t</md-content>\r\n\t\t\t\t\t\t\t\t\t<pre ng-bind=\"characteristic.stringInput\"></pre>\r\n\t\t\t\t\t\t\t\t</md-content>\r\n\t\t\t\t\t\t\t</details>\r\n\t\t\t\t\t\t</li>\r\n\t\t\t\t\t</ul>\r\n\t\t\t\t</details>\r\n\t\t\t</md-tab>\r\n\t\t</md-tabs>\r\n\t</md-content>\r\n<!-- \t<md-card-actions layout=\"row\" layout-align=\"end center\">\r\n\t\t<md-button>Action 1</md-button>\r\n\t\t<md-button>Action 2</md-button>\r\n\t</md-card-actions>\r\n --></md-card>\r\n"
+	module.exports = "<!-- <p>{{brick | json}}</p> -->\r\n<md-card>\r\n\t<md-card-title>\r\n\t\t<md-card-title-text>\r\n\t\t\t<span class=\"md-headline\" ng-bind=\"ctrl.brick.name\"></span>\r\n\t\t\t<span class=\"md-subhead\">\r\n\t\t\t\t<md-progress-circular\tmd-mode=\"indeterminate\"\r\n\t\t\t\t\t\t\t\t\t\tng-show=\"ctrl.isConnecting\"\r\n\t\t\t\t\t\t\t\t\t\t></md-progress-circular>\r\n\t\t\t\t<md-button \tclass\t= \"md-raised md-primary\" \r\n\t\t\t\t\t\t\tng-show\t= \"!ctrl.isConnecting && !ctrl.brick.isConnected\"\r\n\t\t\t\t\t\t\tng-click= \"ctrl.connect()\"\r\n\t\t\t\t\t\t\t>Connect</md-button>\r\n\t\t\t\t<md-button \tclass\t= \"md-raised md-primary\" \r\n\t\t\t\t\t\t\tng-show\t= \"!ctrl.isConnecting &&  ctrl.brick.isConnected\"\r\n\t\t\t\t\t\t\tng-click= \"ctrl.disconnect()\"\r\n\t\t\t\t\t\t\t>Disconnect</md-button>\r\n\t\t\t</span>\r\n\t\t</md-card-title-text>\r\n\t</md-card-title>\r\n\t<md-content class=\"graphers\">\r\n\t\t<!-- <p>Last data: {{lastData | json}}</p> -->\r\n\t \t<md-tabs>\r\n\t\t\t<md-tab label=\"Btn\">\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Button\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.button\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.button)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.button)\"\r\n\t\t\t\t\t\t\t periods\t\t\t= \"[]\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t</md-tab>\r\n\t\t\t<md-tab label=\"Tmp\">\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Temperature\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.temperature\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.temperature)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.temperature)\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t</md-tab>\r\n\t\t\t<md-tab label=\"Lum\">\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Luminometer\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.luminometer\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.luminometer)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.luminometer)\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t</md-tab>\r\n\t\t\t<md-tab label=\"Acc\">\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Accelerometer\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.acc\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.acc)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.acc)\"\r\n\t\t\t\t\t\t\t on-period-change \t= \"ctrl.setPeriodSensor(ctrl.acc)\"\r\n\t\t\t\t\t\t\t periods\t\t\t= \"[100, 200, 300, 400, 500, 1000, 2000]\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t</md-tab>\r\n\t\t\t<md-tab label=\"Gyr\">\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Gyroscope\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.gyro\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.gyro)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.gyro)\"\r\n\t\t\t\t\t\t\t on-period-change \t= \"ctrl.setPeriodSensor(ctrl.gyro)\"\r\n\t\t\t\t\t\t\t periods\t\t\t= \"[100, 200, 300, 400, 500, 1000, 2000]\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t<md-tab label=\"Mag\">\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Magnetometer\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.magnetometer\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.magnetometer)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.magnetometer)\"\r\n\t\t\t\t\t\t\t on-period-change \t= \"ctrl.setPeriodSensor(ctrl.magnetometer)\"\r\n\t\t\t\t\t\t\t periods\t\t\t= \"['MWL_MW_MAG_BMM_150_PP_LOW_POWER', 'MWL_MW_MAG_BMM_150_PP_REGULAR', 'MWL_MW_MAG_BMM_150_PP_ENHANCED_REGULAR', 'MWL_MW_MAG_BMM_150_PP_HIGH_ACCURACY']\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t</md-tab>\r\n\t\t\t<md-tab label=\"Bar\">\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Barometer\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.pressure\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.pressure)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.pressure)\"\r\n\t\t\t\t\t\t\t on-period-change \t= \"ctrl.setPeriodSensor(ctrl.pressure)\"\r\n\t\t\t\t\t\t\t periods\t\t\t= \"[0, 1, 2, 3, 4, 5, 6, 7]\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t\t<alx-grapher title \t\t\t\t= \"Altimeter\"\r\n\t\t\t\t\t\t\t description-data\t= \"ctrl.altitude\"\r\n\t\t\t\t\t\t\t on-enable \t\t\t= \"ctrl.enableSensor   (ctrl.altitude)\"\r\n\t\t\t\t\t\t\t on-disable \t\t= \"ctrl.disableSensor  (ctrl.altitude)\"\r\n\t\t\t\t\t\t\t on-period-change \t= \"ctrl.setPeriodSensor(ctrl.altitude)\"\r\n\t\t\t\t\t\t\t periods\t\t\t= \"[0, 1, 2, 3, 4, 5, 6, 7]\"\r\n\t\t\t\t\t\t\t >\r\n\t\t\t\t</alx-grapher>\r\n\t\t\t</md-tab>\r\n\t\t\t<md-tab label=\"RAW\">\r\n\t\t\t\t<details ng-repeat=\"service in ctrl.brick.services\">\r\n\t\t\t\t\t<summary>\r\n\t\t\t\t\t\t<span class=\"name\" ng-bind=\"service.name\"></span>\r\n\t\t\t\t\t\t<span class=\"uuid\" ng-bind=\"service.uuid\"></span>\r\n\t\t\t\t\t\t<span class=\"type\" ng-bind=\"service.type\"></span>\r\n\t\t\t\t\t</summary>\r\n\t\t\t\t\t<ul>\r\n\t\t\t\t\t\t<li ng-repeat=\"characteristic in service.characteristics\">\r\n\t\t\t\t\t\t\t<details>\r\n\t\t\t\t\t\t\t\t<summary>\r\n\t\t\t\t\t\t\t\t\t<span class=\"name\" ng-bind=\"characteristic.name\"></span>\r\n\t\t\t\t\t\t\t\t\t<span class=\"uuid\" ng-bind=\"characteristic.uuid\"></span>\r\n\t\t\t\t\t\t\t\t\t<span class=\"type\" ng-bind=\"characteristic.type\"></span>\r\n\t\t\t\t\t\t\t\t</summary>\r\n\t\t\t\t\t\t\t\t<p>{{characteristic.properties | json}}</p>\r\n\t\t\t\t\t\t\t\t<md-content layout=\"column\">\r\n\t\t\t\t\t\t\t\t\t<md-content layout=\"row\">\r\n\t\t\t\t\t\t\t\t\t\t<md-input-container ng-show=\"characteristic.properties.write || characteristic.properties.writeWithoutResponse\">\r\n\t\t\t\t\t\t\t\t\t\t\t<label>Send</label>\r\n\t\t\t\t\t\t\t\t\t\t\t<input ng-model=\"commandValue\">\r\n\t\t\t\t\t\t\t\t\t\t</md-input-container>\r\n\t\t\t\t\t\t\t\t\t\t<md-button \tclass\t= \"md-raised md-primary\" \r\n\t\t\t\t\t\t\t\t\t\t\t\t\tng-show\t= \"characteristic.properties.read\"  \r\n\t\t\t\t\t\t\t\t\t\t\t\t\tng-click= \"ctrl.readCharacteristic(characteristic)\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t>Read</md-button>\r\n\t\t\t\t\t\t\t\t\t\t<md-button \tclass\t= \"md-raised md-primary\" \r\n\t\t\t\t\t\t\t\t\t\t\t\t\tng-show\t= \"characteristic.properties.read\"  \r\n\t\t\t\t\t\t\t\t\t\t\t\t\tng-click= \"ctrl.writeCharacteristic(characteristic, commandValue)\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tng-show\t= \"characteristic.properties.write || characteristic.properties.writeWithoutResponse\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t>Write</md-button>\r\n\t\t\t\t\t\t\t\t\t\t<md-button\tclass\t= \"md-raised md-primary\" \r\n\t\t\t\t\t\t\t\t\t\t\t\t\tng-show\t= \"characteristic.properties.notify\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\tng-click = \"ctrl.notifyCharacteristic(characteristic)\"\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t>Notify</md-button>\r\n\t\t\t\t\t\t\t\t\t</md-content>\r\n\t\t\t\t\t\t\t\t\t<pre ng-bind=\"characteristic.stringInput\"></pre>\r\n\t\t\t\t\t\t\t\t</md-content>\r\n\t\t\t\t\t\t\t</details>\r\n\t\t\t\t\t\t</li>\r\n\t\t\t\t\t</ul>\r\n\t\t\t\t</details>\r\n\t\t\t</md-tab>\r\n\t\t</md-tabs>\r\n\t</md-content>\r\n<!-- \t<md-card-actions layout=\"row\" layout-align=\"end center\">\r\n\t\t<md-button>Action 1</md-button>\r\n\t\t<md-button>Action 2</md-button>\r\n\t</md-card-actions>\r\n --></md-card>\r\n"
 
 /***/ },
 /* 224 */

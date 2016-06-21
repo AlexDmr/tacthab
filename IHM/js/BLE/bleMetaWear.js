@@ -22,6 +22,8 @@ var controller = function($scope) {
 						  , name 		: "Barometer"};
 	this.temperature	= { data: [], maxSize: 200, enabled: false
 						  , name 		: "Temperature"};
+	this.luminometer	= { data: [], maxSize: 200, enabled: false
+						  , name 		: "Luminometer"};
 
 	this.connect		= function() {
 		console.log( "connecting to", ctrl.brick.id );
@@ -95,6 +97,8 @@ function link(scope, element, attr, controller) {
 					 , function(event) {processEvent(event, controller.button);} );
 	subscribeForEvent( controller.brick, "temperatureChange", element
 					 , function(event) {processEvent(event, controller.temperature);} );
+	subscribeForEvent( controller.brick, "luminometerChange", element
+					 , function(event) {processEvent(event, controller.luminometer);} );
 	subscribeForEvent( controller.brick, "accelerometerChange", element
 					 , function(event) {processEvent(event, controller.acc);} );
 	subscribeForEvent( controller.brick, "gyroscopeChange", element

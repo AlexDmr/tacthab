@@ -201,11 +201,53 @@ const MblMwAccBmi160Odr = {
     MBL_MW_ACC_BMI160_ODR_1600HZ 	: 12
 };
 
+/*-----------------------------------------------------------------------------------------------------------------
+  Ambient light----------------------------------------------------------------------------------------------------
+  https://github.com/mbientlab/Metawear-CppAPI/blob/master/src/metawear/sensor/cpp/ambientlight_ltr329_register.h
+  https://github.com/mbientlab/Metawear-CppAPI/blob/master/src/metawear/sensor/cpp/ambientlight_ltr329.cpp
+*/
 const AmbientLightLtr329Register = {
     ENABLE                          : 1,
     CONFIG                          : 2,
     OUTPUT                          : 3
 };
+
+const MblMwAlsLtr329Gain 		= {
+    MBL_MW_ALS_LTR329_GAIN_1X 		: 0,     ///< Illuminance range between [1, 64k] lux (default)
+    MBL_MW_ALS_LTR329_GAIN_2X 		: 1,     ///< Illuminance range between [0.5, 32k] lux
+    MBL_MW_ALS_LTR329_GAIN_4X 		: 2,     ///< Illuminance range between [0.25, 16k] lux
+    MBL_MW_ALS_LTR329_GAIN_8X 		: 3,     ///< Illuminance range between [0.125, 8k] lux
+    MBL_MW_ALS_LTR329_GAIN_48X 		: 4,     ///< Illuminance range between [0.02, 1.3k] lux
+    MBL_MW_ALS_LTR329_GAIN_96X 		: 5      ///< Illuminance range between [0.01, 600] lux
+};
+
+/**
+ * Measurement time for each cycle
+ */
+const MblMwAlsLtr329IntegrationTime = {
+    MBL_MW_ALS_LTR329_TIME_100MS 	: 0,    ///< Default setting
+    MBL_MW_ALS_LTR329_TIME_50MS 	: 1,
+    MBL_MW_ALS_LTR329_TIME_200MS 	: 2,
+    MBL_MW_ALS_LTR329_TIME_400MS 	: 3,
+    MBL_MW_ALS_LTR329_TIME_150MS 	: 4,
+    MBL_MW_ALS_LTR329_TIME_250MS 	: 5,
+    MBL_MW_ALS_LTR329_TIME_300MS 	: 6,
+    MBL_MW_ALS_LTR329_TIME_350MS 	: 7
+};
+
+/**
+ * How frequently to update the illuminance data.
+ */
+const MblMwAlsLtr329MeasurementRate = {
+    MBL_MW_ALS_LTR329_RATE_50MS 	: 0,
+    MBL_MW_ALS_LTR329_RATE_100MS 	: 1,
+    MBL_MW_ALS_LTR329_RATE_200MS 	: 2,
+    MBL_MW_ALS_LTR329_RATE_500MS	: 3,       ///< Default setting
+    MBL_MW_ALS_LTR329_RATE_1000MS 	: 4,
+    MBL_MW_ALS_LTR329_RATE_2000MS	: 5
+};
+
+
 
 const GyroBmi160Register = {
     POWER_MODE 						: 1,
@@ -251,40 +293,43 @@ const MblMwGyroBmi160Range = {
 
 
 module.exports = {
-	DataInterpreter 			: DataInterpreter,
-    // Modules
-    BASE_URI                    : BASE_URI,
-    SERVICE_UUID                : SERVICE_UUID,
-    COMMAND_UUID                : COMMAND_UUID,
-    NOTIFY_UUID                 : NOTIFY_UUID,
-    modules                     : modules,
-    // Accelerometer BMI160
-    MblMwAccBmi160Range         : MblMwAccBmi160Range,
-    AccelerometerBmi160Register : AccelerometerBmi160Register,
-    MblMwAccBmi160Odr           : MblMwAccBmi160Odr,
-    // Gyroscope BMI160
-    GyroBmi160Register			: GyroBmi160Register,
-    MblMwGyroBmi160Odr 			: MblMwGyroBmi160Odr,
-    MblMwGyroBmi160Range		: MblMwGyroBmi160Range,
-    // Switch/Button
-    SwitchRegister				: SwitchRegister,
-    // Ambiant light
-    AmbientLightLtr329Register	: AmbientLightLtr329Register,
-    // LED
-    LED 						: LED,
-    // Magnetometer
-    MblMwMagBmm150PowerPreset	: MblMwMagBmm150PowerPreset,
-	MagnetometerBmm150Register 	: MagnetometerBmm150Register,
+	DataInterpreter 				: DataInterpreter,
+	// Modules
+	BASE_URI 						: BASE_URI,
+	SERVICE_UUID 					: SERVICE_UUID,
+	COMMAND_UUID  					: COMMAND_UUID,
+	NOTIFY_UUID                 	: NOTIFY_UUID,
+	modules                     	: modules,
+	// Accelerometer BMI160
+	MblMwAccBmi160Range         	: MblMwAccBmi160Range,
+	AccelerometerBmi160Register 	: AccelerometerBmi160Register,
+	MblMwAccBmi160Odr           	: MblMwAccBmi160Odr,
+	// Gyroscope BMI160
+	GyroBmi160Register				: GyroBmi160Register,
+	MblMwGyroBmi160Odr 				: MblMwGyroBmi160Odr,
+	MblMwGyroBmi160Range			: MblMwGyroBmi160Range,
+	// Switch/Button
+	SwitchRegister					: SwitchRegister,
+	// Ambiant light
+	AmbientLightLtr329Register		: AmbientLightLtr329Register,
+	MblMwAlsLtr329Gain				: MblMwAlsLtr329Gain,
+	MblMwAlsLtr329IntegrationTime	: MblMwAlsLtr329IntegrationTime,
+	MblMwAlsLtr329MeasurementRate	: MblMwAlsLtr329MeasurementRate,
+	// LED
+	LED 							: LED,
+	// Magnetometer
+	MblMwMagBmm150PowerPreset		: MblMwMagBmm150PowerPreset,
+	MagnetometerBmm150Register 		: MagnetometerBmm150Register,
 	// Barometer
-	BarometerBmp280Register		: BarometerBmp280Register,
-	MblMwBaroBoschOversampling	: MblMwBaroBoschOversampling,
-	MblMwBaroBoschIirFilter 	: MblMwBaroBoschIirFilter,
-	MblMwBaroBmp280StandbyTime 	: MblMwBaroBmp280StandbyTime,
-	MblMwBaroBme280StandbyTime 	: MblMwBaroBme280StandbyTime,
+	BarometerBmp280Register			: BarometerBmp280Register,
+	MblMwBaroBoschOversampling		: MblMwBaroBoschOversampling,
+	MblMwBaroBoschIirFilter 		: MblMwBaroBoschIirFilter,
+	MblMwBaroBmp280StandbyTime 		: MblMwBaroBmp280StandbyTime,
+	MblMwBaroBme280StandbyTime 		: MblMwBaroBme280StandbyTime,
 	// Temperature
-	MultiChannelTempRegister 	: MultiChannelTempRegister,
-	TemperatureChannel			: TemperatureChannel,
+	MultiChannelTempRegister 		: MultiChannelTempRegister,
+	TemperatureChannel				: TemperatureChannel,
 
-    // Information
-    informations                : "MetaWear modules, translated from C++ API, tested for model R only."
+	// Information
+	informations                : "MetaWear modules, translated from C++ API, tested for model R only."
 };

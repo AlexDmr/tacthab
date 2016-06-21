@@ -6,6 +6,7 @@ var BrickBLE		= require( './BrickBLE.js' 					)
   , magnetometer	= require( "./MetaWear/Magnetometer.js" 	)
   , barometer		= require( "./MetaWear/Barometer.js" 		)
   , temperature		= require( "./MetaWear/Temperature.js" 		)
+  , luminometer 	= require( "./MetaWear/Luminometer.js" 		)
   , bufferSubscribeSwitch = new Buffer(3)
   ;
 
@@ -29,6 +30,7 @@ var BrickMetaWear 	= function(id, peripheral) {
 		this.initMagnetometer	();
 		this.initBarometer		();
 		this.initTemperature	();
+		this.initLuminometer 	();
 
 		this.on	( 'ble_' + defs.modules.SWITCH + '_' + defs.SwitchRegister.STATE
 				, function(bin) {
@@ -64,10 +66,10 @@ BrickMetaWear.prototype.registerType('BrickMetaWear', BrickMetaWear.prototype);
 accelerometer 	( BrickMetaWear.prototype );
 magnetometer	( BrickMetaWear.prototype );
 temperature		( BrickMetaWear.prototype );
+luminometer		( BrickMetaWear.prototype );
 gyroscope 		( BrickMetaWear.prototype );
 barometer 		( BrickMetaWear.prototype );
 LED 			( BrickMetaWear.prototype );
-
 //____________________________________________________________________________________________________
 // Connection
 //____________________________________________________________________________________________________
