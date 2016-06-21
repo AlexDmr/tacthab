@@ -20,6 +20,8 @@ var controller = function($scope) {
 						  , name 		: "Barometer"};
 	this.altitude		= { data: [], period: '2', maxSize: 200, enabled: false
 						  , name 		: "Barometer"};
+	this.temperature	= { data: [], maxSize: 200, enabled: false
+						  , name 		: "Temperature"};
 
 	this.connect		= function() {
 		console.log( "connecting to", ctrl.brick.id );
@@ -91,6 +93,8 @@ function link(scope, element, attr, controller) {
 	var altitude, pressure;
 	subscribeForEvent( controller.brick, "buttonChange", element
 					 , function(event) {processEvent(event, controller.button);} );
+	subscribeForEvent( controller.brick, "temperatureChange", element
+					 , function(event) {processEvent(event, controller.temperature);} );
 	subscribeForEvent( controller.brick, "accelerometerChange", element
 					 , function(event) {processEvent(event, controller.acc);} );
 	subscribeForEvent( controller.brick, "gyroscopeChange", element

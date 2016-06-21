@@ -5,6 +5,7 @@ var Brick		= require( '../Brick.js' )
 var BrickBLE = function(id, peripheral) {
 	var brick = this;
 
+	console.log( "BrickBLE", id, peripheral );
 	if(id && peripheral) {
 		Brick.apply(this, [id]);
 		this.peripheral	= peripheral;
@@ -53,20 +54,21 @@ BrickBLE.prototype.connect 		= function() {
 	var peripheral = this.peripheral;
 	
 	return new Promise( function(resolve, reject) {
-		console.log( "connecting to", peripheral.id);
+		console.log( "connecting to", peripheral.id, "----------------------------------------");
 		peripheral.connect( function(error) {
 			console.log("\tconnected to", peripheral.id);
-			if(error) {reject(error);} 
+			if(error) {console.error("but error", error); return reject(error);} 
 			if(brick.gotAllServicesAndCharacteristics === false) {
+				console.log( "\tGetting services..." );
 				peripheral.discoverAllServicesAndCharacteristics( function(error/*, services, characteristics*/) {
+					console.log( "\tGetting services done!" );
 					if(error) {
 						console.error("Error BLE", peripheral.id, ":", error); 
-						reject( "Error BLE", peripheral.id, ":", error );
-						return;
+						return reject( "Error BLE", peripheral.id, ":", error );
 					} else {
 						brick.gotAllServicesAndCharacteristics = true;
 						brick.emit("updateDescription", brick.getDescription());
-						resolve();
+						return resolve();
 					}
 				});
 			}

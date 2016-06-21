@@ -13,7 +13,7 @@ module.exports = function(proto) {
 var eventName = 'ble_' + defs.modules.ACCELEROMETER_OPCODE + '_' + defs.AccelerometerBmi160Register.DATA_INTERRUPT;
 proto.initAccelerometer 	= function() {
 	var brick 		= this;
-	this.config 	= {};
+	this.config 	= this.config || {};
 	this.on	( eventName
 			, function(data) {
 				var x = data.readInt16LE(2) / brick.accelerometer_scale
@@ -96,8 +96,8 @@ proto.notifyAccelerometer 	= function() { //enableAxisSampling
 	console.log( "BrickMetaWear::notifyAccelerometer" );
 	var brick 	= this;
 	return 	brick.writeCharacteristic(defs.COMMAND_UUID, buffer_notifyAccelerometer).then( function() {
-			brick.startAccelerometer(					  ).then( function() {
-			brick.writeCharacteristic(defs.COMMAND_UUID, buffer_subscribeAcc);			
+	return	brick.startAccelerometer(					  ).then( function() {
+	return	brick.writeCharacteristic(defs.COMMAND_UUID, buffer_subscribeAcc);			
 			})  });
 }
 

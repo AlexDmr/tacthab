@@ -6,7 +6,7 @@ const MBL_MW_MODULE_BARO_TYPE_BMP280    = 0;            ///< Constant identifyin
 // const MBL_MW_MODULE_BARO_TYPE_BME280    = 1;            ///< Constant identifying the BME280 barometer module type
 
 function bosch_baro_to_firmware(value) {
-    return value; // * 256;
+    return value / 256;
 }
 
 // MblMwDataSignal	( const ResponseHeader& header

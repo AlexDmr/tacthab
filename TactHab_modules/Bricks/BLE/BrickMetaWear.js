@@ -1,10 +1,11 @@
-var BrickBLE		= require( './BrickBLE.js' )
-  , defs 			= require( "./BrickMetaWear_defs.js" )
-  , accelerometer 	= require( "./MetaWear/Accelerometer.js" )
-  , gyroscope	 	= require( "./MetaWear/Gyroscope.js" )
-  , LED			 	= require( "./MetaWear/LED.js" )
-  , magnetometer	= require( "./MetaWear/Magnetometer.js" )
-  , barometer		= require( "./MetaWear/Barometer.js" )
+var BrickBLE		= require( './BrickBLE.js' 					)
+  , defs 			= require( "./BrickMetaWear_defs.js" 		)
+  , accelerometer 	= require( "./MetaWear/Accelerometer.js" 	)
+  , gyroscope	 	= require( "./MetaWear/Gyroscope.js" 		)
+  , LED			 	= require( "./MetaWear/LED.js" 				)
+  , magnetometer	= require( "./MetaWear/Magnetometer.js" 	)
+  , barometer		= require( "./MetaWear/Barometer.js" 		)
+  , temperature		= require( "./MetaWear/Temperature.js" 		)
   , bufferSubscribeSwitch = new Buffer(3)
   ;
 
@@ -27,6 +28,7 @@ var BrickMetaWear 	= function(id, peripheral) {
 		this.initLED			();
 		this.initMagnetometer	();
 		this.initBarometer		();
+		this.initTemperature	();
 
 		this.on	( 'ble_' + defs.modules.SWITCH + '_' + defs.SwitchRegister.STATE
 				, function(bin) {
@@ -61,6 +63,7 @@ BrickMetaWear.prototype.registerType('BrickMetaWear', BrickMetaWear.prototype);
 
 accelerometer 	( BrickMetaWear.prototype );
 magnetometer	( BrickMetaWear.prototype );
+temperature		( BrickMetaWear.prototype );
 gyroscope 		( BrickMetaWear.prototype );
 barometer 		( BrickMetaWear.prototype );
 LED 			( BrickMetaWear.prototype );
@@ -78,6 +81,7 @@ BrickMetaWear.prototype.connect 		= function() {
 }
 
 BrickMetaWear.prototype.disconnect	= function() {
+	clearInterval( this.temperature.timer );
 	return this.notifyCharacteristic(defs.NOTIFY_UUID, false).then( function() {
 				BrickBLE.prototype.disconnect.apply(this, [])
 			});

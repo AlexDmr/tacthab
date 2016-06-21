@@ -50,6 +50,22 @@ const modules = {
 };
 
 /*-----------------------------------------------------------------------------------------------------------------
+  Temperature -----------------------------------------------------------------------------------------------------
+  https://github.com/mbientlab/Metawear-CppAPI/blob/master/src/metawear/sensor/cpp/multichanneltemperature_register.h
+*/
+const MultiChannelTempRegister 		= {
+    TEMPERATURE 									: 1,
+    MODE 											: 2
+};
+
+const TemperatureChannel			= {
+	NRF_DIE											: 0,
+	ON_BOARD_THERMISTOR								: 1,
+	EXT_THERMISTOR									: 2,
+	BMP_280											: 3
+};
+
+/*-----------------------------------------------------------------------------------------------------------------
   BOSCH BMP280 barometer + temperature-----------------------------------------------------------------------------
 */
 // https://github.com/mbientlab/Metawear-CppAPI/blob/master/src/metawear/sensor/barometer_bosch.h
@@ -265,6 +281,9 @@ module.exports = {
 	MblMwBaroBoschIirFilter 	: MblMwBaroBoschIirFilter,
 	MblMwBaroBmp280StandbyTime 	: MblMwBaroBmp280StandbyTime,
 	MblMwBaroBme280StandbyTime 	: MblMwBaroBme280StandbyTime,
+	// Temperature
+	MultiChannelTempRegister 	: MultiChannelTempRegister,
+	TemperatureChannel			: TemperatureChannel,
 
     // Information
     informations                : "MetaWear modules, translated from C++ API, tested for model R only."

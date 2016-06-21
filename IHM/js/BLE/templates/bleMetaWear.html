@@ -30,6 +30,14 @@
 							 >
 				</alx-grapher>
 			</md-tab>
+			<md-tab label="Tmp">
+				<alx-grapher title 				= "Temperature"
+							 description-data	= "ctrl.temperature"
+							 on-enable 			= "ctrl.enableSensor   (ctrl.temperature)"
+							 on-disable 		= "ctrl.disableSensor  (ctrl.temperature)"
+							 >
+				</alx-grapher>
+			</md-tab>
 			<md-tab label="Acc">
 				<alx-grapher title 				= "Accelerometer"
 							 description-data	= "ctrl.acc"
