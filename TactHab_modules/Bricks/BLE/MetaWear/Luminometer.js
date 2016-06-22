@@ -14,7 +14,7 @@ var defs = require( "../BrickMetaWear_defs.js" );
 
 // https://github.com/mbientlab/Metawear-CppAPI/blob/master/src/metawear/sensor/cpp/multichanneltemperature.cpp
 // https://github.com/mbientlab/Metawear-CppAPI/blob/master/src/metawear/sensor/cpp/multichanneltemperature_register.h
-const eventLUMINOMETER = 'ble_' + defs.modules.AMBIENT_LIGHT + '_' + (0x80 | defs.AmbientLightLtr329Register.OUTPUT);
+const eventLUMINOMETER = 'ble_' + defs.modules.AMBIENT_LIGHT + '_' + defs.AmbientLightLtr329Register.OUTPUT;
 
 module.exports = function(proto) {
 
@@ -22,6 +22,7 @@ proto.initLuminometer = function() {
     var brick = this;
     this.on ( eventLUMINOMETER
             , function(data) {
+            	console.log( "Luminometer callback with", data);
                 var luminosity = data.readUInt32LE(2);
                 brick.emit("luminometerChange", {luminosity: luminosity});
                 }
@@ -74,8 +75,12 @@ proto.mbl_mw_als_ltr329_stop 	= function() {
 //____________________________________________________________________________________________________
 //____________________________________________________________________________________________________
 //____________________________________________________________________________________________________
+var buffer_notify = new Buffer(3);
+buffer_notify[0] = defs.modules.AMBIENT_LIGHT;
+buffer_notify[1] = defs.AmbientLightLtr329Register.OUTPUT;
+buffer_notify[2] = 0x1;
 proto.notifyLuminometer     = function() {
-    return Promise.resolve(true);
+    return this.writeCharacteristic(defs.COMMAND_UUID, buffer_notify);
 }
 
 proto.setLuminometerPeriod  = function( config ) {
