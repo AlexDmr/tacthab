@@ -6,7 +6,7 @@ var noble			= require('noble')
   , BrickMetaWear	= require("./BrickMetaWear.js")
   ;
 
-var L_types			= [ /*{nobleType	: SensorTag.CC2540, brickType	: BrickSensorTag}
+var L_types			= [/* {nobleType	: SensorTag.CC2540, brickType	: BrickSensorTag}
 					  , {nobleType	: SensorTag.CC2650, brickType	: BrickSensorTag}
 					  ,*/ {nobleType	: BrickMetaWear, 	brickType	: BrickMetaWear}
 					  ];

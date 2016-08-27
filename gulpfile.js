@@ -1,5 +1,5 @@
 var gulp				= require('gulp')
-  , webpack				= require("gulp-webpack")
+  , webpack				= require("webpack-stream")
   , named				= require('vinyl-named')
   , eslint				= require('gulp-eslint')
   , ExtractTextPlugin	= require("extract-text-webpack-plugin")
@@ -10,6 +10,7 @@ var gulp				= require('gulp')
   , gzip				= require('gulp-gzip')
   , through				= require('through-gulp')
   , upath				= require("upath")
+  , ts 					= require("ts-loader")
   ;
 
 var webpackEntries	=	[ './test/testEditor.js'
@@ -94,9 +95,10 @@ gulp.task("webpack", function(callback) {
 			watch		: true,
 			module		: {
 				loaders: [
-					{ test	: /\.css$/	, loader: ExtractTextPlugin.extract("style-loader", "css-loader")},
-					{ test	: /\.html$/	, loader: 'raw-loader'},
-                    { test: /\.(png|woff|jpg|jpeg|gif)$/, loader: 'url-loader?limit=100000' }
+					{ test	: /\.css$/					, loader: ExtractTextPlugin.extract("style-loader", "css-loader")},
+					{ test	: /\.html$/					, loader: 'raw-loader'},
+                    { test: /\.(png|woff|jpg|jpeg|gif)$/, loader: 'url-loader?limit=100000' },
+                    { test: /\.ts$/ 					, loader: 'ts-loader'}
 				]
 			},
 			plugins: [ new ExtractTextPlugin("[name].css")
