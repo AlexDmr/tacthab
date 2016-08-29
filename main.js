@@ -27,14 +27,6 @@ for(var i=2; i<process.argv.length; i++) {
 
 console.log("Parameters:", params);
 
-var port					= params.port      			   || "8080"
-	, applicationServerIP	= params.applicationServerIP   || '127.0.0.1'
-	, applicationServerPort	= params.applicationServerPort || port
-	;
-console.log("Usage :\n\tnode staticServeur.js [port:PORT] [applicationServerIP:IP] [applicationServerPort:PORT]\n\tDefault port is 8080.\n\tDefault applicationServerIP is 127.0.0.1.\n\tDefault applicationServerPort is the same port than the one used by this HTTP server.");
-console.log("HTTP server listening on port " + port);
-init(port, applicationServerIP, applicationServerPort);
-
 
 /**_________________________________________________________________________________________________________________________________
  * Init modules --------------------------------------------------------------------------------------------------------------------
