@@ -16,10 +16,37 @@ var Putils						= require( './TactHab_modules/programNodes/Putils.js' )
 	// , fs						= require( 'fs-extra' )
 	;
 
+/**_________________________________________________________________________________________________________________________________
+ * Parse command line parameters and initialize everything ------------------------------------------------------------------------
+ **/
+var params = {}, p;
+for(var i=2; i<process.argv.length; i++) {
+	p = process.argv[i].split(':');
+	params[p[0]] = p[1];
+}
+
+console.log("Parameters:", params);
+
+var port					= params.port      			   || "8080"
+	, applicationServerIP	= params.applicationServerIP   || '127.0.0.1'
+	, applicationServerPort	= params.applicationServerPort || port
+	;
+console.log("Usage :\n\tnode staticServeur.js [port:PORT] [applicationServerIP:IP] [applicationServerPort:PORT]\n\tDefault port is 8080.\n\tDefault applicationServerIP is 127.0.0.1.\n\tDefault applicationServerPort is the same port than the one used by this HTTP server.");
+console.log("HTTP server listening on port " + port);
+init(port, applicationServerIP, applicationServerPort);
+
+
+/**_________________________________________________________________________________________________________________________________
+ * Init modules --------------------------------------------------------------------------------------------------------------------
+ **/
 var rootPath = __dirname.slice();
-console.log('webServer.init(',__dirname,',8888, 8843)');
+console.log('webServer.init(',__dirname,', 8888, 8843)');
 webServer.init(__dirname, '8888', '8843', rootPath);
 UpnpServer.init( webServer.TLS_SSL );
+
+
+
+
 
 
 var interpreter = 
@@ -33,4 +60,8 @@ require( "./Server/Fhem.js"			)(webServer);				console.log( "\t-Fhem" );
 // var FhemBridge = require( "./TactHab_modules/Bricks/Factory__Fhem.js" );
 // var fb = new FhemBridge( "192.168.1.12", 8880);
 
-require( "./Server/BLE.js" );									console.log( "\t-BLE" );
+if( typeof params.BLE !== "undefined" ) {
+	console.log("\t-BLE");
+	require("./Server/BLE.js");
+}
+console.log( "\t-OK!");
