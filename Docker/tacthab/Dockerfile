@@ -1,4 +1,4 @@
-FROM alexd2/node-6xx
+FROM alexd2/node-4xx
 
 RUN node --version
 RUN git clone https://github.com/AlexDmr/tacthab.git

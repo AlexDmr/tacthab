@@ -21,15 +21,16 @@ console.log('webServer.init(',__dirname,',8888, 8843)');
 webServer.init(__dirname, '8888', '8843', rootPath);
 UpnpServer.init( webServer.TLS_SSL );
 
-var interpreter = 
-require( "./Server/interpreter.js"	)(webServer);
-require( "./Server/editor.js"		)(webServer);
-require( "./Server/tacthab_web.js"	)(webServer, interpreter);
-require( "./Server/openHab.js"		)(webServer);
-require( "./Server/M2MIAGE.js"		)(webServer);
 
-require( "./Server/Fhem.js"			)(webServer);
+var interpreter = 
+require( "./Server/interpreter.js"	)(webServer);				console.log( "\t-interpreter" );
+require( "./Server/editor.js"		)(webServer);				console.log( "\t-editor" );
+require( "./Server/tacthab_web.js"	)(webServer, interpreter);	console.log( "\t-tacthab_web" );
+require( "./Server/openHab.js"		)(webServer);				console.log( "\t-openHab" );
+require( "./Server/M2MIAGE.js"		)(webServer);				console.log( "\t-M2M" );
+
+require( "./Server/Fhem.js"			)(webServer);				console.log( "\t-Fhem" );
 // var FhemBridge = require( "./TactHab_modules/Bricks/Factory__Fhem.js" );
 // var fb = new FhemBridge( "192.168.1.12", 8880);
 
-require( "./Server/BLE.js" )
+require( "./Server/BLE.js" );									console.log( "\t-BLE" );

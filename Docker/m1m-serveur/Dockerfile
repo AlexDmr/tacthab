@@ -1,3 +1,5 @@
 FROM alexd2/tacthab
 
-RUN rm -r ./tacthab/IHM
+RUN rm -r IHM
+
+VOLUME ["./client"]
