@@ -7,6 +7,6 @@ WORKDIR ./tacthab
 RUN npm install
 # RUN cd IHM ; gulp
 
-EXPOSE 8888 8443
+EXPOSE 8888 8443 6767 1900
 
-CMD node main.js
+CMD node main.js BLE:1
