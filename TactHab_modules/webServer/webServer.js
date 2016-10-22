@@ -19,6 +19,14 @@ var TLS_SSL =	{ key	: fs.readFileSync( path.join('MM.pem'		 ) )
 // console.log( "Brick:", Brick);
 // console.log( "Brick.D_brick:", Brick.D_brick);
 
+var allowCrossDomain = function(req, res, next) {
+	res.header('Access-Control-Allow-Origin' , '*' );
+	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE' );
+	//res.header('Access-Control-Allow-Headers', 'Content-Type' );
+
+	next();
+};
+
 var webServer = Brick.D_brick.webServer = {
 	  fs			: fs
 	, TLS_SSL		: TLS_SSL
@@ -76,7 +84,8 @@ var webServer = Brick.D_brick.webServer = {
 		 this.xmlSerializer	= new this.XMLSerializer();
 		 this.app	  = this.express();
 		 console.log('HTTP (port:', HTTP_port, ') served from', staticPath);
-		 this.server  = this.app.use( this.express.static(staticPath) )
+		 this.server  = this.app.use( allowCrossDomain )
+			 					.use( this.express.static(staticPath) )
 								.use( this.bodyParser.urlencoded({ extended: true }) )
 								.use( this.bodyParser.json() )
 								.use( this.multer.single() )
