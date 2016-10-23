@@ -242,6 +242,14 @@ BrickUPnP_MediaRenderer.prototype.goToTime	= function(time) {
 	}
 
 // UPnP events
+BrickUPnP_MediaRenderer.prototype.on = function(eventName, cb) {
+	var res = BrickUPnP.prototype.on.apply(this, [eventName, cb]);
+	if(eventName === "eventUPnP") {
+		return this.getMediasStates();
+	} else {
+		return res;
+	}
+};
 BrickUPnP_MediaRenderer.prototype.UPnPEvent	= function(event, service) {
 	 delete this.currentInstanceID;
 	 return BrickUPnP.prototype.UPnPEvent.apply(this, [event, service]);
