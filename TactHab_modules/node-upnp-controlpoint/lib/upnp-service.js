@@ -4,7 +4,6 @@ var util 			= require('util'),
 	url 			= require("url"),
 	// xml2js = require('xml2js'),
 	xmldom 			= require("xmldom"),
-	os 				= require( "os" ),
 	request 		= require( "request" );
 
 var xmlSerializer	= new xmldom.XMLSerializer();
@@ -208,22 +207,7 @@ UpnpService.prototype.callAction = function(actionName, args, callback) {
 
 var reURL = /^(https?):\/\/([\w|\.|\d]*)\:?(\d+)\/(.*)$/i;
 
-var ifaces = os.networkInterfaces(), netInterfaces = [];
-for (var dev in ifaces) {
-    var iface = ifaces[dev].filter(function(details) {
-        var rep = details.family === 'IPv4' && details.internal === false;
-        if(rep) {
-            netInterfaces.push( details );
-            console.log("net:", details.address, "internal is", details.internal);
-        }
-        return rep
-    });
-
-    /*if(iface.length > 0) {
-        console.log( "\t-iface:", iface);
-        netInterfaces.push( iface[0] );
-    }*/
-}
+var netInterfaces = require( "./netInterfaces.js" ).netInterfaces ;
 
 UpnpService.prototype.subscribe = function(callback/*, nbTry*/) {
 	var self = this;
@@ -258,7 +242,7 @@ UpnpService.prototype.subscribe = function(callback/*, nbTry*/) {
 
 
 	var callbackUrl = "http://" + IP + ":" + this.device.controlPoint.eventHandler.serverPort + "/listener";
-	console.log("Subscribe with;\n\t-host:", host, "\n\t-callbackUrl:", callbackUrl);
+	//console.log("Subscribe with;\n\t-host:", host, "\n\t-callbackUrl:", callbackUrl);
 	var url = 'http://' + host + ':' + port + path;
 	var options = {
 	  	method	: "SUBSCRIBE",

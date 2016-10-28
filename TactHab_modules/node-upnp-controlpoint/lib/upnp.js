@@ -171,6 +171,7 @@ Gateway.prototype._getArgFromXml = function(xml, arg, required) {
 // UPnP CONTROL POINT
 //____________________________________________________________________________________________________
 //____________________________________________________________________________________________________
+var netInterfaces = require( "./netInterfaces.js" ).netInterfaces;
 function ControlPoint() {
   var self = this;
   events.EventEmitter.call(this);
@@ -180,7 +181,10 @@ function ControlPoint() {
   this.P_membership = new Promise( function(resolve/*, reject*/) {
 	  self.server.bind( SSDP_PORT
 					  , function () {
-							self.server.addMembership       (BROADCAST_ADDR); //fixed issue #2
+                            netInterfaces.forEach( function(interface) {
+                                console.log( "Multicast on ", BROADCAST_ADDR, interface.address);
+                                self.server.addMembership(BROADCAST_ADDR, interface.address);
+                            }); //fixed issue #2
 							self.server.setMulticastLoopback(true);
 	            			self.server.setBroadcast		(true);
 							// self.server.setMulticastTTL(128);
@@ -227,20 +231,6 @@ ControlPoint.prototype.onRequestMessage = function(msg/*, rinfo*/) {
 		 default:
 			// console.log("onRequestMessage", res.method);
 		}
-  /*
-  var ret = this.requestParser.execute(msg, 0, msg.length);
-  if (!(ret instanceof Error)) {
-    var req = this.requestParser.incoming;
-    switch (req.method) {
-      case 'NOTIFY':
-        debug('NOTIFY ' + req.headers.nts + ' NT=' + req.headers.nt + ' USN=' + req.headers.usn);
-        var event = UPNP_NTS_EVENTS[req.headers.nts];
-        if (event) {
-          this.emit(event, req.headers);
-        }
-        break;
-    };
-  }*/
 };
 
 /**
@@ -254,19 +244,6 @@ ControlPoint.prototype.onResponseMessage = function(msg/*, rinfo*/){
 		 debug('RESPONSE ST=' + res.headers.st + ' USN=' + res.headers.usn);
 		 this.emit('DeviceFound', res.headers);
 		}
-
-  //console.log("rinfo: " + JSON.stringify(rinfo));
-    //console.log("msg: " + msg);
-/*
-  this.responseParser.reinitialize(HTTP_PARSER_RESPONSE);	// reinitialise the HTTP parser
-  var ret = this.responseParser.execute(msg, 0, msg.length);
-  if (!(ret instanceof Error)) {
-    var res = this.responseParser.incoming;
-    if (res.statusCode == 200) {
-      debug('RESPONSE ST=' + res.headers.st + ' USN=' + res.headers.usn);
-      this.emit('DeviceFound', res.headers);
-    }
-  }*/
 };
 
 /**
@@ -283,22 +260,30 @@ ControlPoint.prototype.search = function(st, targetAddress) {
 		self	= this,
 		message = new Buffer(SSDP_MSEARCH.replace('%st', st), "ascii");
 	this.P_membership.then( function() {
-		console.log("ControlPoint::search", st, targetAddress);
-		client.on('message', function(msg, rinfo) { 
-			self.onResponseMessage(msg, rinfo); 
-		});
-		// So that we get a port so we can listen before sending
-		console.log( "\t=>", SSDP_PORT, BROADCAST_ADDR );
-		client.bind( function() {
-			// client.setBroadcast(true);
-			client.send(message, 0, message.length, SSDP_PORT, BROADCAST_ADDR);
-			setTimeout	( function() {
-		  					client.close();
-		  					console.log( "close multicast UDP client...")
-						}, 4000);
-		});
+		netInterfaces.forEach( function(interface) {
+            self.createDgramClientForNetInterface(interface, message);
+        });
 	});
   // MX is set to 3, wait for 1 additional sec. before closing the client
+};
+
+
+ControlPoint.prototype.createDgramClientForNetInterface = function(interface, message) {
+    var client = dgram.createSocket({type: 'udp4'})
+        , self = this;
+    client.on('message', function (msg, rinfo) {
+        self.onResponseMessage(msg, rinfo);
+    });
+    client.bind( {address: interface.address}, function() {
+        console.log("SSDP request message at IP", interface.address);
+        client.send(message, 0, message.length, SSDP_PORT, BROADCAST_ADDR);
+        setTimeout	( function() {
+            client.close();
+            console.log( "close multicast UDP client at IP", interface.address);
+        }, 4000);
+    });
+
+    return client;
 };
 
 /**
@@ -310,53 +295,3 @@ ControlPoint.prototype.close = function() {
   // http.parsers.free(this.responseParser);
 };
 
-/* TODO Move these stuff to a separated module/project */
-
-/*
-function searchGateway(timeout, callback) {
-  var clients = {};
-  var t;
-  
-  if (timeout) {
-    t = setTimeout(function() {
-      callback(new Error("searchGateway() timed out"));
-    }, timeout);
-  }
-  
-  var cp = new ControlPoint();
-  cp.on('DeviceFound', function(headers) {
-    var l = url.parse(headers.location);
-    l.port = l.port || (l.protocol == "https:" ? 443 : 80);
-    // Early return if this location is already processed 
-    if (clients[l.href]) return;
-
-    // Retrieve device/service description
-    var client = clients[l.href] = http.createClient(l.port, l.hostname);
-    var request = client.request("GET", l.pathname, {
-      "Host": l.hostname
-    });
-    request.addListener('response', function (response) {
-      if (response.statusCode !== 200) {
-        callback(new Error("Unexpected response status code: " + response.statusCode));
-      }
-      var resbuf = "";
-      response.setEncoding("utf8");
-      response.addListener('data', function (chunk) { resbuf += chunk;});
-      response.addListener("end", function() {
-        resbuf = resbuf.substr(resbuf.indexOf(WANIP) + WANIP.length);
-        var ipurl = resbuf.match(/<controlURL>(.+?)<\/controlURL>/i)[1].trim()
-        clearTimeout(t);
-        var controlUrl = url.parse(ipurl);
-        controlUrl.__proto__ = l;
-        console.log(controlUrl);
-        callback(null, new Gateway(controlUrl.port, controlUrl.hostname, controlUrl.pathname));
-      });
-    });
-    request.end();
-  });
-  
-  cp.search(GW_ST);
-}
-
-exports.searchGateway = searchGateway;
-*/
