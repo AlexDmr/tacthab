@@ -246,7 +246,11 @@ UpnpService.prototype.subscribe = function(callback/*, nbTry*/) {
 		return adresseArray[0] === hostArray[0]
 		    && adresseArray[1] === hostArray[1]
 		    && adresseArray[2] === hostArray[2] ;
-	})[0];
+	})[0] || netInterfaces.filter( function(netInterface) {
+            var adresseArray = netInterface.address.split( "." );
+            return adresseArray[0] === hostArray[0]
+                && adresseArray[1] === hostArray[1];
+        })[0];
 	if(interface) {
 		IP = interface.address;
 		// console.log( "Right IP address to use is", IP );
