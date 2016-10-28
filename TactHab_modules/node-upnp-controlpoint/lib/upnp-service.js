@@ -245,6 +245,7 @@ UpnpService.prototype.subscribe = function(callback/*, nbTry*/) {
 
 
 	var callbackUrl = "http://" + IP + ":" + this.device.controlPoint.eventHandler.serverPort + "/listener";
+	console.log("Subscribe with;\n\t-host:", host, "\n\t-callbackUrl:", callbackUrl);
 	var url = 'http://' + host + ':' + port + path;
 	var options = {
 	  	method	: "SUBSCRIBE",
