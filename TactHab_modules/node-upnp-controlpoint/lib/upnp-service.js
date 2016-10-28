@@ -211,9 +211,18 @@ var reURL = /^(https?):\/\/([\w|\.|\d]*)\:?(\d+)\/(.*)$/i;
 var ifaces = os.networkInterfaces(), netInterfaces = [];
 for (var dev in ifaces) {
     var iface = ifaces[dev].filter(function(details) {
-        return details.family === 'IPv4' && details.internal === false;
+        var rep = details.family === 'IPv4' && details.internal === false;
+        if(rep) {
+            netInterfaces.push( details );
+            console.log("net:", details.address, "internal is", details.internal);
+        }
+        return rep
     });
-    if(iface.length > 0) {netInterfaces.push( iface[0] );}
+
+    /*if(iface.length > 0) {
+        console.log( "\t-iface:", iface);
+        netInterfaces.push( iface[0] );
+    }*/
 }
 
 UpnpService.prototype.subscribe = function(callback/*, nbTry*/) {
