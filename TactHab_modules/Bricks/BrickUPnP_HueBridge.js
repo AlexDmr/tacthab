@@ -7,7 +7,7 @@ var BrickUPnP			= require( './BrickUPnP.js' )
   
 var BrickUPnP_HueBridge = function(id) {
 	 BrickUPnP.prototype.constructor.apply(this, [id]);
-	 console.log( "BrickUPnP", this.brickId);
+	 //console.log( "BrickUPnP", this.brickId);
 	 this.authorizedConnection = false;
 	 this.Lamps = {};
 	 return this;
@@ -43,7 +43,7 @@ BrickUPnP_HueBridge.prototype.connect		= function() {
 											 if(error2) {
 												 console.error("Error with POST /api", error);
 												} else {var response2 = JSON.parse( responseText2 );
-														console.log('POST /api : ', response2);
+														//console.log('POST /api : ', response2);
 														if( response2.length
 														  &&response2.length === 1
 														  ) {if(response2[0].error) {
@@ -75,7 +75,7 @@ BrickUPnP_HueBridge.prototype.connect		= function() {
 											 key		= keys[i];
 											 lampHueId	= self.Lamps[key].lampHueId;
 											 if(typeof response.lights[lampHueId] === 'undefined') {
-												 console.log("SUB BrickUPnP_HueLamp", key);
+												 //console.log("SUB BrickUPnP_HueLamp", key);
 												 self.Lamps[key].dispose();
 												 delete self.Lamps[key];
 												}
@@ -94,7 +94,7 @@ BrickUPnP_HueBridge.prototype.init			= function(device) {
 	 // var self = this;
 	 BrickUPnP.prototype.init.apply(this, [device]);
 	 this.prefixHTTP = 'http://' + device.host + ':' + device.port;
-	 console.log("init Hue bridge ", this.prefixHTTP);
+	 //console.log("init Hue bridge ", this.prefixHTTP);
 	 this.connect();
 	 return this;
 	}
@@ -107,7 +107,7 @@ BrickUPnP_HueBridge.prototype.updateLamp	= function(lampHueId, lampJS) {
 				 brick = new BrickUPnP_HueLamp(this, lampHueId, lampJS);
 				 brick.changeIdTo(uuidLamp);
 				 this.Lamps[uuidLamp] = brick;
-				 console.log("ADD BrickUPnP_HueLamp", uuidLamp);
+				 //console.log("ADD BrickUPnP_HueLamp", uuidLamp);
 				 // console.log(lampJS);
 				}
 	}

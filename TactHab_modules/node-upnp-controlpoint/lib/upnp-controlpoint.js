@@ -174,56 +174,46 @@ var UpnpControlPoint = function( TLS_SSL_json ) {
 	this.ssdp.on("DeviceFound", function(device) {
 		var udn = getUUID(device.usn);
 			
-		if (TRACE) {
-			console.log("DeviceFound: " + udn);
-		}
-		
+		if (TRACE) {console.log("DeviceFound: " + udn);}
 		if (self.devices[udn]) {	
-			// already got this device
-			return;
+			return self.ssdp.emit("DeviceAvailable", device); // already got this device
 		}
-		
-		if (TRACE) {
-			console.log('\t' + JSON.stringify(device));
-			//console.log('\t' + device.usn); 		// unique ID for the device
-			//console.log('\t' + device.st); 		//-> "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
-			//console.log('\t' + device.location); 		//-> "http://192.168.0.1/root.sxml"
-		}
-	
 		self.devices[udn] = "holding";
-			
-		self._getDeviceDetails(udn, device.location, function(device) {
-			self.devices[udn] = device;
-			self.emit("device", device);
+		self._getDeviceDetails(udn, device.location, function(deviceObj) {
+			self.devices[udn] = deviceObj;
+			self.emit("device", deviceObj);
+            return self.ssdp.emit("DeviceAvailable", device);
 		});
 	});
 	
 	/**
 	 * Device alive
 	 */
+	var RE = /= *([0-9]*)$/;
 	this.ssdp.on("DeviceAvailable", function(device) {
 		var udn = getUUID(device.usn);
-			
-		
+
+        //console.log( "DeviceAvailable:", device );
 		if (self.devices[udn]) {
-			return;
-		}
-		
-		if (TRACE) {
-			console.log("DeviceAvailable");
-			//console.log('\t' + JSON.stringify(device));
-			console.log('\t' + udn + " : " + device.nt);
-			// console.log('\t' + device.usn); 		// Unique Service Name.  A unique ID for the device
-			//console.log('\t' + device.nt); 		// Notification Type  e.g. "urn:schemas-upnp-org:device:InternetGatewayDevice:1"
-			//console.log('\t' + device.location); 		// Location -> "http://192.168.0.1/root.sxml"
-		}
-
-		self.devices[udn] = "holding";
-		self._getDeviceDetails(udn, device.location, function(device) {
-			self.devices[udn] = device;
-			self.emit("device", device);
-		});
-
+            if(self.devices[udn].liveCB) {clearTimeout( self.devices[udn].liveCB );}
+            console.log( "Heartbeat (", RE.exec(device["cache-control"])[1], " seconds) for:", device.location );
+            self.devices[udn].liveCB = setTimeout(
+                function() {self.ssdp.emit("DeviceUnavailable", device);},
+                Math.max( 300, parseInt( RE.exec(device["cache-control"])[1] )*1000 )
+            );
+		} else {
+            self.devices[udn] = "holding";
+            self._getDeviceDetails(udn, device.location, function (deviceObj) {
+                if(self.devices[udn] && self.devices[udn].liveCB) {clearTimeout( self.devices[udn].liveCB );}
+                self.devices[udn] = deviceObj;
+                console.log("Heartbeat (", RE.exec(device["cache-control"])[1], " seconds) for:", device.location);
+                self.devices[udn].liveCB = setTimeout(
+                    function () {self.ssdp.emit("DeviceUnavailable", device)},
+                    Math.max(300, parseInt(RE.exec(device["cache-control"])[1]) * 1000)
+                );
+                self.emit("device", deviceObj);
+            });
+        }
 	});
 	
 	/**
@@ -236,9 +226,12 @@ var UpnpControlPoint = function( TLS_SSL_json ) {
 			console.log("DeviceUnavailable");
 			console.log('\t' + JSON.stringify(dev));
 		}
-		
+        console.log( "Heartbeat missing (", RE.exec(dev["cache-control"])[1], " seconds) for:", dev );
 		self.emit("device-lost", udn);
 
+		if(self.devices[udn] && self.devices[udn].liveCB) {
+			clearTimeout( self.devices[udn].liveCB );
+		}
 		delete self.devices[udn];
 	});
 	

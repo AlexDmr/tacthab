@@ -14,7 +14,7 @@ function BrickUPnP_HueLamp(HueBridge, lampHueId, lampJS) {
 		this.set( { alert: "select"
 				  }
 				, function(err ) {console.log("Error ADD Hue", lampHueId, err );}
-			    , function(data) {console.log("Yeahh ADD Hue", lampHueId, data);
+			    , function(data) {//console.log("Yeahh ADD Hue", lampHueId, data);
 								  self.set({on:true, transitiontime: 20, hue:46920, sat:255});
 								  setTimeout(function() {self.set({transitiontime: 20, hue:0, bri:50});}, 2000);
 								  setTimeout(function() {self.set({on:false});}, 5000);
@@ -63,7 +63,7 @@ BrickUPnP_HueLamp.prototype.get		= function(cbError, cbSuccess) {
 }
 BrickUPnP_HueLamp.prototype.set		= function(jsonSet, cbError, cbSuccess) {
 	var self = this;
-	console.log( "BrickUPnP_HueLamp.prototype.set", jsonSet );
+	//console.log( "BrickUPnP_HueLamp.prototype.set", jsonSet );
 	request	( { url		: self.prefixHTTP + '/api/TActHab8888/lights/' + this.lampHueId + '/state'
 			  , method	: "PUT"
 			  , body	: JSON.stringify(jsonSet)
@@ -74,7 +74,7 @@ BrickUPnP_HueLamp.prototype.set		= function(jsonSet, cbError, cbSuccess) {
 					 if(cbError) {cbError(error);}
 					} else {var json = JSON.parse(responseText);
 							if(cbSuccess) {cbSuccess(responseText);}
-							console.error("BrickUPnP_HueLamp::set success:", responseText);
+							//console.log("BrickUPnP_HueLamp::set success:", responseText);
 							for(var i=0; i<json.length; i++) {
 								 if(json[i].success) {
 									 for(var varName in json[i].success) {

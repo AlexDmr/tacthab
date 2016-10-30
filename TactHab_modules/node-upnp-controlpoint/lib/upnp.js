@@ -19,9 +19,9 @@ const SSDP_ALL = 'ssdp:all';
 
 // Map SSDP notification sub type to emitted events 
 const UPNP_NTS_EVENTS = {
-  'ssdp:alive': 'DeviceAvailable',
-  'ssdp:byebye': 'DeviceUnavailable',
-  'ssdp:update': 'DeviceUpdate'
+  'ssdp:alive'  : 'DeviceAvailable',
+  'ssdp:byebye' : 'DeviceUnavailable',
+  'ssdp:update' : 'DeviceUpdate'
 };
 
 //some const strings - dont change
@@ -217,6 +217,8 @@ function pipoParseHTTP_header(str) {
 		   , headers	: attributes
 		   };
 }
+
+var Map_UDN_Timer = {};
 
 ControlPoint.prototype.onRequestMessage = function(msg/*, rinfo*/) {
 	var str = msg.toString('utf8');
