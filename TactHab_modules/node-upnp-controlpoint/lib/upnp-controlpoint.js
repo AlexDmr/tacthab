@@ -196,7 +196,7 @@ var UpnpControlPoint = function( TLS_SSL_json ) {
         //console.log( "DeviceAvailable:", device );
 		if (self.devices[udn]) {
             if(self.devices[udn].liveCB) {clearTimeout( self.devices[udn].liveCB );}
-            console.log( "Heartbeat (", RE.exec(device["cache-control"])[1], " seconds) for:", device.location );
+            // console.log( "Heartbeat (", RE.exec(device["cache-control"])[1], " seconds) for:", device.location );
             self.devices[udn].liveCB = setTimeout(
                 function() {self.ssdp.emit("DeviceUnavailable", device);},
                 Math.max( 300, parseInt( RE.exec(device["cache-control"])[1] )*1000 )
@@ -206,7 +206,7 @@ var UpnpControlPoint = function( TLS_SSL_json ) {
             self._getDeviceDetails(udn, device.location, function (deviceObj) {
                 if(self.devices[udn] && self.devices[udn].liveCB) {clearTimeout( self.devices[udn].liveCB );}
                 self.devices[udn] = deviceObj;
-                console.log("Heartbeat (", RE.exec(device["cache-control"])[1], " seconds) for:", device.location);
+                // console.log("Heartbeat (", RE.exec(device["cache-control"])[1], " seconds) for:", device.location);
                 self.devices[udn].liveCB = setTimeout(
                     function () {self.ssdp.emit("DeviceUnavailable", device)},
                     Math.max(300, parseInt(RE.exec(device["cache-control"])[1]) * 1000)
@@ -226,7 +226,7 @@ var UpnpControlPoint = function( TLS_SSL_json ) {
 			console.log("DeviceUnavailable");
 			console.log('\t' + JSON.stringify(dev));
 		}
-        console.log( "Heartbeat missing (", RE.exec(dev["cache-control"])[1], " seconds) for:", dev );
+        // console.log( "Heartbeat missing (", RE.exec(dev["cache-control"])[1], " seconds) for:", dev );
 		self.emit("device-lost", udn);
 
 		if(self.devices[udn] && self.devices[udn].liveCB) {
