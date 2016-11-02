@@ -109,7 +109,7 @@ EventHandler.prototype._serviceCallbackHandler = function(req, res) {
 											 return function() {EventReceived(nbTimes);}
 											})(nbTimes - 1)
 										, 1000);
-							} else {console.error("\n_____________________________\nNo one listening aborting after 3 trials...", req.headers);}
+							} // else {console.error("\n_____________________________\nNo one listening aborting after 3 trials...", req.headers);}
 					   }
 		}
 		catch (ex) {
@@ -276,7 +276,7 @@ UpnpControlPoint.prototype._getDeviceDetails = function(udn, location, callback)
 		console.log("getting device details from " + location);
 	}
 	// var options = Url.parse(location);
-	console.log("getting device details from ", location);
+	// console.log("getting device details from ", location);
 	var objRequest = {uri: location};
 	if( TLS_SSL && location.indexOf("https://") === 0) {
 		objRequest.cert				= TLS_SSL.cert		;
@@ -298,7 +298,7 @@ UpnpControlPoint.prototype._getDeviceDetails = function(udn, location, callback)
 				var device = new UpnpDevice(self, udn, location, desc, localAddress, body);
 				callback(device);
 			});
-		} else {console.error(response?response.statusCode:"no response"/*, error*/);}
+		} // else {console.error(response?response.statusCode:"no response"/*, error*/);}
 	});
 	
 	/*

@@ -50,7 +50,7 @@ AlxEvents	(BrickUPnP_MediaRenderer);
 BrickUPnP_MediaRenderer.prototype.init		= function(device) {
 	 var self = this;
 	 BrickUPnP.prototype.init.apply(this, [device]);
-	 this.MediasStates = {};
+	 this.MediasStates = {UPnP_Media: {}};
 	 this.automatePlay = new AlxAutomate(	{ initialState	: "INIT"
 											, states	: { INIT	: { transitions : [ {state: 'PLAYING', eventName: 'TransportState', op: 'equal', value: 'PLAYING'}
 																					  , {state: 'STOPPED', eventName: 'TransportState', op: 'equal', value: 'STOPPED'}
@@ -93,14 +93,37 @@ BrickUPnP_MediaRenderer.prototype.init		= function(device) {
 	}
 
 BrickUPnP_MediaRenderer.prototype.getMediasStates	= function() {
-	 return this.MediasStates;
+	return this.MediasStates;
+};
+BrickUPnP_MediaRenderer.prototype.setUPnP_Media = function(mediaServerId, itemId, itemMetadata) {
+	// console.log("BrickUPnP_MediaRenderer::setUPnP_Media");
+	this.MediasStates.UPnP_Media = {
+		mediaServerId	: mediaServerId,
+		itemId			: itemId,
+		itemMetadata	: itemMetadata
+	};
+	for(var att in this.MediasStates.UPnP_Media) {
+		this.emit("eventUPnP"
+			, { serviceType	: "UPnP_Media"
+			  , attribut	: att
+			  , value		: this.MediasStates.UPnP_Media[att]
+			}
+		); // "UPnP_Media", this.MediasStates.UPnP_Media);
 	}
+};
 BrickUPnP_MediaRenderer.prototype.loadMedia	= function(mediaServerId, itemId) {
-	 var self 		 = this;
-	 var mediaServer = this.getBrickFromId(mediaServerId);
-	 var service	 = mediaServer.UPnP.device.services['urn:upnp-org:serviceId:ContentDirectory'];
-	 return new Promise( function(resolve, reject) {
-		 service.callAction	( 'Browse'
+	console.log("loadMedia", mediaServerId, itemId);
+	var self 		 = this;
+	return new Promise( function(resolve, reject) {
+		var mediaServer = self.getBrickFromId(mediaServerId);
+		if(!mediaServer) {
+			return reject("No mediaServer identified by", mediaServer);
+		}
+		var service	 = mediaServer.UPnP.device.services['urn:upnp-org:serviceId:ContentDirectory'];
+		if(!service) {
+			return reject("No service urn:upnp-org:serviceId:ContentDirectory for", mediaServer);
+		}
+		service.callAction	( 'Browse'
 							, { ObjectID		: itemId
 							  , BrowseFlag		: 'BrowseMetadata'
 							  , Filter			: '*'
@@ -112,6 +135,7 @@ BrickUPnP_MediaRenderer.prototype.loadMedia	= function(mediaServerId, itemId) {
 								 // console.log(self.brickId, "BrickUPnP_MediaRenderer::Browse", err || buffer);
 								 if(err) {
 									 console.error("Error :", JSON.stringify(err));
+									 self.setUPnP_Media();
 									 reject(err);
 									} else	{try	{var doc			= xmldomparser.parseFromString(buffer);
 													 var metadata		= doc.getElementsByTagName('Result')[0].textContent;
@@ -121,10 +145,22 @@ BrickUPnP_MediaRenderer.prototype.loadMedia	= function(mediaServerId, itemId) {
 														 // console.log("URI:", res[0].textContent);
 														 self.loadURI( res[0].textContent// uri
 																	 , metadata
-																	 ).then(resolve, reject);
-														} else {console.error("loadMedia : no res : ", metadata);}
+																	 ).then	( function() {
+																 self.setUPnP_Media(mediaServerId, itemId, metadata);
+																 				resolve();
+																			  }
+																			, function(err) {
+																 self.setUPnP_Media();
+																				reject(err);
+																			  }
+														 					);
+														} else 	{console.error("loadMedia : no res : " + metadata);
+														 		 this.setUPnP_Media();
+																 reject("loadMedia : no res : " + metadata);
+																}
 													} catch(err2) {console.error(err2);
-																   reject(err2);
+									 							   self.setUPnP_Media();
+									 							   reject(err2);
 																  }
 											}
 								}
@@ -133,10 +169,11 @@ BrickUPnP_MediaRenderer.prototype.loadMedia	= function(mediaServerId, itemId) {
 	}); // Promise
 }
 BrickUPnP_MediaRenderer.prototype.loadURI	= function(uri, metadata) {
-	 var self = this;// console.log("loadURI", uri, metadata);
+	var self = this;// console.log("loadURI", uri, metadata);
 	return new Promise( function(resolve, reject) {
-		 var service = self.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
-		 service.callAction	( 'SetAVTransportURI'
+		var service = self.UPnP.device.services['urn:upnp-org:serviceId:AVTransport'];
+		if(!service) {return reject("No service urn:upnp-org:serviceId:AVTransport for" + self.id);}
+		service.callAction	( 'SetAVTransportURI'
 							, { InstanceID			: 0
 							  , CurrentURI			: uri
 							  , CurrentURIMetaData	: metadata
