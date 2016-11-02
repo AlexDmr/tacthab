@@ -277,7 +277,7 @@ UpnpControlPoint.prototype._getDeviceDetails = function(udn, location, callback)
 	}
 	// var options = Url.parse(location);
 	console.log("getting device details from ", location);
-	var objRequest = {uri: location}
+	var objRequest = {uri: location};
 	if( TLS_SSL && location.indexOf("https://") === 0) {
 		objRequest.cert				= TLS_SSL.cert		;
 		objRequest.key				= TLS_SSL.key		;
@@ -298,7 +298,7 @@ UpnpControlPoint.prototype._getDeviceDetails = function(udn, location, callback)
 				var device = new UpnpDevice(self, udn, location, desc, localAddress, body);
 				callback(device);
 			});
-		} else {console.error(response?response.statusCode:"no response", error);}
+		} else {console.error(response?response.statusCode:"no response"/*, error*/);}
 	});
 	
 	/*

@@ -238,7 +238,7 @@ ControlPoint.prototype.onRequestMessage = function(msg/*, rinfo*/) {
 /**
  * Message handler for HTTPU response.
  */
-ControlPoint.prototype.onResponseMessage = function(msg/*, rinfo*/){
+ControlPoint.prototype.onResponseMessage = function(msg/*, rinfo*/) {
 	var str = msg.toString('utf8');	
 	var res = pipoParseHTTP_header(str);
 	// console.log("ControlPoint::onResponseMessage", "\n\tinf:", rinfo, "\n\t", res);
