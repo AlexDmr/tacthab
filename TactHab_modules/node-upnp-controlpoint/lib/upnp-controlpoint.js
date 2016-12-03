@@ -191,7 +191,16 @@ var UpnpControlPoint = function( TLS_SSL_json ) {
 	 */
 	var RE = /= *([0-9]*)$/;
 	this.ssdp.on("DeviceAvailable", function(device) {
-		var udn = getUUID(device.usn);
+		var udn = getUUID(device.usn), timeCacheControl = 1800*1000, keys = Object.keys(device);
+		for(var i=0; i<keys; i++) {
+			if( keys[i].toLowerCase() === "cache-control") {
+                var resRE = RE.exec(device[ keys[i] ]);
+                if(resRE) {
+                    timeCacheControl = Math.max( 300, parseInt( resRE[1] )*1000 );
+				}
+				break;
+			}
+		}
 
         //console.log( "DeviceAvailable:", device );
 		if (self.devices[udn]) {
@@ -199,7 +208,7 @@ var UpnpControlPoint = function( TLS_SSL_json ) {
             // console.log( "Heartbeat (", RE.exec(device["cache-control"])[1], " seconds) for:", device.location );
             self.devices[udn].liveCB = setTimeout(
                 function() {self.ssdp.emit("DeviceUnavailable", device);},
-                Math.max( 300, parseInt( RE.exec(device["cache-control"])[1] )*1000 )
+                timeCacheControl
             );
 		} else {
             self.devices[udn] = "holding";
@@ -209,7 +218,7 @@ var UpnpControlPoint = function( TLS_SSL_json ) {
                 // console.log("Heartbeat (", RE.exec(device["cache-control"])[1], " seconds) for:", device.location);
                 self.devices[udn].liveCB = setTimeout(
                     function () {self.ssdp.emit("DeviceUnavailable", device)},
-                    Math.max(300, parseInt(RE.exec(device["cache-control"])[1]) * 1000)
+                    timeCacheControl
                 );
                 self.emit("device", deviceObj);
             });
