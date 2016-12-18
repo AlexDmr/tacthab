@@ -108,8 +108,10 @@ socketBus.connectTo	= function( host, login, pass, friendlyName ) {
 											socket.on 	( 'disconnect'
 														, function() {
 															console.log( "socketBus disconnect" );
-															self.emit( "message", {socket: "disconnect", ms: Date.now()});
+
 															self.disconnectFrom(host, login);
+                                                            self.emit( "message", {socket: "disconnect", ms: Date.now()});
+
 															setTimeout( function() {
 																self.connectTo( host, login, pass, friendlyName );
 															}, 1000 );
@@ -163,7 +165,7 @@ socketBus.connectTo	= function( host, login, pass, friendlyName ) {
 					console.log( "socketBus reconnect" );
 	 				self.emit( 'message', {socket: "reconnect_attempt", ms: Date()} );
 	 			});
-}
+};
 
 module.exports = function(webServer/*, interpreter*/) {
 	/*var D_CB_socketIO = {};
