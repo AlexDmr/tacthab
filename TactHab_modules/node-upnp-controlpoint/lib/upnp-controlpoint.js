@@ -29,15 +29,16 @@ if (typeof String.prototype.startsWith != 'function') {
 
 function getUUID(usn) {
 	var udn = usn;
-	var s = usn.split("::");
-	if (s.length > 0) {
-		udn = s[0];
-	}
+	if(udn) {
+        var s = usn.split("::");
+        if (s.length > 0) {
+            udn = s[0];
+        }
 
-	if (udn.startsWith("uuid:")) {
-		udn = udn.substring(5);
-	}
-	
+        if (udn.startsWith("uuid:")) {
+            udn = udn.substring(5);
+        }
+    }
 	return udn;
 }
 
@@ -172,8 +173,8 @@ var UpnpControlPoint = function( TLS_SSL_json ) {
 			MUST be replaced with hyphens in accordance with RFC 2141. 
 	 */
 	this.ssdp.on("DeviceFound", function(device) {
-		var udn = getUUID(device.usn);
-			
+		var udn = getUUID(device.usn || device.udn);
+        if(!udn) {return;}
 		if (TRACE) {console.log("DeviceFound: " + udn);}
 		if (self.devices[udn]) {	
 			return self.ssdp.emit("DeviceAvailable", device); // already got this device
@@ -191,7 +192,8 @@ var UpnpControlPoint = function( TLS_SSL_json ) {
 	 */
 	var RE = /= *([0-9]*)$/;
 	this.ssdp.on("DeviceAvailable", function(device) {
-		var udn = getUUID(device.usn), timeCacheControl = 1800*1000, keys = Object.keys(device);
+		var udn = getUUID(device.usn || device.udn), timeCacheControl = 1800*1000, keys = Object.keys(device);
+		if(!udn) {return;}
 		for(var i=0; i<keys; i++) {
 			if( keys[i].toLowerCase() === "cache-control") {
                 var resRE = RE.exec(device[ keys[i] ]);
@@ -229,7 +231,8 @@ var UpnpControlPoint = function( TLS_SSL_json ) {
 	 * Device left the building
 	 */
 	this.ssdp.on("DeviceUnavailable", function(dev) {
-		var udn = getUUID(dev.usn);
+		var udn = getUUID(dev.usn || device.udn);
+        if(!udn) {return;}
 			
 		if (TRACE) {
 			console.log("DeviceUnavailable");

@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="59b716ae-6356-49d4-a3fd-86edff57c043" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Server/tacthab_web.js" afterPath="$PROJECT_DIR$/Server/tacthab_web.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/TactHab_modules/node-upnp-controlpoint/lib/upnp-controlpoint.js" afterPath="$PROJECT_DIR$/TactHab_modules/node-upnp-controlpoint/lib/upnp-controlpoint.js" />
     </list>
     <ignored path="TActHab_GIT.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -21,7 +22,7 @@
     <favorites_list name="TActHab_GIT" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.26210427">
+    <splitter split-orientation="horizontal" split-proportion="0.6052142">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
           <file leaf-file-name="M2MIAGE.js" pinned="false" current-in-tab="false">
@@ -47,8 +48,8 @@
           <file leaf-file-name="upnp-controlpoint.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/TactHab_modules/node-upnp-controlpoint/lib/upnp-controlpoint.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="765">
-                  <caret line="206" column="44" lean-forward="false" selection-start-line="206" selection-start-column="44" selection-end-line="206" selection-end-column="44" />
+                <state relative-caret-position="477">
+                  <caret line="34" column="23" lean-forward="true" selection-start-line="34" selection-start-column="23" selection-end-line="34" selection-end-column="23" />
                   <folding />
                 </state>
               </provider>
@@ -101,7 +102,7 @@
           <file leaf-file-name="upnp.js" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/TactHab_modules/node-upnp-controlpoint/lib/upnp.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1022">
+                <state relative-caret-position="6375">
                   <caret line="255" column="19" lean-forward="false" selection-start-line="255" selection-start-column="19" selection-end-line="255" selection-end-column="19" />
                   <folding>
                     <marker date="1478086554566" expanded="true" signature="2152:2184" ph="..." />
@@ -126,7 +127,7 @@
             <entry file="file://$PROJECT_DIR$/Server/tacthab_web.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="599">
-                  <caret line="112" column="122" lean-forward="true" selection-start-line="111" selection-start-column="60" selection-end-line="112" selection-end-column="122" />
+                  <caret line="112" column="122" lean-forward="false" selection-start-line="111" selection-start-column="60" selection-end-line="112" selection-end-column="122" />
                   <folding />
                 </state>
               </provider>
@@ -158,6 +159,7 @@
     <findStrings>
       <find>http</find>
       <find>request</find>
+      <find>getUUID</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -214,8 +216,8 @@
         <option value="$PROJECT_DIR$/TactHab_modules/Bricks/BrickUPnP_HueLamp.js" />
         <option value="$PROJECT_DIR$/TactHab_modules/node-upnp-controlpoint/lib/upnp.js" />
         <option value="$PROJECT_DIR$/TactHab_modules/Bricks/BrickUPnP_MediaRenderer.js" />
-        <option value="$PROJECT_DIR$/TactHab_modules/node-upnp-controlpoint/lib/upnp-controlpoint.js" />
         <option value="$PROJECT_DIR$/Server/tacthab_web.js" />
+        <option value="$PROJECT_DIR$/TactHab_modules/node-upnp-controlpoint/lib/upnp-controlpoint.js" />
       </list>
     </option>
   </component>
@@ -290,6 +292,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -350,7 +353,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -468,12 +470,13 @@
       <workItem from="1478087487546" duration="43000" />
       <workItem from="1478095231594" duration="4212000" />
       <workItem from="1480800163874" duration="1557000" />
-      <workItem from="1482063663341" duration="1632000" />
+      <workItem from="1482063663341" duration="1947000" />
+      <workItem from="1484243558005" duration="298000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="45399000" />
+    <option name="totallyTimeSpent" value="46012000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="84" y="-11" width="2663" height="1846" extended-state="6" />
@@ -849,7 +852,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TactHab_modules/node-upnp-controlpoint/lib/upnp.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1022">
+        <state relative-caret-position="6375">
           <caret line="255" column="19" lean-forward="false" selection-start-line="255" selection-start-column="19" selection-end-line="255" selection-end-column="19" />
           <folding>
             <marker date="1478086554566" expanded="true" signature="2152:2184" ph="..." />
@@ -867,14 +870,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TactHab_modules/node-upnp-controlpoint/lib/upnp-controlpoint.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="206" column="44" lean-forward="false" selection-start-line="206" selection-start-column="44" selection-end-line="206" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/TactHab_modules/Bricks/BrickAndroidPhone.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -886,7 +881,15 @@
     <entry file="file://$PROJECT_DIR$/Server/tacthab_web.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="599">
-          <caret line="112" column="122" lean-forward="true" selection-start-line="111" selection-start-column="60" selection-end-line="112" selection-end-column="122" />
+          <caret line="112" column="122" lean-forward="false" selection-start-line="111" selection-start-column="60" selection-end-line="112" selection-end-column="122" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TactHab_modules/node-upnp-controlpoint/lib/upnp-controlpoint.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="477">
+          <caret line="34" column="23" lean-forward="true" selection-start-line="34" selection-start-column="23" selection-end-line="34" selection-end-column="23" />
           <folding />
         </state>
       </provider>
