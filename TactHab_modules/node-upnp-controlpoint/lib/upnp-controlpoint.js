@@ -231,7 +231,7 @@ var UpnpControlPoint = function( TLS_SSL_json ) {
 	 * Device left the building
 	 */
 	this.ssdp.on("DeviceUnavailable", function(dev) {
-		var udn = getUUID(dev.usn || device.udn);
+		var udn = getUUID(dev.usn || dev.udn);
         if(!udn) {return;}
 			
 		if (TRACE) {
